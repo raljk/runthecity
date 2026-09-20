@@ -158,7 +158,8 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .hb ellipse{stroke:none}
 .hb text{font-family:var(--display);font-weight:800;text-anchor:middle;fill:var(--token-ink)}
 .hb .r{font-family:var(--body);font-weight:800;letter-spacing:.02em}
-.police{fill:#2a2f33;stroke:#0c0e0f;stroke-width:1.5}
+.police{pointer-events:none}
+.police polygon{stroke:rgba(6,8,14,.45);stroke-width:.6;stroke-linejoin:round}
 .pc{pointer-events:none}
 .lf{pointer-events:none}
 .hexhit{fill:transparent;stroke:none;cursor:pointer}
@@ -595,6 +596,40 @@ function massing(P, C, hex, kind, base, defs, i, fast) {
   return parts.sort((a, b) => b.d - a.d).map(p => p.s).join('');
 }
 
+/* The police marker: an officer with more braid than rank, and a case he
+   ought not to be carrying. Built from the same boxes as everything else and
+   turned to face the camera, so the cap peak, the badge and the payoff stay
+   readable from wherever you are standing. */
+function policeHTML(C, cx, cz, base) {
+  let ux = C.bx, uz = C.bz;
+  const m = Math.hypot(ux, uz);
+  if (m < 0.01) { ux = 0; uz = 1; } else { ux /= m; uz /= m; }   // straight down: face south
+  const nx = -uz, nz = ux;
+  const NAVY = [38, 46, 72], DARK = [24, 30, 48], SHIRT = [96, 110, 146];
+  const SKIN = [176, 138, 108], GOLD = [222, 180, 78], CASE = [86, 58, 38];
+  const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+  // dx is forward, dz is sideways, dy is up from the block
+  const box = (dx, dz, dy, len, wide, tall, body, front) =>
+    roadBox(C, cx + ux * dx + nx * dz, cz + uz * dx + nz * dz, base + dy,
+      ux, uz, len, wide, tall, body, front ? rgb(front) : null, null);
+  let g = '';
+  g += box(0, 0, 0, 9, 12, 13, DARK);                  // trousers
+  g += box(-1, 9.5, 0, 5, 9, 7, CASE);                 // the case, set down beside him
+  g += box(0, 0, 13, 10, 14, 14, NAVY, SHIRT);         // tunic, open at the front
+  g += box(0, 0, 27, 11, 15.5, 2.5, GOLD);             // rather a lot of shoulder braid
+  g += box(0, 0, 29.5, 7.5, 8.5, 8.5, SKIN);           // head
+  g += box(0, 0, 37.4, 8.5, 10, 1.6, GOLD);            // cap band
+  g += box(0, 0, 39, 8.5, 10, 3.8, DARK);              // cap
+  g += box(5.4, 0, 37.2, 4.5, 9.4, 1.3, DARK);         // peak
+  const chest = project(cx + ux * 5.2, base + 21, cz + uz * 5.2, C);
+  if (chest) g += `<circle cx="${n1(chest.x)}" cy="${n1(chest.y)}" r="${n1(2.1 * chest.k)}" fill="${rgb(GOLD)}"/>`;
+  const foot = project(cx, base, cz, C);
+  const shade = foot
+    ? `<ellipse cx="${n1(foot.x)}" cy="${n1(foot.y)}" rx="${n1(14 * foot.k)}" ` +
+      `ry="${n1(14 * foot.k * Math.max(.18, Math.sin(CAM.pitch * Math.PI / 180)))}" fill="rgba(0,0,0,.34)"/>` : '';
+  return shade + g;
+}
+
 /* A name on a pole, raised out of the block under the pointer. Nothing is
    labelled until you ask, which keeps nineteen names off the board. */
 function flagHTML(C, B, i) {
@@ -965,11 +1000,8 @@ function boardSVG(st, o) {
     if (s) add(Math.min(...v.hexes.map(i => tileD[i])) - 1, s);
   });
   const rh = GEO.hexes[B.police], rt = TOP_Y[B.hexes[B.police].t], off = B.hexes[B.police].n ? 27 : 0;
-  const rp = P(rh.cx + off, rt, rh.cy + (off ? 6 : 2)), rk = P(rh.cx + off, rt + 44, rh.cy + (off ? 6 : 2));
-  if (rp && rk) add(tileD[B.police] - 2, `<g class="police"><title>Police pressure</title>` +
-    `<ellipse cx="${n1(rp.x)}" cy="${n1(rp.y)}" rx="${n1(13 * rp.k)}" ry="${n1(13 * rp.k * Math.max(.18, Math.sin(CAM.pitch * Math.PI / 180)))}" fill="rgba(0,0,0,.32)" stroke="none"/>` +
-    `<path d="M${n1(rp.x - 11 * rp.k)},${n1(rp.y)}C${n1(rp.x - 10 * rp.k)},${n1(rk.y + 12 * rk.k)} ${n1(rk.x - 8 * rk.k)},${n1(rk.y + 7 * rk.k)} ${n1(rk.x)},${n1(rk.y + 7 * rk.k)}C${n1(rk.x + 8 * rk.k)},${n1(rk.y + 7 * rk.k)} ${n1(rp.x + 10 * rp.k)},${n1(rk.y + 12 * rk.k)} ${n1(rp.x + 11 * rp.k)},${n1(rp.y)}Z"/>` +
-    `<circle cx="${n1(rk.x)}" cy="${n1(rk.y)}" r="${n1(8 * rk.k)}"/></g>`);
+  const cop = policeHTML(C, rh.cx + off, rh.cy + (off ? 6 : 2), rt);
+  if (cop) add(tileD[B.police] - 2, `<g class="police"><title>Police pressure</title>${cop}</g>`);
 
   /* ---------- the spots you can still take ----------
      These sit above the island so a tilted board can never hide a legal move, but
