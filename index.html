@@ -160,6 +160,7 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .hb .r{font-family:var(--body);font-weight:800;letter-spacing:.02em}
 .police{fill:#2a2f33;stroke:#0c0e0f;stroke-width:1.5}
 .pc{pointer-events:none}
+.life{pointer-events:none}
 .lastring{fill:none;stroke:#fff;stroke-width:2.5;stroke-dasharray:4 4}
 .spot,.espot{cursor:pointer}
 .spot .hit,.espot .hit{fill:transparent;stroke:transparent}
@@ -450,6 +451,12 @@ const SIDE_RGB = {                       // the concrete and fill under each blo
   works: [106, 76, 58], tower: [80, 90, 106], deadzone: [56, 58, 64],
 };
 const APRON_Y = 0, RIM_Y = 8, SLAB_Y = -46;
+/* The city sits on a platform at street level. Every block is pulled back from
+   its hexagon by INSET, so the gap between two neighbours is a road two lanes
+   wide, and the corners where three blocks meet become junctions. */
+const STREET_Y = 7, INSET = 9;
+const SHRINK = (S * Math.sqrt(3) / 2 - INSET) / (S * Math.sqrt(3) / 2);
+const ROAD_RGB = [24, 27, 35], PAVE_RGB = [54, 60, 74], BANK_RGB = [96, 88, 76];
 const RIM_RGB = [58, 68, 92], EDGE_RGB = [40, 46, 62], APRON_RGB = [22, 28, 40];
 const RIM_R = 5.86 * S, APRON_R = 5.6 * S;
 const ring6 = R => Array.from({ length: 6 }, (_, k) => { const a = k * Math.PI / 3; return [R * Math.cos(a), R * Math.sin(a)]; });
@@ -504,9 +511,9 @@ function seeded(n) {
   };
 }
 /* a pointy-top hexagon is the three strips its edges cut, so one test covers all six sides */
-const insideBlock = (x, z, pad) => Math.abs(x) <= INRADIUS - pad &&
-  Math.abs(x * 0.5 + z * 0.8660254) <= INRADIUS - pad &&
-  Math.abs(x * 0.5 - z * 0.8660254) <= INRADIUS - pad;
+const insideBlock = (x, z, pad) => Math.abs(x) <= INRADIUS - INSET - pad &&
+  Math.abs(x * 0.5 + z * 0.8660254) <= INRADIUS - INSET - pad &&
+  Math.abs(x * 0.5 - z * 0.8660254) <= INRADIUS - INSET - pad;
 const area = ps => {
   let a = 0;
   for (let i = 0, n = ps.length; i < n; i++) { const p = ps[i], q = ps[(i + 1) % n]; a += p.x * q.y - q.x * p.y; }
@@ -582,6 +589,88 @@ function massing(P, C, hex, kind, base, defs, i, fast) {
   return parts.sort((a, b) => b.d - a.d).map(p => p.s).join('');
 }
 
+/* =====================================================================
+   Traffic, and the people on the pavement.
+
+   The board only redraws when the camera moves, so between frames the city
+   would sit perfectly dead. This is its own small layer with its own clock:
+   a few dozen headlights running the street grid and slower specks walking
+   the kerbs, redrawn on a timer without touching the fifteen hundred
+   elements underneath. Cars pick a new street at each corner, so the
+   traffic never loops and never has to be choreographed.
+   ===================================================================== */
+const LIFE = { cars: [], feet: [], raf: 0, last: 0, still: false };
+const HEADLIGHT = ['#fff3d4', '#ffe9b8', '#e8f4ff'], TAILLIGHT = ['#ff4a3d', '#ff6a4a'];
+
+function makeLife() {
+  if (LIFE.cars.length) return;
+  const r = seeded(0x51F2C17);
+  const pick = () => Math.floor(r() * GEO.edges.length);
+  for (let i = 0; i < 64; i++) {
+    const e = pick(), red = r() < 0.42;
+    LIFE.cars.push({ e, from: r() < 0.5 ? GEO.edges[e].a : GEO.edges[e].b, t: r(),
+      v: 0.17 + r() * 0.16, col: red ? TAILLIGHT[i % 2] : HEADLIGHT[i % 3], red, lane: red ? -1 : 1 });
+  }
+  for (let i = 0; i < 46; i++) {
+    const e = pick();
+    LIFE.feet.push({ e, from: r() < 0.5 ? GEO.edges[e].a : GEO.edges[e].b, t: r(),
+      v: 0.035 + r() * 0.03, side: r() < 0.5 ? 1 : -1 });
+  }
+}
+/* At the end of a street, take any street but the one just travelled. */
+function advance(o, dt) {
+  o.t += o.v * dt;
+  while (o.t > 1) {
+    const e = GEO.edges[o.e], to = e.a === o.from ? e.b : e.a;
+    const outs = GEO.verts[to].edges.filter(x => x !== o.e);
+    o.e = outs.length ? outs[(Math.random() * outs.length) | 0] : o.e;
+    o.from = to; o.t -= 1;
+  }
+}
+function lifeHTML(C, B) {
+  const out = [];
+  LIFE.cars.forEach(c => {
+    const e = GEO.edges[c.e], A = GEO.verts[c.from], D = GEO.verts[e.a === c.from ? e.b : e.a];
+    const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1;
+    // two lanes: which side you drive on follows which way you are going
+    const ox = -dz / L * 3.4 * c.lane, oz = dx / L * 3.4 * c.lane;
+    const y = STREET_Y + 0.6, back = Math.max(0, c.t - 0.17);
+    const head = project(A.x + dx * c.t + ox, y, A.y + dz * c.t + oz, C);
+    const tail = project(A.x + dx * back + ox, y, A.y + dz * back + oz, C);
+    if (!head || !tail) return;
+    const L2 = `x1="${n1(tail.x)}" y1="${n1(tail.y)}" x2="${n1(head.x)}" y2="${n1(head.y)}" stroke-linecap="round"`;
+    const w = (c.red ? 2.6 : 3.4) * head.k;
+    out.push(`<line ${L2} stroke="${c.col}" stroke-width="${n1(w * 2.8)}" opacity=".16"/>` +
+      `<line ${L2} stroke="${c.col}" stroke-width="${n1(w)}" opacity="${c.red ? '.85' : '1'}"/>`);
+  });
+  LIFE.feet.forEach(f => {
+    const e = GEO.edges[f.e], A = GEO.verts[f.from], D = GEO.verts[e.a === f.from ? e.b : e.a];
+    const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1;
+    const nx = -dz / L * (INSET - 1.5) * f.side, nz = dx / L * (INSET - 1.5) * f.side;  // onto the pavement
+    const p = project(A.x + dx * f.t + nx, STREET_Y + 0.5, A.y + dz * f.t + nz, C);
+    if (!p) return;
+    out.push(`<circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(1.9 * p.k)}" fill="#ffdcab" opacity=".75"/>`);
+  });
+  return out.join('');
+}
+/* The clock. Held still for anyone who has asked for less motion, and
+   parked whenever the tab is hidden so a phone in a pocket stays asleep. */
+function tickLife(now) {
+  LIFE.raf = 0;
+  const host = document.querySelector('svg.board .life');
+  if (!host || !G.state) return;
+  const dt = LIFE.last ? Math.min(0.1, (now - LIFE.last) / 1000) : 0;
+  LIFE.last = now;
+  if (dt) { LIFE.cars.forEach(c => advance(c, dt)); LIFE.feet.forEach(f => advance(f, dt)); }
+  host.innerHTML = lifeHTML(basis(), G.state.board);
+  runLife();
+}
+function runLife() {
+  if (LIFE.still || LIFE.raf || document.hidden || !G.state) return;
+  LIFE.raf = requestAnimationFrame(tickLife);
+}
+function stopLife() { if (LIFE.raf) cancelAnimationFrame(LIFE.raf); LIFE.raf = 0; LIFE.last = 0; }
+
 /* Everything the mouse can hit, remembered in screen units so that a tap
    near a spot still finds it once the board is tilted. */
 const PROJ = { v: Object.create(null), e: Object.create(null) };
@@ -594,6 +683,7 @@ const PROJ = { v: Object.create(null), e: Object.create(null) };
 function boardSVG(st, o) {
   o = o || {};
   const B = st.board, C = basis(), fast = !!o.fast;
+  makeLife();
   const defs = [], back = [], scene = [], front = [];
   const P = (x, y, z) => project(x, y, z, C);
   PROJ.v = Object.create(null); PROJ.e = Object.create(null);
@@ -632,6 +722,57 @@ function boardSVG(st, o) {
     }
   }
 
+  /* ---------- the street grid ----------
+     Pavement over the whole platform, then a carriageway down the middle of
+     every hexagon edge, a patch at each junction, and a broken line along the
+     centre. It all lies flat at one height, below everything that stands up,
+     so it can be drawn in one go before the blocks are sorted. */
+  GEO.hexes.forEach(h => {
+    const q = h.vs.map(v => P(GEO.verts[v].x, STREET_Y, GEO.verts[v].y));
+    if (q.every(Boolean)) back.push(`<polygon points="${pts(q)}" fill="${lit([0, 1, 0], PAVE_RGB, .74)}"/>`);
+  });
+  GEO.edges.forEach(e => {                                          // the drop from the streets to the apron
+    if (e.hexes.length !== 1) return;
+    const A = GEO.verts[e.a], D = GEO.verts[e.b], hx = GEO.hexes[e.hexes[0]];
+    const mx = (A.x + D.x) / 2 - hx.cx, mz = (A.y + D.y) / 2 - hx.cy, m = Math.hypot(mx, mz), n = [mx / m, 0, mz / m];
+    if (!faces(C, n, [(A.x + D.x) / 2, STREET_Y / 2, (A.y + D.y) / 2])) return;
+    const a1 = P(A.x, STREET_Y, A.y), b1 = P(D.x, STREET_Y, D.y), b0 = P(D.x, APRON_Y, D.y), a0 = P(A.x, APRON_Y, A.y);
+    if (!a1 || !b1 || !b0 || !a0) return;
+    back.push(`<polygon points="${pts([a1, b1, b0, a0])}" fill="${lit(n, BANK_RGB, .5)}"/>`);
+  });
+  const ROAD = INSET - 2.5;
+  GEO.edges.forEach(e => {                                          // the carriageway itself
+    const A = GEO.verts[e.a], D = GEO.verts[e.b];
+    const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1;
+    let nx = -dz / L, nz = dx / L, off = 0;
+    if (e.hexes.length === 1) {                                     // a coast road only has an inside
+      const hx = GEO.hexes[e.hexes[0]];
+      if (nx * (hx.cx - (A.x + D.x) / 2) + nz * (hx.cy - (A.y + D.y) / 2) < 0) { nx = -nx; nz = -nz; }
+      off = ROAD / 2;
+    }
+    const q = [[A.x + nx * (off + ROAD), A.y + nz * (off + ROAD)], [D.x + nx * (off + ROAD), D.y + nz * (off + ROAD)],
+               [D.x + nx * (off - ROAD), D.y + nz * (off - ROAD)], [A.x + nx * (off - ROAD), A.y + nz * (off - ROAD)]]
+      .map(c => P(c[0], STREET_Y + 0.05, c[1]));
+    if (q.every(Boolean)) back.push(`<polygon points="${pts(q)}" fill="${lit([0, 1, 0], ROAD_RGB, .82)}"/>`);
+  });
+  GEO.verts.forEach(v => {                                          // fill the junctions
+    const q = Array.from({ length: 6 }, (_, k) => {
+      const a = k * Math.PI / 3;
+      return P(v.x + Math.cos(a) * ROAD * 1.15, STREET_Y + 0.1, v.y + Math.sin(a) * ROAD * 1.15);
+    });
+    if (q.every(Boolean)) back.push(`<polygon points="${pts(q)}" fill="${lit([0, 1, 0], ROAD_RGB, .82)}"/>`);
+  });
+  GEO.edges.forEach(e => {                                          // the broken white line
+    if (e.hexes.length === 1) return;
+    const A = GEO.verts[e.a], D = GEO.verts[e.b];
+    const p1 = P(A.x + (D.x - A.x) * 0.2, STREET_Y + 0.2, A.y + (D.y - A.y) * 0.2);
+    const p2 = P(A.x + (D.x - A.x) * 0.8, STREET_Y + 0.2, A.y + (D.y - A.y) * 0.8);
+    if (!p1 || !p2) return;
+    back.push(`<line x1="${n1(p1.x)}" y1="${n1(p1.y)}" x2="${n1(p2.x)}" y2="${n1(p2.y)}" ` +
+      `stroke="rgba(226,214,164,.45)" stroke-width="${n1(1.2 * p1.k)}" ` +
+      `stroke-dasharray="${n1(5 * p1.k)} ${n1(7 * p1.k)}" stroke-linecap="round"/>`);
+  });
+
   /* how deep each tile sits, so anything standing on one can be drawn after it */
   const tileD = GEO.hexes.map((h, i) => { const p = P(h.cx, TOP_Y[B.hexes[i].t], h.cy); return p ? p.d : -1; });
 
@@ -640,7 +781,7 @@ function boardSVG(st, o) {
     const e = GEO.edges[GEO.terminalEdges[i]], hi = e.hexes[0], h = GEO.hexes[hi], a = GEO.verts[e.a], b = GEO.verts[e.b];
     const mx = (a.x + b.x) / 2, mz = (a.y + b.y) / 2, dx = mx - h.cx, dz = mz - h.cy, len = Math.hypot(dx, dz);
     const hx = mx + dx / len * 35, hz = mz + dz / len * 35, top = TOP_Y[B.hexes[hi].t];
-    const p = P(hx, APRON_Y + 4, hz), pa = P(a.x, top, a.y), pb = P(b.x, top, b.y);
+    const p = P(hx, APRON_Y + 4, hz), pa = P(a.x, STREET_Y, a.y), pb = P(b.x, STREET_Y, b.y);
     if (!p || !pa || !pb) return;
     const col = type === 'any' ? 'var(--frame-line)' : `var(--${TERRAIN_OF[type]})`;
     const label = type === 'any' ? '3:1 terminal, any resource' : `2:1 ${type} terminal`;
@@ -657,19 +798,21 @@ function boardSVG(st, o) {
   GEO.hexes.forEach((h, i) => {
     if (tileD[i] < 0) return;
     const t = B.hexes[i], top = TOP_Y[t.t], g = [];
-    const vT = h.vs.map(v => P(GEO.verts[v].x, top, GEO.verts[v].y));
-    const vB = h.vs.map(v => P(GEO.verts[v].x, APRON_Y, GEO.verts[v].y));
+    const ix = v => h.cx + (GEO.verts[v].x - h.cx) * SHRINK;        // pulled back behind the kerb
+    const iz = v => h.cy + (GEO.verts[v].y - h.cy) * SHRINK;
+    const vT = h.vs.map(v => P(ix(v), top, iz(v)));
+    const vB = h.vs.map(v => P(ix(v), STREET_Y, iz(v)));
     if (!vT.every(Boolean) || !vB.every(Boolean)) return;
-    for (let k = 0; k < 6; k++) {                                   // the cut earth down to the water
-      const j = (k + 1) % 6, A = GEO.verts[h.vs[k]], D = GEO.verts[h.vs[j]];
-      const mx = (A.x + D.x) / 2 - h.cx, mz = (A.y + D.y) / 2 - h.cy, m = Math.hypot(mx, mz), n = [mx / m, 0, mz / m];
-      if (!faces(C, n, [(A.x + D.x) / 2, top / 2, (A.y + D.y) / 2])) continue;
-      const q = [vT[k], vT[j], vB[j], vB[k]], coast = GEO.edges[h.es[k]].hexes.length === 1;
-      g.push(!fast && ART && coast ? skin(defs, `c${i}-${k}`, q, 'wall_strata', shade(n))
+    for (let k = 0; k < 6; k++) {                                   // the retaining wall up from the pavement
+      const j = (k + 1) % 6, ax = ix(h.vs[k]), az = iz(h.vs[k]), dx = ix(h.vs[j]), dz = iz(h.vs[j]);
+      const mx = (ax + dx) / 2 - h.cx, mz = (az + dz) / 2 - h.cy, m = Math.hypot(mx, mz), n = [mx / m, 0, mz / m];
+      if (!faces(C, n, [(ax + dx) / 2, (top + STREET_Y) / 2, (az + dz) / 2])) continue;
+      const q = [vT[k], vT[j], vB[j], vB[k]];
+      g.push(!fast && ART && area(q) > 240 ? skin(defs, `c${i}-${k}`, q, 'wall_strata', shade(n) * 0.7)
         : `<polygon points="${pts(q)}" fill="${lit(n, SIDE_RGB[t.t], .56)}"/>`);
     }
     if (!fast && ART) {                                             // the painted tile, fitted to the tilted top
-      const w = S * R3, d = 2 * S;
+      const w = S * R3 * SHRINK, d = 2 * S * SHRINK;
       const a = P(h.cx - w / 2, top, h.cy - d / 2), b = P(h.cx + w / 2, top, h.cy - d / 2), c = P(h.cx - w / 2, top, h.cy + d / 2);
       if (a && b && c) {
         defs.push(`<clipPath id="k${i}"><polygon points="${pts(vT)}"/></clipPath>`);
@@ -678,9 +821,9 @@ function boardSVG(st, o) {
         // phone, where a block is a thumbnail, it is what tells the districts apart.
         g.push(`<polygon points="${pts(vT)}" style="fill:var(--${t.t});opacity:.10"/>`);
         g.push(`<polygon class="hexline" points="${pts(vT)}"/>`);
-        g.push(massing(P, C, h, t.t, top, defs, i, fast));
       }
     } else g.push(`<polygon class="hexline" points="${pts(vT)}" style="fill:${lit([0, 1, 0], TOP_RGB[t.t], .6)}"/>`);
+    g.push(massing(P, C, h, t.t, top, defs, i, fast));   // the model stands up even without the art
 
     const mid = P(h.cx, top, h.cy);
     if (mid && o.labels) g.push(`<text class="hlabel${ART || t.t === 'warehouse' || t.t === 'works' || t.t === 'tower' ? ' lt' : ''}" x="${n1(mid.x)}" y="${n1(mid.y - 24 * mid.k)}" style="font-size:${n1(12 * mid.k)}px">${(RESOURCE_OF[t.t] || 'deadzone').toUpperCase()}</text>`);
@@ -698,12 +841,12 @@ function boardSVG(st, o) {
   /* ---------- streets, operations, holdings, police ---------- */
   Object.keys(st.streets).forEach(id => {
     const e = GEO.edges[id], p = playerOf(st, st.streets[id]); if (!e || !p) return;
-    const s = street(P, C, e, `var(--p-${p.color})`, topOf(B, e.hexes));
+    const s = street(P, C, e, `var(--p-${p.color})`, STREET_Y);
     if (s) add(Math.min(...e.hexes.map(i => tileD[i])) - 1, s);
   });
   Object.keys(st.buildings).forEach(id => {
     const v = GEO.verts[id], bd = st.buildings[id], p = bd && playerOf(st, bd.pid); if (!v || !p) return;
-    const s = building(P, C, v, `var(--p-${p.color})`, topOf(B, v.hexes), bd.k === 'c');
+    const s = building(P, C, v, `var(--p-${p.color})`, STREET_Y, bd.k === 'c');
     if (s) add(Math.min(...v.hexes.map(i => tileD[i])) - 1, s);
   });
   const rh = GEO.hexes[B.police], rt = TOP_Y[B.hexes[B.police].t], off = B.hexes[B.police].n ? 27 : 0;
@@ -719,7 +862,7 @@ function boardSVG(st, o) {
      top, or the board would show one dot and the tap would find another. */
   const col = o.color ? `var(--p-${o.color})` : 'var(--accent)', spots = [];
   (o.legalV || []).forEach(id => {
-    const v = GEO.verts[id], p = P(v.x, topOf(B, v.hexes) + 16, v.y); if (!p) return;
+    const v = GEO.verts[id], p = P(v.x, STREET_Y + 16, v.y); if (!p) return;
     PROJ.v[id] = { x: p.x, y: p.y, k: p.k };
     const sel = o.sel && o.sel.kind === 'v' && o.sel.id === id, k = p.k;
     spots.push({ d: p.d, s: `<g class="spot${sel ? ' sel' : ''}" data-v="${id}" tabindex="0" role="button" aria-pressed="${!!sel}" aria-label="Operation spot beside ${esc(nearHexes(B, v.hexes))}">` +
@@ -728,7 +871,7 @@ function boardSVG(st, o) {
       `<circle class="dot" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1((sel ? 13 : 8.5) * k)}" stroke="${col}" stroke-width="${n1(4 * k)}"${sel ? ` style="fill:${col}"` : ''}/></g>` });
   });
   (o.legalE || []).forEach(id => {
-    const e = GEO.edges[id], a = GEO.verts[e.a], b = GEO.verts[e.b], y = topOf(B, e.hexes) + 12;
+    const e = GEO.edges[id], a = GEO.verts[e.a], b = GEO.verts[e.b], y = STREET_Y + 12;
     const p1 = P(a.x + (b.x - a.x) * .22, y, a.y + (b.y - a.y) * .22), p2 = P(a.x + (b.x - a.x) * .78, y, a.y + (b.y - a.y) * .78);
     if (!p1 || !p2) return;
     PROJ.e[id] = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2, k: (p1.k + p2.k) / 2 };
@@ -742,14 +885,15 @@ function boardSVG(st, o) {
   });
   spots.sort((a, b) => b.d - a.d).forEach(x => front.push(x.s));
   if (st.phase === 'place' && st.step === 'street' && st.lastV != null) {
-    const v = GEO.verts[st.lastV], p = P(v.x, topOf(B, v.hexes) + 16, v.y);
+    const v = GEO.verts[st.lastV], p = P(v.x, STREET_Y + 16, v.y);
     if (p) front.push(`<circle class="lastring" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(19 * p.k)}"/>`);
   }
 
   scene.sort((a, b) => b.d - a.d);
   const live = (o.legalV && o.legalV.length) || (o.legalE && o.legalE.length);
   return `<svg class="board" viewBox="${viewBox(C)}" role="${live ? 'group' : 'img'}" aria-label="The city board in three dimensions${live ? ', with spots you can pick' : ''}">` +
-    `<defs>${defs.join('')}</defs>${back.join('')}${scene.map(s => s.s).join('')}${front.join('')}</svg>`;
+    `<defs>${defs.join('')}</defs>${back.join('')}${scene.map(s => s.s).join('')}` +
+    `<g class="life">${lifeHTML(C, B)}</g>${front.join('')}</svg>`;
 }
 
 /* A street: a bar of colour lying along the edge, with its sides shaded. */
@@ -830,6 +974,7 @@ function drawBoard() {
   view.last = t;
   host.innerHTML = boardSVG(st, view.fast ? { ...view.opts, fast: true } : view.opts);
   view.cost = performance.now() - t;
+  runLife();                                                   // the layer was just replaced
   if (key) {                                                   // put focus back where it was
     const again = document.querySelector(key[0] === 'v' ? `[data-v="${key.slice(1)}"]` : `[data-e="${key.slice(1)}"]`);
     if (again && again.focus) again.focus({ preventScroll: true });
@@ -901,7 +1046,7 @@ function bindCamera(root) {
     if (!ev.target.closest || !ev.target.closest('svg.board')) return;
     ev.preventDefault();
     nudge(c => { c.dist *= Math.exp(ev.deltaY * 0.0013); }, true);
-    clearTimeout(view.wheelTimer); view.wheelTimer = setTimeout(operate, 180);
+    clearTimeout(view.wheelTimer); view.wheelTimer = setTimeout(camSettle, 180);
   }, { passive: false });
 }
 
@@ -935,6 +1080,7 @@ const CAM_KEYS = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowD
    panels around it or losing the focus ring. */
 function boardView(st, o) {
   view.opts = o || {};
+  setTimeout(runLife, 0);                       // this markup is not in the document yet
   return `<div class="board3d">${boardSVG(st, view.opts)}</div>${camBarHTML()}`;
 }
 
@@ -1497,6 +1643,9 @@ document.addEventListener('submit', ev => {
 });
 
 bindCamera(document);
+LIFE.still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopLife(); else runLife(); });
+
 (() => {                                                  // pick up where this screen left the camera
   const c = load('rtcity.cam');
   if (c && ['yaw', 'pitch', 'dist'].every(k => typeof c[k] === 'number' && isFinite(c[k]))) {
