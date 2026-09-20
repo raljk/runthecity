@@ -160,14 +160,20 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .hb .r{font-family:var(--body);font-weight:800;letter-spacing:.02em}
 .police{fill:#2a2f33;stroke:#0c0e0f;stroke-width:1.5}
 .pc{pointer-events:none}
-.life{pointer-events:none}
+.lf{pointer-events:none}
+.hexhit{fill:transparent;stroke:none;cursor:pointer}
+.flag{pointer-events:none}
+.flag text{font-family:var(--display);font-weight:800}
+.flagup{animation:flagup .22s cubic-bezier(.2,.9,.3,1.25) both}
+@keyframes flagup{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.flagup{animation:none}}
 .lastring{fill:none;stroke:#fff;stroke-width:2.5;stroke-dasharray:4 4}
 .spot,.espot{cursor:pointer}
 .spot .hit,.espot .hit{fill:transparent;stroke:transparent}
-.spot .casing{fill:var(--piece-line);opacity:.55}
+.spot .casing{fill:var(--piece-line);opacity:.3}
 .espot .ecasing{stroke:var(--piece-line);stroke-linecap:round;opacity:.6}
 .espot.sel .ecasing{display:none}
-.spot .dot{fill:#fff;transform-box:fill-box;transform-origin:center;animation:pulse 1.5s ease-in-out infinite}
+.spot .dot{fill:rgba(255,255,255,.78);transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-in-out infinite}
 .espot .dash{stroke:#fff;stroke-linecap:round;animation:fade 1.5s ease-in-out infinite}
 .spot.sel .dot{animation:none;stroke:var(--piece-line)}
 .espot.sel .dash{animation:none}
@@ -182,7 +188,7 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .camctl button.wide{width:auto;padding:0 14px;font-size:.82rem;font-weight:700}
 .camctl button:hover{border-color:var(--accent);color:var(--accent)}
 .camctl svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-@keyframes pulse{0%,100%{transform:scale(.8);opacity:.75}50%{transform:scale(1.15);opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(.85);opacity:.45}50%{transform:scale(1.06);opacity:.78}}
 @keyframes fade{0%,100%{opacity:.55}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){.spot .dot,.espot .dash{animation:none}}
 </style>
@@ -589,6 +595,30 @@ function massing(P, C, hex, kind, base, defs, i, fast) {
   return parts.sort((a, b) => b.d - a.d).map(p => p.s).join('');
 }
 
+/* A name on a pole, raised out of the block under the pointer. Nothing is
+   labelled until you ask, which keeps nineteen names off the board. */
+function flagHTML(C, B, i) {
+  if (i == null || !GEO.hexes[i] || !B.hexes[i]) return '';
+  const h = GEO.hexes[i], t = B.hexes[i], top = TOP_Y[t.t];
+  const foot = project(h.cx, top + 2, h.cy, C), tip = project(h.cx, top + 40, h.cy, C);
+  if (!foot || !tip) return '';
+  const k = tip.k;
+  const name = (RESOURCE_OF[t.t] || 'dead zone').toUpperCase() + (t.n ? '  ' + t.n : '');
+  const w = (name.length * 7.6 + 20) * k, hh = 20 * k;
+  return '<g class="flagup">' +
+    `<line x1="${n1(foot.x)}" y1="${n1(foot.y)}" x2="${n1(tip.x)}" y2="${n1(tip.y)}" stroke="rgba(226,236,247,.45)" stroke-width="${n1(1.3 * k)}"/>` +
+    `<circle cx="${n1(foot.x)}" cy="${n1(foot.y)}" r="${n1(1.8 * k)}" fill="rgba(226,236,247,.5)"/>` +
+    `<rect x="${n1(tip.x - w / 2)}" y="${n1(tip.y - hh)}" width="${n1(w)}" height="${n1(hh)}" rx="${n1(5 * k)}" ` +
+      `fill="rgba(9,13,20,.9)" stroke="var(--accent)" stroke-width="${n1(1.2 * k)}"/>` +
+    `<text x="${n1(tip.x)}" y="${n1(tip.y - hh / 2 + 4.4 * k)}" text-anchor="middle" ` +
+      `style="font-size:${n1(11.5 * k)}px;letter-spacing:${n1(0.8 * k)}px" fill="#eef3fb">${name}</text>` +
+    '</g>';
+}
+function drawFlag() {
+  const host = document.querySelector('svg.board .flag');
+  if (host && G.state) host.innerHTML = flagHTML(basis(), G.state.board, ui.hex);
+}
+
 /* =====================================================================
    Traffic, and the people on the pavement.
 
@@ -599,70 +629,156 @@ function massing(P, C, hex, kind, base, defs, i, fast) {
    elements underneath. Cars pick a new street at each corner, so the
    traffic never loops and never has to be choreographed.
    ===================================================================== */
-const LIFE = { cars: [], feet: [], raf: 0, last: 0, still: false };
-const HEADLIGHT = ['#fff3d4', '#ffe9b8', '#e8f4ff'], TAILLIGHT = ['#ff4a3d', '#ff6a4a'];
+const LIFE = { cars: [], feet: [], raf: 0, last: 0, still: false, live: new Set(), slots: [] };
+const AMBIENT = 3;                       // a few cars about at any hour, even on a dead board
+
+/* A street is busy when somebody has built on one of its corners. A major
+   holding pulls trade from one street further out than an operation does. */
+function liveEdges(st) {
+  const set = new Set();
+  Object.keys(st.buildings).forEach(v => {
+    const vert = GEO.verts[v];
+    if (!vert) return;
+    vert.edges.forEach(e => set.add(e));
+    if (st.buildings[v].k === 'c') vert.adj.forEach(n => GEO.verts[n].edges.forEach(e => set.add(e)));
+  });
+  return set;
+}
+/* Park whatever the city cannot justify, and put the rest on a street that is
+   actually earning. This is what makes the board wake up as people build. */
+function retune() {
+  const live = LIFE.live, pool = live.size ? Array.from(live) : null;
+  const put = (list, want, ambient) => list.forEach((o, i) => {
+    const wanted = i < want;
+    if (wanted && o.parked) {
+      if (pool && i >= ambient) {
+        o.e = pool[(Math.random() * pool.length) | 0];
+        o.from = Math.random() < 0.5 ? GEO.edges[o.e].a : GEO.edges[o.e].b;
+        o.t = Math.random();
+      }
+      o.parked = false;
+    } else if (!wanted) o.parked = true;
+  });
+  put(LIFE.cars, Math.min(LIFE.cars.length, AMBIENT + Math.round(live.size * 1.05)), AMBIENT);
+  put(LIFE.feet, Math.min(LIFE.feet.length, 1 + Math.round(live.size * 0.6)), 1);
+}
+const HEADLIGHT = ['#fff6dd', '#ffeec6', '#eef7ff'], TAILLIGHT = ['#ff3b2e', '#ff5a3a'];
+const CAR_BODY = [[38, 44, 58], [52, 40, 46], [34, 52, 60], [58, 54, 48], [44, 38, 62]];
+const COAT = [[74, 66, 84], [88, 74, 66], [62, 72, 88], [92, 84, 72]];
 
 function makeLife() {
   if (LIFE.cars.length) return;
   const r = seeded(0x51F2C17);
   const pick = () => Math.floor(r() * GEO.edges.length);
-  for (let i = 0; i < 64; i++) {
+  for (let i = 0; i < 52; i++) {
     const e = pick(), red = r() < 0.42;
     LIFE.cars.push({ e, from: r() < 0.5 ? GEO.edges[e].a : GEO.edges[e].b, t: r(),
-      v: 0.17 + r() * 0.16, col: red ? TAILLIGHT[i % 2] : HEADLIGHT[i % 3], red, lane: red ? -1 : 1 });
+      v: 0.17 + r() * 0.16, body: CAR_BODY[i % CAR_BODY.length],
+      head: HEADLIGHT[i % 3], tail: TAILLIGHT[i % 2], lane: red ? -1 : 1 });
   }
-  for (let i = 0; i < 46; i++) {
+  for (let i = 0; i < 30; i++) {
     const e = pick();
     LIFE.feet.push({ e, from: r() < 0.5 ? GEO.edges[e].a : GEO.edges[e].b, t: r(),
-      v: 0.035 + r() * 0.03, side: r() < 0.5 ? 1 : -1 });
+      v: 0.035 + r() * 0.03, side: r() < 0.5 ? 1 : -1,
+      way: r() < 0.5 ? 1 : -1, coat: COAT[i % COAT.length] });
   }
 }
 /* At the end of a street, take any street but the one just travelled. */
-function advance(o, dt) {
+function advance(o, dt, ambient) {
   o.t += o.v * dt;
   while (o.t > 1) {
     const e = GEO.edges[o.e], to = e.a === o.from ? e.b : e.a;
-    const outs = GEO.verts[to].edges.filter(x => x !== o.e);
+    let outs = GEO.verts[to].edges.filter(x => x !== o.e);
+    if (!ambient && LIFE.live.size) {
+      const busy = outs.filter(x => LIFE.live.has(x));
+      if (busy.length) outs = busy;
+    }
     o.e = outs.length ? outs[(Math.random() * outs.length) | 0] : o.e;
     o.from = to; o.t -= 1;
   }
 }
-function lifeHTML(C, B) {
+/* A box on the road, turned to face the way it is travelling. Four upright
+   sides and a roof, back-face culled like everything else. The front and back
+   faces are not painted body colour but light colour, which is what gives a
+   car headlights and tail lights without a single extra element. */
+function roadBox(C, cx, cz, y, ux, uz, len, wide, tall, body, front, rear) {
+  const nx = -uz, nz = ux;
+  const c = [[cx + ux * len / 2 + nx * wide / 2, cz + uz * len / 2 + nz * wide / 2],
+             [cx + ux * len / 2 - nx * wide / 2, cz + uz * len / 2 - nz * wide / 2],
+             [cx - ux * len / 2 - nx * wide / 2, cz - uz * len / 2 - nz * wide / 2],
+             [cx - ux * len / 2 + nx * wide / 2, cz - uz * len / 2 + nz * wide / 2]];
+  const lo = c.map(q => project(q[0], y, q[1], C));
+  const hi = c.map(q => project(q[0], y + tall, q[1], C));
+  if (lo.some(q => !q) || hi.some(q => !q)) return '';
+  const N = [[ux, 0, uz], [-nx, 0, -nz], [-ux, 0, -uz], [nx, 0, nz]];   // front, right, back, left
+  const paint = [front, null, rear, null];
+  let out = '';
+  for (let k = 0; k < 4; k++) {
+    const j = (k + 1) % 4;
+    if (!faces(C, N[k], [(c[k][0] + c[j][0]) / 2, y + tall / 2, (c[k][1] + c[j][1]) / 2])) continue;
+    const col = paint[k] || lit(N[k], body, .42);
+    out += `<polygon points="${pts([hi[k], hi[j], lo[j], lo[k]])}" fill="${col}"/>`;
+  }
+  return out + `<polygon points="${pts(hi)}" fill="${lit([0, 1, 0], body, .62)}"/>`;
+}
+
+/* How many blocks sit in front of something at this depth. That is the slot it
+   belongs in, which is what lets a building hide the car behind it. */
+function slotFor(d) {
+  let n = 0;
+  while (n < LIFE.slots.length && LIFE.slots[n] > d) n++;
+  return n;
+}
+function lifeParts(C, B) {
   const out = [];
+  const put = (d, html) => { const n = slotFor(d); out[n] = (out[n] || '') + html; };
   LIFE.cars.forEach(c => {
+    if (c.parked) return;
     const e = GEO.edges[c.e], A = GEO.verts[c.from], D = GEO.verts[e.a === c.from ? e.b : e.a];
-    const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1;
+    const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1, ux = dx / L, uz = dz / L;
     // two lanes: which side you drive on follows which way you are going
-    const ox = -dz / L * 3.4 * c.lane, oz = dx / L * 3.4 * c.lane;
-    const y = STREET_Y + 0.6, back = Math.max(0, c.t - 0.17);
-    const head = project(A.x + dx * c.t + ox, y, A.y + dz * c.t + oz, C);
-    const tail = project(A.x + dx * back + ox, y, A.y + dz * back + oz, C);
-    if (!head || !tail) return;
-    const L2 = `x1="${n1(tail.x)}" y1="${n1(tail.y)}" x2="${n1(head.x)}" y2="${n1(head.y)}" stroke-linecap="round"`;
-    const w = (c.red ? 2.6 : 3.4) * head.k;
-    out.push(`<line ${L2} stroke="${c.col}" stroke-width="${n1(w * 2.8)}" opacity=".16"/>` +
-      `<line ${L2} stroke="${c.col}" stroke-width="${n1(w)}" opacity="${c.red ? '.85' : '1'}"/>`);
+    const ox = -uz * 3.4 * c.lane, oz = ux * 3.4 * c.lane;
+    const cx = A.x + dx * c.t + ox, cz = A.y + dz * c.t + oz;
+    const body = roadBox(C, cx, cz, STREET_Y + 0.15, ux, uz, 7, 3.2, 2.6, c.body, c.head, c.tail);
+    if (!body) return;
+    // the pool of light the headlights throw on the road ahead
+    const g1 = project(cx + ux * 4, STREET_Y + 0.05, cz + uz * 4, C);
+    const g2 = project(cx + ux * 11, STREET_Y + 0.05, cz + uz * 11, C);
+    const beam = g1 && g2
+      ? `<line x1="${n1(g1.x)}" y1="${n1(g1.y)}" x2="${n1(g2.x)}" y2="${n1(g2.y)}" stroke="${c.head}" ` +
+        `stroke-width="${n1(3.4 * g1.k)}" stroke-linecap="round" opacity=".13"/>` : '';
+    const at = project(cx, STREET_Y + 1.3, cz, C);
+    put(at ? at.d : 0, beam + body);
   });
   LIFE.feet.forEach(f => {
+    if (f.parked) return;
     const e = GEO.edges[f.e], A = GEO.verts[f.from], D = GEO.verts[e.a === f.from ? e.b : e.a];
     const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1;
     const nx = -dz / L * (INSET - 1.5) * f.side, nz = dx / L * (INSET - 1.5) * f.side;  // onto the pavement
-    const p = project(A.x + dx * f.t + nx, STREET_Y + 0.5, A.y + dz * f.t + nz, C);
-    if (!p) return;
-    out.push(`<circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(1.9 * p.k)}" fill="#ffdcab" opacity=".75"/>`);
+    const px = A.x + dx * f.t + nx, pz = A.y + dz * f.t + nz;
+    const b = roadBox(C, px, pz, STREET_Y + 0.15, dx / L * f.way, dz / L * f.way, 1.5, 1.5, 3.8, f.coat, null, null);
+    const at = project(px, STREET_Y + 1.9, pz, C);
+    if (b) put(at ? at.d : 0, b);
   });
-  return out.join('');
+  return out;
 }
 /* The clock. Held still for anyone who has asked for less motion, and
    parked whenever the tab is hidden so a phone in a pocket stays asleep. */
 function tickLife(now) {
   LIFE.raf = 0;
-  const host = document.querySelector('svg.board .life');
-  if (!host || !G.state) return;
+  const slots = document.querySelectorAll('svg.board .lf');
+  if (!slots.length || !G.state) return;
   const dt = LIFE.last ? Math.min(0.1, (now - LIFE.last) / 1000) : 0;
   LIFE.last = now;
-  if (dt) { LIFE.cars.forEach(c => advance(c, dt)); LIFE.feet.forEach(f => advance(f, dt)); }
-  host.innerHTML = lifeHTML(basis(), G.state.board);
+  if (dt) {
+    LIFE.cars.forEach((c, i) => { if (!c.parked) advance(c, dt, i < AMBIENT); });
+    LIFE.feet.forEach((f, i) => { if (!f.parked) advance(f, dt, i < 1); });
+  }
+  const parts = lifeParts(basis(), G.state.board);
+  slots.forEach(g => {                                   // only touch a slot that changed
+    const html = parts[+g.dataset.lf] || '';
+    if (g.__h !== html) { g.__h = html; g.innerHTML = html; }
+  });
   runLife();
 }
 function runLife() {
@@ -684,7 +800,7 @@ function boardSVG(st, o) {
   o = o || {};
   const B = st.board, C = basis(), fast = !!o.fast;
   makeLife();
-  const defs = [], back = [], scene = [], front = [];
+  const defs = [], back = [], scene = [], front = [], hits = [];
   const P = (x, y, z) => project(x, y, z, C);
   PROJ.v = Object.create(null); PROJ.e = Object.create(null);
   const add = (d, s) => scene.push({ d, s });
@@ -825,8 +941,7 @@ function boardSVG(st, o) {
     } else g.push(`<polygon class="hexline" points="${pts(vT)}" style="fill:${lit([0, 1, 0], TOP_RGB[t.t], .6)}"/>`);
     g.push(massing(P, C, h, t.t, top, defs, i, fast));   // the model stands up even without the art
 
-    const mid = P(h.cx, top, h.cy);
-    if (mid && o.labels) g.push(`<text class="hlabel${ART || t.t === 'warehouse' || t.t === 'works' || t.t === 'tower' ? ' lt' : ''}" x="${n1(mid.x)}" y="${n1(mid.y - 24 * mid.k)}" style="font-size:${n1(12 * mid.k)}px">${(RESOURCE_OF[t.t] || 'deadzone').toUpperCase()}</text>`);
+    const mid = P(h.cx, top, h.cy);   // the block's name is raised on demand, not painted on
     if (t.n && mid) {                                               // the number disc, lying flat but read upright
       const k = mid.k, r = 19 * k, p = PIPS[t.n];
       let dots = '';
@@ -867,8 +982,8 @@ function boardSVG(st, o) {
     const sel = o.sel && o.sel.kind === 'v' && o.sel.id === id, k = p.k;
     spots.push({ d: p.d, s: `<g class="spot${sel ? ' sel' : ''}" data-v="${id}" tabindex="0" role="button" aria-pressed="${!!sel}" aria-label="Operation spot beside ${esc(nearHexes(B, v.hexes))}">` +
       `<circle class="hit" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(30 * k)}"/>` +
-      `<circle class="casing" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${sel ? 0 : n1(12.5 * k)}"/>` +
-      `<circle class="dot" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1((sel ? 13 : 8.5) * k)}" stroke="${col}" stroke-width="${n1(4 * k)}"${sel ? ` style="fill:${col}"` : ''}/></g>` });
+      `<circle class="casing" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${sel ? 0 : n1(8.5 * k)}"/>` +
+      `<circle class="dot" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1((sel ? 12 : 5.6) * k)}" stroke="${col}" stroke-width="${n1((sel ? 3.4 : 2.2) * k)}"${sel ? ` style="fill:${col}"` : ''}/></g>` });
   });
   (o.legalE || []).forEach(id => {
     const e = GEO.edges[id], a = GEO.verts[e.a], b = GEO.verts[e.b], y = STREET_Y + 12;
@@ -889,11 +1004,26 @@ function boardSVG(st, o) {
     if (p) front.push(`<circle class="lastring" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(19 * p.k)}"/>`);
   }
 
+  /* A transparent lid on each block, so the pointer knows which one it is over.
+     It goes in before the spot markers, which stay on top and stay pickable. */
+  GEO.hexes.forEach((h, i) => {
+    if (tileD[i] < 0) return;
+    const q = h.vs.map(v => P(h.cx + (GEO.verts[v].x - h.cx) * SHRINK, TOP_Y[B.hexes[i].t],
+                              h.cy + (GEO.verts[v].y - h.cy) * SHRINK, C));
+    if (q.every(Boolean)) hits.push(`<polygon class="hexhit" data-hex="${i}" points="${pts(q)}"/>`);
+  });
+
   scene.sort((a, b) => b.d - a.d);
+  LIFE.slots = scene.map(x => x.d);
+  LIFE.live = liveEdges(st);
+  retune();
+  const parts = lifeParts(C, B);
+  const body = `<g class="lf" data-lf="0">${parts[0] || ''}</g>` +
+    scene.map((x, n) => x.s + `<g class="lf" data-lf="${n + 1}">${parts[n + 1] || ''}</g>`).join('');
   const live = (o.legalV && o.legalV.length) || (o.legalE && o.legalE.length);
   return `<svg class="board" viewBox="${viewBox(C)}" role="${live ? 'group' : 'img'}" aria-label="The city board in three dimensions${live ? ', with spots you can pick' : ''}">` +
-    `<defs>${defs.join('')}</defs>${back.join('')}${scene.map(s => s.s).join('')}` +
-    `<g class="life">${lifeHTML(C, B)}</g>${front.join('')}</svg>`;
+    `<defs>${defs.join('')}</defs>${back.join('')}${body}${hits.join('')}${front.join('')}` +
+    `<g class="flag">${flagHTML(C, B, ui.hex)}</g></svg>`;
 }
 
 /* A street: a bar of colour lying along the edge, with its sides shaded. */
@@ -1023,6 +1153,15 @@ function bindCamera(root) {
     if (d.moved >= SLOP) { view.swallow = true; setTimeout(() => { view.swallow = false; }, 0); store('rtcity.cam', { yaw: CAM.yaw, pitch: CAM.pitch, dist: CAM.dist }); }
     camSettle();
   };
+  /* Hovering raises the flag on a desktop; on a phone a tap that did not land
+     on a spot does the same, and tapping the same block again puts it down. */
+  root.addEventListener('pointermove', ev => {
+    if (view.drag || ev.pointerType !== 'mouse') return;
+    const g = ev.target.closest && ev.target.closest('[data-hex]');
+    const i = g ? +g.dataset.hex : null;
+    if (i !== ui.hex) { ui.hex = i; drawFlag(); }
+  });
+  root.addEventListener('pointerleave', () => { if (ui.hex !== null) { ui.hex = null; drawFlag(); } });
   root.addEventListener('pointerup', stop);
   root.addEventListener('pointercancel', stop);
 
@@ -1120,7 +1259,7 @@ const joinRoom = (params.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, 
 const WATCH = !!joinRoom && params.has('watch'); // read-only big-board view of someone else's table
 const ROOM_LETTERS = 'ABCDEFGHJKMNPQRSTUVWXYZ';
 const G = { client: null, online: false, state: null, hist: [], b: 0 };
-const ui = { sel: null, pending: false, toast: null, toastTimer: 0 };
+const ui = { sel: null, hex: null, pending: false, toast: null, toastTimer: 0 };
 
 function toast(msg) {
   clearTimeout(ui.toastTimer); let t = $('#toast');
@@ -1594,6 +1733,13 @@ function pickSpot(target, ev) {
 }
 document.addEventListener('click', ev => {
   if (pickSpot(ev.target, ev)) return;
+  const hex = ev.target.closest && ev.target.closest('[data-hex]');
+  if (hex || ui.hex !== null) {
+    const i = hex ? +hex.dataset.hex : null;
+    ui.hex = (i !== null && i === ui.hex) ? null : i;
+    drawFlag();
+    if (hex) return;
+  }
   const hb = ev.target.closest('[data-h]'), pb = ev.target.closest('[data-p]'), cb = ev.target.closest('[data-c]');
   if (cb) { if (cb.dataset.c === 'watch') copyText(watchURL(), 'Board link'); else copyText(joinURL(), 'Phone link'); return; }
   if (ev.target.closest('[data-l=host]')) { bootHost(); return; }
