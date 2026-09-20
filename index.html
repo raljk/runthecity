@@ -149,15 +149,15 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .hexline{fill:none;stroke:rgba(196,214,244,.52);stroke-width:2.5;stroke-linejoin:round}
 .hlabel{font-family:var(--body);font-weight:800;letter-spacing:.1em;text-anchor:middle;fill:#14110a}
 .hlabel.lt{fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.45);stroke-width:2.2px}
-.tok circle{fill:var(--token);stroke:rgba(0,0,0,.35);stroke-width:1.5}
-.tok text{font-family:var(--display);font-weight:800;text-anchor:middle;fill:var(--token-ink)}
-.tok .pip{fill:var(--token-ink);stroke:none}
-.tok.red text{fill:var(--token-red)}.tok.red .pip{fill:var(--token-red)}
-.pier{stroke:var(--frame);stroke-linecap:round}
-.hb circle{fill:var(--token)}
-.hb ellipse{stroke:none}
-.hb text{font-family:var(--display);font-weight:800;text-anchor:middle;fill:var(--token-ink)}
-.hb .r{font-family:var(--body);font-weight:800;letter-spacing:.02em}
+.sign rect,.hb rect{fill:rgba(10,14,22,.82)}
+.sign line{stroke:rgba(214,228,246,.26)}
+.sign rect{stroke:rgba(214,228,246,.34)}
+.sign text,.hb text{font-family:var(--display);font-weight:700;text-anchor:middle;fill:#dfe8f5}
+.sign .pip{fill:rgba(223,232,245,.5);stroke:none}
+.sign.red rect{stroke:var(--token-red);fill:rgba(30,8,12,.84)}
+.sign.red text{fill:#ff6a72}.sign.red .pip{fill:rgba(255,106,114,.66)}
+.pier{stroke:rgba(150,166,196,.5);stroke-linecap:round}
+.hb .r{font-family:var(--body);font-weight:800;letter-spacing:.06em}
 .police{pointer-events:none}
 .police polygon{stroke:rgba(6,8,14,.45);stroke-width:.6;stroke-linejoin:round}
 .pc{pointer-events:none}
@@ -937,12 +937,13 @@ function boardSVG(st, o) {
     const col = type === 'any' ? 'var(--frame-line)' : `var(--${TERRAIN_OF[type]})`;
     const label = type === 'any' ? '3:1 terminal, any resource' : `2:1 ${type} terminal`;
     add(p.d, `<g class="hb"><title>${label}</title>` +
-      `<line class="pier" x1="${n1(p.x)}" y1="${n1(p.y)}" x2="${n1(pa.x)}" y2="${n1(pa.y)}" stroke-width="${n1(5 * p.k)}"/>` +
-      `<line class="pier" x1="${n1(p.x)}" y1="${n1(p.y)}" x2="${n1(pb.x)}" y2="${n1(pb.y)}" stroke-width="${n1(5 * p.k)}"/>` +
-      `<ellipse cx="${n1(p.x)}" cy="${n1(p.y + 2.5 * p.k)}" rx="${n1(19 * p.k)}" ry="${n1(19 * p.k)}" fill="rgba(0,0,0,.25)"/>` +
-      `<circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(19 * p.k)}" stroke="${col}" stroke-width="${n1(5 * p.k)}"/>` +
-      `<text x="${n1(p.x)}" y="${n1(p.y + (type === 'any' ? 4.5 : .5) * p.k)}" style="font-size:${n1(13 * p.k)}px">${type === 'any' ? '3:1' : '2:1'}</text>` +
-      (type === 'any' ? '' : `<text class="r" x="${n1(p.x)}" y="${n1(p.y + 10.5 * p.k)}" style="font-size:${n1(8.5 * p.k)}px">${type.toUpperCase()}</text>`) + '</g>');
+      `<line class="pier" x1="${n1(p.x)}" y1="${n1(p.y)}" x2="${n1(pa.x)}" y2="${n1(pa.y)}" stroke-width="${n1(3.4 * p.k)}"/>` +
+      `<line class="pier" x1="${n1(p.x)}" y1="${n1(p.y)}" x2="${n1(pb.x)}" y2="${n1(pb.y)}" stroke-width="${n1(3.4 * p.k)}"/>` +
+      `<rect x="${n1(p.x - (type === 'any' ? 12 : 20) * p.k)}" y="${n1(p.y - (type === 'any' ? 8.5 : 10.5) * p.k)}" ` +
+        `width="${n1((type === 'any' ? 24 : 40) * p.k)}" height="${n1((type === 'any' ? 17 : 21) * p.k)}" ` +
+        `rx="${n1(3.4 * p.k)}" style="stroke:${col}" stroke-width="${n1(1.3 * p.k)}"/>` +
+      `<text x="${n1(p.x)}" y="${n1(p.y + (type === 'any' ? 4 : -0.6) * p.k)}" style="font-size:${n1(11 * p.k)}px">${type === 'any' ? '3:1' : '2:1'}</text>` +
+      (type === 'any' ? '' : `<text class="r" x="${n1(p.x)}" y="${n1(p.y + 7.6 * p.k)}" style="font-size:${n1(7 * p.k)}px;fill:${col}">${type.toUpperCase()}</text>`) + '</g>');
   });
 
   /* ---------- the nineteen city blocks ---------- */
@@ -977,13 +978,19 @@ function boardSVG(st, o) {
     g.push(massing(P, C, h, t.t, top, defs, i, fast));   // the model stands up even without the art
 
     const mid = P(h.cx, top, h.cy);   // the block's name is raised on demand, not painted on
-    if (t.n && mid) {                                               // the number disc, lying flat but read upright
-      const k = mid.k, r = 19 * k, p = PIPS[t.n];
+    // The number as a small lit sign on a post, the way a block would be marked
+    // in this city, rather than a bakelite disc borrowed from another game.
+    const sign = P(h.cx, top + 13, h.cy);
+    if (t.n && mid && sign) {
+      const k = sign.k, red = t.n === 6 || t.n === 8, p = PIPS[t.n];
+      const w = (t.n > 9 ? 25 : 20) * k, hh = 19 * k;
       let dots = '';
-      for (let q = 0; q < p; q++) dots += `<circle class="pip" cx="${n1(mid.x + (q - (p - 1) / 2) * 5 * k)}" cy="${n1(mid.y + 11.5 * k)}" r="${n1(1.7 * k)}"/>`;
-      g.push(`<g class="tok${t.n === 6 || t.n === 8 ? ' red' : ''}"><ellipse cx="${n1(mid.x)}" cy="${n1(mid.y + 3 * k)}" rx="${n1(r)}" ry="${n1(r)}" fill="rgba(0,0,0,.3)" stroke="none"/>` +
-        `<circle cx="${n1(mid.x)}" cy="${n1(mid.y)}" r="${n1(r)}"/>` +
-        `<text x="${n1(mid.x)}" y="${n1(mid.y + 4.5 * k)}" style="font-size:${n1(20 * k)}px">${t.n}</text>${dots}</g>`);
+      for (let q = 0; q < p; q++)
+        dots += `<circle class="pip" cx="${n1(sign.x + (q - (p - 1) / 2) * 3.3 * k)}" cy="${n1(sign.y + 5.4 * k)}" r="${n1(1.05 * k)}"/>`;
+      g.push(`<g class="sign${red ? ' red' : ''}">` +
+        `<line x1="${n1(mid.x)}" y1="${n1(mid.y)}" x2="${n1(sign.x)}" y2="${n1(sign.y + hh / 2)}" stroke-width="${n1(1.1 * k)}"/>` +
+        `<rect x="${n1(sign.x - w / 2)}" y="${n1(sign.y - hh / 2)}" width="${n1(w)}" height="${n1(hh)}" rx="${n1(3.2 * k)}" stroke-width="${n1(1.1 * k)}"/>` +
+        `<text x="${n1(sign.x)}" y="${n1(sign.y + 1.2 * k)}" style="font-size:${n1(12.5 * k)}px">${t.n}</text>${dots}</g>`);
     }
     add(tileD[i], g.join(''));
   });
