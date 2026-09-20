@@ -1009,7 +1009,7 @@ function stopLife() { if (LIFE.raf) cancelAnimationFrame(LIFE.raf); LIFE.raf = 0
 
 /* Everything the mouse can hit, remembered in screen units so that a tap
    near a spot still finds it once the board is tilted. */
-const PROJ = { v: Object.create(null), e: Object.create(null) };
+const PROJ = { v: Object.create(null), e: Object.create(null), h: Object.create(null) };
 
 /* =====================================================================
    One frame. Builds the tray, then a list of things standing on it, sorts
@@ -1022,7 +1022,7 @@ function boardSVG(st, o) {
   makeLife();
   const defs = [], back = [], scene = [], front = [], hits = [];
   const P = (x, y, z) => project(x, y, z, C);
-  PROJ.v = Object.create(null); PROJ.e = Object.create(null);
+  PROJ.v = Object.create(null); PROJ.e = Object.create(null); PROJ.h = Object.create(null);
   const add = (d, s) => scene.push({ d, s });
 
   /* ---------- the tray the island sits in ---------- */
@@ -1228,6 +1228,7 @@ function boardSVG(st, o) {
      that, and it is the shape the finger is actually aiming at. */
   (o.legalH || []).forEach(i => {
     const h = GEO.hexes[i], p = P(h.cx, TOP_Y[B.hexes[i].t] + 30, h.cy); if (!p) return;
+    PROJ.h[i] = { x: p.x, y: p.y, k: p.k };
     const sel = o.sel && o.sel.kind === 'h' && o.sel.id === i;
     front.push(`<g class="pc"><circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1((sel ? 17 : 11) * p.k)}" ` +
       `fill="${sel ? col : 'rgba(8,11,18,.55)'}" stroke="${col}" stroke-width="${n1((sel ? 4 : 2.6) * p.k)}"/></g>`);
@@ -1923,7 +1924,7 @@ async function connectHost() {
    PLAYER (phone)
    ===================================================================== */
 const PID = (() => { let id = load('rtcity.pid'); if (typeof id !== 'string' || !/^[a-z0-9]{8}$/.test(id)) { id = makeCode(8, 'abcdefghijkmnpqrstuvwxyz23456789'); store('rtcity.pid', id); } return id; })();
-const P = { base: TOPIC_ROOT + joinRoom, hostUp: null, waited: false, waitTimer: 0, error: '', screen: '', name: load('rtcity.name') || '', color: null, turnKey: null, stepKey: null };
+const P = { base: TOPIC_ROOT + joinRoom, hostUp: null, waited: false, waitTimer: 0, error: '', screen: '', name: load('rtcity.name') || '', color: null, turnKey: null, stepKey: null, scrolled: null };
 
 // The state topic is on a public relay, so a phone treats it as untrusted: every field that is drawn
 // must be one of the known values. Anything else is dropped before it can reach the page.
@@ -2097,6 +2098,18 @@ function turnHTML(st, me) {
     + barHTML(`<button class="btn big" data-p="endturn" ${ui.pending ? 'disabled' : ''}>${ui.pending ? 'Ending…' : anyMove(st, me) ? 'End my turn' : 'Nothing to do, end my turn'}</button>`);
 }
 
+/* When the board is the control rather than the picture, scroll it into view.
+   The card above it can be taller than a phone screen, so a player was being
+   asked to tap something that was not on screen yet. Once per step, never
+   while they are already working, so it cannot fight their own scrolling. */
+function boardIntoView(key) {
+  if (P.scrolled === key) return;
+  P.scrolled = key;
+  setTimeout(() => {
+    const b = $('.phone .boardbox');
+    if (b && b.scrollIntoView) { try { b.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { b.scrollIntoView(false); } }
+  }, 80);
+}
 function renderPlayer() {
   const st = G.state, screen = playerScreen(), me = st && playerOf(st, PID);
   if (!$('#p-main')) {
@@ -2157,6 +2170,11 @@ function renderPlayer() {
     h = turnHTML(st, me);
   }
   setHTML('#p-main', h);
+  // the steps whose answer is a tap on the board
+  const st2 = G.state;
+  if (st2 && me && activePid(st2) === PID && (screen === 'place' || (screen === 'turn' && st2.step === 'police'))) {
+    boardIntoView([screen, st2.step, st2.placeIdx, st2.turnIdx, st2.turnNo].join('|'));
+  } else if (P.scrolled && !(st2 && st2.step === 'police')) P.scrolled = null;
 }
 
 async function bootPlayer() {
@@ -2208,6 +2226,22 @@ function nearestSpot(ev) {
   look(PROJ.v, 'data-v'); look(PROJ.e, 'data-e');
   return best;
 }
+/* Blocks are picked by proximity too. Asking for an exact hit on the block's
+   lid looked fine on a table screen and failed on a phone: the board sits below
+   a tall card, so its lower blocks were off the bottom of the page or behind the
+   sticky button, and a tap on them reached nothing at all. The nearest block to
+   the finger is always pickable, wherever it is on screen. */
+function nearestHex(ev) {
+  const svg = ev && ev.target.closest && ev.target.closest('svg.board'); if (!svg || !svg.getScreenCTM) return null;
+  const m = svg.getScreenCTM(); if (!m) return null;
+  const pt = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
+  let best = null, bestD = Infinity;
+  Object.keys(PROJ.h).forEach(id => {
+    const s = PROJ.h[id], d = Math.hypot(pt.x - s.x, pt.y - s.y);
+    if (d < 70 * s.k && d < bestD) { bestD = d; best = +id; }
+  });
+  return best;
+}
 function pickSpot(target, ev) {
   if (view.swallow) return false;                       // that gesture was moving the camera
   // Tilting the board foreshortens it, so neighbouring spots crowd together and their
@@ -2232,10 +2266,14 @@ function policePick() {
 document.addEventListener('click', ev => {
   if (pickSpot(ev.target, ev)) return;
   const hex = ev.target.closest && ev.target.closest('[data-hex]');
-  if (hex && policePick()) {
-    const i = +hex.dataset.hex;
-    if (i !== G.state.board.police) { ui.sel = { kind: 'h', id: i }; safeRender(); }
-    return;
+  if (policePick() && !view.swallow) {
+    const near = nearestHex(ev);
+    const i = near !== null ? near : hex ? +hex.dataset.hex : null;
+    if (i !== null) {
+      if (i !== G.state.board.police) { ui.sel = { kind: 'h', id: i }; safeRender(); }
+      else toast('The police are already on that block.');
+      return;
+    }
   }
   if (hex || ui.hex !== null) {
     const i = hex ? +hex.dataset.hex : null;
