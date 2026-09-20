@@ -1,0 +1,4 @@
+# Publish only the game page. Everything else in this folder stays local (notes, raw art, the API key file).
+/*
+!/index.html
+!/.gitignore
