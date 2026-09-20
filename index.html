@@ -67,10 +67,10 @@ button,input{font:inherit;color:inherit}
 .turnchip{display:inline-block;width:.8em;height:.8em;border-radius:3px;border:2px solid var(--piece-line);vertical-align:-.05em;margin-right:.35em}
 .boardbox{border-radius:18px;overflow:hidden;box-shadow:var(--shadow);line-height:0;
   background:radial-gradient(120% 100% at 50% 22%,color-mix(in srgb,var(--apron) 42%,var(--panel)),var(--panel))}
-/* pan-y, not none: a finger swiped up the board still scrolls the page, so the
-   confirm button below it is never stranded. Sideways drags spin the island;
-   tilt and zoom are on the buttons and on two fingers. */
-svg.board{display:block;width:100%;height:auto;touch-action:pan-y;cursor:grab}
+/* The board takes the gestures: a finger slides it, two fingers pinch and
+   slide. The phone layout keeps it short enough that the page still has
+   somewhere to scroll from, and the confirm bar is sticky regardless. */
+svg.board{display:block;width:100%;height:auto;touch-action:none;cursor:grab}
 svg.board:active{cursor:grabbing}
 .host svg.board{max-height:calc(100vh - 150px)}
 .side{display:flex;flex-direction:column;gap:14px;min-width:0}
@@ -112,7 +112,7 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 /* ---------- phone layout ---------- */
 .phone{max-width:560px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
 .phone .boardbox{margin-inline:-16px;border-radius:0}
-.phone svg.board{max-height:56vh}
+.phone svg.board{max-height:64vh}
 .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .sw{appearance:none;border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.78rem;font-weight:600;min-height:64px}
 .sw .chip{width:30px;height:30px}
@@ -373,20 +373,27 @@ const LEGEND = '<p class="legend" aria-label="District key">' + ['warehouse', 'n
    yaw walks around the island, pitch lifts from table level to straight down,
    dist zooms. ox/oy slide the picture itself, which is easier to reason about
    than sliding the point the camera looks at, and cannot lose the board. */
-const CAM = { yaw: 22, pitch: 52, dist: 1020, ox: 0, oy: 0 };
+/* dist is the eye's distance and it no longer moves: it only ever set how
+   strong the perspective is, and using it for zoom meant the board was framed
+   by a window of fixed size, which left about a third of a phone screen empty.
+   zoom scales the window instead, so at zoom 1 the whole board fills whatever
+   screen it is on. ox/oy are fractions of that window, so a drag moves the
+   board by the same amount on a phone as on a television. */
+const CAM = { yaw: 22, pitch: 52, dist: 1020, zoom: 1, ox: 0, oy: 0 };
 const CAM_HOME = Object.freeze({ ...CAM });
 const LENS = 1000;                        // focal length in board units
 const PITCH_MIN = 21, PITCH_MAX = 90;   // below this the tiles foreshorten into unreadable slivers
-const DIST_MIN = 620, DIST_MAX = 2200;
-const PAN_MAX = 300;
+const ZOOM_MIN = 1, ZOOM_MAX = 4.5;
+const PAN_MAX = 0.42;                     // as a share of the window, so you cannot lose the board
 const VB = { x: -470, y: -380, w: 940, h: 760 };
 
 function clampCam() {
   CAM.pitch = Math.min(PITCH_MAX, Math.max(PITCH_MIN, CAM.pitch));
-  CAM.dist = Math.min(DIST_MAX, Math.max(DIST_MIN, CAM.dist));
+  CAM.zoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, CAM.zoom));
   CAM.yaw = ((CAM.yaw % 360) + 360) % 360;
-  CAM.ox = Math.min(PAN_MAX, Math.max(-PAN_MAX, CAM.ox));
-  CAM.oy = Math.min(PAN_MAX, Math.max(-PAN_MAX, CAM.oy));
+  const lim = PAN_MAX * (1 - 1 / CAM.zoom);   // nothing to pan to when the whole board fits
+  CAM.ox = Math.min(lim, Math.max(-lim, CAM.ox));
+  CAM.oy = Math.min(lim, Math.max(-lim, CAM.oy));
 }
 
 /* The camera never rolls, so yaw and pitch give its three axes directly.
@@ -422,7 +429,10 @@ function viewBox(C) {
     if (p.x < left) left = p.x; if (p.x > right) right = p.x;
   }
   if (!isFinite(lo)) return `${VB.x} ${VB.y} ${VB.w} ${VB.h}`;
-  return `${(left + right) / 2 - VB.w / 2 - CAM.ox} ${(lo + hi) / 2 - VB.h / 2 - CAM.oy} ${VB.w} ${VB.h}`;
+  // The tray, plus a little air, plus room for whatever stands on it.
+  const w = (right - left) * 1.07 / CAM.zoom, h = (hi - lo + 46) * 1.07 / CAM.zoom;
+  const cx = (left + right) / 2 - CAM.ox * w, cy = (lo + hi) / 2 - 12 - CAM.oy * h;
+  return `${n1(cx - w / 2)} ${n1(cy - h / 2)} ${n1(w)} ${n1(h)}`;
 }
 
 /* Paint a picture onto a flat four-sided face. The face is a rectangle in the
@@ -1158,7 +1168,7 @@ function nudge(f, live) {
   f(CAM); clampCam();
   view.fast = !!live && (view.cost > 9 || view.gap > 26);
   queueBoard();
-  if (!live) { store('rtcity.cam', { yaw: CAM.yaw, pitch: CAM.pitch, dist: CAM.dist }); }
+  if (!live) { store('rtcity.cam', { yaw: CAM.yaw, pitch: CAM.pitch, zoom: CAM.zoom }); }
 }
 function camSettle() { view.last = 0; if (view.fast) { view.fast = false; queueBoard(); } }
 function resetCam() { nudge(c => Object.assign(c, CAM_HOME)); }
@@ -1168,6 +1178,12 @@ function topDown() { nudge(c => { c.pitch = 90; c.yaw = 0; c.ox = 0; c.oy = 0; }
 const SLOP = 7;            // a finger that moves less than this was a tap, not a drag
 const touchMid = ts => ({ x: (ts[0].clientX + ts[1].clientX) / 2, y: (ts[0].clientY + ts[1].clientY) / 2,
   s: Math.hypot(ts[0].clientX - ts[1].clientX, ts[0].clientY - ts[1].clientY) });
+/* how big the board is on screen, so a drag moves it the same share everywhere */
+function boardBox() {
+  const el = document.querySelector('svg.board');
+  const r = el && el.getBoundingClientRect();
+  return { w: Math.max(120, r ? r.width : 900), h: Math.max(120, r ? r.height : 700) };
+}
 
 function bindCamera(root) {
   root.addEventListener('pointerdown', ev => {
@@ -1181,15 +1197,17 @@ function bindCamera(root) {
     const dx = ev.clientX - d.x, dy = ev.clientY - d.y;
     d.x = ev.clientX; d.y = ev.clientY; d.moved += Math.abs(dx) + Math.abs(dy);
     if (d.moved < SLOP) return;                                // still might be a tap
-    const scale = 1200 / Math.max(240, root.clientWidth || 900);
-    const tilt = ev.pointerType === 'mouse' ? dy * 0.32 : 0;   // the page keeps up-and-down on touch
-    if (d.pan) nudge(c => { c.ox += dx * scale; c.oy += dy * scale; }, true);
-    else nudge(c => { c.yaw -= dx * 0.42; c.pitch += tilt; }, true);
+    // A finger drags the board around, which is what you want once you have
+    // zoomed in on your own corner of it; turning is on the buttons and on a
+    // second finger. A mouse still orbits, with shift to slide.
+    const box = boardBox(), pan = d.pan || ev.pointerType !== 'mouse';
+    if (pan) nudge(c => { c.ox -= dx / box.w; c.oy -= dy / box.h; }, true);
+    else nudge(c => { c.yaw -= dx * 0.42; c.pitch += dy * 0.32; }, true);
   });
   const stop = ev => {
     const d = view.drag; if (!d || (ev && ev.pointerId !== undefined && ev.pointerId !== d.id)) return;
     view.drag = null;
-    if (d.moved >= SLOP) { view.swallow = true; setTimeout(() => { view.swallow = false; }, 0); store('rtcity.cam', { yaw: CAM.yaw, pitch: CAM.pitch, dist: CAM.dist }); }
+    if (d.moved >= SLOP) { view.swallow = true; setTimeout(() => { view.swallow = false; }, 0); store('rtcity.cam', { yaw: CAM.yaw, pitch: CAM.pitch, zoom: CAM.zoom }); }
     camSettle();
   };
   /* Hovering raises the flag on a desktop; on a phone a tap that did not land
@@ -1213,8 +1231,11 @@ function bindCamera(root) {
   root.addEventListener('touchmove', ev => {
     if (!two || ev.touches.length !== 2) return;
     ev.preventDefault();
-    const now = touchMid(ev.touches), scale = 1200 / Math.max(240, root.clientWidth || 900);
-    nudge(c => { c.dist *= two.s / Math.max(1, now.s); c.ox += (now.x - two.x) * scale; c.oy += (now.y - two.y) * scale; }, true);
+    const now = touchMid(ev.touches), box = boardBox();
+    nudge(c => {
+      c.zoom *= now.s / Math.max(1, two.s);
+      c.ox -= (now.x - two.x) / box.w; c.oy -= (now.y - two.y) / box.h;
+    }, true);
     two = now;
   }, { passive: false });
   const endTwo = ev => { if (two && ev.touches.length < 2) { two = null; view.swallow = true; setTimeout(() => { view.swallow = false; }, 0); camSettle(); } };
@@ -1223,7 +1244,7 @@ function bindCamera(root) {
   root.addEventListener('wheel', ev => {
     if (!ev.target.closest || !ev.target.closest('svg.board')) return;
     ev.preventDefault();
-    nudge(c => { c.dist *= Math.exp(ev.deltaY * 0.0013); }, true);
+    nudge(c => { c.zoom *= Math.exp(-ev.deltaY * 0.0016); }, true);
     clearTimeout(view.wheelTimer); view.wheelTimer = setTimeout(camSettle, 180);
   }, { passive: false });
 }
@@ -1245,8 +1266,8 @@ function camAction(k) {
     case 'right': nudge(c => { c.yaw += 15; }); break;
     case 'up': nudge(c => { c.pitch -= 8; }); break;
     case 'down': nudge(c => { c.pitch += 8; }); break;
-    case 'in': nudge(c => { c.dist /= 1.15; }); break;
-    case 'out': nudge(c => { c.dist *= 1.15; }); break;
+    case 'in': nudge(c => { c.zoom *= 1.3; }); break;
+    case 'out': nudge(c => { c.zoom /= 1.3; }); break;
     case 'home': resetCam(); break;
     case 'flat': topDown(); break;
   }
@@ -1833,8 +1854,8 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) stopL
 
 (() => {                                                  // pick up where this screen left the camera
   const c = load('rtcity.cam');
-  if (c && ['yaw', 'pitch', 'dist'].every(k => typeof c[k] === 'number' && isFinite(c[k]))) {
-    CAM.yaw = c.yaw; CAM.pitch = c.pitch; CAM.dist = c.dist; clampCam();
+  if (c && ['yaw', 'pitch', 'zoom'].every(k => typeof c[k] === 'number' && isFinite(c[k]))) {
+    CAM.yaw = c.yaw; CAM.pitch = c.pitch; CAM.zoom = c.zoom; clampCam();
   }
 })();
 
