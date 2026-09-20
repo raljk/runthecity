@@ -142,6 +142,45 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .rolls .grow{flex:1;font-weight:600}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:600;font-size:.88rem;box-shadow:var(--shadow);z-index:20;max-width:calc(100vw - 32px);text-align:center}
 
+/* ---------- the move card ----------
+   The first thing on the phone, every turn: whose move it is, what that move
+   is, and what you can do about it. */
+.move{display:flex;flex-direction:column;gap:5px}
+.mtitle{font-family:var(--display);font-weight:800;font-size:1.5rem;line-height:1.1}
+.move.you .mtitle{color:var(--accent)}
+.mnow{font-size:1.02rem;font-weight:600}
+.roll{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
+.roll .sum{font-family:var(--display);font-weight:800;font-size:1.5rem;font-variant-numeric:tabular-nums;line-height:1}
+.moves{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;display:flex;align-items:center;gap:10px;text-align:left;background:var(--panel);
+  border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:58px;cursor:pointer;font-weight:700}
+.opt:disabled{cursor:not-allowed;border-style:dashed;color:var(--muted)}
+.opt:disabled .ico{filter:grayscale(1);opacity:.5}
+.opt .grow{flex:1;min-width:0}
+.opt.stack{flex-direction:column;align-items:stretch;gap:3px}
+.opt .top{display:flex;align-items:center;gap:10px}
+.opt .top .nm{flex:1;min-width:0}
+.opt .why{display:block;font-weight:500;font-size:.79rem;color:var(--muted);text-transform:none}
+.opt[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.opt .chip{width:22px;height:22px;border-radius:6px;flex:none}
+.cost{display:inline-flex;align-items:center;gap:1px;flex:none}
+.cost .ico{width:18px;height:18px}
+.cost b{font-size:.76rem;margin-right:4px}
+.cost b:last-child{margin-right:0}
+.picks{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pick{appearance:none;border:2px solid var(--line);background:var(--panel);border-radius:10px;padding:7px 2px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.7rem;font-weight:700;cursor:pointer;min-height:66px;text-transform:capitalize}
+.pick .ico{width:26px;height:26px}
+.pick .n{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600;text-transform:none;white-space:nowrap}
+.pick[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.pick:disabled{opacity:.3;cursor:not-allowed}
+.tally{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;font-size:.86rem}
+.tally li{display:flex;align-items:center;gap:8px;padding:4px 0}
+.tally .chip{width:16px;height:16px;border-radius:4px;flex:none}
+.tally .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tally .now{color:var(--accent);font-weight:700}
+.tally .num{font-variant-numeric:tabular-nums;color:var(--muted)}
+
 /* ---------- board pieces ---------- */
 /* Stroke widths and font sizes are written per frame so they hold their
    apparent size as the camera moves, which is why they are not pinned here:
@@ -230,6 +269,17 @@ const PIPS = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1 };
 // Number tokens in A–R order, laid along the spiral.
 const TOKENS = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11];
 const MAX_PLAYERS = 4;
+/* What a turn costs, in the city's own words. Every price matches base Catan:
+   street = road, operation = settlement, major holding = city. */
+const COST = {
+  street:    { muscle: 1, product: 1 },
+  operation: { muscle: 1, product: 1, talent: 1, cash: 1 },
+  holding:   { cash: 2, influence: 3 },
+};
+const STOCK = { street: 15, operation: 5, holding: 4 };
+const PIECE = { street: 'street', operation: 'operation', holding: 'major holding' };
+const WIN_VP = 10;
+const HAND_SAFE = 7;   // hold more than this when a seven lands and you lose half
 
 /* ---------- small helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -343,9 +393,134 @@ function legalSetupStreets(st) {
   return st.lastV == null ? [] : GEO.verts[st.lastV].edges.filter(e => !st.streets[e]);
 }
 function placementSeq(st) { return st.order.concat(st.order.slice().reverse()); }
-function activePid(st) { return st.phase === 'place' ? placementSeq(st)[st.placeIdx] : null; }
+function activePid(st) {
+  if (st.phase === 'place') return placementSeq(st)[st.placeIdx];
+  if (st.phase === 'turn') return st.order[st.turnIdx] || null;
+  return null;
+}
 function playerOf(st, pid) { return st.players.find(p => p.pid === pid) || null; }
 function handCount(p) { return RES_ORDER.reduce((n, r) => n + (p.hand[r] || 0), 0); }
+const andList = a => (a.length < 3 ? a.join(' and ') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
+function handList(h) { return andList(RES_ORDER.filter(r => h[r]).map(r => h[r] + ' ' + r)) || 'nothing'; }
+function blockName(st, i) { const h = st.board.hexes[i]; return h.t === 'deadzone' ? 'the deadzone' : `the ${h.t} on ${h.n}`; }
+
+/* ---------- turn rules ----------
+   Everything the game will let you do is worked out here, once, so the phone,
+   the table screen and the host all answer the same question the same way. */
+const buildingsOf = (st, pid) => Object.keys(st.buildings).filter(v => st.buildings[v].pid === pid);
+const streetsOf = (st, pid) => Object.keys(st.streets).filter(e => st.streets[e] === pid);
+function vpOf(st, pid) { return buildingsOf(st, pid).reduce((n, v) => n + (st.buildings[v].k === 'c' ? 2 : 1), 0); }
+function left(st, pid, kind) {
+  const b = buildingsOf(st, pid);
+  if (kind === 'street') return STOCK.street - streetsOf(st, pid).length;
+  return STOCK[kind] - b.filter(v => (st.buildings[v].k === 'c') === (kind === 'holding')).length;
+}
+function canPay(p, kind) { return RES_ORDER.every(r => (p.hand[r] || 0) >= (COST[kind][r] || 0)); }
+function payFor(p, kind) { RES_ORDER.forEach(r => { if (COST[kind][r]) p.hand[r] -= COST[kind][r]; }); }
+function shortOf(p, kind) { return RES_ORDER.filter(r => (p.hand[r] || 0) < (COST[kind][r] || 0)).map(r => (COST[kind][r] - (p.hand[r] || 0)) + ' ' + r); }
+
+/* A street follows your own streets and operations, but it cannot run through
+   somebody else's junction: their operation blocks the road there. */
+function legalStreets(st, pid) {
+  const reach = v => {
+    const b = st.buildings[v];
+    if (b) return b.pid === pid;
+    return GEO.verts[v].edges.some(e => st.streets[e] === pid);
+  };
+  return GEO.edges.map((_, e) => e).filter(e => st.streets[e] === undefined && (reach(GEO.edges[e].a) || reach(GEO.edges[e].b)));
+}
+// A new operation needs the two-junction gap AND a street of yours running into it.
+function legalNewOperations(st, pid) {
+  return legalOperations(st).filter(v => GEO.verts[v].edges.some(e => st.streets[e] === pid));
+}
+function legalHoldings(st, pid) {
+  return buildingsOf(st, pid).filter(v => st.buildings[v].k === 's').map(Number);
+}
+function legalFor(st, pid, kind) {
+  return kind === 'street' ? legalStreets(st, pid) : kind === 'operation' ? legalNewOperations(st, pid) : legalHoldings(st, pid);
+}
+/* Terminals: an operation on either end of a terminal's edge earns its rate. */
+function tradeRate(st, pid, res) {
+  let rate = 4;
+  st.board.terminals.forEach((t, i) => {
+    const e = GEO.edges[GEO.terminalEdges[i]];
+    if (![e.a, e.b].some(v => st.buildings[v] && st.buildings[v].pid === pid)) return;
+    if (t === res) rate = Math.min(rate, 2); else if (t === 'any') rate = Math.min(rate, 3);
+  });
+  return rate;
+}
+function tradables(st, p) { return RES_ORDER.filter(r => (p.hand[r] || 0) >= tradeRate(st, p.pid, r)); }
+function produce(st, sum) {
+  const got = {};
+  st.board.hexes.forEach((h, i) => {
+    if (h.n !== sum || i === st.board.police) return;
+    const res = RESOURCE_OF[h.t]; if (!res) return;
+    GEO.hexes[i].vs.forEach(v => {
+      const b = st.buildings[v], p = b && playerOf(st, b.pid); if (!p) return;
+      const n = b.k === 'c' ? 2 : 1;
+      p.hand[res] = (p.hand[res] || 0) + n;
+      got[b.pid] = got[b.pid] || {}; got[b.pid][res] = (got[b.pid][res] || 0) + n;
+    });
+  });
+  return got;
+}
+function victims(st, h, pid) {
+  const ids = [];
+  GEO.hexes[h].vs.forEach(v => { const b = st.buildings[v]; if (b && b.pid !== pid && !ids.includes(b.pid)) ids.push(b.pid); });
+  return ids.filter(id => handCount(playerOf(st, id)) > 0);
+}
+/* Can this player do anything at all right now? The phone says so out loud,
+   because not knowing was the thing that stalled the first play test. */
+function anyMove(st, p) {
+  if (tradables(st, p).length) return true;
+  return ['street', 'operation', 'holding'].some(k => canPay(p, k) && left(st, p.pid, k) > 0 && legalFor(st, p.pid, k).length);
+}
+
+/* One description of what the table is waiting for. Both screens read this, so
+   they can never disagree about whose move it is or what it is. */
+function guide(st, pid) {
+  const act = activePid(st), ap = act ? playerOf(st, act) : null, me = pid ? playerOf(st, pid) : null;
+  const yours = !!me && act === pid, who = ap ? ap.name : 'the table';
+  const mine = (now, hint) => ({ yours: true, act, ap, title: 'Your move', now, hint: hint || '' });
+  const theirs = (now, hint) => ({ yours: false, act, ap, title: me ? `Waiting on ${who}` : who, now, hint: hint || '' });
+  if (st.phase === 'lobby') return { yours: false, act, ap, title: 'In the lobby', now: me ? 'Waiting for the table to start the game.' : 'Scan the code to take a seat.', hint: '' };
+  if (st.phase === 'rolloff') {
+    const rolled = me && st.rolls[pid];
+    return { yours: !!me && st.contenders.includes(pid) && !rolled, act, ap, title: rolled ? 'Waiting on the others' : me ? 'Your move' : 'Roll for first player',
+      now: rolled ? `You rolled ${rolled[0] + rolled[1]}.` : 'Roll the dice. Highest roll places first.', hint: '' };
+  }
+  if (st.phase === 'over') {
+    const w = playerOf(st, st.win);
+    return { yours: false, act: null, ap: null, title: w && w.pid === pid ? 'You run the city' : `${w ? w.name : 'Nobody'} runs the city`,
+      now: `${WIN_VP} points. The game is over.`, hint: 'Use Back to lobby on the table screen to play again.' };
+  }
+  if (st.phase === 'place' || st.phase === 'done') {
+    if (st.phase === 'done') return theirs('Set-up is complete.');
+    const nth = st.placeIdx < st.order.length ? 1 : 2;
+    return yours
+      ? mine(st.step === 'operation' ? `Tap a glowing spot for your ${ordinal(nth)} operation.` : 'Tap a glowing path beside the operation you just placed.',
+             st.step === 'operation' && nth === 2 ? 'This one pays your starting cards.' : '')
+      : theirs(`${who} is placing ${st.step === 'street' ? 'a street' : 'an operation'}.`, 'Nothing for you to do until your turn.');
+  }
+  // the turn itself
+  const owe = me && st.pend ? (st.pend[pid] || 0) : 0;
+  if (st.step === 'discard') {
+    const owing = Object.keys(st.pend).map(id => playerOf(st, id)).filter(Boolean).map(x => x.name);
+    if (owe) return { yours: true, act, ap, title: 'Your move', now: `Seven rolled. Drop ${owe} ${owe === 1 ? 'card' : 'cards'}.`, hint: 'Anyone holding more than seven loses half of them.' };
+    return { yours: false, act, ap, title: `Waiting on ${andList(owing)}`, now: `Seven rolled. ${andList(owing)} must drop half their cards.`,
+      hint: me ? 'You are under eight cards, so your hand is safe.' : '' };
+  }
+  if (st.step === 'police') return yours ? mine('Tap a block to send the police there. It stops paying out.', 'Pick the block that hurts someone else most.')
+    : theirs(`${who} is moving the police.`, 'Nothing for you to do until your turn.');
+  if (st.step === 'steal') return yours ? mine('Take one card, unseen, from somebody on that block.')
+    : theirs(`${who} is taking a card.`, 'Nothing for you to do until your turn.');
+  if (st.step === 'roll') return yours ? mine('Roll the dice. Every block on that number pays out.')
+    : theirs(`${who} is about to roll.`, 'Nothing for you to do until your turn. You still collect on their roll.');
+  const stuck = me && !anyMove(st, me);
+  return yours ? mine(stuck ? 'Nothing you can build or trade with these cards.' : 'Build, trade at a terminal, or end your turn.',
+                      stuck ? 'End your turn and wait for better dice.' : 'You can do as many of these as you can pay for.')
+    : theirs(`${who} is building.`, 'Nothing for you to do until your turn.');
+}
 
 /* =====================================================================
    Board drawing (shared by table and phones)
@@ -1048,6 +1223,15 @@ function boardSVG(st, o) {
       `<line class="dash" ${L} stroke-width="${n1((sel ? 8 : 7) * k)}" stroke-dasharray="${sel ? 'none' : n1(k) + ' ' + n1(11 * k)}"${sel ? ` style="stroke:${col}"` : ''}/></g>` });
   });
   spots.sort((a, b) => b.d - a.d).forEach(x => front.push(x.s));
+  /* Blocks the police can be sent to. The ring is drawn on top so a tilted board
+     cannot hide it, but it takes no taps: the transparent lid on the block does
+     that, and it is the shape the finger is actually aiming at. */
+  (o.legalH || []).forEach(i => {
+    const h = GEO.hexes[i], p = P(h.cx, TOP_Y[B.hexes[i].t] + 30, h.cy); if (!p) return;
+    const sel = o.sel && o.sel.kind === 'h' && o.sel.id === i;
+    front.push(`<g class="pc"><circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1((sel ? 17 : 11) * p.k)}" ` +
+      `fill="${sel ? col : 'rgba(8,11,18,.55)'}" stroke="${col}" stroke-width="${n1((sel ? 4 : 2.6) * p.k)}"/></g>`);
+  });
   if (st.phase === 'place' && st.step === 'street' && st.lastV != null) {
     const v = GEO.verts[st.lastV], p = P(v.x, STREET_Y + 16, v.y);
     if (p) front.push(`<circle class="lastring" cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(19 * p.k)}"/>`);
@@ -1319,7 +1503,7 @@ const joinRoom = (params.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, 
 const WATCH = !!joinRoom && params.has('watch'); // read-only big-board view of someone else's table
 const ROOM_LETTERS = 'ABCDEFGHJKMNPQRSTUVWXYZ';
 const G = { client: null, online: false, state: null, hist: [], b: 0 };
-const ui = { sel: null, hex: null, pending: false, toast: null, toastTimer: 0 };
+const ui = { sel: null, hex: null, pending: false, toast: null, toastTimer: 0, mode: null, drop: {}, give: null, get: null };
 
 function toast(msg) {
   clearTimeout(ui.toastTimer); let t = $('#toast');
@@ -1348,7 +1532,8 @@ setInterval(() => { if (!stuck()) { downTicks = 0; return; } if (++downTicks >= 
 function hostBase() { return TOPIC_ROOT + G.state.room; }
 function newTableState(kind) {
   return { v: 0, room: makeCode(5, ROOM_LETTERS) + '2', phase: 'lobby', board: makeBoard(kind || 'random'), players: [], order: [], contenders: [], rolls: {}, round: 1,
-    starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {}, log: ['Table opened. Scan the code to take a seat.'] };
+    starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {},
+    turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, log: ['Table opened. Scan the code to take a seat.'] };
 }
 function say(msg) { G.state.log.unshift(msg); G.state.log.length = Math.min(G.state.log.length, 14); }
 function commit() {
@@ -1386,7 +1571,7 @@ function hostAction(a) {
       commit(); return;
     }
     case 'operate': {
-      if (!p || activePid(st) !== p.pid || st.step !== 'operation' || !Number.isInteger(a.v) || !legalOperations(st).includes(a.v)) return;
+      if (!p || st.phase !== 'place' || activePid(st) !== p.pid || st.step !== 'operation' || !Number.isInteger(a.v) || !legalOperations(st).includes(a.v)) return;
       snapshot();
       st.buildings[a.v] = { pid: p.pid, k: 's' }; st.lastV = a.v; st.step = 'street';
       const second = st.placeIdx >= st.order.length;
@@ -1398,15 +1583,110 @@ function hostAction(a) {
       ui.sel = null; commit(); return;
     }
     case 'street': {
-      if (!p || activePid(st) !== p.pid || st.step !== 'street' || !Number.isInteger(a.e) || !legalSetupStreets(st).includes(a.e)) return;
+      if (!p || st.phase !== 'place' || activePid(st) !== p.pid || st.step !== 'street' || !Number.isInteger(a.e) || !legalSetupStreets(st).includes(a.e)) return;
       snapshot();
       st.streets[a.e] = p.pid; st.lastV = null; st.step = 'operation'; st.placeIdx++;
       if (st.placeIdx >= st.order.length * 2) {
-        st.phase = 'done'; say(`Set-up complete. ${playerOf(st, st.starter).name} takes the first turn.`);
+        st.phase = 'turn'; st.turnIdx = 0; st.turnNo = 1; st.step = 'roll'; st.dice = null; st.got = {}; st.pend = {};
+        say(`Set-up complete. ${playerOf(st, st.starter).name} rolls first.`);
       }
       ui.sel = null; commit(); return;
     }
+
+    /* ---------- the turn ---------- */
+    case 'rollturn': {
+      if (!turnOf(st, p) || st.step !== 'roll') return;
+      snapshot();
+      const d = [rnd(6) + 1, rnd(6) + 1], sum = d[0] + d[1];
+      st.dice = d; st.got = {}; st.pend = {};
+      if (sum === 7) {
+        st.players.forEach(x => { const n = handCount(x); if (n > HAND_SAFE) st.pend[x.pid] = Math.floor(n / 2); });
+        const owing = Object.keys(st.pend).map(id => playerOf(st, id).name);
+        st.step = owing.length ? 'discard' : 'police';
+        say(`${p.name} rolled 7. ${owing.length ? owing.join(' and ') + ' must drop half.' : 'The police are on the move.'}`);
+      } else {
+        st.got = produce(st, sum); st.step = 'act';
+        const took = Object.keys(st.got).map(id => `${playerOf(st, id).name} took ${handList(st.got[id])}`);
+        say(`${p.name} rolled ${sum}.${took.length ? ' ' + took.join('; ') + '.' : ' Nobody collected.'}`);
+      }
+      commit(); return;
+    }
+    case 'discard': {
+      const owe = st.phase === 'turn' && st.step === 'discard' && p ? st.pend[p.pid] : 0;
+      if (!owe || !a.cards || typeof a.cards !== 'object') return;
+      let n = 0;
+      const ok = RES_ORDER.every(r => {
+        const k = a.cards[r] || 0;
+        if (!Number.isInteger(k) || k < 0 || k > (p.hand[r] || 0)) return false;
+        n += k; return true;
+      });
+      if (!ok || n !== owe) return;
+      snapshot();
+      RES_ORDER.forEach(r => { if (a.cards[r]) p.hand[r] -= a.cards[r]; });
+      delete st.pend[p.pid];
+      say(`${p.name} dropped ${handList(a.cards)}.`);
+      if (!Object.keys(st.pend).length) st.step = 'police';
+      commit(); return;
+    }
+    case 'police': {
+      if (!turnOf(st, p) || st.step !== 'police') return;
+      if (!Number.isInteger(a.h) || a.h < 0 || a.h >= GEO.hexes.length || a.h === st.board.police) return;
+      snapshot();
+      st.board.police = a.h;
+      const vs = victims(st, a.h, p.pid);
+      st.step = vs.length ? 'steal' : 'act';
+      say(`${p.name} moved the police onto ${blockName(st, a.h)}.${vs.length ? '' : ' Nobody there to lean on.'}`);
+      ui.sel = null; commit(); return;
+    }
+    case 'steal': {
+      if (!turnOf(st, p) || st.step !== 'steal') return;
+      if (!victims(st, st.board.police, p.pid).includes(a.from)) return;
+      snapshot();
+      const q = playerOf(st, a.from), pool = [];
+      RES_ORDER.forEach(r => { for (let i = 0; i < (q.hand[r] || 0); i++) pool.push(r); });
+      const r = pool[rnd(pool.length)];
+      q.hand[r]--; p.hand[r] = (p.hand[r] || 0) + 1;
+      st.step = 'act'; say(`${p.name} took a card from ${q.name}.`);
+      commit(); return;
+    }
+    case 'build': {
+      if (!turnOf(st, p) || st.step !== 'act' || !COST[a.kind]) return;
+      const kind = a.kind, spot = kind === 'street' ? a.e : a.v;
+      if (!Number.isInteger(spot) || !legalFor(st, p.pid, kind).includes(spot)) return;
+      if (left(st, p.pid, kind) <= 0 || !canPay(p, kind)) return;
+      snapshot(); payFor(p, kind);
+      if (kind === 'street') { st.streets[spot] = p.pid; say(`${p.name} laid a street.`); }
+      else if (kind === 'operation') { st.buildings[spot] = { pid: p.pid, k: 's' }; say(`${p.name} opened an operation.`); }
+      else { st.buildings[spot].k = 'c'; say(`${p.name} turned an operation into a major holding.`); }
+      checkWin(st, p);
+      ui.sel = null; commit(); return;
+    }
+    case 'trade': {
+      if (!turnOf(st, p) || st.step !== 'act') return;
+      if (!RES_ORDER.includes(a.give) || !RES_ORDER.includes(a.get) || a.give === a.get) return;
+      const rate = tradeRate(st, p.pid, a.give);
+      if ((p.hand[a.give] || 0) < rate) return;
+      snapshot();
+      p.hand[a.give] -= rate; p.hand[a.get] = (p.hand[a.get] || 0) + 1;
+      say(`${p.name} traded ${rate} ${a.give} for 1 ${a.get}.`); commit(); return;
+    }
+    case 'endturn': {
+      if (!turnOf(st, p) || st.step !== 'act') return;
+      snapshot(); nextTurn(st); commit(); return;
+    }
   }
+}
+const turnOf = (st, p) => !!p && st.phase === 'turn' && activePid(st) === p.pid;
+function nextTurn(st) {
+  st.turnIdx = (st.turnIdx + 1) % st.order.length;
+  if (st.turnIdx === 0) st.turnNo++;
+  st.step = 'roll'; st.dice = null; st.got = {}; st.pend = {};
+  say(`${playerOf(st, st.order[st.turnIdx]).name} is up.`);
+}
+function checkWin(st, p) {
+  if (vpOf(st, p.pid) < WIN_VP) return;
+  st.phase = 'over'; st.win = p.pid; st.step = 'roll';
+  say(`${p.name} runs the city with ${vpOf(st, p.pid)} points.`);
 }
 function decideStarter() {
   const st = G.state, sum = id => st.rolls[id][0] + st.rolls[id][1];
@@ -1433,16 +1713,20 @@ function hostControl(act, arg) {
       st.phase = 'rolloff'; st.contenders = st.players.map(p => p.pid); st.rolls = {}; st.round = 1;
       say('Everyone rolls. Highest roll places first.'); commit(); return;
     case 'rollfor': hostAction({ t: 'roll', pid: arg }); return;
+    case 'rollturn': hostAction({ t: 'rollturn', pid: activePid(st) }); return;
+    case 'endturn': hostAction({ t: 'endturn', pid: activePid(st) }); return;
     case 'up': { const i = st.players.findIndex(p => p.pid === arg); if (st.phase === 'lobby' && i > 0) { [st.players[i - 1], st.players[i]] = [st.players[i], st.players[i - 1]]; commit(); } return; }
     case 'kick': hostAction({ t: 'leave', pid: arg }); return;
     case 'undo': {
       if (!G.hist.length) return;
       const prev = JSON.parse(G.hist.pop()), v = st.v, online = Object.fromEntries(st.players.map(p => [p.pid, p.online]));
-      prev.v = v; prev.players.forEach(p => { p.online = !!online[p.pid]; }); G.state = prev; say('Undid the last placement.'); ui.sel = null; commit(); return;
+      prev.v = v; prev.players.forEach(p => { p.online = !!online[p.pid]; }); G.state = prev; say('Undid the last move.'); ui.sel = null; commit(); return;
     }
     case 'lobby':
       if (!confirm('Go back to the lobby? Placed pieces are cleared, players stay seated.')) return;
-      Object.assign(st, { phase: 'lobby', order: [], contenders: [], rolls: {}, round: 1, starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {} });
+      Object.assign(st, { phase: 'lobby', order: [], contenders: [], rolls: {}, round: 1, starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {},
+        turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null });
+      st.board.police = st.board.hexes.findIndex(h => h.t === 'deadzone');   // the police go home with the pieces
       st.players.forEach(p => { p.hand = {}; }); G.hist = []; ui.sel = null; say('Back in the lobby.'); commit(); return;
     case 'newtable':
       if (!confirm('Close this table and open a new one? Everyone will need to scan the new code.')) return;
@@ -1452,7 +1736,8 @@ function hostControl(act, arg) {
       setTimeout(() => location.reload(), 500); return;
     case 'confirm': {
       const pid = activePid(st); if (!pid || !ui.sel) return;
-      hostAction(ui.sel.kind === 'v' ? { t: 'operate', pid, v: ui.sel.id } : { t: 'street', pid, e: ui.sel.id }); return;
+      if (ui.sel.kind === 'h') hostAction({ t: 'police', pid, h: ui.sel.id });
+      else hostAction(ui.sel.kind === 'v' ? { t: 'operate', pid, v: ui.sel.id } : { t: 'street', pid, e: ui.sel.id }); return;
     }
   }
 }
@@ -1516,6 +1801,17 @@ function renderHost() {
     const nth = st.placeIdx < st.order.length ? 1 : 2;
     what = `<span class="turnchip" style="background:var(--p-${ap.color})"></span>${esc(ap.name)}: place your ${ordinal(nth)} ${st.step === 'street' ? 'street, touching the operation you just placed' : 'operation'}.`;
     if (ui.sel && !ro) extra = `<button class="btn" data-h="confirm">Confirm for ${esc(ap.name)}</button><button class="btn ghost" data-h-clear>Clear</button>`;
+  } else if (st.phase === 'turn') {
+    const g = guide(st, act), dice = st.dice ? ` <span class="dice" aria-hidden="true">${DIE[st.dice[0]]}${DIE[st.dice[1]]}</span> <strong>${st.dice[0] + st.dice[1]}</strong>` : '';
+    what = `${g.yours ? `<span class="turnchip" style="background:var(--p-${ap.color})"></span>${esc(ap.name)}: ` : ''}${esc(g.now)}${dice}`;
+    if (!ro) {
+      if (st.step === 'roll') extra = `<button class="btn" data-h="rollturn">Roll for ${esc(ap.name)}</button>`;
+      else if (st.step === 'act') extra = `<button class="btn ghost" data-h="endturn">End ${esc(ap.name)}&#39;s turn</button>`;
+      else if (st.step === 'police' && ui.sel && ui.sel.kind === 'h') extra = `<button class="btn" data-h="confirm">Send the police to ${esc(blockName(st, ui.sel.id))}</button><button class="btn ghost" data-h-clear>Clear</button>`;
+    }
+  } else if (st.phase === 'over') {
+    const w = playerOf(st, st.win);
+    what = `<span class="turnchip" style="background:var(--p-${w.color})"></span>${esc(w.name)} runs the city with ${vpOf(st, st.win)} points.`;
   } else what = `Set-up complete. ${esc(playerOf(st, st.starter).name)} takes the first turn.`;
   if (G.fatal) { what = esc(G.fatal); extra = '<button class="btn" data-p="reload">Reload</button>'; }
   setHTML('#h-banner', `<p class="what">${what}</p>${extra}`);
@@ -1523,7 +1819,8 @@ function renderHost() {
   // board (the table screen can place for the active player too; the board view only looks)
   const placing = st.phase === 'place' && !ro;
   setHTML('#h-board', boardView(st, { labels: true, color: ap && ap.color, sel: ro ? null : ui.sel,
-    legalV: placing && st.step === 'operation' ? legalOperations(st) : [], legalE: placing && st.step === 'street' ? legalSetupStreets(st) : [] }));
+    legalV: placing && st.step === 'operation' ? legalOperations(st) : [], legalE: placing && st.step === 'street' ? legalSetupStreets(st) : [],
+    legalH: !ro && st.phase === 'turn' && st.step === 'police' ? GEO.hexes.map((_, i) => i).filter(i => i !== st.board.police) : [] }));
 
   // join card: QR for phones, plus links to share with friends who are somewhere else
   const url = joinURL(), qr = qrSVG(url), mini = st.phase !== 'lobby';
@@ -1543,7 +1840,7 @@ function renderHost() {
     const roll = st.rolls[p.pid]; let end = '';
     if (st.phase === 'lobby') end = ro ? '' : `${i > 0 ? `<button class="btn ghost small" data-h="up" data-arg="${esc(p.pid)}" aria-label="Move ${esc(p.name)} up one seat">&uarr;</button>` : ''}<button class="btn ghost small" data-h="kick" data-arg="${esc(p.pid)}" aria-label="Remove ${esc(p.name)}">&times;</button>`;
     else if (st.phase === 'rolloff') end = !st.contenders.includes(p.pid) ? `<span class="muted small">out${roll ? ' with ' + (roll[0] + roll[1]) : ''}</span>` : roll ? `<span class="dice" aria-hidden="true">${DIE[roll[0]]}${DIE[roll[1]]}</span><strong>${roll[0] + roll[1]}</strong>` : ro ? '<span class="muted small">rolling…</span>' : `<button class="btn ghost small" data-h="rollfor" data-arg="${esc(p.pid)}">Roll for them</button>`;
-    else end = `<span class="small">${Object.values(st.buildings).filter(b => b.pid === p.pid).length} VP &middot; ${handCount(p)} ${handCount(p) === 1 ? 'card' : 'cards'}</span>`;
+    else end = `<span class="small">${st.pend && st.pend[p.pid] ? `dropping ${st.pend[p.pid]} &middot; ` : ''}${vpOf(st, p.pid)} of ${WIN_VP} &middot; ${handCount(p)} ${handCount(p) === 1 ? 'card' : 'cards'}</span>`;
     return `<li class="seat${p.pid === act ? ' active' : ''}"><span class="chip" style="background:var(--p-${p.color})"></span><div><p class="nm">${esc(p.name)}${p.pid === st.starter ? ' &#9733;' : ''}</p><p class="sub"><span class="dot${p.online ? ' on' : ''}"></span>${p.online ? 'connected' : 'phone asleep or offline'}</p></div><div class="end">${end}</div></li>`;
   });
   for (let i = st.players.length; i < MAX_PLAYERS && st.phase === 'lobby'; i++) seats.push('<li class="seat open"><span></span><p>Open seat</p><span></span></li>');
@@ -1626,14 +1923,15 @@ async function connectHost() {
    PLAYER (phone)
    ===================================================================== */
 const PID = (() => { let id = load('rtcity.pid'); if (typeof id !== 'string' || !/^[a-z0-9]{8}$/.test(id)) { id = makeCode(8, 'abcdefghijkmnpqrstuvwxyz23456789'); store('rtcity.pid', id); } return id; })();
-const P = { base: TOPIC_ROOT + joinRoom, hostUp: null, waited: false, waitTimer: 0, error: '', screen: '', name: load('rtcity.name') || '', color: null, turnKey: null };
+const P = { base: TOPIC_ROOT + joinRoom, hostUp: null, waited: false, waitTimer: 0, error: '', screen: '', name: load('rtcity.name') || '', color: null, turnKey: null, stepKey: null };
 
 // The state topic is on a public relay, so a phone treats it as untrusted: every field that is drawn
 // must be one of the known values. Anything else is dropped before it can reach the page.
 function validState(s) {
   const obj = x => !!x && typeof x === 'object' && !Array.isArray(x), int = Number.isInteger;
   const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k), num = k => /^[0-9]{1,3}$/.test(k);
-  if (!obj(s) || s.room !== joinRoom || !int(s.v) || !['lobby', 'rolloff', 'place', 'done'].includes(s.phase) || !['operation', 'street'].includes(s.step)) return false;
+  const STEPS = { lobby: ['operation'], rolloff: ['operation'], place: ['operation', 'street'], done: ['operation'], turn: ['roll', 'discard', 'police', 'steal', 'act'], over: ['roll', 'act'] };
+  if (!obj(s) || s.room !== joinRoom || !int(s.v) || !STEPS[s.phase] || !STEPS[s.phase].includes(s.step)) return false;
   const B = s.board;
   if (!obj(B) || !Array.isArray(B.hexes) || B.hexes.length !== 19 || !int(B.police) || B.police < 0 || B.police > 18) return false;
   if (!B.hexes.every(h => obj(h) && typeof h.t === 'string' && own(RESOURCE_OF, h.t) && int(h.n) && h.n >= 0 && h.n <= 12 && (h.n === 0 || own(PIPS, h.n)))) return false;
@@ -1644,17 +1942,37 @@ function validState(s) {
   const pids = s.players.map(p => p.pid), known = id => pids.includes(id);
   if (!Array.isArray(s.order) || !s.order.every(known) || !Array.isArray(s.contenders) || !s.contenders.every(known)) return false;
   if (!obj(s.rolls) || !Object.keys(s.rolls).every(k => known(k) && Array.isArray(s.rolls[k]) && s.rolls[k].length === 2 && s.rolls[k].every(d => int(d) && d >= 1 && d <= 6))) return false;
-  if (!obj(s.buildings) || !Object.keys(s.buildings).every(k => num(k) && +k < GEO.verts.length && obj(s.buildings[k]) && known(s.buildings[k].pid))) return false;
+  if (!obj(s.buildings) || !Object.keys(s.buildings).every(k => num(k) && +k < GEO.verts.length && obj(s.buildings[k]) && known(s.buildings[k].pid) && ['s', 'c'].includes(s.buildings[k].k))) return false;
   if (!obj(s.streets) || !Object.keys(s.streets).every(k => num(k) && +k < GEO.edges.length && known(s.streets[k]))) return false;
   if (!int(s.placeIdx) || s.placeIdx < 0 || !int(s.round)) return false;
+  // turn fields: a table on the older build never sends them, so they are only required once a turn is running
+  const hand = h => obj(h) && RES_ORDER.every(r => h[r] === undefined || (int(h[r]) && h[r] >= 0 && h[r] < 100));
+  if (s.dice !== undefined && s.dice !== null && !(Array.isArray(s.dice) && s.dice.length === 2 && s.dice.every(d => int(d) && d >= 1 && d <= 6))) return false;
+  if (s.got !== undefined && !(obj(s.got) && Object.keys(s.got).every(k => known(k) && hand(s.got[k])))) return false;
+  if (s.pend !== undefined && !(obj(s.pend) && Object.keys(s.pend).every(k => known(k) && int(s.pend[k]) && s.pend[k] > 0 && s.pend[k] < 100))) return false;
+  if (s.win !== undefined && s.win !== null && !known(s.win)) return false;
+  if (s.phase === 'turn' || s.phase === 'over') {
+    if (!int(s.turnIdx) || s.turnIdx < 0 || !int(s.turnNo) || s.turnNo < 1) return false;
+    if (!obj(s.got) || !obj(s.pend) || s.order.length !== s.players.length || s.turnIdx >= s.order.length) return false;
+    if (s.step === 'discard' && !Object.keys(s.pend).length) return false;
+    if (s.phase === 'over' && !known(s.win)) return false;
+  }
   if (s.lastV !== null && !(int(s.lastV) && s.lastV >= 0 && s.lastV < GEO.verts.length)) return false;
   if (s.phase === 'place' && (!s.order.length || s.order.length !== s.players.length || s.placeIdx >= s.order.length * 2)) return false;
-  if ((s.phase === 'place' || s.phase === 'done') && !known(s.starter)) return false;
+  if (s.phase !== 'lobby' && s.phase !== 'rolloff' && !known(s.starter)) return false;
   return true;
 }
 function act(body) {
   if (!send(G.client, P.base + '/act', Object.assign({ pid: PID }, body))) { toast('Not connected. Trying again in a moment.'); return false; }
   return true;
+}
+/* Every move looks the same from the phone's side: grey the buttons while the
+   table thinks, and say something if it never answers. */
+function pact(body) {
+  if (!act(body)) return;
+  ui.pending = true; renderPlayer();
+  clearTimeout(ui.pendTimer);
+  ui.pendTimer = setTimeout(() => { if (ui.pending) { ui.pending = false; renderPlayer(); toast('The table did not answer. Try again.'); } }, 4000);
 }
 function playerScreen() {
   const st = G.state;
@@ -1671,6 +1989,113 @@ function handHTML(me) {
     : `<span class="res"><b class="${r === 'cash' ? 'dk' : ''}" style="background:var(--${TERRAIN_OF[r]})">${me.hand[r]}</b>${r}</span>`).join('')}</div>` : '<p class="muted small">No cards yet.</p>';
 }
 function meHTML(me, sub) { return `<div class="me"><span class="chip" style="background:var(--p-${me.color})"></span><div><p class="nm">${esc(me.name)}</p><p class="muted small">${sub}</p></div></div>`; }
+const ico = r => ART ? `<i class="ico" style="background-image:var(--ico-${r})"></i>` : '';
+function costHTML(kind) {
+  return `<span class="cost">${RES_ORDER.filter(r => COST[kind][r]).map(r => ART
+    ? `${ico(r)}<b>${COST[kind][r]}</b>` : `<b>${COST[kind][r]} ${r}</b>`).join('')}</span>`;
+}
+/* The card at the top of every phone: whose move, what that move is, and the
+   one thing the first play test could not answer — whether you can act at all. */
+function moveCard(st, me, extra) {
+  const g = guide(st, me ? me.pid : null);
+  return `<section class="card"><div class="move${g.yours ? ' you' : ''}">
+    <p class="mtitle">${!g.yours && g.ap ? `<span class="turnchip" style="background:var(--p-${g.ap.color})"></span>` : ''}${esc(g.title)}</p>
+    <p class="mnow">${esc(g.now)}</p>${g.hint ? `<p class="small muted">${esc(g.hint)}</p>` : ''}</div>${extra || ''}</section>`;
+}
+function rollHTML(st, me) {
+  if (!st.dice) return '';
+  const sum = st.dice[0] + st.dice[1], mine = st.got && st.got[me.pid];
+  const what = sum === 7 ? 'Seven. No block pays out.' : mine ? `You took ${handList(mine)}.` : 'Nothing for you on that roll.';
+  return `<p class="roll"><span class="dice" aria-hidden="true">${DIE[st.dice[0]]}${DIE[st.dice[1]]}</span><span class="sum">${sum}</span><span class="small">${esc(what)}</span></p>`;
+}
+function tallyHTML(st, me) {
+  const act = activePid(st);
+  return `<ul class="tally">${st.players.map(p => {
+    const vp = vpOf(st, p.pid), owes = st.pend && st.pend[p.pid];
+    return `<li><span class="chip" style="background:var(--p-${p.color})"></span>` +
+      `<span class="grow${p.pid === act ? ' now' : ''}">${esc(p.name)}${p.pid === me.pid ? ' (you)' : ''}</span>` +
+      (owes ? `<span class="num">dropping ${owes}</span>` : '') +
+      `<span class="num">${vp} pt${vp === 1 ? '' : 's'}</span><span class="num">${handCount(p)} ${handCount(p) === 1 ? 'card' : 'cards'}</span></li>`;
+  }).join('')}</ul>`;
+}
+const OPT_NAME = { street: 'Lay a street', operation: 'Open an operation', holding: 'Upgrade to a major holding' };
+const NO_SPOT = { street: 'Nowhere left to run one from your streets.', operation: 'No junction is both free and on one of your streets.', holding: 'You have no operation to upgrade.' };
+function optHTML(st, me, kind) {
+  const stock = left(st, me.pid, kind), pay = canPay(me, kind), spots = legalFor(st, me.pid, kind).length, ok = stock > 0 && pay && spots > 0;
+  const why = stock <= 0 ? `No ${PIECE[kind]} pieces left.` : !pay ? `You still need ${andList(shortOf(me, kind))}.`
+    : !spots ? NO_SPOT[kind] : `${spots} spot${spots === 1 ? '' : 's'} open, ${stock} left to build.`;
+  return `<li><button class="opt stack" data-p="mode" data-arg="${kind}" aria-pressed="${ui.mode === kind}" ${ok ? '' : 'disabled'}>` +
+    `<span class="top"><span class="nm">${OPT_NAME[kind]}</span>${costHTML(kind)}</span><span class="why">${esc(why)}</span></button></li>`;
+}
+function tradeOptHTML(st, me) {
+  const can = tradables(st, me), best = Math.min.apply(null, RES_ORDER.map(r => tradeRate(st, me.pid, r)));
+  const why = can.length ? `Swap ${can.map(r => tradeRate(st, me.pid, r) + ' ' + r).join(' or ')} for any one card.`
+    : `You need ${best} of one kind. Your best rate is ${best} to 1.`;
+  return `<li><button class="opt stack" data-p="mode" data-arg="trade" aria-pressed="${ui.mode === 'trade'}" ${can.length ? '' : 'disabled'}>` +
+    `<span class="top"><span class="nm">Trade at a terminal</span></span><span class="why">${esc(why)}</span></button></li>`;
+}
+const barHTML = inner => `<div class="actionbar">${inner}</div>`;
+
+function turnHTML(st, me) {
+  const yours = st.phase === 'turn' && activePid(st) === me.pid;
+  const owe = st.pend ? (st.pend[me.pid] || 0) : 0;
+  const board = o => `<div class="boardbox">${boardView(st, o)}</div>${LEGEND}`;
+  const score = `<p class="small muted">${vpOf(st, me.pid)} of ${WIN_VP} points &middot; ${left(st, me.pid, 'street')} streets, ${left(st, me.pid, 'operation')} operations and ${left(st, me.pid, 'holding')} major holdings left to build</p>`;
+  const head = moveCard(st, me, rollHTML(st, me) + handHTML(me) + score + tallyHTML(st, me));
+  if (st.phase !== 'turn') return head + board({ labels: true });
+
+  if (st.step === 'discard') {
+    if (!owe) return head + board({ labels: true });
+    const chosen = RES_ORDER.reduce((n, r) => n + (ui.drop[r] || 0), 0);
+    return head + `<section class="card"><h2>Pick ${owe} to drop</h2>
+      <div class="picks">${RES_ORDER.map(r => { const have = (me.hand[r] || 0) - (ui.drop[r] || 0);
+        return `<button class="pick" data-p="drop" data-arg="${r}" ${have > 0 && chosen < owe ? '' : 'disabled'}>${ico(r)}<span>${r}</span><span class="n">${have}</span></button>`; }).join('')}</div>
+      <p class="small">${chosen ? `Dropping ${esc(handList(ui.drop))}. ` : 'Tap the cards you can spare. '}${chosen < owe ? `${owe - chosen} still to pick.` : 'That is the lot.'}</p>
+      <div class="row"><button class="btn" style="flex:1" data-p="dodiscard" ${chosen === owe && !ui.pending ? '' : 'disabled'}>Drop ${owe} ${owe === 1 ? 'card' : 'cards'}</button>
+      <button class="btn ghost" data-p="cleardrop" ${chosen ? '' : 'disabled'}>Start over</button></div></section>` + board({ labels: true });
+  }
+  if (!yours) return head + board({ labels: true });
+
+  if (st.step === 'roll') return head + board({ labels: true })
+    + barHTML(`<button class="btn big" data-p="rollturn" ${ui.pending ? 'disabled' : ''}>${ui.pending ? 'Rolling…' : 'Roll the dice'}</button>`);
+
+  if (st.step === 'police') {
+    const sel = ui.sel && ui.sel.kind === 'h' ? ui.sel.id : null;
+    return head + board({ labels: true, color: me.color, sel: ui.sel, legalH: GEO.hexes.map((_, i) => i).filter(i => i !== st.board.police) })
+      + barHTML(`<button class="btn big" data-p="dopolice" ${sel !== null && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Moving…' : sel !== null ? `Send the police to ${esc(blockName(st, sel))}` : 'Tap a block on the map'}</button>`);
+  }
+  if (st.step === 'steal') {
+    const vs = victims(st, st.board.police, me.pid);
+    return head + `<section class="card"><h2>Take a card</h2><ul class="moves">${vs.map(id => { const q = playerOf(st, id);
+      return `<li><button class="opt" data-p="steal" data-arg="${esc(id)}" ${ui.pending ? 'disabled' : ''}><span class="chip" style="background:var(--p-${q.color})"></span>` +
+        `<span class="grow">${esc(q.name)}<span class="why">Holding ${handCount(q)} cards. You take one, unseen.</span></span></button></li>`;
+    }).join('')}</ul></section>` + board({ labels: true });
+  }
+  // the building part of the turn
+  if (ui.mode && COST[ui.mode]) {
+    const kind = ui.mode, spots = legalFor(st, me.pid, kind), o = { labels: true, color: me.color, sel: ui.sel };
+    if (kind === 'street') o.legalE = spots; else o.legalV = spots;
+    const ready = ui.sel && ui.sel.kind === (kind === 'street' ? 'e' : 'v');
+    return head + board(o) + barHTML(
+      `<button class="btn big" data-p="build" ${ready && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Building…' : ready ? `Build the ${PIECE[kind]} here` : 'Tap a glowing spot'}</button>` +
+      `<button class="btn ghost" data-p="back">Back</button>`);
+  }
+  if (ui.mode === 'trade') {
+    const rate = ui.give ? tradeRate(st, me.pid, ui.give) : 0, ready = ui.give && ui.get && ui.give !== ui.get;
+    return head + `<section class="card"><h2>Trade at a terminal</h2>
+      <p class="small muted">Give, at your best rate</p>
+      <div class="picks">${RES_ORDER.map(r => { const rr = tradeRate(st, me.pid, r);
+        return `<button class="pick" data-p="give" data-arg="${r}" aria-pressed="${ui.give === r}" ${(me.hand[r] || 0) >= rr ? '' : 'disabled'}>${ico(r)}<span>${r}</span><span class="n">${me.hand[r] || 0} &middot; ${rr}:1</span></button>`; }).join('')}</div>
+      <p class="small muted">Take one</p>
+      <div class="picks">${RES_ORDER.map(r => `<button class="pick" data-p="get" data-arg="${r}" aria-pressed="${ui.get === r}" ${ui.give === r ? 'disabled' : ''}>${ico(r)}<span>${r}</span><span class="n">${me.hand[r] || 0}</span></button>`).join('')}</div>
+      <div class="row"><button class="btn" style="flex:1" data-p="dotrade" ${ready && !ui.pending ? '' : 'disabled'}>${ready ? `Give ${rate} ${ui.give} for 1 ${ui.get}` : 'Pick both sides'}</button>
+      <button class="btn ghost" data-p="back">Back</button></div></section>` + board({ labels: true })
+      + barHTML(`<button class="btn big" data-p="endturn" ${ui.pending ? 'disabled' : ''}>End my turn</button>`);
+  }
+  return head + `<section class="card"><h2>What you can do</h2><ul class="moves">${['street', 'operation', 'holding'].map(k => optHTML(st, me, k)).join('')}${tradeOptHTML(st, me)}</ul></section>`
+    + board({ labels: true })
+    + barHTML(`<button class="btn big" data-p="endturn" ${ui.pending ? 'disabled' : ''}>${ui.pending ? 'Ending…' : anyMove(st, me) ? 'End my turn' : 'Nothing to do, end my turn'}</button>`);
+}
 
 function renderPlayer() {
   const st = G.state, screen = playerScreen(), me = st && playerOf(st, PID);
@@ -1680,8 +2105,16 @@ function renderPlayer() {
   }
   $('#p-status').className = 'pill' + (G.online ? ' on' : ''); setHTML('#p-status', G.online ? 'Connected' : 'Connecting');
   setHTML('#p-alert', st && P.hostUp === false ? '<div class="warn"><p><strong>The table screen is offline.</strong> Your seat is safe. Play resumes when it reconnects.</p></div>' : '');
-  const turnKey = st ? [st.phase, st.round, st.placeIdx, st.step, Object.keys(st.buildings || {}).length, st.rolls && st.rolls[PID] ? 1 : 0].join('|') : '';
-  if (turnKey !== P.turnKey) { P.turnKey = turnKey; ui.pending = false; ui.sel = null; clearTimeout(ui.pendTimer); }
+  const turnKey = st ? [st.phase, st.round, st.placeIdx, st.step, st.turnIdx, st.turnNo, Object.keys(st.buildings || {}).length,
+    Object.keys(st.streets || {}).length, me ? handCount(me) : 0, st.rolls && st.rolls[PID] ? 1 : 0].join('|') : '';
+  if (turnKey !== P.turnKey) {
+    // a trade leaves you in the trade panel, because one trade usually wants another;
+    // anything else that moves the game on puts you back at the list of moves.
+    const stepKey = st ? [st.phase, st.step, st.turnIdx].join('|') : '';
+    P.turnKey = turnKey; ui.pending = false; ui.sel = null; ui.drop = {}; clearTimeout(ui.pendTimer);
+    if (ui.mode !== 'trade' || stepKey !== P.stepKey) { ui.mode = null; ui.give = null; ui.get = null; }
+    P.stepKey = stepKey;
+  }
   const changed = screen !== P.screen; P.screen = screen;
 
   if (screen === 'join') {
@@ -1716,15 +2149,12 @@ function renderPlayer() {
       ${must ? `<button class="btn big" data-p="roll" ${ui.pending ? 'disabled' : ''}>Roll the dice</button>` : ''}
       <ul class="rolls">${st.players.map(p => { const r = st.rolls[p.pid]; return `<li><span class="chip" style="background:var(--p-${p.color})"></span><span class="grow">${esc(p.name)}</span>${!st.contenders.includes(p.pid) ? `<span class="muted small">out${r ? ' with ' + (r[0] + r[1]) : ''}</span>` : r ? `<span class="dice" aria-hidden="true">${DIE[r[0]]}${DIE[r[1]]}</span><strong>${r[0] + r[1]}</strong>` : '<span class="muted small">rolling…</span>'}</li>`; }).join('')}</ul></section>`;
   } else if (screen === 'place') {
-    const active = activePid(st), mineTurn = active === PID, ap = playerOf(st, active), nth = st.placeIdx < st.order.length ? 1 : 2;
-    const tip = mineTurn ? (st.step === 'operation' ? `Tap a glowing spot for your ${ordinal(nth)} operation.${nth === 2 ? ' This one pays your starting cards.' : ''}` : 'Tap a glowing path next to the operation you just placed.') : `${esc(ap.name)} is placing a ${st.step}.`;
-    h = `<section class="card">${meHTML(me, tip)}${handCount(me) ? handHTML(me) : ''}</section>
-      <div class="boardbox">${boardView(st, mineTurn ? { labels: true, color: me.color, sel: ui.sel, legalV: st.step === 'operation' ? legalOperations(st) : [], legalE: st.step === 'street' ? legalSetupStreets(st) : [] } : { labels: true })}</div>${LEGEND}
-      ${mineTurn ? `<div class="actionbar"><button class="btn big" data-p="confirm" ${ui.sel && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Placing…' : ui.sel ? `Place ${st.step} here` : `Pick a spot for your ${st.step}`}</button></div>` : ''}`;
-  } else if (screen === 'done') {
-    const first = playerOf(st, st.starter);
-    h = `<section class="card">${meHTML(me, first.pid === PID ? 'Set-up is done. You take the first turn.' : `Set-up is done. ${esc(first.name)} takes the first turn.`)}
-      <h2>Your starting cards</h2>${handHTML(me)}<p class="small muted">2 victory points &middot; 3 operations, 13 streets and 4 major holdings left to build</p></section><div class="boardbox">${boardView(st, { labels: true })}</div>${LEGEND}`;
+    const mineTurn = activePid(st) === PID;
+    h = moveCard(st, me, (handCount(me) ? handHTML(me) : '') + tallyHTML(st, me))
+      + `<div class="boardbox">${boardView(st, mineTurn ? { labels: true, color: me.color, sel: ui.sel, legalV: st.step === 'operation' ? legalOperations(st) : [], legalE: st.step === 'street' ? legalSetupStreets(st) : [] } : { labels: true })}</div>${LEGEND}`
+      + (mineTurn ? barHTML(`<button class="btn big" data-p="confirm" ${ui.sel && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Placing…' : ui.sel ? `Place your ${st.step} here` : `Pick a spot for your ${st.step}`}</button>`) : '');
+  } else if (screen === 'turn' || screen === 'over' || screen === 'done') {
+    h = turnHTML(st, me);
   }
   setHTML('#p-main', h);
 }
@@ -1791,9 +2221,22 @@ function pickSpot(target, ev) {
   if (again && again.focus) again.focus({ preventScroll: true });
   return true;
 }
+/* During the police step a tap on a block picks it, rather than opening the
+   block's information flag. The transparent lid over each block is the target;
+   the ring drawn above it takes no taps, so it can never steal one. */
+function policePick() {
+  const st = G.state;
+  if (WATCH || !st || st.phase !== 'turn' || st.step !== 'police') return false;
+  return joinRoom ? activePid(st) === PID : true;
+}
 document.addEventListener('click', ev => {
   if (pickSpot(ev.target, ev)) return;
   const hex = ev.target.closest && ev.target.closest('[data-hex]');
+  if (hex && policePick()) {
+    const i = +hex.dataset.hex;
+    if (i !== G.state.board.police) { ui.sel = { kind: 'h', id: i }; safeRender(); }
+    return;
+  }
   if (hex || ui.hex !== null) {
     const i = hex ? +hex.dataset.hex : null;
     ui.hex = (i !== null && i === ui.hex) ? null : i;
@@ -1816,6 +2259,24 @@ document.addEventListener('click', ev => {
     case 'recolor': act({ t: 'color', color: pb.dataset.arg }); break;
     case 'leave': act({ t: 'leave' }); break;
     case 'roll': if (act({ t: 'roll' })) { ui.pending = true; renderPlayer(); clearTimeout(ui.pendTimer); ui.pendTimer = setTimeout(() => { if (ui.pending) { ui.pending = false; renderPlayer(); } }, 4000); } break;
+    case 'mode': ui.mode = ui.mode === pb.dataset.arg ? null : pb.dataset.arg; ui.sel = null; ui.give = null; ui.get = null; renderPlayer(); break;
+    case 'back': ui.mode = null; ui.sel = null; ui.give = null; ui.get = null; renderPlayer(); break;
+    case 'give': ui.give = pb.dataset.arg; if (ui.get === ui.give) ui.get = null; renderPlayer(); break;
+    case 'get': ui.get = pb.dataset.arg; renderPlayer(); break;
+    case 'drop': ui.drop[pb.dataset.arg] = (ui.drop[pb.dataset.arg] || 0) + 1; renderPlayer(); break;
+    case 'cleardrop': ui.drop = {}; renderPlayer(); break;
+    case 'rollturn': pact({ t: 'rollturn' }); break;
+    case 'endturn': pact({ t: 'endturn' }); break;
+    case 'steal': pact({ t: 'steal', from: pb.dataset.arg }); break;
+    case 'dodiscard': pact({ t: 'discard', cards: ui.drop }); break;
+    case 'dotrade': if (ui.give && ui.get && ui.give !== ui.get) pact({ t: 'trade', give: ui.give, get: ui.get }); break;
+    case 'dopolice': if (ui.sel && ui.sel.kind === 'h') pact({ t: 'police', h: ui.sel.id }); break;
+    case 'build': {
+      const want = ui.mode === 'street' ? 'e' : 'v';
+      if (!ui.sel || !COST[ui.mode] || ui.sel.kind !== want) break;
+      pact(want === 'e' ? { t: 'build', kind: ui.mode, e: ui.sel.id } : { t: 'build', kind: ui.mode, v: ui.sel.id });
+      break;
+    }
     case 'confirm':
       if (!ui.sel || !st) break;
       if (act(ui.sel.kind === 'v' ? { t: 'operate', v: ui.sel.id } : { t: 'street', e: ui.sel.id })) {
