@@ -174,6 +174,11 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .pick .n{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600;text-transform:none;white-space:nowrap}
 .pick[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
 .pick:disabled{opacity:.3;cursor:not-allowed}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chipx{appearance:none;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--bg);
+  color:inherit;border-radius:99px;padding:5px 10px;font-size:.8rem;font-weight:700;cursor:pointer;text-transform:capitalize;min-height:34px}
+.chipx .ico{width:20px;height:20px}
+.chipx:hover{border-color:var(--accent);color:var(--accent)}
 .tally{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;font-size:.86rem}
 .tally li{display:flex;align-items:center;gap:8px;padding:4px 0}
 .tally .chip{width:16px;height:16px;border-radius:4px;flex:none}
@@ -464,6 +469,31 @@ function produce(st, sum) {
   });
   return got;
 }
+/* A bundle of cards a phone asked to move. Anything that is not a plain count
+   of a real card, or more than the player actually holds, is thrown away. */
+function cleanBundle(b, p) {
+  if (!b || typeof b !== 'object' || Array.isArray(b)) return null;
+  if (!Object.keys(b).every(k => RES_ORDER.includes(k))) return null;
+  const out = {}; let n = 0;
+  for (const r of RES_ORDER) {
+    const k = b[r] || 0;
+    if (!Number.isInteger(k) || k < 0 || k > 19) return null;
+    if (p && k > (p.hand[r] || 0)) return null;
+    if (k) { out[r] = k; n += k; }
+  }
+  return n ? out : null;
+}
+const holds = (p, b) => RES_ORDER.every(r => (p.hand[r] || 0) >= (b[r] || 0));
+const bundleSize = b => RES_ORDER.reduce((n, r) => n + (b[r] || 0), 0);
+function moveCards(from, to, b) { RES_ORDER.forEach(r => { if (b[r]) { from.hand[r] -= b[r]; to.hand[r] = (to.hand[r] || 0) + b[r]; } }); }
+// an offer stops being real the moment its owner cannot cover it any more
+function pruneOffer(st) {
+  const o = st.offer; if (!o) return;
+  const p = playerOf(st, o.from);
+  if (!p || !holds(p, o.give)) { st.offer = null; say('The offer lapsed: the cards behind it are gone.'); }
+}
+const canAnswer = (st, p) => !!st.offer && st.offer.from !== p.pid && st.offer.replies[p.pid] === undefined;
+
 function victims(st, h, pid) {
   const ids = [];
   GEO.hexes[h].vs.forEach(v => { const b = st.buildings[v]; if (b && b.pid !== pid && !ids.includes(b.pid)) ids.push(b.pid); });
@@ -471,6 +501,7 @@ function victims(st, h, pid) {
 }
 /* Can this player do anything at all right now? The phone says so out loud,
    because not knowing was the thing that stalled the first play test. */
+const canOffer = (st, p) => st.players.length > 1 && handCount(p) > 0;
 function anyMove(st, p) {
   if (tradables(st, p).length) return true;
   return ['street', 'operation', 'holding'].some(k => canPay(p, k) && left(st, p.pid, k) > 0 && legalFor(st, p.pid, k).length);
@@ -516,10 +547,29 @@ function guide(st, pid) {
     : theirs(`${who} is taking a card.`, 'Nothing for you to do until your turn.');
   if (st.step === 'roll') return yours ? mine('Roll the dice. Every block on that number pays out.')
     : theirs(`${who} is about to roll.`, 'Nothing for you to do until your turn. You still collect on their roll.');
-  const stuck = me && !anyMove(st, me);
-  return yours ? mine(stuck ? 'Nothing you can build or trade with these cards.' : 'Build, trade at a terminal, or end your turn.',
-                      stuck ? 'End your turn and wait for better dice.' : 'You can do as many of these as you can pay for.')
-    : theirs(`${who} is building.`, 'Nothing for you to do until your turn.');
+  const o = st.offer;
+  if (yours) {
+    if (o) {
+      const yes = Object.keys(o.replies).filter(id => o.replies[id] === 1).map(id => playerOf(st, id)).filter(Boolean).map(x => x.name);
+      const out = st.players.filter(x => x.pid !== pid && o.replies[x.pid] === undefined).map(x => x.name);
+      if (yes.length) return mine(`${andList(yes)} will take your trade.`, 'Tap whoever you want to deal with.');
+      if (out.length) return mine(`Your offer is with ${andList(out)}.`, 'Build or end your turn while you wait.');
+      return mine('Everybody passed on your offer.', 'Pull it and try another, or carry on.');
+    }
+    const stuck = !anyMove(st, me);
+    return mine(stuck ? 'Nothing you can build or swap at a terminal.' : 'Build, trade, or end your turn.',
+                stuck ? canOffer(st, me) ? 'Offer the others a trade, or end your turn.' : 'End your turn and wait for better dice.'
+                      : 'You can do as many of these as you can pay for.');
+  }
+  if (o && me) {
+    if (o.replies[pid] === undefined) {
+      return { yours: true, act, ap, title: 'Your move',
+        now: `${who} will give you ${handList(o.give)} for ${handList(o.want)}.`,
+        hint: holds(me, o.want) ? 'Take it or pass. It is their turn either way.' : `You do not hold ${handList(o.want)}, so this one is not for you.` };
+    }
+    return theirs(`${who} is trading.`, o.replies[pid] === 1 ? 'You said yes. Whether it happens is their call.' : 'You passed on that offer.');
+  }
+  return theirs(`${who} is building.`, 'Nothing for you to do until your turn.');
 }
 
 /* =====================================================================
@@ -1504,7 +1554,7 @@ const joinRoom = (params.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, 
 const WATCH = !!joinRoom && params.has('watch'); // read-only big-board view of someone else's table
 const ROOM_LETTERS = 'ABCDEFGHJKMNPQRSTUVWXYZ';
 const G = { client: null, online: false, state: null, hist: [], b: 0 };
-const ui = { sel: null, hex: null, pending: false, toast: null, toastTimer: 0, mode: null, drop: {}, give: null, get: null };
+const ui = { sel: null, hex: null, pending: false, toast: null, toastTimer: 0, mode: null, drop: {}, give: null, get: null, offGive: {}, offWant: {} };
 
 function toast(msg) {
   clearTimeout(ui.toastTimer); let t = $('#toast');
@@ -1534,7 +1584,7 @@ function hostBase() { return TOPIC_ROOT + G.state.room; }
 function newTableState(kind) {
   return { v: 0, room: makeCode(5, ROOM_LETTERS) + '2', phase: 'lobby', board: makeBoard(kind || 'random'), players: [], order: [], contenders: [], rolls: {}, round: 1,
     starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {},
-    turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, log: ['Table opened. Scan the code to take a seat.'] };
+    turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, offer: null, log: ['Table opened. Scan the code to take a seat.'] };
 }
 function say(msg) { G.state.log.unshift(msg); G.state.log.length = Math.min(G.state.log.length, 14); }
 function commit() {
@@ -1648,7 +1698,7 @@ function hostAction(a) {
       const r = pool[rnd(pool.length)];
       q.hand[r]--; p.hand[r] = (p.hand[r] || 0) + 1;
       st.step = 'act'; say(`${p.name} took a card from ${q.name}.`);
-      commit(); return;
+      pruneOffer(st); commit(); return;
     }
     case 'build': {
       if (!turnOf(st, p) || st.step !== 'act' || !COST[a.kind]) return;
@@ -1659,7 +1709,7 @@ function hostAction(a) {
       if (kind === 'street') { st.streets[spot] = p.pid; say(`${p.name} laid a street.`); }
       else if (kind === 'operation') { st.buildings[spot] = { pid: p.pid, k: 's' }; say(`${p.name} opened an operation.`); }
       else { st.buildings[spot].k = 'c'; say(`${p.name} turned an operation into a major holding.`); }
-      checkWin(st, p);
+      checkWin(st, p); pruneOffer(st);
       ui.sel = null; commit(); return;
     }
     case 'trade': {
@@ -1669,7 +1719,43 @@ function hostAction(a) {
       if ((p.hand[a.give] || 0) < rate) return;
       snapshot();
       p.hand[a.give] -= rate; p.hand[a.get] = (p.hand[a.get] || 0) + 1;
-      say(`${p.name} traded ${rate} ${a.give} for 1 ${a.get}.`); commit(); return;
+      say(`${p.name} traded ${rate} ${a.give} for 1 ${a.get}.`);
+      pruneOffer(st); commit(); return;
+    }
+    case 'offer': {
+      if (!turnOf(st, p) || st.step !== 'act' || st.players.length < 2) return;
+      const give = cleanBundle(a.give, p), want = cleanBundle(a.want, null);
+      if (!give || !want) return;
+      if (RES_ORDER.some(r => give[r] && want[r])) return;   // a card for the same card is not a trade
+      snapshot();
+      st.offer = { from: p.pid, give, want, replies: {} };
+      say(`${p.name} offers ${handList(give)} for ${handList(want)}.`);
+      commit(); return;
+    }
+    case 'reply': {
+      const o = st.offer;
+      if (!p || st.phase !== 'turn' || st.step !== 'act' || !o || o.from === p.pid) return;
+      if (o.replies[p.pid] !== undefined) return;            // one answer each
+      const yes = a.ok === true;
+      if (yes && !holds(p, o.want)) return;
+      o.replies[p.pid] = yes ? 1 : 0;
+      say(`${p.name} ${yes ? 'will take that trade' : 'passed on the trade'}.`);
+      commit(); return;
+    }
+    case 'swap': {
+      const o = st.offer;
+      if (!turnOf(st, p) || st.step !== 'act' || !o || o.from !== p.pid) return;
+      const q = playerOf(st, a.with);
+      if (!q || q.pid === p.pid || o.replies[a.with] !== 1) return;
+      if (!holds(p, o.give) || !holds(q, o.want)) return;    // hands move while an offer sits out
+      snapshot();
+      moveCards(p, q, o.give); moveCards(q, p, o.want);
+      say(`${p.name} gave ${q.name} ${handList(o.give)} for ${handList(o.want)}.`);
+      st.offer = null; commit(); return;
+    }
+    case 'unoffer': {
+      if (!turnOf(st, p) || !st.offer || st.offer.from !== p.pid) return;
+      snapshot(); st.offer = null; say(`${p.name} pulled the offer.`); commit(); return;
     }
     case 'endturn': {
       if (!turnOf(st, p) || st.step !== 'act') return;
@@ -1681,7 +1767,7 @@ const turnOf = (st, p) => !!p && st.phase === 'turn' && activePid(st) === p.pid;
 function nextTurn(st) {
   st.turnIdx = (st.turnIdx + 1) % st.order.length;
   if (st.turnIdx === 0) st.turnNo++;
-  st.step = 'roll'; st.dice = null; st.got = {}; st.pend = {};
+  st.step = 'roll'; st.dice = null; st.got = {}; st.pend = {}; st.offer = null;
   say(`${playerOf(st, st.order[st.turnIdx]).name} is up.`);
 }
 function checkWin(st, p) {
@@ -1726,7 +1812,7 @@ function hostControl(act, arg) {
     case 'lobby':
       if (!confirm('Go back to the lobby? Placed pieces are cleared, players stay seated.')) return;
       Object.assign(st, { phase: 'lobby', order: [], contenders: [], rolls: {}, round: 1, starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {},
-        turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null });
+        turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, offer: null });
       st.board.police = st.board.hexes.findIndex(h => h.t === 'deadzone');   // the police go home with the pieces
       st.players.forEach(p => { p.hand = {}; }); G.hist = []; ui.sel = null; say('Back in the lobby.'); commit(); return;
     case 'newtable':
@@ -1952,6 +2038,14 @@ function validState(s) {
   if (s.got !== undefined && !(obj(s.got) && Object.keys(s.got).every(k => known(k) && hand(s.got[k])))) return false;
   if (s.pend !== undefined && !(obj(s.pend) && Object.keys(s.pend).every(k => known(k) && int(s.pend[k]) && s.pend[k] > 0 && s.pend[k] < 100))) return false;
   if (s.win !== undefined && s.win !== null && !known(s.win)) return false;
+  const bundle = b => obj(b) && Object.keys(b).length && Object.keys(b).every(k => RES_ORDER.includes(k) && int(b[k]) && b[k] > 0 && b[k] < 20);
+  if (s.offer !== undefined && s.offer !== null) {
+    const o = s.offer;
+    if (!obj(o) || !known(o.from) || !bundle(o.give) || !bundle(o.want) || !obj(o.replies)) return false;
+    if (!Object.keys(o.replies).every(k => known(k) && k !== o.from && (o.replies[k] === 0 || o.replies[k] === 1))) return false;
+    if (RES_ORDER.some(r => o.give[r] && o.want[r])) return false;
+    if (s.phase !== 'turn' || s.step !== 'act' || s.order[s.turnIdx] !== o.from) return false;
+  }
   if (s.phase === 'turn' || s.phase === 'over') {
     if (!int(s.turnIdx) || s.turnIdx < 0 || !int(s.turnNo) || s.turnNo < 1) return false;
     if (!obj(s.got) || !obj(s.pend) || s.order.length !== s.players.length || s.turnIdx >= s.order.length) return false;
@@ -2036,6 +2130,56 @@ function tradeOptHTML(st, me) {
     `<span class="top"><span class="nm">Trade at a terminal</span></span><span class="why">${esc(why)}</span></button></li>`;
 }
 const barHTML = inner => `<div class="actionbar">${inner}</div>`;
+function offerOptHTML(st, me) {
+  const ok = canOffer(st, me);
+  const why = st.players.length < 2 ? 'Nobody else is at the table.' : !handCount(me) ? 'You have no cards to offer.'
+    : 'Ask the others for what the bank will not give you.';
+  return `<li><button class="opt stack" data-p="mode" data-arg="offer" aria-pressed="${ui.mode === 'offer'}" ${ok ? '' : 'disabled'}>` +
+    `<span class="top"><span class="nm">Offer the table a trade</span></span><span class="why">${esc(why)}</span></button></li>`;
+}
+const bundleChips = (b, side) => RES_ORDER.filter(r => b[r]).map(r =>
+  `<button class="chipx" data-p="offsub" data-arg="${side}:${r}" aria-label="Take one ${r} back">${ico(r)}${b[r]} ${r} &times;</button>`).join('') || '<span class="small muted">nothing yet</span>';
+
+/* Composing an offer: tap a card to add one, tap it in the summary to take it
+   back. Two grids rather than one, because giving and wanting are not the same
+   question and a phone has no room to say so twice. */
+function offerComposeHTML(st, me) {
+  const g = ui.offGive, w = ui.offWant, ready = bundleSize(g) && bundleSize(w) && !RES_ORDER.some(r => g[r] && w[r]);
+  const grid = (side, bag) => `<div class="picks">${RES_ORDER.map(r => {
+    const held = me.hand[r] || 0, n = bag[r] || 0;
+    const full = side === 'give' ? n >= held : n >= 9;
+    const other = side === 'give' ? ui.offWant[r] : ui.offGive[r];
+    return `<button class="pick" data-p="offadd" data-arg="${side}:${r}" aria-pressed="${n > 0}" ${full || other ? 'disabled' : ''}>` +
+      `${ico(r)}<span>${r}</span><span class="n">${side === 'give' ? n + ' of ' + held : String(n)}</span></button>`; }).join('')}</div>`;
+  return `<section class="card"><h2>Offer the table a trade</h2>
+    <p class="small muted">You give</p>${grid('give', g)}
+    <p class="small muted">You want back</p>${grid('want', w)}
+    <p class="small">Giving</p><div class="chips">${bundleChips(g, 'give')}</div>
+    <p class="small">For</p><div class="chips">${bundleChips(w, 'want')}</div>
+    <div class="row"><button class="btn" style="flex:1" data-p="offsend" ${ready && !ui.pending ? '' : 'disabled'}>${ready ? 'Send it to the table' : 'Pick both sides'}</button>
+    <button class="btn ghost" data-p="offclear" ${bundleSize(g) || bundleSize(w) ? '' : 'disabled'}>Clear</button>
+    <button class="btn ghost" data-p="back">Back</button></div></section>`;
+}
+// Your offer, once it is out: who has answered, and the button that closes the deal.
+function offerStatusHTML(st, me, o) {
+  return `<section class="card"><h2>Your offer</h2>
+    <p class="mnow">${esc(handList(o.give))} for ${esc(handList(o.want))}</p>
+    <ul class="moves">${st.players.filter(p => p.pid !== me.pid).map(p => {
+      const r = o.replies[p.pid], can = holds(p, o.want);
+      const why = r === 1 ? 'Will take it. Tap to make the swap.' : r === 0 ? 'Passed.' : can ? 'Thinking about it.' : `Cannot cover ${handList(o.want)}.`;
+      return `<li><button class="opt" data-p="offswap" data-arg="${esc(p.pid)}" ${r === 1 && !ui.pending ? '' : 'disabled'}>` +
+        `<span class="chip" style="background:var(--p-${p.color})"></span><span class="grow">${esc(p.name)}<span class="why">${esc(why)}</span></span></button></li>`;
+    }).join('')}</ul>
+    <button class="btn ghost" data-p="unoffer" ${ui.pending ? 'disabled' : ''}>Pull the offer</button></section>`;
+}
+// Somebody else's offer, seen from your phone while you wait for your turn.
+function offerAnswerHTML(st, me, o) {
+  const from = playerOf(st, o.from), mine = o.replies[me.pid];
+  return `<section class="card"><h2>${mine === undefined ? 'On the table' : 'You answered'}</h2>
+    <p class="mnow"><span class="turnchip" style="background:var(--p-${from.color})"></span>You get ${esc(handList(o.give))} &middot; you hand over ${esc(handList(o.want))}</p>
+    <p class="small muted">${mine === undefined ? (holds(me, o.want) ? 'Your call. Passing costs you nothing.' : 'You cannot cover your side of it.')
+      : mine === 1 ? 'You said yes. ' + esc(from.name) + ' decides whether it happens.' : 'You passed. Nothing more to do here.'}</p></section>`;
+}
 
 function turnHTML(st, me) {
   const yours = st.phase === 'turn' && activePid(st) === me.pid;
@@ -2055,6 +2199,13 @@ function turnHTML(st, me) {
       <div class="row"><button class="btn" style="flex:1" data-p="dodiscard" ${chosen === owe && !ui.pending ? '' : 'disabled'}>Drop ${owe} ${owe === 1 ? 'card' : 'cards'}</button>
       <button class="btn ghost" data-p="cleardrop" ${chosen ? '' : 'disabled'}>Start over</button></div></section>` + board({ labels: true });
   }
+  if (!yours && st.offer && st.step === 'act') {
+    const o = st.offer, said = o.replies[me.pid];
+    return head + offerAnswerHTML(st, me, o) + board({ labels: true })
+      + (said === undefined ? barHTML(
+        `<button class="btn big" data-p="reply" data-arg="yes" ${holds(me, o.want) && !ui.pending ? '' : 'disabled'}>Take the trade</button>` +
+        `<button class="btn ghost" data-p="reply" data-arg="no" ${ui.pending ? 'disabled' : ''}>Pass</button>`) : '');
+  }
   if (!yours) return head + board({ labels: true });
 
   if (st.step === 'roll') return head + board({ labels: true })
@@ -2073,6 +2224,8 @@ function turnHTML(st, me) {
     }).join('')}</ul></section>` + board({ labels: true });
   }
   // the building part of the turn
+  const off = st.offer && st.offer.from === me.pid ? st.offer : null;
+  if (ui.mode === 'offer' && !off) return head + offerComposeHTML(st, me) + board({ labels: true });
   if (ui.mode && COST[ui.mode]) {
     const kind = ui.mode, spots = legalFor(st, me.pid, kind), o = { labels: true, color: me.color, sel: ui.sel };
     if (kind === 'street') o.legalE = spots; else o.legalV = spots;
@@ -2093,9 +2246,10 @@ function turnHTML(st, me) {
       <button class="btn ghost" data-p="back">Back</button></div></section>` + board({ labels: true })
       + barHTML(`<button class="btn big" data-p="endturn" ${ui.pending ? 'disabled' : ''}>End my turn</button>`);
   }
-  return head + `<section class="card"><h2>What you can do</h2><ul class="moves">${['street', 'operation', 'holding'].map(k => optHTML(st, me, k)).join('')}${tradeOptHTML(st, me)}</ul></section>`
+  return head + (off ? offerStatusHTML(st, me, off) : '')
+    + `<section class="card"><h2>What you can do</h2><ul class="moves">${['street', 'operation', 'holding'].map(k => optHTML(st, me, k)).join('')}${tradeOptHTML(st, me)}${off ? '' : offerOptHTML(st, me)}</ul></section>`
     + board({ labels: true })
-    + barHTML(`<button class="btn big" data-p="endturn" ${ui.pending ? 'disabled' : ''}>${ui.pending ? 'Ending…' : anyMove(st, me) ? 'End my turn' : 'Nothing to do, end my turn'}</button>`);
+    + barHTML(`<button class="btn big" data-p="endturn" ${ui.pending ? 'disabled' : ''}>${ui.pending ? 'Ending…' : anyMove(st, me) || canOffer(st, me) ? 'End my turn' : 'Nothing to do, end my turn'}</button>`);
 }
 
 /* When the board is the control rather than the picture, scroll it into view.
@@ -2119,12 +2273,13 @@ function renderPlayer() {
   $('#p-status').className = 'pill' + (G.online ? ' on' : ''); setHTML('#p-status', G.online ? 'Connected' : 'Connecting');
   setHTML('#p-alert', st && P.hostUp === false ? '<div class="warn"><p><strong>The table screen is offline.</strong> Your seat is safe. Play resumes when it reconnects.</p></div>' : '');
   const turnKey = st ? [st.phase, st.round, st.placeIdx, st.step, st.turnIdx, st.turnNo, Object.keys(st.buildings || {}).length,
-    Object.keys(st.streets || {}).length, me ? handCount(me) : 0, st.rolls && st.rolls[PID] ? 1 : 0].join('|') : '';
+    Object.keys(st.streets || {}).length, me ? handCount(me) : 0, st.rolls && st.rolls[PID] ? 1 : 0,
+    st.offer ? 'o' + Object.keys(st.offer.replies).length : '-'].join('|') : '';
   if (turnKey !== P.turnKey) {
     // a trade leaves you in the trade panel, because one trade usually wants another;
     // anything else that moves the game on puts you back at the list of moves.
     const stepKey = st ? [st.phase, st.step, st.turnIdx].join('|') : '';
-    P.turnKey = turnKey; ui.pending = false; ui.sel = null; ui.drop = {}; clearTimeout(ui.pendTimer);
+    P.turnKey = turnKey; ui.pending = false; ui.sel = null; ui.drop = {}; ui.offGive = {}; ui.offWant = {}; clearTimeout(ui.pendTimer);
     if (ui.mode !== 'trade' || stepKey !== P.stepKey) { ui.mode = null; ui.give = null; ui.get = null; }
     P.stepKey = stepKey;
   }
@@ -2298,6 +2453,18 @@ document.addEventListener('click', ev => {
     case 'leave': act({ t: 'leave' }); break;
     case 'roll': if (act({ t: 'roll' })) { ui.pending = true; renderPlayer(); clearTimeout(ui.pendTimer); ui.pendTimer = setTimeout(() => { if (ui.pending) { ui.pending = false; renderPlayer(); } }, 4000); } break;
     case 'mode': ui.mode = ui.mode === pb.dataset.arg ? null : pb.dataset.arg; ui.sel = null; ui.give = null; ui.get = null; renderPlayer(); break;
+    case 'offadd': case 'offsub': {
+      const parts = String(pb.dataset.arg).split(':'), bag = parts[0] === 'give' ? ui.offGive : ui.offWant, r = parts[1];
+      if (!RES_ORDER.includes(r)) break;
+      bag[r] = (bag[r] || 0) + (pb.dataset.p === 'offadd' ? 1 : -1);
+      if (bag[r] <= 0) delete bag[r];
+      renderPlayer(); break;
+    }
+    case 'offclear': ui.offGive = {}; ui.offWant = {}; renderPlayer(); break;
+    case 'offsend': pact({ t: 'offer', give: ui.offGive, want: ui.offWant }); break;
+    case 'offswap': pact({ t: 'swap', with: pb.dataset.arg }); break;
+    case 'unoffer': pact({ t: 'unoffer' }); break;
+    case 'reply': pact({ t: 'reply', ok: pb.dataset.arg === 'yes' }); break;
     case 'back': ui.mode = null; ui.sel = null; ui.give = null; ui.get = null; renderPlayer(); break;
     case 'give': ui.give = pb.dataset.arg; if (ui.get === ui.give) ui.get = null; renderPlayer(); break;
     case 'get': ui.get = pb.dataset.arg; renderPlayer(); break;
