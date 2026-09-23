@@ -1548,13 +1548,14 @@ const LENS = 1000;                        // focal length in board units
 const PITCH_MIN = 21, PITCH_MAX = 90;   // below this the tiles foreshorten into unreadable slivers
 const ZOOM_MIN = 1, ZOOM_MAX = 4.5;
 const PAN_MAX = 0.42;                     // as a share of the window, so you cannot lose the board
+const PAN_FREE = 0.4;                     // how far the whole board can be slid about at no zoom at all
 const VB = { x: -470, y: -380, w: 940, h: 760 };
 
 function clampCam() {
   CAM.pitch = Math.min(PITCH_MAX, Math.max(PITCH_MIN, CAM.pitch));
   CAM.zoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, CAM.zoom));
   CAM.yaw = ((CAM.yaw % 360) + 360) % 360;
-  const lim = PAN_MAX * (1 - 1 / CAM.zoom);   // nothing to pan to when the whole board fits
+  const lim = PAN_FREE + PAN_MAX * (1 - 1 / CAM.zoom);   // a little room even when the whole board fits, more as you zoom in
   CAM.ox = Math.min(lim, Math.max(-lim, CAM.ox));
   CAM.oy = Math.min(lim, Math.max(-lim, CAM.oy));
 }
@@ -9464,9 +9465,10 @@ function boardBox() {
 
 function bindCamera(root) {
   root.addEventListener('pointerdown', ev => {
-    if (ev.pointerType === 'mouse' && ev.button !== 0) return;
     const svg = ev.target.closest && ev.target.closest('svg.board'); if (!svg) return;
-    view.drag = { x: ev.clientX, y: ev.clientY, moved: 0, id: ev.pointerId, pan: ev.shiftKey || ev.ctrlKey };
+    if (ev.pointerType === 'mouse' && ev.button !== 0 && ev.button !== 2) return;
+    // the left button grabs the board and moves it; the right button, or shift or alt, turns and tilts it
+    view.drag = { x: ev.clientX, y: ev.clientY, moved: 0, id: ev.pointerId, turn: ev.pointerType === 'mouse' && (ev.button === 2 || ev.shiftKey || ev.altKey) };
     try { svg.setPointerCapture(ev.pointerId); } catch (e) { /* capture is a nicety */ }
   });
   root.addEventListener('pointermove', ev => {
@@ -9474,11 +9476,10 @@ function bindCamera(root) {
     const dx = ev.clientX - d.x, dy = ev.clientY - d.y;
     d.x = ev.clientX; d.y = ev.clientY; d.moved += Math.abs(dx) + Math.abs(dy);
     if (d.moved < SLOP) return;                                // still might be a tap
-    // A finger drags the board around, which is what you want once you have
-    // zoomed in on your own corner of it; turning is on the buttons and on a
-    // second finger. A mouse still orbits, with shift to slide.
-    const box = boardBox(), pan = d.pan || ev.pointerType !== 'mouse';
-    if (pan) nudge(c => { c.ox -= dx / box.w; c.oy -= dy / box.h; }, true);
+    // A finger or the left button grabs the board and moves it about the
+    // screen; turning is on the buttons, the right button and a second finger.
+    const box = boardBox();
+    if (!d.turn) nudge(c => { c.ox += dx / box.w; c.oy += dy / box.h; }, true);   // the board follows the hand
     else nudge(c => { c.yaw -= dx * 0.42; c.pitch += dy * 0.32; }, true);
   });
   const stop = ev => {
@@ -9496,6 +9497,8 @@ function bindCamera(root) {
     if (i !== ui.hex) { ui.hex = i; drawFlag(); }
   });
   root.addEventListener('pointerleave', () => { if (ui.hex !== null) { ui.hex = null; drawFlag(); } });
+  // the right button turns the board, so it does not open the browser's menu there
+  root.addEventListener('contextmenu', ev => { if (ev.target.closest && ev.target.closest('svg.board')) ev.preventDefault(); });
   root.addEventListener('pointerup', stop);
   root.addEventListener('pointercancel', stop);
 
@@ -9511,7 +9514,7 @@ function bindCamera(root) {
     const now = touchMid(ev.touches), box = boardBox();
     nudge(c => {
       c.zoom *= now.s / Math.max(1, two.s);
-      c.ox -= (now.x - two.x) / box.w; c.oy -= (now.y - two.y) / box.h;
+      c.ox += (now.x - two.x) / box.w; c.oy += (now.y - two.y) / box.h;
     }, true);
     two = now;
   }, { passive: false });
