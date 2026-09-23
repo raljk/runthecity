@@ -59,9 +59,58 @@ button,input{font:inherit;color:inherit}
 .small{font-size:.84rem}
 
 /* ---------- host layout ---------- */
-.host{display:grid;grid-template-columns:minmax(0,1fr) clamp(370px,27vw,540px);gap:20px;padding:20px;align-items:start}
+.host{display:grid;grid-template-columns:minmax(0,1fr) clamp(360px,27vw,460px);gap:20px;padding:20px;align-items:start}
 @media (max-width:980px){.host{grid-template-columns:minmax(0,1fr)}}
+/* On a computer the table screen is one screenful that never scrolls: the board
+   takes every pixel the side column and the skills strip leave it. The board's
+   SVG keeps its own aspect inside that box (meet), and every tap and flying card
+   is mapped through getScreenCTM, so letterboxing it moves nothing. */
+@media (min-width:981px) and (min-height:600px){
+  .hframe{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+  .hframe>.host{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);align-items:stretch;padding:14px 20px;gap:18px}
+  .host .stage{min-height:0}
+  /* the turn banner floats over the top of the board, where the view keeps air for the far side's towers */
+  .host .bwrap{flex:1;min-height:0;position:relative}
+  .host .banner{position:absolute;left:0;right:0;top:0;z-index:3;min-height:0;padding:12px 16px 30px;border-radius:18px 18px 0 0;pointer-events:none;
+    background:linear-gradient(to bottom,color-mix(in srgb,var(--bg) 88%,transparent) 0,color-mix(in srgb,var(--bg) 62%,transparent) 55%,transparent)}
+  .host .banner>*{pointer-events:auto}
+  .host .banner .what{text-shadow:0 1px 3px #000,0 0 14px rgba(0,0,0,.8)}
+  .host .boardbox{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
+  /* the camera buttons sit as a small block in the bottom-right corner, which the hexagon never reaches */
+  .host .camctl{position:absolute;right:12px;bottom:12px;z-index:2;display:grid;grid-template-columns:repeat(4,34px);gap:4px;padding:6px;
+    border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 82%,transparent);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,.45)}
+  .host .camctl button{width:34px;height:34px;border-radius:8px}
+  .host .camctl [data-cam=home]{grid-column:span 2;width:auto}
+  .host .camctl button.wide{grid-column:span 4;width:auto;height:30px;padding:0 8px;font-size:.76rem}
+  .host .camctl svg{width:18px;height:18px}
+  body.hostfight .host .bwrap{flex:none}
+  body.hostfight .host .banner{position:static;padding:0;background:none}
+  .host .board3d{flex:1;min-height:0;position:relative}
+  .host svg.board{position:absolute;inset:0;width:100%;height:100%;max-height:none}
+  body.hostfight .host #h-arena{flex:1;min-height:0}
+  .host .arena.ontable{height:100%}
+  .host .side{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+  .host .logcard{flex:1;min-height:170px}
+  .host .logcard .log{flex:1;min-height:0;max-height:none}
+  .hstrip .hmk{grid-template-columns:repeat(var(--n,11),minmax(0,1fr))}
+}
+@media (min-width:981px) and (max-width:1279px){.hstrip .hmk{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}}
+@media (min-width:1280px) and (max-width:1399px){.hstrip .stl{display:none}}
+/* the join code, the links and the table's own buttons, in one card that folds away */
+.drawer{gap:0;padding:0}
+.drawer:has(#h-dhead:empty){display:none}
+.dhead{appearance:none;border:0;background:transparent;display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;cursor:pointer;text-align:left;border-radius:14px;min-height:48px}
+.dhead .dt{font-family:var(--display);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);line-height:1.25}
+.dhead:hover .dt{color:var(--ink)}
+.dhead .dcode{font:800 1rem/1 var(--display);letter-spacing:.12em}
+.dhead .grow{flex:1}
+.dhead[aria-expanded=false] .chev{transform:rotate(-90deg)}
+.dbody{display:flex;flex-direction:column;gap:14px;padding:0 16px 16px}
+.dbody>div:empty{display:none}
+.dbody .dctl{display:flex;flex-direction:column;gap:12px;padding-top:14px;border-top:1px solid var(--line)}
 .stage{display:flex;flex-direction:column;gap:12px;min-width:0}
+.bwrap{display:flex;flex-direction:column;gap:12px;min-width:0}
 .banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-height:48px}
 .banner .what{font-family:var(--display);font-weight:700;font-size:1.25rem;line-height:1.15;flex:1;min-width:200px}
 .turnchip{display:inline-block;width:.8em;height:.8em;border-radius:3px;border:2px solid var(--piece-line);vertical-align:-.05em;margin-right:.35em}
@@ -73,6 +122,9 @@ button,input{font:inherit;color:inherit}
 svg.board{display:block;width:100%;height:auto;touch-action:none;cursor:grab}
 svg.board:active{cursor:grabbing}
 .host svg.board{max-height:calc(100vh - 150px)}
+.side .join{flex-wrap:wrap}
+.side .joininfo{flex:1 1 140px}
+.side .seat .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .side{display:flex;flex-direction:column;gap:14px;min-width:0}
 .join{display:flex;flex-direction:row;align-items:center;gap:16px}
 a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
@@ -107,6 +159,7 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .seg button{appearance:none;border:0;background:transparent;padding:10px;cursor:pointer;font-weight:600;min-height:44px}
 .seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
 .log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.84rem;color:var(--muted);max-height:180px;overflow:auto}
+.logcard{min-height:0}
 .log li:first-child{color:var(--ink)}
 
 /* ---------- phone layout ---------- */
@@ -519,8 +572,19 @@ div.opt.cant{border-style:dashed;color:var(--muted)}
 .aimhead{display:flex;gap:12px;align-items:center}
 .freebie{display:inline-grid;place-items:center;min-width:46px;height:46px;padding:0 10px;border-radius:9px;border:2px dashed var(--ok);color:var(--ok);font:800 .8rem var(--display);text-transform:uppercase;letter-spacing:.08em}
 .aimhead p{margin:3px 0 0}
-.hmk{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px 6px}
-.hm{display:flex;flex-direction:column;align-items:center;gap:3px;font:800 .82rem var(--display);font-variant-numeric:tabular-nums}
+.hstrip{display:flex;align-items:center;gap:10px 18px;padding:9px 20px calc(9px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--panel)}
+.hstrip:empty{display:none}
+.hstrip .stl{flex:none;width:78px;line-height:1.25;cursor:help}
+.hmk{flex:1;min-width:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px 6px}
+.hm{display:flex;align-items:center;gap:5px;min-width:0;line-height:1.1}
+.hm .sc{width:26px;height:36px;border-radius:5px;border-width:1.5px}
+.hm .sc.xs::before{height:3px}
+.hm>span:last-child{min-width:0}
+.hm strong,.hm em{display:block;overflow:hidden;text-overflow:ellipsis}
+.hm strong{font-size:.74rem;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2}
+.hm em{font-style:normal;font-weight:500;font-size:.66rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hm.out strong{color:var(--muted)}
+@media (max-width:980px){.hstrip{flex-wrap:wrap}.hstrip .stl{max-width:none}}
 /* Lucky Streak: three dice, and three pairs to choose between */
 .dice3{--d:54px;display:flex;gap:12px;justify-content:center;padding:4px 0}
 .d3{transition:opacity .3s,transform .3s}
@@ -3109,17 +3173,25 @@ function qrSVG(text) {
 }
 
 function renderHostShell() {
-  $('#app').innerHTML = `
+  $('#app').innerHTML = `<div class="hframe">
   <header class="bar"><span class="brand">Run the <i>City</i></span><span class="muted small">${WATCH ? 'Board view, table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
   <main class="host">
-    <section class="stage"><div id="h-banner" class="banner"></div><div id="h-offer" class="slot"></div><div id="h-board" class="boardbox"></div><div id="h-arena"></div></section>
-    <aside class="side"><div id="h-join"></div><div id="h-warn"></div>
+    <section class="stage"><div id="h-offer" class="slot"></div><div class="bwrap"><div id="h-banner" class="banner"></div><div id="h-board" class="boardbox"></div></div><div id="h-arena"></div></section>
+    <aside class="side">
+      <section class="card drawer"><div id="h-dhead"></div><div id="h-dbody" class="dbody"><div id="h-join"></div><div id="h-warn"></div><div id="h-ctrl" class="dctl"></div></div></section>
       <section class="card"><h2>Seats, clockwise</h2><ul id="h-seats" class="seats"></ul></section>
-      <div id="h-market" class="slot"></div>
-      <section class="card" id="h-ctrl"></section>
-      <section class="card"><h2>What happened</h2><ul id="h-log" class="log"></ul></section>
+      <section class="card logcard"><h2>What happened</h2><ul id="h-log" class="log"></ul></section>
     </aside>
-  </main>`;
+  </main>
+  <footer id="h-market" class="hstrip" aria-label="Skills and talents left at the market"></footer></div>`;
+}
+/* The join code and the table's own buttons fold away once the game is running
+   and open again in the lobby or when it is over. Folding it by hand holds only
+   until the game moves between those, so the next game starts the right way. */
+const drawerGroup = st => (st && st.phase !== 'lobby' && st.phase !== 'over' ? 'game' : 'table');
+function drawerOpen(st) {
+  if (ui.drawer && ui.drawer.g !== drawerGroup(st)) ui.drawer = null;
+  return ui.drawer ? ui.drawer.open : drawerGroup(st) === 'table';
 }
 /* the seat list on its own, so a card that lands can bump one count without redrawing the table */
 function seatsHTML(st, ro) {
@@ -3195,11 +3267,15 @@ function renderHost() {
 
   // join card: QR for phones, plus links to share with friends who are somewhere else
   const url = joinURL(), qr = qrSVG(url), mini = st.phase !== 'lobby';
-  if (!ro && !G.client) setHTML('#h-join', `<section class="card"><h2>${G.fatal ? 'No connection' : 'Opening the table'}</h2><p class="muted">${G.fatal ? 'The join code appears once the relay is reachable.' : 'Connecting to the relay. The join code appears in a moment.'}</p></section>`);
-  else setHTML('#h-join', `<section class="card"><div class="join${mini ? ' mini' : ''}"><div class="qrbox">${qr || '<p class="qrfallback">QR code unavailable. Share the link instead.</p>'}</div>
+  const open = drawerOpen(st), live = ro || G.client;
+  setHTML('#h-dhead', `<button type="button" class="dhead" data-h="drawer" aria-expanded="${open}" aria-controls="h-dbody"><span class="dt">${ro ? 'Join this table' : 'Join code &amp; table controls'}</span><span class="grow"></span>` +
+    `${open || !live ? '' : `<span class="dcode" title="Rejoin code">${esc(st.room)}</span>`}${CHEV}</button>`);
+  $('#h-dbody').hidden = !open;
+  if (!ro && !G.client) setHTML('#h-join', `<div class="joinwait"><h2>${G.fatal ? 'No connection' : 'Opening the table'}</h2><p class="muted">${G.fatal ? 'The join code appears once the relay is reachable.' : 'Connecting to the relay. The join code appears in a moment.'}</p></div>`);
+  else setHTML('#h-join', `<div class="join${mini ? ' mini' : ''}"><div class="qrbox">${qr || '<p class="qrfallback">QR code unavailable. Share the link instead.</p>'}</div>
     <div class="joininfo"><h2>${mini ? 'Rejoin code' : 'Scan to take a seat'}</h2><p class="roomcode">${esc(st.room)}</p><a class="joinurl" href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div></div>
     <div class="row"><button class="btn ghost small" data-c="join">Copy phone link</button><button class="btn ghost small" data-c="watch">Copy board link</button>${ro ? '' : `<a class="btn ghost small" href="${esc(watchURL())}" target="_blank" rel="noopener">Open board view</a>`}</div>
-    <p class="small muted">Phones scan the code or open the phone link to play. The board link shows this board, live, on any other screen.</p></section>`);
+    <p class="small muted">Phones scan the code or open the phone link to play. The board link shows this board, live, on any other screen.</p>`);
   const custom = ro ? null : load('rtcity.base');
   setHTML('#h-warn', !ro && (isLocalOnly() || custom) ? `<div class="warn">${isLocalOnly() && !custom
       ? `<p><strong>Phones cannot open this address yet.</strong> This page is running from ${location.protocol === 'file:' ? 'a file on this computer' : 'localhost'}, which only this computer can reach. Serve this folder on your Wi-Fi, then enter this computer's network address.</p>`
@@ -3213,9 +3289,9 @@ function renderHost() {
   // controls
   let c = '';
   if (ro) {
-    c = `<h2>You are watching</h2><p class="small muted">This screen shows the shared board and updates live. Pieces are moved from the players' phones.</p><a class="btn ghost" href="${esc(url)}">Play from this device instead</a>`;
+    c = `<p class="small muted"><strong>You are watching.</strong> This screen shows the shared board and updates live. Pieces are moved from the players' phones.</p><a class="btn ghost" href="${esc(url)}">Play from this device instead</a>`;
   } else {
-    c = '<h2>Table controls</h2>';
+    c = '';
     if (st.phase === 'lobby') {
       c += `<div class="seg" role="group" aria-label="City layout"><button data-h="map" data-arg="random" aria-pressed="${st.board.kind === 'random'}">Random city</button><button data-h="map" data-arg="beginner" aria-pressed="${st.board.kind === 'beginner'}" ${st.board.hexes.length === 30 ? 'disabled title="The big city is always dealt at random"' : ''}>Starter city</button></div>
         <div class="row"><button class="btn ghost" data-h="reshuffle" ${st.board.kind === 'random' ? '' : 'disabled'}>Deal again</button><button class="btn" style="flex:1" data-h="start" ${st.players.length < 2 ? 'disabled' : ''}>Start set-up</button></div>
@@ -3643,8 +3719,11 @@ function seatBadges(p) {
 function hostMarketHTML(st) {
   if (!st.stock) return '';
   const left2 = k => deckOf(st, k) + (FX.cardHold && FX.cardHold.k === k ? 1 : 0);
-  return `<section class="card"><h2>Skills &amp; talents</h2><div class="hmk">${CARD_ORDER.map(k => `<span class="hm" data-k="${k}" title="${esc(CARDS[k].name)}: ${esc(CARDS[k].verb)}">${scard(k, { size: 's', dim: !left2(k) })}<b>${left2(k)}</b></span>`).join('')}</div>
-    <p class="small muted">Buy on your turn after you roll; your first two upgrades each draw one. One a turn, and nothing is ready on the turn you got it.</p></section>`;
+  const rule = 'Buy on your turn after you roll; your first two upgrades each draw one. One a turn, and nothing is ready on the turn you got it.';
+  return `<h2 class="stl" title="${rule}">Skills &amp; talents</h2>` +
+    `<div class="hmk" style="--n:${CARD_ORDER.length}">${CARD_ORDER.map(k => { const c = CARDS[k], n = left2(k);
+      return `<span class="hm${n ? '' : ' out'}" data-k="${k}" title="${esc(c.name)}: ${esc(c.verb)}">${scard(k, { size: 'xs', dim: !n })}` +
+        `<span><strong>${esc(c.name)}</strong><em>${!n ? (c.price ? 'Sold out' : 'None left') : c.price ? n + ' left' : n + ' in crates'}</em></span></span>`; }).join('')}</div>`;
 }
 /* the two rows under "What you can do": play what you hold, or go to the market */
 function skillOptsHTML(st, me, live) {
@@ -4659,7 +4738,9 @@ function fxRoll(ev) {
     return wait(quick ? 650 : 900);
   }).then(() => {
     // step aside so the cards have the board to themselves, then go
-    const brd = !phone && document.querySelector('svg.board'), top = brd ? Math.max(8, brd.getBoundingClientRect().top + 8) : 8;
+    // (on a computer the banner floats over the top of the board, so it stops under the banner's words)
+    const brd = !phone && document.querySelector('svg.board'), words = !phone && document.querySelector('#h-banner .what'),
+      top = brd ? Math.max(8, brd.getBoundingClientRect().top + 8, words ? words.getBoundingClientRect().bottom + 14 : 0) : 8;
     place(phone ? 0.62 : 0.5, top - y);
     setTimeout(() => { box.classList.add('away'); setTimeout(() => box.remove(), 450); }, quick ? 250 : 1700);
     return wait(quick ? 120 : 260);
@@ -5190,7 +5271,12 @@ document.addEventListener('click', ev => {
   const cam = ev.target.closest('[data-cam]');
   if (cam) { camAction(cam.dataset.cam); return; }
   if (ev.target.closest('[data-h-clear]')) { ui.sel = null; renderHost(); return; }
-  if (hb) { if (hb.dataset.h === 'clearbase') { store('rtcity.base', null); renderHost(); } else hostControl(hb.dataset.h, hb.dataset.arg); return; }
+  if (hb) {
+    if (hb.dataset.h === 'clearbase') { store('rtcity.base', null); renderHost(); }
+    else if (hb.dataset.h === 'drawer') { ui.drawer = { g: drawerGroup(G.state), open: !drawerOpen(G.state) }; renderHost(); }
+    else hostControl(hb.dataset.h, hb.dataset.arg);
+    return;
+  }
   if (!pb) return;
   const st = G.state;
   switch (pb.dataset.p) {
