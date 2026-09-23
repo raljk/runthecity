@@ -561,6 +561,28 @@ div.opt.cant{border-style:dashed;color:var(--muted)}
 .opt.mk .tags{display:flex;gap:6px;align-items:center;font-size:.72rem;color:var(--muted);font-weight:600;margin:3px 0 1px}
 .opt.mk .price{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:7px}
 .opt.mk .left{font-size:.72rem;color:var(--muted);font-weight:700}
+/* a card opened from the market: a sheet over the list on a phone, a card in the middle on anything wider */
+body.modalopen{overflow:hidden}
+.modal{position:fixed;inset:0;z-index:25;display:flex;align-items:flex-end;justify-content:center}
+.modal .scrim{position:absolute;inset:0;background:rgba(3,5,10,.74);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);touch-action:none}
+.modal .sheet{position:relative;width:100%;max-width:560px;max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:9px;padding:20px 18px calc(16px + env(safe-area-inset-bottom,0px));
+  background:var(--panel);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -14px 44px rgba(0,0,0,.65)}
+.modal .sheet p{margin:0}
+.mkhero{display:flex;justify-content:center;padding:4px 0 8px}
+.mkdesc{text-align:center;font-size:1rem;line-height:1.45;text-wrap:pretty;max-width:34em;margin:0 auto}
+.mkprice{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.mkleft{font-size:.76rem;color:var(--muted);font-weight:700}
+.mkacts{display:flex;gap:8px;margin-top:8px}
+.mkacts .btn{flex:1}
+.mkacts .btn.ghost{flex:0 1 auto;min-width:96px}
+.mkacts .btn.ghost.big{flex:1}
+@media (min-width:600px){.modal{align-items:center;padding:20px}.modal .sheet{max-width:440px;border-bottom:1px solid var(--line);border-radius:20px}}
+@keyframes sheetup{from{transform:translateY(48px);opacity:0}to{transform:none;opacity:1}}
+@keyframes scrimin{from{opacity:0}}
+.modal.enter .sheet{animation:sheetup .26s cubic-bezier(.2,.9,.3,1)}
+.modal.enter .scrim{animation:scrimin .2s ease-out}
+@media (prefers-reduced-motion:reduce){.modal.enter .sheet,.modal.enter .scrim{animation:none}}
 .mkfan{display:inline-flex;align-items:center}
 .mkfan .sc+.sc{margin-left:-7px}
 .aimhead{display:flex;gap:12px;align-items:center}
@@ -3744,16 +3766,56 @@ function cardsHTML(st, me, sel) {
     ${sel ? cardDetailHTML(sel, canPlay(st, me, sel)) : ''}
     <p class="small muted">One skill or talent a turn, yours or anybody's. Talents can go before you roll, skills after. Anything you got this turn is ready once the turn passes.</p></section>`;
 }
-function marketHTML(st, me, sel) {
+function marketHTML(st, me) {
   return `<section class="card"><h2>The market</h2>
     <p class="small muted">Skills are moves your crew can make; talents are gifts. What you buy is ready once the turn passes.</p>
     <ul class="moves">${CARD_ORDER.map(k => {
       const c = CARDS[k], cb = canBuy(st, me, k), n = deckOf(st, k);
-      return `<li><button class="opt mk${cb.ok ? ' can' : ''}" data-p="mkpick" data-arg="${k}" aria-pressed="${sel === k}">${scard(k, { size: 'm', dim: !n })}` +
+      return `<li><button class="opt mk${cb.ok ? ' can' : ''}" data-p="mkpick" data-arg="${k}" aria-haspopup="dialog">${scard(k, { size: 'm', dim: !n })}` +
         `<span class="grow"><span class="nm">${esc(c.name)}</span><span class="tags">${kindTag(k)} ${TIER_NAME[c.tier]}</span><span class="why">${esc(c.verb)}</span>` +
         `<span class="price">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : '<span class="small muted">Only from an upgrade</span>'}<span class="left">${c.price ? (n ? n + ' left' : 'Sold out') : n + ' in the crates'}</span></span></span></button></li>`;
-    }).join('')}</ul>
-    ${sel ? cardDetailHTML(sel, canBuy(st, me, sel)) : ''}</section>`;
+    }).join('')}</ul></section>`;
+}
+/* A card tapped in the market opens over the list. The card is the picture: it
+   already carries its name, whether it is a skill or a talent, and what it is for,
+   so the sheet adds only the rules text, the price and the button that buys it.
+   The price says what you are short of by itself (a dashed card is one you lack),
+   and the button says in a few words why it cannot be bought yet. */
+function marketModalHTML(st, me, k) {
+  const c = CARDS[k], cb = canBuy(st, me, k), n = deckOf(st, k), busy = ui.pending;
+  const when = c.when === 'act' ? 'Play it after you roll.' : c.when === 'any' ? 'Play it before or after you roll.' : '';
+  const label = busy ? 'Buying…' : cb.ok ? `Buy ${esc(c.name)}` : !n ? 'Sold out'
+    : !turnOf(st, me) ? 'Buy on your turn' : st.step === 'roll' ? 'Roll first, then buy' : st.step !== 'act' ? 'Not right now' : 'Can’t afford it yet';
+  return `<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(c.name)}"><div class="scrim" data-p="mkclose"></div><div class="sheet">` +
+    `<div class="mkhero">${scard(k, { size: 'xl', dim: !n })}</div>` +
+    `<p class="mkdesc">${esc(c.text)}${when ? ` <span class="muted">${when}</span>` : ''}</p>` +
+    `<div class="mkprice">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : ''}<span class="mkleft">${n ? n + (c.price ? ' left' : ' in the crates') : 'None left'}</span></div>` +
+    // a card that is never for sale says so in its own text, so it gets no buy button at all
+    `<div class="mkacts">${c.price ? `<button class="btn big" data-p="buy" ${cb.ok && !busy ? '' : 'disabled'}>${label}</button>` : ''}` +
+    `<button class="btn ghost${c.price ? '' : ' big'}" data-p="mkclose">Close</button></div></div></div>`;
+}
+/* Put the market's sheet up or take it down. While it is up the page behind it
+   cannot be scrolled, tapped or tabbed into; when it goes, focus goes back to the
+   card it was opened from, so a keyboard or screen reader is not left at the top. */
+const MODAL = { kbd: false };   // whether the last thing that happened was a key, so focus is drawn only for keyboards
+document.addEventListener('keydown', () => { MODAL.kbd = true; }, true);
+document.addEventListener('pointerdown', () => { MODAL.kbd = false; }, true);
+function modalSync(html) {
+  const box = $('#p-modal'); if (!box) return;
+  const how = { preventScroll: true, focusVisible: MODAL.kbd };
+  const was = !!box.firstChild, open = !!html;
+  setHTML('#p-modal', html);
+  document.body.classList.toggle('modalopen', open);
+  document.querySelectorAll('#app > header, #app > main').forEach(e => { e.inert = open; });
+  if (!open) {
+    const b = was && ui.mkFrom && document.querySelector(`[data-p=mkpick][data-arg="${ui.mkFrom}"]`);
+    if (b) b.focus(how);
+    if (was) ui.mkFrom = null;
+    return;
+  }
+  if (!was) box.firstChild.classList.add('enter');   // straight on the element, so setHTML still sees the same markup
+  const sheet = box.querySelector('.sheet');
+  if (sheet && !sheet.contains(document.activeElement)) (sheet.querySelector('[data-p=buy]:not(:disabled)') || sheet.querySelector('.mkacts [data-p=mkclose]')).focus(how);
 }
 const streetWhere = (st, e) => `street by ${nearHexes(st.board, GEO.edges[e].hexes, 2)}`;
 const AIMED = ['fight', 'rewind', 'tipoff', 'shakedown', 'connections'];
@@ -3762,9 +3824,9 @@ const AIMED = ['fight', 'rewind', 'tipoff', 'shakedown', 'connections'];
 function cardMode(st, me) {
   const m = ui.mode, back = '<button class="btn ghost" data-p="back">Back</button>', busy = ui.pending;
   if (m === 'market') {
-    const sel = isCard(ui.buy) ? ui.buy : null, cb = sel ? canBuy(st, me, sel) : null;
-    return { panel: marketHTML(st, me, sel),
-      bar: `<button class="btn big" data-p="buy" ${cb && cb.ok && !busy ? '' : 'disabled'}>${busy ? 'Buying…' : !sel ? 'Pick a skill or talent' : cb.ok ? `Buy ${esc(CARDS[sel].name)}` : 'Not for you right now'}</button>${back}` };
+    const sel = isCard(ui.buy) ? ui.buy : null;
+    return { panel: marketHTML(st, me), modal: sel ? marketModalHTML(st, me, sel) : '',
+      bar: `<button class="btn big" disabled>Tap a card to see it</button>${back}` };
   }
   if (m === 'cards') {
     const held = CARD_ORDER.filter(k => heldCard(me, k)), sel = held.includes(ui.card) ? ui.card : held[0] || null;
@@ -3870,7 +3932,7 @@ function turnParts(st, me) {
   const calm = cardsCalm(st, me);
   const cm = calm && typeof ui.mode === 'string' && (ui.mode === 'cards' || ui.mode === 'market' || ui.mode.startsWith('card:')) ? cardMode(st, me) : null;
   if (cm) {
-    out.panel = cm.panel; out.bar = cm.bar;
+    out.panel = cm.panel; out.bar = cm.bar; out.modal = cm.modal || '';
     if (cm.bo) { bo = cm.bo; need = true; }
   } else if (st.phase === 'place') {
     if (yours) {
@@ -3978,7 +4040,7 @@ function renderPlayer() {
   fxObserve(st); sndObserve(st);
   if (!$('#p-main')) {
     $('#app').innerHTML = `<header class="bar"><span class="brand">Run the <i>City</i></span><span class="muted small">Table ${esc(joinRoom)}</span><span class="grow"></span><span id="p-status" class="pill">Connecting</span><span id="p-key" style="display:contents"></span>${sndBtnHTML()}</header>
-      <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-arena"></div>`;
+      <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-arena"></div><div id="p-modal"></div>`;
   }
   $('#p-status').className = 'pill' + (G.online ? ' on' : ''); setHTML('#p-status', G.online ? 'Connected' : 'Connecting');
   setHTML('#p-key', st ? keyBtnHTML() : ''); setHTML('#p-keypanel', st ? keyPanelHTML(st, me) : '');
@@ -4000,7 +4062,11 @@ function renderPlayer() {
     P.turnKey = turnKey; ui.pending = false; ui.drop = {}; ui.offGive = {}; ui.offWant = {}; clearTimeout(ui.pendTimer);
     if (!(stay && aiming)) { ui.sel = null; ui.from = null; ui.res = null; ui.take = {}; ui.pickI = null; }
     if (!stay) { ui.mode = null; ui.give = null; ui.get = null; }
-    ui.buy = null; ui.keep = null; ui.boost = null; ui.backup = false;
+    // a card open in the market stays open through somebody else's move; buying one of your own closes it
+    const held = me ? cardCount(me) : 0;
+    if (!(stay && ui.mode === 'market' && held === P.held)) ui.buy = null;
+    P.held = held;
+    ui.keep = null; ui.boost = null; ui.backup = false;
     P.stepKey = stepKey;
   }
   const changed = screen !== P.screen; P.screen = screen;
@@ -4040,9 +4106,10 @@ function renderPlayer() {
     const parts = turnParts(st, me), main = $('#p-main');
     if (!$('#ps-move')) { main.__h = null; main.innerHTML = PSLOTS.map(k => `<div id="ps-${k}" class="slot${k === 'bar' ? ' actionbar' : ''}"></div>`).join(''); }
     PSLOTS.forEach(k => setHTML('#ps-' + k, parts[k] || ''));
-    h = null; P.need = parts.need;
+    h = null; P.need = parts.need; P.modal = parts.modal || '';
   }
   if (h !== null) { P.need = false; setHTML('#p-main', h); }
+  modalSync(h === null ? P.modal : '');
   arenaSync(st, me, false);
   // the steps whose answer is a tap on the board
   const st2 = G.state;
@@ -5302,7 +5369,8 @@ document.addEventListener('click', ev => {
     case 'card':
       if (!cardsCalm(st, st && playerOf(st, PID))) { toast('Finish this step first, then tap it again.'); break; }
       ui.mode = 'cards'; ui.card = pb.dataset.arg; ui.sel = null; renderPlayer(); break;
-    case 'mkpick': ui.buy = pb.dataset.arg; renderPlayer(); break;
+    case 'mkpick': if (isCard(pb.dataset.arg)) { ui.buy = ui.mkFrom = pb.dataset.arg; renderPlayer(); } break;
+    case 'mkclose': ui.buy = null; renderPlayer(); break;
     case 'buy': if (isCard(ui.buy)) pact({ t: 'buy', k: ui.buy }); break;
     case 'play': if (isCard(pb.dataset.arg)) pact({ t: 'play', k: pb.dataset.arg }); break;
     case 'aim': if (isCard(pb.dataset.arg)) { ui.mode = 'card:' + pb.dataset.arg; ui.sel = null; ui.from = null; ui.res = null; ui.take = {}; ui.pickI = null; renderPlayer(); } break;
@@ -5363,6 +5431,7 @@ document.addEventListener('click', ev => {
   }
 });
 document.addEventListener('keydown', ev => {
+  if (ev.key === 'Escape' && ui.buy && $('#p-modal') && $('#p-modal').firstChild) { ui.buy = null; renderPlayer(); return; }
   if (CAM_KEYS[ev.key] && !ev.metaKey && !ev.ctrlKey && !ev.altKey && ev.target.closest && ev.target.closest('.boardbox')) {
     ev.preventDefault(); camAction(CAM_KEYS[ev.key]); return;
   }
