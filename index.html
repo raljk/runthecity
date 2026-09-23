@@ -21,7 +21,7 @@
   --apron:#141b27; --apron2:#0b1018; --frame:#2b3448; --frame-line:#465274;
   --warehouse:#1f8f9e; --nightlife:#d6379e; --residential:#e0a63c;
   --works:#c25a2c; --tower:#6d84a8; --deadzone:#3f434a;
-  --p-red:#ff4b5c; --p-blue:#3b82ff; --p-white:#eef3fb; --p-orange:#ff9f2e;
+  --p-red:#ff4b5c; --p-blue:#3b82ff; --p-white:#eef3fb; --p-orange:#ff9f2e; --p-green:#34d17a; --p-purple:#a66bff;
   --piece-line:#04060b; --token:#f2efe4; --token-ink:#15171d; --token-red:#d41f3d;
   --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.5);
   --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
@@ -113,7 +113,7 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .phone{max-width:560px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
 .phone .boardbox{margin-inline:-16px;border-radius:0}
 .phone svg.board{max-height:64vh}
-.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sw{appearance:none;border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.78rem;font-weight:600;min-height:64px}
 .sw .chip{width:30px;height:30px}
 .sw[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
@@ -396,14 +396,7 @@ div.opt.cant{border-style:dashed;color:var(--muted)}
 @keyframes sumpop{0%{opacity:0;transform:scale(.2) rotate(-12deg)}60%{opacity:1;transform:scale(1.3) rotate(3deg);text-shadow:0 0 34px currentColor}100%{opacity:1;transform:scale(1);text-shadow:0 0 14px currentColor}}
 .slotm .pay{min-height:calc(var(--d)*.42);display:flex;align-items:center;gap:8px;font-weight:700;font-size:calc(var(--d)*.19);opacity:0;transition:opacity .3s;white-space:nowrap}
 .slotm.done .pay{opacity:1}
-.slotm .bulb{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:#4d3a12;animation:bulb .54s steps(1) infinite}
-.slotm.small .bulb{width:7px;height:7px;margin:-3.5px 0 0 -3.5px}
-@keyframes bulb{0%{background:#ffe9a3;box-shadow:0 0 9px 2px #ffc94d}34%{background:#4d3a12;box-shadow:none}}
-.slotm.done .bulb{animation-duration:.2s}
 .slotm.seven{border-color:#ff3347;box-shadow:0 0 0 5px #05070d,0 0 54px 10px rgba(255,51,71,.6),0 24px 60px rgba(0,0,0,.7)}
-.slotm.seven.done .bulb{animation-name:bulbcop;animation-duration:.4s}
-.slotm.seven.done .bulb:nth-child(odd){animation-delay:-.2s}
-@keyframes bulbcop{0%{background:#ff3347;box-shadow:0 0 10px 3px #ff3347}50%{background:#2f6bff;box-shadow:0 0 10px 3px #2f6bff}}
 .slotm.seven.done{animation:shake .4s linear 2}
 @keyframes shake{0%,100%{margin-left:0}25%{margin-left:-7px}75%{margin-left:7px}}
 .slotm.away{opacity:0}
@@ -437,14 +430,15 @@ const BROKERS = [
   'wss://test.mosquitto.org:8081/mqtt',
 ];
 const TOPIC_ROOT = 'runthecity/v1/';
-const COLORS = ['red', 'blue', 'white', 'orange'];
+const COLORS = ['red', 'blue', 'white', 'orange', 'green', 'purple'];
 const RESOURCE_OF = { warehouse: 'product', nightlife: 'talent', residential: 'cash', works: 'muscle', tower: 'influence', deadzone: null };
 const TERRAIN_OF = { product: 'warehouse', talent: 'nightlife', cash: 'residential', muscle: 'works', influence: 'tower' };
 const RES_ORDER = ['muscle', 'product', 'talent', 'cash', 'influence'];
 const PIPS = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1 };
 // Number tokens in A–R order, laid along the spiral.
 const TOKENS = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11];
-const MAX_PLAYERS = 4;
+const MAX_PLAYERS = 6;
+const BIG_FROM = 5;    // this many seated and the city grows to the five-to-six-player size
 /* What a turn costs, in the city's own words. Every price matches base Catan:
    street = road, operation = settlement, major holding = city. */
 const COST = {
@@ -475,15 +469,22 @@ const ordinal = n => (n === 1 ? 'first' : 'second');
 const DIE = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 
 /* =====================================================================
-   Board geometry: 19 pointy-top hexes in rows 3-4-5-4-3, 54 intersections,
-   72 paths. Hex index order is rows top to bottom, left to right.
+   Board geometry. Two cities, both pointy-top hexes in centred rows:
+   the base one is 3-4-5-4-3 (19 blocks, 54 intersections, 72 paths), and
+   the one for five or six players is 3-4-5-6-5-4-3 (30 blocks). Hex index
+   order is rows top to bottom, left to right. A board's own hex count says
+   which geometry it uses, and GEO always follows the state on screen.
    ===================================================================== */
 const S = 60, R3 = Math.sqrt(3);
-const GEO = (() => {
-  const hexes = [], verts = [], edges = [], vKey = new Map(), eKey = new Map();
-  for (let r = -2; r <= 2; r++) for (let q = Math.max(-2, -2 - r); q <= Math.min(2, 2 - r); q++) {
-    hexes.push({ q, r, cx: S * R3 * (q + r / 2), cy: S * 1.5 * r, dist: Math.max(Math.abs(q), Math.abs(r), Math.abs(-q - r)), vs: [], es: [] });
-  }
+function buildGeo(rows, terminalSteps) {
+  const hexes = [], verts = [], edges = [], vKey = new Map(), eKey = new Map(), mid = (rows.length - 1) / 2;
+  rows.forEach((n, ri) => { const r = ri - mid;
+    for (let i = 0; i < n; i++) {
+      const cx = S * R3 * (i - (n - 1) / 2), cy = S * 1.5 * r;
+      // cube distance from the middle, which only the base city's token spiral uses
+      const q = Math.round(i - (n - 1) / 2 - r / 2);
+      hexes.push({ q, r, cx, cy, dist: Math.max(Math.abs(q), Math.abs(r), Math.abs(-q - r)), vs: [], es: [] });
+    } });
   hexes.forEach((h, hi) => {
     // corner k sits at angle 60k-30 degrees: 0 upper-right, 1 lower-right, 2 bottom, 3 lower-left, 4 upper-left, 5 top
     for (let k = 0; k < 6; k++) {
@@ -507,16 +508,16 @@ const GEO = (() => {
   const neighbours = hexes.map(() => []);
   edges.forEach(e => { if (e.hexes.length === 2) { neighbours[e.hexes[0]].push(e.hexes[1]); neighbours[e.hexes[1]].push(e.hexes[0]); } });
 
-  // Walk the 30 coastal paths clockwise, starting at the north-west side of the top-left hex.
-  // Harbors sit at fixed steps along that walk; this reproduces the printed frame of the beginner map.
+  // Walk the coastal paths clockwise, starting at the north-west side of the top-left hex.
+  // Harbors sit at fixed steps along that walk; for the base city this reproduces the printed frame of the beginner map.
   const isCoast = e => edges[e].hexes.length === 1;
   const coast = []; let e = hexes[0].es[4], from = hexes[0].vs[4];
-  for (let i = 0; i < 30; i++) {
+  do {
     coast.push(e);
     const to = edges[e].a === from ? edges[e].b : edges[e].a;
     const cur = e; e = verts[to].edges.find(x => x !== cur && isCoast(x)); from = to;
-  }
-  const terminalEdges = [0, 3, 7, 10, 13, 17, 20, 23, 27].map(i => coast[i]);
+  } while (e !== coast[0]);
+  const terminalEdges = terminalSteps(coast.length).map(i => coast[i]);
 
   // Token spiral: counter-clockwise round the outer ring from a corner, then the inner ring
   // starting on the hex that touches that corner, then the centre.
@@ -530,8 +531,29 @@ const GEO = (() => {
     inner.forEach((n, idx) => { let d = Math.abs(n.a - outer[at].a); d = Math.min(d, 2 * Math.PI - d); if (d < best) { best = d; k = idx; } });
     return [...o.map(x => x.i), ...[...inner.slice(k), ...inner.slice(0, k)].map(x => x.i), centre];
   }
-  return { hexes, verts, edges, neighbours, terminalEdges, spiral };
-})();
+  // The tray: a flat-topped hexagon round the whole city. The big city is the
+  // base one with a row let in across the middle, so its tray is the base tray
+  // with the top and bottom pushed out by one row and the side points out to match.
+  const grow = S * 1.5 * (rows.length - 5) / 2;
+  const tray = R => [[R + grow / R3, 0], [R / 2, R * R3 / 2 + grow], [-R / 2, R * R3 / 2 + grow],
+    [-R - grow / R3, 0], [-R / 2, -R * R3 / 2 - grow], [R / 2, -R * R3 / 2 - grow]];
+  return { hexes, verts, edges, neighbours, terminalEdges, spiral, rim: tray(RIM_R), apron: tray(APRON_R) };
+}
+const RIM_R = 5.86 * S, APRON_R = 5.6 * S;
+const GEOS = {
+  19: buildGeo([3, 4, 5, 4, 3], () => [0, 3, 7, 10, 13, 17, 20, 23, 27]),
+  // eleven terminals spread evenly round the longer coast, never two on neighbouring paths
+  30: buildGeo([3, 4, 5, 6, 5, 4, 3], L => Array.from({ length: 11 }, (_, i) => Math.round(i * L / 11))),
+};
+let GEO = GEOS[19];
+/* Point GEO at the geometry this board uses. Traffic runs on edge numbers, so
+   it starts over when the city changes size. */
+function useGeo(B) {
+  const g = B && GEOS[B.hexes.length];
+  if (!g || g === GEO) return;
+  GEO = g;
+  if (typeof LIFE !== 'undefined') { LIFE.cars.length = 0; LIFE.feet.length = 0; }
+}
 
 /* ---------- board set-up ---------- */
 const BEGINNER_HEXES = [
@@ -542,20 +564,35 @@ const BEGINNER_HEXES = [
   ['works', 5], ['residential', 6], ['nightlife', 11],
 ];
 const BEGINNER_HARBORS = ['any', 'cash', 'influence', 'any', 'talent', 'any', 'any', 'muscle', 'product'];
+/* The five-to-six-player city, as the extension counts it: 30 blocks, 28 tokens, 11 terminals. */
+const BIG_BAG = [].concat(Array(6).fill('warehouse'), Array(6).fill('nightlife'), Array(6).fill('residential'), Array(5).fill('works'), Array(5).fill('tower'), ['deadzone', 'deadzone']);
+const BIG_TOKENS = [2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12, 12];
+const BIG_HARBORS = ['any', 'any', 'any', 'any', 'any', 'muscle', 'product', 'talent', 'talent', 'cash', 'influence'];
 
-function redsTouch(hx) {
+function redsTouch(hx, g) {
   const red = i => hx[i].n === 6 || hx[i].n === 8;
-  return hx.some((_, i) => red(i) && GEO.neighbours[i].some(red));
+  return hx.some((_, i) => red(i) && g.neighbours[i].some(red));
 }
-function makeBoard(kind) {
+function makeBoard(kind, big) {
+  if (big) {
+    // no printed spiral for this one: deal the tokens at random and redeal until no two reds touch
+    let hx;
+    for (let tries = 0; tries < 2000; tries++) {
+      hx = shuffle(BIG_BAG).map(t => ({ t, n: 0 }));
+      const toks = shuffle(BIG_TOKENS); let k = 0;
+      hx.forEach(h => { if (h.t !== 'deadzone') h.n = toks[k++]; });
+      if (!redsTouch(hx, GEOS[30])) break;
+    }
+    return { kind: 'random', hexes: hx, terminals: shuffle(BIG_HARBORS), police: hx.findIndex(h => h.t === 'deadzone') };
+  }
   if (kind === 'beginner') {
     return { kind, hexes: BEGINNER_HEXES.map(([t, n]) => ({ t, n })), terminals: BEGINNER_HARBORS.slice(), police: 9 };
   }
   const bag = [].concat(Array(4).fill('warehouse'), Array(4).fill('nightlife'), Array(4).fill('residential'), Array(3).fill('works'), Array(3).fill('tower'), ['deadzone']);
   for (let tries = 0; tries < 60; tries++) {
     const hx = shuffle(bag).map(t => ({ t, n: 0 }));
-    let k = 0; GEO.spiral(rnd(6)).forEach(i => { if (hx[i].t !== 'deadzone') hx[i].n = TOKENS[k++]; });
-    if (redsTouch(hx)) continue; // the spiral should never allow this; checked anyway
+    let k = 0; GEOS[19].spiral(rnd(6)).forEach(i => { if (hx[i].t !== 'deadzone') hx[i].n = TOKENS[k++]; });
+    if (redsTouch(hx, GEOS[19])) continue; // the spiral should never allow this; checked anyway
     return { kind: 'random', hexes: hx, terminals: shuffle(BEGINNER_HARBORS), police: hx.findIndex(h => h.t === 'deadzone') };
   }
   return makeBoard('beginner');
@@ -818,7 +855,7 @@ function project(x, y, z, C) {
 function viewBox(C) {
   let lo = Infinity, hi = -Infinity, left = Infinity, right = -Infinity;
   for (let k = 0; k < 6; k++) for (const y of [RIM_Y, SLAB_Y]) {
-    const p = project(RIM_PTS[k][0], y, RIM_PTS[k][1], C);
+    const p = project(GEO.rim[k][0], y, GEO.rim[k][1], C);
     if (!p) continue;
     if (p.y < lo) lo = p.y; if (p.y > hi) hi = p.y;
     if (p.x < left) left = p.x; if (p.x > right) right = p.x;
@@ -870,9 +907,6 @@ const STREET_Y = 7, INSET = 9;
 const SHRINK = (S * Math.sqrt(3) / 2 - INSET) / (S * Math.sqrt(3) / 2);
 const ROAD_RGB = [24, 27, 35], PAVE_RGB = [54, 60, 74], BANK_RGB = [96, 88, 76];
 const RIM_RGB = [58, 68, 92], EDGE_RGB = [40, 46, 62], APRON_RGB = [22, 28, 40];
-const RIM_R = 5.86 * S, APRON_R = 5.6 * S;
-const ring6 = R => Array.from({ length: 6 }, (_, k) => { const a = k * Math.PI / 3; return [R * Math.cos(a), R * Math.sin(a)]; });
-const RIM_PTS = ring6(RIM_R), APRON_PTS = ring6(APRON_R);
 
 /* where a building or street sits: on top of the tallest ground it touches */
 const topOf = (B, ids) => Math.max(...ids.map(i => TOP_Y[B.hexes[i].t]));
@@ -1266,13 +1300,17 @@ function boardSVG(st, o) {
   const add = (d, s) => scene.push({ d, s });
 
   /* ---------- the tray the island sits in ---------- */
+  const RIM_PTS = GEO.rim, APRON_PTS = GEO.apron;
+  // outward normal of tray side k; the big city's tray is not regular, so the midpoint alone will not do
+  const side = (T, k) => { const j = (k + 1) % 6, dx = T[j][0] - T[k][0], dz = T[j][1] - T[k][1], m = Math.hypot(dx, dz);
+    return { j, mx: (T[k][0] + T[j][0]) / 2, mz: (T[k][1] + T[j][1]) / 2, nx: dz / m, nz: -dx / m }; };
   const rimT = RIM_PTS.map(p => P(p[0], RIM_Y, p[1])), rimB = RIM_PTS.map(p => P(p[0], SLAB_Y, p[1]));
   const cast = RIM_PTS.map(p => P(p[0] * 1.05 + 26, SLAB_Y - 1, p[1] * 1.05 + 20));
   if (cast.every(Boolean)) back.push(`<polygon points="${pts(cast)}" fill="rgba(0,0,0,.28)"/>`);
   if (rimT.every(Boolean) && rimB.every(Boolean)) {
     for (let k = 0; k < 6; k++) {
-      const j = (k + 1) % 6, mx = (RIM_PTS[k][0] + RIM_PTS[j][0]) / 2, mz = (RIM_PTS[k][1] + RIM_PTS[j][1]) / 2, m = Math.hypot(mx, mz);
-      const n = [mx / m, 0, mz / m];
+      const { j, mx, mz, nx, nz } = side(RIM_PTS, k), o = nx * mx + nz * mz > 0 ? 1 : -1;
+      const n = [nx * o, 0, nz * o];
       if (!faces(C, n, [mx, (RIM_Y + SLAB_Y) / 2, mz])) continue;
       const q = [rimT[k], rimT[j], rimB[j], rimB[k]];
       back.push(!fast && ART ? skin(defs, `w${k}`, q, 'wall_edge', shade(n))
@@ -1283,14 +1321,14 @@ function boardSVG(st, o) {
   const apronT = APRON_PTS.map(p => P(p[0], RIM_Y, p[1])), apron = APRON_PTS.map(p => P(p[0], APRON_Y, p[1]));
   if (apronT.every(Boolean) && apron.every(Boolean)) {
     for (let k = 0; k < 6; k++) {                                   // inner wall of the rim, seen across the board
-      const j = (k + 1) % 6, mx = (APRON_PTS[k][0] + APRON_PTS[j][0]) / 2, mz = (APRON_PTS[k][1] + APRON_PTS[j][1]) / 2, m = Math.hypot(mx, mz);
-      const n = [-mx / m, 0, -mz / m];
+      const { j, mx, mz, nx, nz } = side(APRON_PTS, k), o = nx * mx + nz * mz > 0 ? -1 : 1;
+      const n = [nx * o, 0, nz * o];
       if (!faces(C, n, [mx, (RIM_Y + APRON_Y) / 2, mz])) continue;
       back.push(`<polygon points="${pts([apronT[k], apronT[j], apron[j], apron[k]])}" fill="${lit(n, RIM_RGB, .3)}"/>`);
     }
     back.push(`<polygon points="${pts(apron)}" fill="${lit([0, 1, 0], APRON_RGB, .6)}"/>`);
     if (!fast && ART) {
-      const w = APRON_R * 2, a = P(-w / 2, APRON_Y, -w / 2), b = P(w / 2, APRON_Y, -w / 2), c = P(-w / 2, APRON_Y, w / 2);
+      const w = 2 * Math.max(...APRON_PTS.map(q => Math.max(Math.abs(q[0]), Math.abs(q[1])))), a = P(-w / 2, APRON_Y, -w / 2), b = P(w / 2, APRON_Y, -w / 2), c = P(-w / 2, APRON_Y, w / 2);
       if (a && b && c) {
         defs.push(`<clipPath id="k-apron"><polygon points="${pts(apron)}"/></clipPath>`);
         back.push(`<g clip-path="url(#k-apron)"><g transform="matrix(${n1(b.x - a.x)},${n1(b.y - a.y)},${n1(c.x - a.x)},${n1(c.y - a.y)},${n1(a.x)},${n1(a.y)})"><use href="#img-apron"/></g></g>`);
@@ -1371,7 +1409,7 @@ function boardSVG(st, o) {
       (type === 'any' ? '' : `<text class="r" x="${n1(p.x)}" y="${n1(p.y + 7.6 * p.k)}" style="font-size:${n1(7 * p.k)}px;fill:${col}">${type.toUpperCase()}</text>`) + '</g>');
   });
 
-  /* ---------- the nineteen city blocks ---------- */
+  /* ---------- the city blocks ---------- */
   GEO.hexes.forEach((h, i) => {
     if (tileD[i] < 0) return;
     const t = B.hexes[i], top = TOP_Y[t.t], g = [];
@@ -1787,8 +1825,17 @@ function newTableState(kind) {
     turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, offer: null, log: ['Table opened. Scan the code to take a seat.'] };
 }
 function say(msg) { G.state.log.unshift(msg); G.state.log.length = Math.min(G.state.log.length, 14); }
+/* In the lobby the city follows the head count: a fifth seat deals the big
+   city, and dropping back to four deals the base one again. */
+function fitCity(st) {
+  const big = st.players.length >= BIG_FROM;
+  if (st.phase !== 'lobby' || (st.board.hexes.length === 30) === big) return;
+  st.board = makeBoard('random', big);
+  say(big ? 'Five at the table: the city grows to thirty blocks.' : 'Back to four seats: the city shrinks to nineteen blocks.');
+}
 function commit() {
   if (G.closing) return;
+  useGeo(G.state.board);
   G.state.v++; store('rtcity.host', { state: G.state, hist: G.hist, b: G.b });
   publishState(G.client); renderHost();
 }
@@ -1807,14 +1854,14 @@ function hostAction(a) {
       const free = COLORS.filter(c => !st.players.some(x => x.color === c));
       const color = free.includes(a.color) ? a.color : free[0];
       st.players.push({ pid: a.pid, name, color, online: true, hand: {} });
-      say(`${name} took the ${color} seat.`); commit(); return;
+      say(`${name} took the ${color} seat.`); fitCity(st); commit(); return;
     }
     case 'color':
       if (!p || st.phase !== 'lobby' || !COLORS.includes(a.color) || st.players.some(x => x.color === a.color)) return;
       p.color = a.color; commit(); return;
     case 'leave':
       if (!p || st.phase !== 'lobby') return;
-      st.players = st.players.filter(x => x !== p); say(`${p.name} left the table.`); commit(); return;
+      st.players = st.players.filter(x => x !== p); say(`${p.name} left the table.`); fitCity(st); commit(); return;
     case 'roll': {
       if (!p || st.phase !== 'rolloff' || !st.contenders.includes(p.pid) || Array.isArray(st.rolls[p.pid])) return;
       const d = [rnd(6) + 1, rnd(6) + 1]; st.rolls[p.pid] = d; say(`${p.name} rolled ${d[0] + d[1]}.`);
@@ -1993,8 +2040,8 @@ function decideStarter() {
 function hostControl(act, arg) {
   const st = G.state;
   switch (act) {
-    case 'map': if (st.phase === 'lobby' && st.board.kind !== arg) { st.board = makeBoard(arg); say(arg === 'beginner' ? 'Switched to the starter city.' : 'Dealt a random city.'); commit(); } return;
-    case 'reshuffle': if (st.phase === 'lobby') { st.board = makeBoard('random'); say('Dealt a new random city.'); commit(); } return;
+    case 'map': if (st.phase === 'lobby' && st.board.kind !== arg && st.board.hexes.length === 19) { st.board = makeBoard(arg); say(arg === 'beginner' ? 'Switched to the starter city.' : 'Dealt a random city.'); commit(); } return;
+    case 'reshuffle': if (st.phase === 'lobby') { st.board = makeBoard('random', st.board.hexes.length === 30); say('Dealt a new random city.'); commit(); } return;
     case 'start':
       if (st.phase !== 'lobby' || st.players.length < 2) return;
       st.phase = 'rolloff'; st.contenders = st.players.map(p => p.pid); st.rolls = {}; st.round = 1;
@@ -2082,6 +2129,7 @@ function seatsHTML(st, ro) {
 }
 function renderHost() {
   const ro = WATCH, st = G.state;
+  if (st) useGeo(st.board);
   fxObserve(st);
   if (!$('#h-banner')) renderHostShell();
   const pill = ro ? (G.online ? (P.hostUp === false ? 'Table screen offline' : 'Live') : 'Connecting') : (G.fatal ? 'Offline' : G.online ? 'Relay connected' : G.client ? 'Reconnecting' : 'Connecting');
@@ -2155,9 +2203,9 @@ function renderHost() {
   } else {
     c = '<h2>Table controls</h2>';
     if (st.phase === 'lobby') {
-      c += `<div class="seg" role="group" aria-label="City layout"><button data-h="map" data-arg="random" aria-pressed="${st.board.kind === 'random'}">Random city</button><button data-h="map" data-arg="beginner" aria-pressed="${st.board.kind === 'beginner'}">Starter city</button></div>
+      c += `<div class="seg" role="group" aria-label="City layout"><button data-h="map" data-arg="random" aria-pressed="${st.board.kind === 'random'}">Random city</button><button data-h="map" data-arg="beginner" aria-pressed="${st.board.kind === 'beginner'}" ${st.board.hexes.length === 30 ? 'disabled title="The big city is always dealt at random"' : ''}>Starter city</button></div>
         <div class="row"><button class="btn ghost" data-h="reshuffle" ${st.board.kind === 'random' ? '' : 'disabled'}>Deal again</button><button class="btn" style="flex:1" data-h="start" ${st.players.length < 2 ? 'disabled' : ''}>Start set-up</button></div>
-        <p class="small muted">${st.players.length < 3 ? 'The base game is for 3 or 4 players. You can start with 2 to try it out.' : 'Seat order is the turn order, clockwise from whoever rolls highest.'}</p>`;
+        <p class="small muted">${st.players.length < 3 ? 'Run the City is for 3 to 6 players. You can start with 2 to try it out.' : st.players.length >= BIG_FROM ? 'Five or six seats play on the big city: thirty blocks and eleven terminals.' : 'Seat order is the turn order, clockwise from whoever rolls highest.'}</p>`;
     } else {
       c += `<div class="row">${st.phase !== 'rolloff' ? `<button class="btn ghost" data-h="undo" ${G.hist.length ? '' : 'disabled'}>Undo last placement</button>` : ''}<button class="btn ghost" data-h="lobby">Back to lobby</button></div>`;
     }
@@ -2170,7 +2218,7 @@ function renderHost() {
 function renderLanding() {
   $('#app').innerHTML = `<header class="bar"><span class="brand">Run the <i>City</i></span></header>
   <main class="phone">
-    <section class="card">${ART ? '<div class="hero" role="img" aria-label="A painted city of hexagonal blocks on dark wet tarmac, lit by neon, dotted with small operations and streets"></div>' : ''}<h1>One shared board. Everyone plays from their phone.</h1><p class="muted">Open a table on the screen you want to run the game from. Friends scan its code, or open its link, to take a seat from anywhere.</p><button class="btn big" data-l="host">Open a table on this screen</button></section>
+    <section class="card">${ART ? '<div class="hero" role="img" aria-label="A painted city of hexagonal blocks on dark wet tarmac, lit by neon, dotted with small operations and streets"></div>' : ''}<h1>One shared board. Everyone plays from their phone.</h1><p class="muted">Open a table on the screen you want to run the game from. Friends scan its code, or open its link, to take a seat from anywhere.</p><button class="btn big" data-l="host">${load('rtcity.host') ? 'Back to your table' : 'Open a table on this screen'}</button></section>
     <p class="or">or</p>
     <section class="card"><h2>Got a table code?</h2>
       <form data-form="code" style="display:flex;flex-direction:column;gap:10px"><label class="small muted" for="code-input">Table code, as shown on the table screen</label><input type="text" id="code-input" maxlength="8" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="KQTMX2">
@@ -2188,6 +2236,7 @@ async function bootHost() {
   const saved = load('rtcity.host');
   if (saved && saved.state && saved.state.room && saved.state.board) { G.state = saved.state; G.hist = saved.hist || []; G.b = saved.b | 0; G.state.players.forEach(p => { p.online = false; }); }
   else G.state = newTableState('random');
+  useGeo(G.state.board);
   try { sessionStorage.removeItem('rtcity.autohost'); } catch (e) { /* private mode */ }
   renderHostShell(); renderHost(); keepAwake();
   connectHost();
@@ -2235,17 +2284,18 @@ function validState(s) {
   const STEPS = { lobby: ['operation'], rolloff: ['operation'], place: ['operation', 'street'], done: ['operation'], turn: ['roll', 'discard', 'police', 'steal', 'act'], over: ['roll', 'act'] };
   if (!obj(s) || s.room !== joinRoom || !int(s.v) || !STEPS[s.phase] || !STEPS[s.phase].includes(s.step)) return false;
   const B = s.board;
-  if (!obj(B) || !Array.isArray(B.hexes) || B.hexes.length !== 19 || !int(B.police) || B.police < 0 || B.police > 18) return false;
+  const g = obj(B) && Array.isArray(B.hexes) && GEOS[B.hexes.length];
+  if (!g || !int(B.police) || B.police < 0 || B.police >= B.hexes.length) return false;
   if (!B.hexes.every(h => obj(h) && typeof h.t === 'string' && own(RESOURCE_OF, h.t) && int(h.n) && h.n >= 0 && h.n <= 12 && (h.n === 0 || own(PIPS, h.n)))) return false;
-  if (!Array.isArray(B.terminals) || B.terminals.length !== 9 || !B.terminals.every(t => t === 'any' || RES_ORDER.includes(t))) return false;
+  if (!Array.isArray(B.terminals) || B.terminals.length !== g.terminalEdges.length || !B.terminals.every(t => t === 'any' || RES_ORDER.includes(t))) return false;
   if (!Array.isArray(s.players) || s.players.length > MAX_PLAYERS) return false;
   if (!s.players.every(p => obj(p) && typeof p.pid === 'string' && /^[a-z0-9]{8}$/.test(p.pid) && typeof p.name === 'string' && p.name.length <= 40 && COLORS.includes(p.color) &&
     obj(p.hand) && RES_ORDER.every(r => p.hand[r] === undefined || (int(p.hand[r]) && p.hand[r] >= 0 && p.hand[r] < 100)))) return false;
   const pids = s.players.map(p => p.pid), known = id => pids.includes(id);
   if (!Array.isArray(s.order) || !s.order.every(known) || !Array.isArray(s.contenders) || !s.contenders.every(known)) return false;
   if (!obj(s.rolls) || !Object.keys(s.rolls).every(k => known(k) && Array.isArray(s.rolls[k]) && s.rolls[k].length === 2 && s.rolls[k].every(d => int(d) && d >= 1 && d <= 6))) return false;
-  if (!obj(s.buildings) || !Object.keys(s.buildings).every(k => num(k) && +k < GEO.verts.length && obj(s.buildings[k]) && known(s.buildings[k].pid) && ['s', 'c'].includes(s.buildings[k].k))) return false;
-  if (!obj(s.streets) || !Object.keys(s.streets).every(k => num(k) && +k < GEO.edges.length && known(s.streets[k]))) return false;
+  if (!obj(s.buildings) || !Object.keys(s.buildings).every(k => num(k) && +k < g.verts.length && obj(s.buildings[k]) && known(s.buildings[k].pid) && ['s', 'c'].includes(s.buildings[k].k))) return false;
+  if (!obj(s.streets) || !Object.keys(s.streets).every(k => num(k) && +k < g.edges.length && known(s.streets[k]))) return false;
   if (!int(s.placeIdx) || s.placeIdx < 0 || !int(s.round)) return false;
   // turn fields: a table on the older build never sends them, so they are only required once a turn is running
   const hand = h => obj(h) && RES_ORDER.every(r => h[r] === undefined || (int(h[r]) && h[r] >= 0 && h[r] < 100));
@@ -2267,7 +2317,7 @@ function validState(s) {
     if (s.step === 'discard' && !Object.keys(s.pend).length) return false;
     if (s.phase === 'over' && !known(s.win)) return false;
   }
-  if (s.lastV !== null && !(int(s.lastV) && s.lastV >= 0 && s.lastV < GEO.verts.length)) return false;
+  if (s.lastV !== null && !(int(s.lastV) && s.lastV >= 0 && s.lastV < g.verts.length)) return false;
   if (s.phase === 'place' && (!s.order.length || s.order.length !== s.players.length || s.placeIdx >= s.order.length * 2)) return false;
   if (s.phase !== 'lobby' && s.phase !== 'rolloff' && !known(s.starter)) return false;
   return true;
@@ -2603,6 +2653,7 @@ function boardIntoView(key) {
 }
 function renderPlayer() {
   const st = G.state, screen = playerScreen(), me = st && playerOf(st, PID);
+  if (st) useGeo(st.board);
   fxObserve(st);
   if (!$('#p-main')) {
     $('#app').innerHTML = `<header class="bar"><span class="brand">Run the <i>City</i></span><span class="muted small">Table ${esc(joinRoom)}</span><span class="grow"></span><span id="p-status" class="pill">Connecting</span><span id="p-key" style="display:contents"></span></header>
@@ -2642,7 +2693,7 @@ function renderPlayer() {
   if (screen === 'connecting') h = '<section class="card"><h1>Finding the table…</h1><p class="muted">Connecting your phone to the table screen.</p></section>';
   else if (screen === 'error') h = `<section class="card"><h1>Could not connect</h1><p>${esc(P.error)}</p><button class="btn" data-p="reload">Try again</button></section>`;
   else if (screen === 'notable') h = `<section class="card"><h1>No table answers to ${esc(joinRoom)}</h1><p class="muted">The table may have closed, or the code is from an older game. Scan the code on the table screen again.</p><button class="btn" data-p="reload">Look again</button></section>`;
-  else if (screen === 'full') h = '<section class="card"><h1>All four seats are taken</h1><p class="muted">You can watch from here. If someone leaves, a seat opens up.</p></section><div class="boardbox">' + boardView(st) + '</div>';
+  else if (screen === 'full') h = '<section class="card"><h1>All six seats are taken</h1><p class="muted">You can watch from here. If someone leaves, a seat opens up.</p></section><div class="boardbox">' + boardView(st) + '</div>';
   else if (screen === 'spectate') h = '<section class="card"><h1>This game has already started</h1><p class="muted">You are watching. If you were seated before, open the join link on the same phone and browser you used.</p></section><div class="boardbox">' + boardView(st) + '</div>';
   else if (screen === 'lobby') {
     const free = COLORS.filter(c => !st.players.some(p => p.color === c));
@@ -2685,9 +2736,9 @@ async function bootPlayer() {
         if (!validState(s)) return;
         if (G.state && s.v < G.state.v) return;
         const prev = G.state; if (prev && s.v > prev.v) P.hostUp = true; // a fresh state means the table is alive
-        G.state = s; const me = WATCH ? null : playerOf(s, PID);
+        G.state = s; useGeo(s.board); const me = WATCH ? null : playerOf(s, PID);
         if (me && !me.online && G.online) send(G.client, P.base + '/pres/' + PID, '1', true);
-        try { render(); } catch (e) { console.error(e); G.state = prev; safeRender(); }
+        try { render(); } catch (e) { console.error(e); G.state = prev; if (prev) useGeo(prev.board); safeRender(); }
       },
       up: c => {
         G.online = true; c.subscribe(P.base + '/state', { qos: 1 }); c.subscribe(P.base + '/host', { qos: 1 }); if (!WATCH) send(c, P.base + '/pres/' + PID, '1', true);
@@ -2934,15 +2985,7 @@ function fxRoll(ev) {
     `<div class="win">${reel(ev.dice[0], quick ? 9 : 14)}${reel(ev.dice[1], quick ? 13 : 22)}<span class="sum">${ev.sum}</span></div>` +
     `<div class="pay">${pay}</div>`;
   layer.appendChild(box);
-  // lights round the frame, chasing in threes
-  const w = box.offsetWidth, h = box.offsetHeight, step = phone ? 22 : 28, nx = Math.max(3, Math.round(w / step)), ny = Math.max(2, Math.round(h / step));
-  let bulbs = '', k = 0;
-  const bulb = (x, y) => { bulbs += `<i class="bulb" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;animation-delay:${(-0.18 * (k++ % 3)).toFixed(2)}s"></i>`; };
-  for (let i = 0; i < nx; i++) bulb((i + 0.5) * w / nx, 0);
-  for (let i = 0; i < ny; i++) bulb(w, (i + 0.5) * h / ny);
-  for (let i = nx - 1; i >= 0; i--) bulb((i + 0.5) * w / nx, h);
-  for (let i = ny - 1; i >= 0; i--) bulb(0, (i + 0.5) * h / ny);
-  box.insertAdjacentHTML('beforeend', bulbs);
+  const w = box.offsetWidth, h = box.offsetHeight;
   const c = (!phone && boardCentre()) || { x: window.innerWidth / 2, y: Math.min(window.innerHeight * 0.4, 330) };
   const x = Math.max(8, Math.min(window.innerWidth - w - 8, c.x - w / 2)), y = Math.max(8, c.y - h / 2);
   const place = (s, dy) => { box.style.transform = `translate(${x.toFixed(0)}px,${(y + dy).toFixed(0)}px) scale(${s})`; };
@@ -3137,8 +3180,10 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) stopL
 })();
 
 let autohost = false; try { autohost = sessionStorage.getItem('rtcity.autohost') === '1'; } catch (e) { /* private mode */ }
+// a phone always opens on the landing page: it is far more often a seat than a table, and "Open a table" still resumes one
+const pocket = matchMedia('(pointer: coarse) and (max-width: 599px), (pointer: coarse) and (max-height: 599px)').matches;
 if (joinRoom) bootPlayer();
-else if (load('rtcity.host') || autohost) bootHost(); // this browser already runs a table: go straight back to it
+else if (autohost || (load('rtcity.host') && !pocket)) bootHost(); // this browser already runs a table: go straight back to it
 else renderLanding();
 })();
 </script>
