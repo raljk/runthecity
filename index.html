@@ -1743,28 +1743,57 @@ function prism(P, C, cx, cz, w, d, h, rot, base, m, defs, id, fast) {
     ? skin(defs, id + 'r', hi, m.roof, shade([0, 1, 0]) * 0.45)
     : '<polygon points="' + pts(hi) + '" fill="' + lit([0, 1, 0], m.body, .72) + '"' + EDGE + '/>');
   const mid = P(cx, base + h / 2, cz);
-  return { d: mid ? mid.d : 0, s: g.join('') };
+  return { d: mid ? mid.d : 0, s: g.join(''), c, box: boxOf(lo.concat(hi)) };
+}
+/* the box a set of screen points fills, [x0, y0, x1, y1] */
+function boxOf(ps) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const p of ps) { if (p.x < x0) x0 = p.x; if (p.x > x1) x1 = p.x; if (p.y < y0) y0 = p.y; if (p.y > y1) y1 = p.y; }
+  return [x0, y0, x1, y1];
+}
+const boxesMeet = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+/* Which of two footprints on the ground stands nearer the eye: 1 if a does,
+   -1 if b does, 0 if neither can hide the other. Two convex footprints that
+   do not touch have a line between them along one of their own edges, and
+   whichever lies on the eye's side of that line is in front, however tall
+   either of them is. An eye straight over the gap sees both whole. */
+function ahead(a, b, C) {
+  for (const [p, q, sg] of [[a, b, 1], [b, a, -1]]) {
+    for (let i = 0; i < p.length; i++) {
+      const s = p[i], t = p[(i + 1) % p.length], nx = t[1] - s[1], nz = s[0] - t[0];
+      if (!nx && !nz) continue;
+      let p0 = Infinity, p1 = -Infinity, q0 = Infinity, q1 = -Infinity;
+      for (const c of p) { const v = c[0] * nx + c[1] * nz; if (v < p0) p0 = v; if (v > p1) p1 = v; }
+      for (const c of q) { const v = c[0] * nx + c[1] * nz; if (v < q0) q0 = v; if (v > q1) q1 = v; }
+      const e = C.ex * nx + C.ez * nz;
+      if (p1 <= q0) return e <= p1 ? sg : e >= q0 ? -sg : 0;
+      if (q1 <= p0) return e >= p0 ? sg : e <= q1 ? -sg : 0;
+    }
+  }
+  return 0;
 }
 
 /* One block's worth of buildings, sorted among themselves and joined into one string. */
-function massing(P, C, hex, kind, base, defs, i, fast, deco) {
+function massing(P, C, hex, kind, base, defs, i, fast, deco, keep) {
   const m = MASS[kind], parts = [];
   cityPlan(i, kind).forEach((b, n) => {
     const id = i + '-' + n;
     const main = prism(P, C, hex.cx + b.x, hex.cy + b.z, b.w, b.d, b.h, b.rot, base, m, defs, id, fast);
     if (!main) return;
-    let body = main.s;
+    let body = main.s, box = main.box;
     if (b.cap) {
       const ca = Math.cos(b.rot), sa = Math.sin(b.rot);
       const top = prism(P, C, hex.cx + b.x + b.cap.dx * ca - b.cap.dz * sa,
         hex.cy + b.z + b.cap.dx * sa + b.cap.dz * ca,
         b.cap.w, b.cap.d, b.cap.h, b.rot, base + b.h, m, defs, id + 'c', fast);
-      if (top) body += top.s;
+      if (top) box = [Math.min(box[0], top.box[0]), Math.min(box[1], top.box[1]), Math.max(box[2], top.box[2]), Math.max(box[3], top.box[3])], body += top.s;
     }
     if (deco) body += deco(P, C, hex, kind, base, i, n, b, fast);
-    parts.push({ d: main.d, s: '<g class="pc">' + body + '</g>' });
+    parts.push({ d: main.d, s: '<g class="pc">' + body + '</g>', foot: main.c, box });
   });
-  return parts.sort((a, b) => b.d - a.d).map(p => p.s).join('');
+  parts.sort((a, b) => b.d - a.d);
+  if (keep) parts.forEach(p => keep.push(p));
+  return parts.map(p => p.s).join('');
 }
 
 /* The police marker: an officer with more braid than rank, and a case he
@@ -4066,7 +4095,7 @@ const neonMarked = () => !!(view.opts && view.opts.show > 0);
    blocks far to near, a block's buildings far to near and its number sign
    last, a piece just after the blocks round it, the spots over everything.
    The outlines are the convex hulls of the boxes the board builds them from
-   (the gable of a house and the mast of a tower within their boxes), which
+   (a piece's six-sided tiers, and a holding's mast and beacon in a box), which
    is exact for a building and near enough for the rest. Only worked out in a
    frame that has something to put out, and only near it. */
 function neonHull(ps) {
@@ -4105,7 +4134,7 @@ function neonTileD(C, st) {
    screen that reach into the box x0..x1, y0..y1. i is the place's block (-1
    for the arch and the pylons, which stand in the street), dn the depth of
    the middle of its building, and d its depth among the blocks. */
-function neonOver(C, st, i, dn, d, x0, y0, x1, y1) {
+function neonOver(C, st, i, dn, d, x0, y0, x1, y1, foot) {
   const tD = neonTileD(C, st), out = [], B = st.board;
   const add = q => {
     if (!q || q.length < 3) return;
@@ -4136,18 +4165,15 @@ function neonOver(C, st, i, dn, d, x0, y0, x1, y1) {
       add(neonBar(SP(h.cx, top, h.cy), sg, 1.2 * sg.k));
     }
   });
-  // the players' pieces: a street's bar, a house to its ridge, or a tower's two tiers and its mast
-  for (const id in st.streets) {
-    const e = GEO.edges[id], a = e && GEO.verts[e.a], b = e && GEO.verts[e.b];
-    if (!a || !(Math.min(...e.hexes.map(k => tD[k])) - 1 < d) || !near(SP((a.x + b.x) / 2, STREET_Y + 5, (a.y + b.y) / 2), 40)) continue;
-    const dx = b.x - a.x, dz = b.y - a.y, L = Math.hypot(dx, dz), nx = -dz / L * 5.5, nz = dx / L * 5.5;
-    add(neonPrism([[0.18, 1], [0.82, 1], [0.82, -1], [0.18, -1]].map(([t, s]) => [a.x + dx * t + nx * s, a.y + dz * t + nz * s]), STREET_Y, STREET_Y + 9));
-  }
+  // the players' buildings, tier by tier, and a holding's mast and beacon; a street lies flat on the road and covers nothing.
+  // The board draws a building that stands in front of a piece again over it, so the piece covers nothing of that one.
   for (const id in st.buildings) {
-    const v = GEO.verts[id];
-    if (!v || !(Math.min(...v.hexes.map(k => tD[k])) - 1 < d) || !near(SP(v.x, STREET_Y + 30, v.y), 60)) continue;
-    if (st.buildings[id].k === 'c') { add(neonPrism(neonSq(v.x, v.y, 12), STREET_Y, STREET_Y + 30)); add(neonPrism(neonSq(v.x, v.y, 8), STREET_Y + 30, STREET_Y + 50)); add(neonPrism(neonSq(v.x, v.y, 1.3), STREET_Y + 50, STREET_Y + 62)); }
-    else add(neonPrism(neonSq(v.x, v.y, 11), STREET_Y, STREET_Y + 26));
+    const v = GEO.verts[id], big = v && st.buildings[id].k === 'c';
+    if (!v || !(Math.min(...v.hexes.map(k => tD[k])) - 1 < d) || !near(SP(v.x, STREET_Y + 30, v.y), 70)) continue;
+    const r = (big ? HOLD_TIERS : OP_TIERS)[0].r;
+    if (foot && ahead(foot, HEX6.map(([x, z]) => [v.x + x * r, v.y + z * r]), C) > 0) continue;
+    for (const t of big ? HOLD_TIERS : OP_TIERS) add(neonPrism(HEX6.map(([x, z]) => [v.x + x * t.r, v.y + z * t.r]), STREET_Y + t.y0, STREET_Y + t.y1));
+    if (big) add(neonPrism(neonSq(v.x, v.y, 3), STREET_Y + HOLD_TIERS[2].y1, STREET_Y + HOLD_TIERS[2].y1 + 15));
   }
   // the police, a little after their block
   const pi = B.police;
@@ -4195,7 +4221,7 @@ function neonKey(C, st, nb, bk) {
   const i = bk >> 4, n = bk & 15, kind = st.board.hexes[i] && st.board.hexes[i].t, b = kind && cityPlan(i, kind)[n];
   if (!b) return null;
   const box = neonBox(GEO.hexes[i], b), m = SP(box.cx, TOP_Y[kind] + b.h / 2, box.cz);
-  return m && { i, dn: m.d, d: neonTileD(C, st)[i] };
+  return m && { i, dn: m.d, d: neonTileD(C, st)[i], foot: box.c };
 }
 /* Lays a veil by a (1 is out) over the quads Q and along the tube lines T of
    the place whose key is K, with a hole wherever the board draws something
@@ -4214,7 +4240,7 @@ function neonShade(ctx, C, st, K, Q, T, halo, a) {
   const poly = (q, closed) => { ctx.moveTo(q[0].x, q[0].y); for (let j = 1; j < q.length; j++) ctx.lineTo(q[j].x, q[j].y); if (closed) ctx.closePath(); };
   const cut = q => { ctx.beginPath(); ctx.rect(x0 - 1, y0 - 1, x1 - x0 + 2, y1 - y0 + 2); poly(q, true); ctx.clip('evenodd'); };
   ctx.save();
-  for (const q of neonOver(C, st, K.i, K.dn, K.d, x0, y0, x1, y1)) cut(q);
+  for (const q of neonOver(C, st, K.i, K.dn, K.d, x0, y0, x1, y1, K.foot)) cut(q);
   ctx.fillStyle = ctx.strokeStyle = 'rgb(6,4,12)';
   if (T) {
     ctx.save();
@@ -5650,9 +5676,9 @@ function holoMarkList(st, P, pieces) {
   });
   if (pieces) for (const v in bs) {
     const g = GEO.verts[v], big = bs[v].k === 'c';
-    const a = g && P(g.x, STREET_Y, g.y), b = g && P(g.x, STREET_Y + (big ? 52 : 28), g.y);
+    const a = g && P(g.x, STREET_Y, g.y), b = g && P(g.x, STREET_Y + (big ? 72 : 21), g.y);
     if (!a || !b) continue;
-    const hw = (big ? 20 : 17) * a.k;
+    const hw = (big ? 21 : 17) * a.k;
     list.push([a.x - hw, b.y - 2 * b.k, a.x + hw, a.y + 10 * a.k, a.k]);
   }
   return list;
@@ -9051,6 +9077,9 @@ function boardSVG(st, o) {
   /* ---------- the city blocks ---------- */
   const cs = B.police !== policeHome(B) ? crimeScene(P, C, st, B.police, lite) : null;
   if (cs) defs.push(GLOWS);
+  // whose colour each street is lit in, so the blocks either side can carry it on their edges
+  const owned = Object.create(null), cover = [];               // cover: what a piece behind it has to be drawn under
+  Object.keys(st.streets).forEach(id => { const p = playerOf(st, st.streets[id]); if (p) owned[id] = pieceInk(p.color, lite); });
   if (!lite) defs.push(FIRE_DEFS);
   GEO.hexes.forEach((h, i) => {
     if (tileD[i] < 0) return;
@@ -9067,6 +9096,8 @@ function boardSVG(st, o) {
       const q = [vT[k], vT[j], vB[j], vB[k]];
       g.push(!fast && ART && area(q) > 240 ? skin(defs, `c${i}-${k}`, q, 'wall_strata', shade(n) * 0.7)
         : `<polygon points="${pts(q)}" fill="${lit(n, SIDE_RGB[t.t], .56)}"/>`);
+      const ink = owned[h.es[k]];                                    // a lit street throws its colour up the wall
+      if (ink && ink.wall) g.push(`<polygon class="pc" points="${pts(q)}" fill="${ink.wall}"/>`);
     }
     if (!fast && ART) {                                             // the painted tile, fitted to the tilted top
       const w = S * R3 * SHRINK, d = 2 * S * SHRINK;
@@ -9080,8 +9111,16 @@ function boardSVG(st, o) {
         g.push(`<polygon class="hexline" points="${pts(vT)}"/>`);
       }
     } else g.push(`<polygon class="hexline" points="${pts(vT)}" style="fill:${lit([0, 1, 0], TOP_RGB[t.t], .6)}"/>`);
+    for (let k = 0; k < 6; k++) {                                   // the kerb of an owned street, lit in its colour
+      const ink = owned[h.es[k]];
+      if (ink) g.push(kerbTube(vT[k], vT[(k + 1) % 6], ink, o.fightE === h.es[k]));
+    }
     if (cs && i === B.police) g.push(cs.under);                     // the light and the far tape lie behind the buildings
-    if (!lite) g.push(massing(P, C, h, t.t, top, defs, i, fast, deco));   // the model stands up even without the art
+    if (!lite) {                                                    // the model stands up even without the art
+      const keep = [];
+      g.push(massing(P, C, h, t.t, top, defs, i, fast, deco, keep));
+      keep.forEach(b => cover.push({ key: tileD[i], n: cover.length, foot: b.foot, box: b.box, s: b.s }));
+    }
     if (cs && i === B.police) g.push(cs.wash);                      // the lights playing on the buildings
 
     const mid = P(h.cx, top, h.cy);   // the block's name is raised on demand, not painted on
@@ -9094,25 +9133,48 @@ function boardSVG(st, o) {
       let dots = '';
       for (let q = 0; q < p; q++)
         dots += `<circle class="pip" cx="${n1(sign.x + (q - (p - 1) / 2) * 3.3 * k)}" cy="${n1(sign.y + 5.4 * k)}" r="${n1(1.05 * k)}"/>`;
-      g.push(`<g class="sign${red ? ' red' : ''}">` +
+      const s = `<g class="sign${red ? ' red' : ''}">` +
         `<line x1="${n1(mid.x)}" y1="${n1(mid.y)}" x2="${n1(sign.x)}" y2="${n1(sign.y + hh / 2)}" stroke-width="${n1(1.1 * k)}"/>` +
         `<rect x="${n1(sign.x - w / 2)}" y="${n1(sign.y - hh / 2)}" width="${n1(w)}" height="${n1(hh)}" rx="${n1(3.2 * k)}" stroke-width="${n1(1.1 * k)}"/>` +
-        `<text x="${n1(sign.x)}" y="${n1(sign.y + 1.2 * k)}" style="font-size:${n1(12.5 * k)}px">${t.n}</text>${dots}</g>`);
+        `<text x="${n1(sign.x)}" y="${n1(sign.y + 1.2 * k)}" style="font-size:${n1(12.5 * k)}px">${t.n}</text>${dots}</g>`;
+      g.push(s);
+      cover.push({ key: tileD[i], n: cover.length, foot: [[h.cx, h.cy]], box: [sign.x - w / 2, sign.y - hh / 2, sign.x + w / 2, Math.max(mid.y, sign.y + hh / 2)], s });
     }
     scene.push({ d: tileD[i], s: g.join(''), hex: i });
   });
   if (mk && SHOW.scene) SHOW.scene(P, C, st, add, defs, tileD, lean, on);
 
   /* ---------- streets, operations, holdings, police ---------- */
-  Object.keys(st.streets).forEach(id => {
-    const e = GEO.edges[id], p = playerOf(st, st.streets[id]); if (!e || !p) return;
-    const s = street(P, C, e, `var(--p-${p.color})`, STREET_Y);
-    if (s) add(Math.min(...e.hexes.map(i => tileD[i])) - 1, o.fightE === +id ? s.replace('<g class="pc">', '<g class="pc fightst">') : s);
+  // streets and the pads under buildings lie flat on the road, so they go in with it
+  Object.keys(owned).forEach(id => {
+    const s = street(P, C, GEO.edges[id], owned[id]);
+    if (s) back.push(o.fightE === +id ? s.replace('<g class="pc">', '<g class="pc fightst">') : s);
   });
+  /* A building goes in just after the blocks round its junction, which is
+     right for the block behind it but not for the ones in front, whose
+     towers it would otherwise stand in front of. So anything that really is
+     nearer the eye and was drawn before it (a city building, a number sign,
+     another piece) is drawn again over it, cut to the piece's own outline:
+     the piece is hidden exactly where something stands in front of it. */
+  const pieces = [];
   Object.keys(st.buildings).forEach(id => {
     const v = GEO.verts[id], bd = st.buildings[id], p = bd && playerOf(st, bd.pid); if (!v || !p) return;
-    const s = building(P, C, v, `var(--p-${p.color})`, STREET_Y, bd.k === 'c');
-    if (s) add(Math.min(...v.hexes.map(i => tileD[i])) - 1, s);
+    const ink = pieceInk(p.color, lite), big = bd.k === 'c';
+    back.push(pad(P, v, big ? 19 : 16, ink));
+    const b = building(P, C, v, ink, STREET_Y, big);
+    if (!b) return;
+    const r = (big ? HOLD_TIERS : OP_TIERS)[0].r;
+    pieces.push({ id, key: Math.min(...v.hexes.map(i => tileD[i])) - 1, n: 1e6 + pieces.length, s: b.s, outline: b.outline,
+      foot: HEX6.map(([x, z]) => [v.x + x * r, v.y + z * r]), box: boxOf(b.outline.flat()) });
+  });
+  pieces.forEach(pc => {
+    const hide = cover.concat(pieces).filter(c => c !== pc && c.key > pc.key && boxesMeet(c.box, pc.box) && ahead(c.foot, pc.foot, C) > 0);
+    let s = pc.s;
+    if (hide.length) {
+      defs.push(`<clipPath id="pv${pc.id}">${pc.outline.map(q => `<polygon points="${pts(q)}"/>`).join('')}</clipPath>`);
+      s += `<g clip-path="url(#pv${pc.id})">${hide.sort((a, b) => b.key - a.key || a.n - b.n).map(c => c.s).join('')}</g>`;
+    }
+    add(pc.key, s);
   });
   const rh = GEO.hexes[B.police], rt = TOP_Y[B.hexes[B.police].t], off = B.hexes[B.police].n ? 27 : 0;
   const cop = policeHTML(C, rh.cx + off, rh.cy + (off ? 6 : 2), rt);
@@ -9190,90 +9252,141 @@ function boardSVG(st, o) {
     `<g class="flag">${flagHTML(C, B, ui.hex)}</g></svg>`;
 }
 
-/* A street: a bar of colour lying along the edge, with its sides shaded. */
-function street(P, C, e, col, top) {
-  const A = GEO.verts[e.a], B2 = GEO.verts[e.b];
-  const dx = B2.x - A.x, dz = B2.y - A.y, L = Math.hypot(dx, dz), ux = dx / L, uz = dz / L, nx = -uz, nz = ux, hw = 5.5, ht = 9;
-  const base = [[.18, 1], [.82, 1], [.82, -1], [.18, -1]].map(([t, s]) => [A.x + dx * t + nx * hw * s, A.y + dz * t + nz * hw * s]);
-  const lo = base.map(p => P(p[0], top, p[1])), hi = base.map(p => P(p[0], top + ht, p[1]));
-  if (lo.some(p => !p) || hi.some(p => !p)) return '';
-  const g = [];
-  const N = [[nx, 0, nz], [ux, 0, uz], [-nx, 0, -nz], [-ux, 0, -uz]];
-  for (let k = 0; k < 4; k++) {
-    const j = (k + 1) % 4, mp = [(base[k][0] + base[j][0]) / 2, top + ht / 2, (base[k][1] + base[j][1]) / 2];
-    if (!faces(C, N[k], mp)) continue;
-    g.push(`<polygon points="${pts([hi[k], hi[j], lo[j], lo[k]])}" fill="${col}" style="fill:${col};filter:brightness(${(0.5 + 0.5 * Math.max(0, N[k][0] * LIGHT[0] + N[k][2] * LIGHT[2])).toFixed(2)})" stroke="var(--piece-line)" stroke-width="1.1"/>`);
+/* ---------- the players' pieces ----------
+   A piece belongs to the city it stands in: dark like everything else after
+   dark, with its owner's colour as the light it gives off. What makes it
+   stand out is what the city itself never does: a road lit along both kerbs,
+   a lit pad on the ground, and buildings that are six-sided rather than
+   boxes, with neon round every roof. The colours are worked out here rather
+   than by a CSS filter on every face, which is cheaper to paint and matches
+   the light the show throws round a piece. */
+const PIECE_RGB = { red: [255, 75, 92], blue: [59, 130, 255], white: [238, 243, 251], orange: [255, 159, 46], green: [52, 209, 122], purple: [166, 107, 255] };
+const rgbS = (c, a) => (a == null ? 'rgb(' : 'rgba(') + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + (a == null ? ')' : ',' + a + ')');
+const mixRGB = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+const INKS = {};
+/* Everything a piece is painted with, per colour. Simple view has bright flat
+   blocks rather than a dark city, so there the neon's soft halo becomes a
+   dark casing, the way the rest of that view is outlined. */
+function pieceInk(color, lite) {
+  const key = color + (lite ? '/s' : '');
+  if (INKS[key]) return INKS[key];
+  const c = PIECE_RGB[color] || PIECE_RGB.white, night = [16, 19, 30], white = [255, 255, 255];
+  const core = mixRGB(c, white, .32);                                // the hot middle of a tube, still its own colour
+  return (INKS[key] = {
+    body: mixRGB(night, c, .36),                                     // walls: dark glass with the colour in it
+    roof: mixRGB(night, c, .86),                                     // the roof is what the table sees most of, so it carries the colour
+    win: rgbS(mixRGB(c, white, .3), .92),                            // windows lit from inside
+    glow: lite ? 'rgba(4,6,11,.8)' : rgbS(c, .42), gw: lite ? 3.2 : 3.6,
+    hot: rgbS(lite ? c : core), hw: lite ? 1.7 : 1.15,
+    road: lite ? rgbS(mixRGB(night, c, .5), .92) : rgbS(c, .5),     // the carriageway of a street
+    line: lite ? rgbS(c) : rgbS(core, .85),                          // and its centre line
+    pad: lite ? rgbS(mixRGB(night, c, .5), .92) : rgbS(c, .3),
+    wall: lite ? null : rgbS(c, .26),                                // the light a street throws up the block beside it
+    halo: lite ? 'rgba(4,6,11,.6)' : rgbS(c, .4),
+  });
+}
+/* a neon line: a wide soft stroke of the colour under a thin hot one */
+const tube = (attrs, ink, k, w) => `<${attrs} stroke="${ink.glow}" stroke-width="${n1((w || 1) * ink.gw * k)}"/>` +
+  `<${attrs} stroke="${ink.hot}" stroke-width="${n1((w || 1) * ink.hw * k)}"/>`;
+
+/* A street is the road itself, lit. The owner's colour lies over the
+   carriageway with its centre line picked out, and the blocks either side
+   carry a neon tube along their edges (kerbTube, drawn with each block).
+   The road is flat at street level, so it goes in with the road, under the
+   traffic and behind whatever stands in front of it; the tubes run along the
+   tops of the kerbs, which is why a street still shows when a block hides
+   the road itself. A coast road has no block outside it, so its outer edge
+   gets its tube on the road. */
+function street(P, C, e, ink) {
+  const A = GEO.verts[e.a], D = GEO.verts[e.b], ROAD = INSET - 2.5;
+  const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1;
+  let nx = -dz / L, nz = dx / L, off = 0;
+  const coast = e.hexes.length === 1;
+  if (coast) {                                                      // a coast road only has an inside, like the road under it
+    const hx = GEO.hexes[e.hexes[0]];
+    if (nx * (hx.cx - (A.x + D.x) / 2) + nz * (hx.cy - (A.y + D.y) / 2) < 0) { nx = -nx; nz = -nz; }
+    off = ROAD / 2;
   }
-  g.push(`<polygon points="${pts(hi)}" fill="${col}" stroke="var(--piece-line)" stroke-width="1.2"/>`);
-  return `<g class="pc">${g.join('')}</g>`;
+  const at = (t, s) => P(A.x + dx * t + nx * (off + s), STREET_Y + 0.3, A.y + dz * t + nz * (off + s));
+  const t0 = 0.08, t1 = 0.92, q = [at(t0, ROAD), at(t1, ROAD), at(t1, -ROAD), at(t0, -ROAD)];
+  if (q.some(p => !p)) return '';
+  const k = (q[0].k + q[2].k) / 2, line = (a, b) => `line x1="${n1(a.x)}" y1="${n1(a.y)}" x2="${n1(b.x)}" y2="${n1(b.y)}" stroke-linecap="round"`;
+  let s = `<polygon points="${pts(q)}" fill="${ink.road}"/>`;
+  const c0 = at(.16, 0), c1 = at(.84, 0);
+  if (c0 && c1) s += `<${line(c0, c1)} stroke="${ink.line}" stroke-width="${n1(1.8 * k)}" stroke-dasharray="${n1(6 * k)} ${n1(5 * k)}"/>`;
+  if (coast) { const a = at(t0, 0.6 - ROAD), b = at(t1, 0.6 - ROAD); if (a && b) s += tube(line(a, b), ink, k, 1.5); }
+  return `<g class="pc">${s}</g>`;
+}
+/* the lit edge of a block along an owned street, from corner a to corner b as the board projected them */
+function kerbTube(a, b, ink, fight) {
+  const t = (p, q, u) => ({ x: p.x + (q.x - p.x) * u, y: p.y + (q.y - p.y) * u });
+  const p = t(a, b, .05), q = t(a, b, .95), k = (a.k + b.k) / 2;
+  return `<g class="pc${fight ? ' fightst' : ''}">` + tube(`line x1="${n1(p.x)}" y1="${n1(p.y)}" x2="${n1(q.x)}" y2="${n1(q.y)}" stroke-linecap="round"`, ink, k, 1.5) + '</g>';
 }
 
-/* An operation is a little house; a major holding is the same house grown a
-   storey with a tower, so the two read apart at a glance from any angle. */
-function building(P, C, v, col, top, big) {
-  if (big) return tower(P, C, v, col, top);
-  const w = 11, wall = 13, ridge = 26;
-  const sq = [[-w, -w], [w, -w], [w, w], [-w, w]];
-  const lo = sq.map(p => P(v.x + p[0], top, v.y + p[1]));
-  const hi = sq.map(p => P(v.x + p[0], top + wall, v.y + p[1]));
-  const r1 = P(v.x - w, top + ridge, v.y), r2 = P(v.x + w, top + ridge, v.y);
-  const sh = P(v.x, top, v.y);
-  if (lo.some(p => !p) || hi.some(p => !p) || !r1 || !r2 || !sh) return '';
-  const g = [`<ellipse cx="${n1(sh.x)}" cy="${n1(sh.y)}" rx="${n1(w * 1.5 * sh.k)}" ry="${n1(w * 1.5 * sh.k * Math.max(.18, Math.sin(CAM.pitch * Math.PI / 180)))}" fill="rgba(0,0,0,.3)"/>`];
-  const N = [[0, 0, -1], [1, 0, 0], [0, 0, 1], [-1, 0, 0]];
-  const sv = ['#000', '#fff'];
-  for (let k = 0; k < 4; k++) {
-    const j = (k + 1) % 4, mp = [v.x + (sq[k][0] + sq[j][0]) / 2, top + wall / 2, v.y + (sq[k][1] + sq[j][1]) / 2];
-    if (!faces(C, N[k], mp)) continue;
-    g.push(shadeFace([hi[k], hi[j], lo[j], lo[k]], N[k], col));
-  }
-  // the two slopes of the roof and its gable ends
-  const rl = Math.hypot(w, ridge - wall);   // the slope's own normal, not a guess at one
-  [[-1, [hi[0], hi[1], r2, r1]], [1, [hi[3], hi[2], r2, r1]]].forEach(([sgn, q]) => {
-    const n = [0, w / rl, sgn * (ridge - wall) / rl];
-    if (faces(C, n, [v.x, top + (wall + ridge) / 2, v.y + sgn * w / 2])) g.push(shadeFace(q, n, col));
-  });
-  [{ q: [hi[0], hi[3], r1], n: [-1, 0, 0] }, { q: [hi[1], hi[2], r2], n: [1, 0, 0] }].forEach(f => {
-    if (faces(C, f.n, [v.x + f.n[0] * w, top + wall, v.y])) g.push(shadeFace(f.q, f.n, col));
-  });
-  return `<g class="pc">${g.join('')}</g>`;
+/* flat-topped, so the three faces a junction shows look straight down its three streets */
+const HEX6 = Array.from({ length: 6 }, (_, k) => [Math.cos(k * Math.PI / 3), Math.sin(k * Math.PI / 3)]);
+/* the lit pad a building stands on, flat on the junction and drawn with the road */
+function pad(P, v, r, ink) {
+  const q = HEX6.map(([x, z]) => P(v.x + x * r, STREET_Y + 0.35, v.y + z * r));
+  if (q.some(p => !p)) return '';
+  return `<g class="pc"><polygon points="${pts(q)}" fill="${ink.pad}"/>` +
+    tube(`polygon points="${pts(q)}" fill="none" stroke-linejoin="round"`, ink, q[0].k, .8) + '</g>';
 }
-/* A major holding is a tower, not a bigger house: a broad base, a slimmer
-   setback on top of it, a mast, and lit windows, so an upgrade reads from
-   across the table. It is drawn tier by tier, bottom up, which is already
-   back to front for anything inside one piece. */
-const TIERS = [{ w: 12, y0: 0, y1: 30, rows: 3 }, { w: 8, y0: 30, y1: 50, rows: 2 }];
-function tower(P, C, v, col, top) {
-  const sh = P(v.x, top, v.y);
-  if (!sh) return '';
-  const g = [`<ellipse cx="${n1(sh.x)}" cy="${n1(sh.y)}" rx="${n1(18 * sh.k)}" ry="${n1(18 * sh.k * Math.max(.18, Math.sin(CAM.pitch * Math.PI / 180)))}" fill="rgba(0,0,0,.34)"/>`];
-  const N = [[0, 0, -1], [1, 0, 0], [0, 0, 1], [-1, 0, 0]];
-  for (const t of TIERS) {
-    const sq = [[-t.w, -t.w], [t.w, -t.w], [t.w, t.w], [-t.w, t.w]];
-    const lo = sq.map(p => P(v.x + p[0], top + t.y0, v.y + p[1])), hi = sq.map(p => P(v.x + p[0], top + t.y1, v.y + p[1]));
-    if (lo.some(p => !p) || hi.some(p => !p)) return '';
-    for (let k = 0; k < 4; k++) {
-      const j = (k + 1) % 4, a = sq[k], b = sq[j];
-      if (!faces(C, N[k], [v.x + (a[0] + b[0]) / 2, top + (t.y0 + t.y1) / 2, v.y + (a[1] + b[1]) / 2])) continue;
-      g.push(shadeFace([hi[k], hi[j], lo[j], lo[k]], N[k], col));
-      // two lit windows a floor, set in from the corners
-      const at = (u, y) => P(v.x + a[0] + (b[0] - a[0]) * u, top + y, v.y + a[1] + (b[1] - a[1]) * u);
-      const fh = (t.y1 - t.y0) / t.rows;
-      for (let r = 0; r < t.rows; r++) for (const [u0, u1] of [[0.16, 0.44], [0.56, 0.84]]) {
-        const y0 = t.y0 + fh * r + fh * 0.3, y1 = t.y0 + fh * r + fh * 0.72;
-        const q = [at(u0, y1), at(u1, y1), at(u1, y0), at(u0, y0)];
-        if (q.every(Boolean)) g.push(`<polygon points="${pts(q)}" fill="rgba(255,238,178,.88)"/>`);
-      }
+/* An operation is a six-sided pavilion on the junction; a major holding is a
+   six-sided tower three tiers high with a beacon on its mast. Each tier is
+   dark glass, a lit band of windows a floor and neon round its roof, drawn
+   bottom up, which is already back to front for anything inside one piece. */
+const OP_TIERS = [{ r: 12, y0: 0, y1: 15, floors: 2 }, { r: 6, y0: 15, y1: 20, floors: 0 }];
+const HOLD_TIERS = [{ r: 14.5, y0: 0, y1: 28, floors: 4 }, { r: 10.5, y0: 28, y1: 46, floors: 3 }, { r: 6.5, y0: 46, y1: 56, floors: 1 }];
+function hexTier(P, C, v, t, top, ink, g, outline) {
+  const c = HEX6.map(([x, z]) => [v.x + x * t.r, v.y + z * t.r]);
+  const lo = c.map(p => P(p[0], top + t.y0, p[1])), hi = c.map(p => P(p[0], top + t.y1, p[1]));
+  if (lo.some(p => !p) || hi.some(p => !p)) return false;
+  outline.push(hull2(widen(lo.concat(hi), ink.gw * hi[0].k / 2 + 0.4)));   // out to the edge of the neon's halo
+  const fh = (t.y1 - t.y0) / (t.floors || 1);
+  for (let k = 0; k < 6; k++) {
+    const j = (k + 1) % 6, a = (k + 0.5) * Math.PI / 3, n = [Math.cos(a), 0, Math.sin(a)];
+    if (!faces(C, n, [(c[k][0] + c[j][0]) / 2, top + (t.y0 + t.y1) / 2, (c[k][1] + c[j][1]) / 2])) continue;
+    g.push(`<polygon points="${pts([hi[k], hi[j], lo[j], lo[k]])}" fill="${lit(n, ink.body, .5)}"/>`);
+    const at = (u, y) => P(c[k][0] + (c[j][0] - c[k][0]) * u, y, c[k][1] + (c[j][1] - c[k][1]) * u);
+    for (let f = 0; f < t.floors; f++) {
+      const y0 = top + t.y0 + fh * (f + 0.3), y1 = top + t.y0 + fh * (f + 0.74);
+      const q = [at(.13, y1), at(.87, y1), at(.87, y0), at(.13, y0)];
+      if (q.every(Boolean)) g.push(`<polygon points="${pts(q)}" fill="${ink.win}"/>`);
     }
-    g.push(shadeFace(hi, [0, 1, 0], col));                          // the flat roof of this tier
   }
-  const m0 = P(v.x, top + TIERS[1].y1, v.y), m1 = P(v.x, top + TIERS[1].y1 + 12, v.y);
-  if (m0 && m1) g.push(`<line x1="${n1(m0.x)}" y1="${n1(m0.y)}" x2="${n1(m1.x)}" y2="${n1(m1.y)}" stroke="var(--piece-line)" stroke-width="${n1(2.4 * m0.k)}" stroke-linecap="round"/>`);
-  return `<g class="pc">${g.join('')}</g>`;
+  const roof = pts(hi);
+  g.push(`<polygon points="${roof}" fill="${lit([0, 1, 0], ink.roof, .6)}"/>`);
+  g.push(tube(`polygon points="${roof}" fill="none" stroke-linejoin="round"`, ink, hi[0].k));
+  return true;
 }
-function shadeFace(q, n, col) {
-  const l = Math.max(0, n[0] * LIGHT[0] + n[1] * LIGHT[1] + n[2] * LIGHT[2]);
-  return `<polygon points="${pts(q)}" style="fill:${col};filter:brightness(${(0.52 + 0.62 * l).toFixed(2)})" stroke="var(--piece-line)" stroke-width="1.2" stroke-linejoin="round"/>`;
+function building(P, C, v, ink, top, big) {
+  const g = [], outline = [];
+  for (const t of big ? HOLD_TIERS : OP_TIERS) if (!hexTier(P, C, v, t, top, ink, g, outline)) return null;
+  if (big) {                                                        // the mast and its beacon
+    const y = top + HOLD_TIERS[2].y1, m0 = P(v.x, y, v.y), m1 = P(v.x, y + 11, v.y);
+    if (m0 && m1) g.push(`<line x1="${n1(m0.x)}" y1="${n1(m0.y)}" x2="${n1(m1.x)}" y2="${n1(m1.y)}" stroke="${rgbS(ink.body)}" stroke-width="${n1(1.6 * m0.k)}" stroke-linecap="round"/>` +
+      `<circle cx="${n1(m1.x)}" cy="${n1(m1.y)}" r="${n1(4.2 * m1.k)}" fill="${ink.halo}"/>` +
+      `<circle cx="${n1(m1.x)}" cy="${n1(m1.y)}" r="${n1(1.9 * m1.k)}" fill="${ink.hot}"/>`);
+    if (m0 && m1) {                                                 // the mast and the beacon's halo, as one thin shape
+      const r = 4.2 * m1.k;
+      outline.push(hull2([{ x: m1.x - r, y: m1.y - r }, { x: m1.x + r, y: m1.y - r }, { x: m1.x + r, y: m1.y + r }, { x: m1.x - r, y: m1.y + r },
+        { x: m0.x - m0.k, y: m0.y }, { x: m0.x + m0.k, y: m0.y }]));
+    }
+  }
+  return { s: `<g class="pc">${g.join('')}</g>`, outline };
+}
+/* the points pushed out by m every way, so a hull of them also takes in a stroke m wide round them */
+const RING8 = Array.from({ length: 8 }, (_, j) => [Math.cos(j * Math.PI / 4) * 1.083, Math.sin(j * Math.PI / 4) * 1.083]);
+const widen = (ps, m) => ps.flatMap(p => RING8.map(([x, y]) => ({ x: p.x + x * m, y: p.y + y * m })));
+/* the convex hull of some screen points, as a polygon */
+function hull2(ps) {
+  ps = ps.slice().sort((a, b) => a.x - b.x || a.y - b.y);
+  const cr = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x), lo = [], hi = [];
+  for (const p of ps) { while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); }
+  for (let i = ps.length - 1; i >= 0; i--) { const p = ps[i]; while (hi.length > 1 && cr(hi[hi.length - 2], hi[hi.length - 1], p) <= 0) hi.pop(); hi.push(p); }
+  return lo.slice(0, -1).concat(hi.slice(0, -1));
 }
 
 /* =====================================================================
@@ -10465,7 +10578,7 @@ function tallyHTML(st, me) {
 }
 const OPT_NAME = { street: 'Lay a street', operation: 'Open an operation', holding: 'Upgrade to a major holding' };
 const NO_SPOT = { street: 'Nowhere left to run one from your streets.', operation: 'No junction is both free and on one of your streets.', holding: 'You have no operation to upgrade.' };
-const PIECE_PATH = { street: 'M4 21 21 5l6 6L10 27z', operation: 'M5 27V14l11-9 11 9v13z', holding: 'M6 28V13h5V4h10v9h5v15z' };
+const PIECE_PATH = { street: 'M4 21 21 5l6 6L10 27z', operation: 'M5 28V13h22v15zM10 13V7h12v6z', holding: 'M5 29V15h22v14zM8 15V8h16v7zM11 8V4h10v4zM15 4V1h2v3z' };
 const pieceIcon = (kind, color) => `<svg class="pi" viewBox="0 0 32 32" aria-hidden="true"><path d="${PIECE_PATH[kind]}" style="fill:var(--p-${color})"/></svg>`;
 /* What you can make: the piece in your colour, then its price laid out in
    cards. A card you hold is lit and one you are missing is an empty outline, so
