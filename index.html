@@ -331,6 +331,26 @@ div.opt.cant{border-style:dashed;color:var(--muted)}
 .pier{stroke:rgba(150,166,196,.5);stroke-linecap:round}
 .hb .r{font-family:var(--body);font-weight:800;letter-spacing:.06em}
 .police{pointer-events:none}
+/* The crime scene round the police. Widths and radii are written per frame, so
+   nothing here may pin them. The lamps are small and may flash hard; the light
+   on the ground covers a lot of screen, so it only swells and fades, well under
+   three times a second. --sp is set from the page clock by syncSiren(). */
+.siren{pointer-events:none}
+.siren .tape{fill:none;stroke:#f2cd1d;stroke-linecap:round;stroke-linejoin:round}
+.siren .tape-t{fill:none;stroke:#17140a;stroke-linejoin:round}
+.siren .post{stroke:#aab3c2;stroke-linecap:round}
+.siren .bcn .lamp{stroke:rgba(255,255,255,.6)}
+.siren .bcn.r .lamp{fill:#ff4155}.siren .bcn.b .lamp{fill:#4d8dff}
+.siren .bcn.r{animation:bcnR 1.2s linear infinite}
+.siren .bcn.b{animation:bcnB 1.2s linear infinite}
+.siren .glow.r{animation:glowR 1.2s ease-in-out infinite}
+.siren .glow.b{animation:glowB 1.2s ease-in-out infinite}
+.siren .bcn,.siren .glow{animation-delay:var(--sp,0s)}
+@keyframes bcnR{0%,9%{opacity:1}12%,16%{opacity:.16}19%,31%{opacity:1}35%,100%{opacity:.16}}
+@keyframes bcnB{0%,49%{opacity:.16}50%,59%{opacity:1}62%,66%{opacity:.16}69%,81%{opacity:1}85%,100%{opacity:.16}}
+@keyframes glowR{0%{opacity:.55}15%{opacity:1}42%,92%{opacity:.12}100%{opacity:.55}}
+@keyframes glowB{0%,42%{opacity:.12}50%{opacity:.55}65%{opacity:1}92%,100%{opacity:.12}}
+@media (prefers-reduced-motion:reduce){.siren .bcn,.siren .glow{animation:none}}
 .police polygon{stroke:rgba(6,8,14,.45);stroke-width:.6;stroke-linejoin:round}
 .pc{pointer-events:none}
 .lf{pointer-events:none}
@@ -372,6 +392,21 @@ div.opt.cant{border-style:dashed;color:var(--muted)}
 .flyc{position:absolute;left:0;top:0;will-change:transform,opacity}
 .payring{position:absolute;left:0;top:0;width:74px;height:74px;margin:-37px 0 0 -37px;border-radius:50%;border:4px solid var(--token);
   box-shadow:0 0 22px 4px rgba(255,255,255,.55),inset 0 0 14px rgba(255,255,255,.4);animation:payring .7s ease-out 3 both}
+/* the police landing: rings of red and blue, and tape pulled taut across the block */
+.raid{position:absolute;left:0;top:0;width:0;height:0}
+.raid .rtw{position:absolute;left:0;top:0}
+.raid .rr{position:absolute;left:-50px;top:-50px;width:100px;height:100px;border-radius:50%;border:5px solid;opacity:0;animation:raidring .74s ease-out 2 both}
+.raid .rr.r{border-color:#ff3347;box-shadow:0 0 26px 6px rgba(255,51,71,.55),inset 0 0 16px rgba(255,51,71,.45)}
+.raid .rr.b{border-color:#3d86ff;box-shadow:0 0 26px 6px rgba(61,134,255,.55),inset 0 0 16px rgba(61,134,255,.45);animation-delay:.37s}
+@keyframes raidring{0%{transform:scale(.3);opacity:0}25%{opacity:1}100%{transform:scale(1.8);opacity:0}}
+.raid .rt{--w:310px;--rot:-9deg;position:absolute;left:calc(var(--w)/-2);top:-14px;width:var(--w);height:28px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:#f2cd1d;color:#15130a;font:800 13px/1 var(--display);letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 5px 16px rgba(0,0,0,.6);transform:rotate(var(--rot)) scaleX(0);animation:raidtape 2.2s cubic-bezier(.2,.9,.3,1) both}
+.raid .rt.x{--rot:7deg;top:6px;animation-delay:.14s}
+.raid.small .rt{--w:220px;height:21px;top:-11px;font-size:10px}
+.raid.small .rt.x{top:5px}
+@keyframes raidtape{0%{transform:rotate(var(--rot)) scaleX(0)}13%{transform:rotate(var(--rot)) scaleX(1.05)}19%,100%{transform:rotate(var(--rot)) scaleX(1)}
+  80%{opacity:1}100%{opacity:0}}
 @keyframes payring{0%{transform:scale(.35);opacity:0}30%{opacity:1}100%{transform:scale(1.25);opacity:0}}
 .slotm{--d:88px;position:absolute;left:0;top:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 22px 14px;border-radius:22px;
   background:linear-gradient(#1a2036,#0b0f1c);border:3px solid var(--accent);color:var(--ink);
@@ -1069,6 +1104,110 @@ function policeHTML(C, cx, cz, base) {
   return shade + g;
 }
 
+/* Wherever the police are sent, the block becomes a crime scene: tape strung
+   round the kerb between posts, red and blue lamps on the posts, the light
+   they throw across the ground and, in full view, a cruiser pulled up on the
+   pavement. The officer idling at home on the dead zone gets none of it, so
+   tape on the board always means somebody rolled a seven and put him there.
+
+   The tape runs just inside the kerb, which keeps it outside every building,
+   and its corners are cut short of the block's own, which keeps its posts out
+   of the operations standing at the junctions. Anything on the ground or on
+   the far side goes in with the block, under its buildings; the near side is
+   drawn after the officer, who is standing inside the line. The flashing is
+   CSS, and syncSiren() keeps it in step when the board is redrawn. */
+const policeHome = B => B.hexes.findIndex(h => h.t === 'deadzone');
+const SIREN_MS = 1200;
+const GLOWS = [['r', '#ff2436'], ['b', '#2f6dff']].map(([v, c]) =>
+  `<radialGradient id="glow-${v}"><stop offset="0" stop-color="${c}" stop-opacity=".75"/>` +
+    `<stop offset=".45" stop-color="${c}" stop-opacity=".3"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>` +
+  `<radialGradient id="wash-${v}"><stop offset="0" stop-color="${c}" stop-opacity=".34"/>` +
+    `<stop offset=".6" stop-color="${c}" stop-opacity=".16"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`).join('');
+function crimeScene(P, C, st, i, lite) {
+  const B = st.board, h = GEO.hexes[i], top = TOP_Y[B.hexes[i].t];
+  const mid = P(h.cx, top, h.cy);
+  if (!mid) return null;
+  const pitch = CAM.pitch * Math.PI / 180;
+  const flat = Math.max(.18, Math.sin(pitch));       // how round a circle on the ground still looks
+  const tall = Math.max(.45, Math.cos(pitch));       // how much of an upright ribbon still shows
+  const R = SHRINK * 0.965, POST = 12, TAPE = 8;
+  const c = h.vs.map(v => [h.cx + (GEO.verts[v].x - h.cx) * R, h.cy + (GEO.verts[v].y - h.cy) * R]);
+  const along = (k, t) => { const a = c[k], b = c[(k + 1) % 6]; return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
+  const col = k => k % 2 ? 'b' : 'r';                 // the sides take turns, red then blue
+  let under = '', over = '';
+  const put = (d, s) => { if (d > mid.d) under += s; else over += s; };
+
+  for (let k = 0; k < 6; k++) {                       // a pool of light on the ground below each side
+    const [x, z] = along(k, 0.5), g = P(x, top + 0.3, z);
+    if (g) under += `<ellipse class="glow ${col(k)}" cx="${n1(g.x)}" cy="${n1(g.y)}" rx="${n1(34 * g.k)}" ry="${n1(34 * g.k * flat)}" fill="url(#glow-${col(k)})"/>`;
+  }
+  // and the same light thrown up the buildings, which is what still shows when the block is small
+  const lift = P(h.cx, top + 16, h.cy);
+  const wash = lift ? ['r', 'b'].map(cl => `<ellipse class="glow ${cl}" cx="${n1(lift.x)}" cy="${n1(lift.y)}" ` +
+    `rx="${n1(62 * lift.k)}" ry="${n1(62 * lift.k * Math.max(.62, flat))}" fill="url(#wash-${cl})"/>`).join('') : '';
+  const ring = [];                                    // two posts to a side, twelve in all
+  for (let k = 0; k < 6; k++) ring.push({ at: along(k, 0.2), k }, { at: along(k, 0.8), k });
+  ring.forEach((a, n) => {                            // the tape, sagging a little between posts
+    const b = ring[(n + 1) % 12], long = n % 2 === 0;
+    const q = [P(a.at[0], top + TAPE, a.at[1]),
+      P((a.at[0] + b.at[0]) / 2, top + TAPE - (long ? 2.2 : 0.6), (a.at[1] + b.at[1]) / 2),
+      P(b.at[0], top + TAPE, b.at[1])];
+    if (q.some(p => !p)) return;
+    const k = q[1].k, w = 3.3 * tall * k, line = pts(q);
+    put(q[1].d, `<polyline class="tape" points="${line}" stroke-width="${n1(w)}"/>` +
+      `<polyline class="tape-t" points="${line}" stroke-width="${n1(w * .4)}" ` +
+      `stroke-dasharray="${[2.6, .9, 1.5, .9, 2.2, .9, 1.1, 3.4].map(v => n1(v * k)).join(' ')}"/>`);
+  });
+  ring.forEach(a => {                                 // the posts, each carrying a lamp
+    const f = P(a.at[0], top, a.at[1]), t = P(a.at[0], top + POST, a.at[1]);
+    if (!f || !t) return;
+    put(f.d, `<line class="post" x1="${n1(f.x)}" y1="${n1(f.y)}" x2="${n1(t.x)}" y2="${n1(t.y)}" stroke-width="${n1(1.3 * t.k)}"/>` +
+      `<g class="bcn ${col(a.k)}"><circle cx="${n1(t.x)}" cy="${n1(t.y)}" r="${n1(9 * t.k)}" fill="url(#glow-${col(a.k)})"/>` +
+      `<circle class="lamp" cx="${n1(t.x)}" cy="${n1(t.y)}" r="${n1(2.4 * t.k)}" stroke-width="${n1(.5 * t.k)}"/></g>`);
+  });
+
+  /* The cruiser, on the pavement of the southernmost side without a street of
+     anyone's on it. It is chosen from the board, not the camera, so it stays
+     parked when you walk round it; on the pavement it is clear of the traffic
+     lanes and of the pieces lying along the road. */
+  let car = null;
+  if (!lite) {
+    const mz = e => GEO.verts[GEO.edges[e].a].y + GEO.verts[GEO.edges[e].b].y;
+    const e = h.es.slice().sort((x, y) => (!!st.streets[x] - !!st.streets[y]) || mz(y) - mz(x))[0];
+    const A = GEO.verts[GEO.edges[e].a], D = GEO.verts[GEO.edges[e].b];
+    const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz), ux = dx / L, uz = dz / L;
+    let nx = -uz, nz = ux;
+    if (nx * (h.cx - A.x) + nz * (h.cy - A.y) < 0) { nx = -nx; nz = -nz; }   // towards the block
+    const x = (A.x + D.x) / 2 + nx * 7.2, z = (A.y + D.y) / 2 + nz * 7.2;
+    const body = roadBox(C, x, z, STREET_Y + 0.15, ux, uz, 8, 3.6, 1.7, [22, 26, 36], '#fff6dd', '#ff3b2e') +
+      roadBox(C, x - ux * 0.5, z - uz * 0.5, STREET_Y + 1.85, ux, uz, 4.2, 3.3, 1.25, [214, 220, 232], null, null);
+    const at = P(x, STREET_Y + 1.5, z);
+    if (body && at) {
+      let s = '';
+      for (const [side, cl] of [[1, 'r'], [-1, 'b']]) {
+        const g = P(x + nx * side * 7, STREET_Y + 0.1, z + nz * side * 7);
+        if (g) s += `<ellipse class="glow ${cl}" cx="${n1(g.x)}" cy="${n1(g.y)}" rx="${n1(15 * g.k)}" ry="${n1(15 * g.k * flat)}" fill="url(#glow-${cl})"/>`;
+      }
+      s += body;
+      for (const [side, cl] of [[1, 'r'], [-1, 'b']]) {
+        const l = P(x - ux * 0.5 + nx * side * 0.9, STREET_Y + 3.4, z - uz * 0.5 + nz * side * 0.9);
+        if (l) s += `<g class="bcn ${cl}"><circle cx="${n1(l.x)}" cy="${n1(l.y)}" r="${n1(5.5 * l.k)}" fill="url(#glow-${cl})"/>` +
+          `<circle class="lamp" cx="${n1(l.x)}" cy="${n1(l.y)}" r="${n1(1.05 * l.k)}" stroke-width="${n1(.3 * l.k)}"/></g>`;
+      }
+      car = { d: at.d, s: `<g class="siren">${s}</g>` };
+    }
+  }
+  return { under: `<g class="siren">${under}</g>`, wash: `<g class="siren">${wash}</g>`, over: `<g class="siren">${over}</g>`, car };
+}
+/* The lamps flash on a CSS loop, and a redraw builds new elements that would
+   start it again from nothing: a camera being dragged would hold every lamp on
+   red. Setting the loop's delay from the page clock keeps them all in step. */
+function syncSiren() {
+  const svg = document.querySelector('svg.board');
+  if (svg && svg.style && svg.style.setProperty && svg.querySelector('.siren'))
+    svg.style.setProperty('--sp', `${-(performance.now() % SIREN_MS).toFixed(0)}ms`);
+}
+
 /* A name on a pole, raised out of the block under the pointer. Nothing is
    labelled until you ask, which keeps nineteen names off the board. */
 function flagHTML(C, B, i) {
@@ -1410,6 +1549,8 @@ function boardSVG(st, o) {
   });
 
   /* ---------- the city blocks ---------- */
+  const cs = B.police !== policeHome(B) ? crimeScene(P, C, st, B.police, lite) : null;
+  if (cs) defs.push(GLOWS);
   GEO.hexes.forEach((h, i) => {
     if (tileD[i] < 0) return;
     const t = B.hexes[i], top = TOP_Y[t.t], g = [];
@@ -1438,7 +1579,9 @@ function boardSVG(st, o) {
         g.push(`<polygon class="hexline" points="${pts(vT)}"/>`);
       }
     } else g.push(`<polygon class="hexline" points="${pts(vT)}" style="fill:${lit([0, 1, 0], TOP_RGB[t.t], .6)}"/>`);
+    if (cs && i === B.police) g.push(cs.under);                     // the light and the far tape lie behind the buildings
     if (!lite) g.push(massing(P, C, h, t.t, top, defs, i, fast));   // the model stands up even without the art
+    if (cs && i === B.police) g.push(cs.wash);                      // the lights playing on the buildings
 
     const mid = P(h.cx, top, h.cy);   // the block's name is raised on demand, not painted on
     // The number as a small lit sign on a post, the way a block would be marked
@@ -1472,6 +1615,7 @@ function boardSVG(st, o) {
   const rh = GEO.hexes[B.police], rt = TOP_Y[B.hexes[B.police].t], off = B.hexes[B.police].n ? 27 : 0;
   const cop = policeHTML(C, rh.cx + off, rh.cy + (off ? 6 : 2), rt);
   if (cop) add(tileD[B.police] - 2, `<g class="police"><title>Police pressure</title>${cop}</g>`);
+  if (cs) { add(tileD[B.police] - 2.5, cs.over); if (cs.car) add(cs.car.d, cs.car.s); }
 
   /* ---------- the spots you can still take ----------
      These sit above the island so a tilted board can never hide a legal move, but
@@ -1561,7 +1705,8 @@ function street(P, C, e, col, top) {
 /* An operation is a little house; a major holding is the same house grown a
    storey with a tower, so the two read apart at a glance from any angle. */
 function building(P, C, v, col, top, big) {
-  const w = big ? 13 : 11, wall = big ? 17 : 13, ridge = big ? 31 : 26;
+  if (big) return tower(P, C, v, col, top);
+  const w = 11, wall = 13, ridge = 26;
   const sq = [[-w, -w], [w, -w], [w, w], [-w, w]];
   const lo = sq.map(p => P(v.x + p[0], top, v.y + p[1]));
   const hi = sq.map(p => P(v.x + p[0], top + wall, v.y + p[1]));
@@ -1585,6 +1730,39 @@ function building(P, C, v, col, top, big) {
   [{ q: [hi[0], hi[3], r1], n: [-1, 0, 0] }, { q: [hi[1], hi[2], r2], n: [1, 0, 0] }].forEach(f => {
     if (faces(C, f.n, [v.x + f.n[0] * w, top + wall, v.y])) g.push(shadeFace(f.q, f.n, col));
   });
+  return `<g class="pc">${g.join('')}</g>`;
+}
+/* A major holding is a tower, not a bigger house: a broad base, a slimmer
+   setback on top of it, a mast, and lit windows, so an upgrade reads from
+   across the table. It is drawn tier by tier, bottom up, which is already
+   back to front for anything inside one piece. */
+const TIERS = [{ w: 12, y0: 0, y1: 30, rows: 3 }, { w: 8, y0: 30, y1: 50, rows: 2 }];
+function tower(P, C, v, col, top) {
+  const sh = P(v.x, top, v.y);
+  if (!sh) return '';
+  const g = [`<ellipse cx="${n1(sh.x)}" cy="${n1(sh.y)}" rx="${n1(18 * sh.k)}" ry="${n1(18 * sh.k * Math.max(.18, Math.sin(CAM.pitch * Math.PI / 180)))}" fill="rgba(0,0,0,.34)"/>`];
+  const N = [[0, 0, -1], [1, 0, 0], [0, 0, 1], [-1, 0, 0]];
+  for (const t of TIERS) {
+    const sq = [[-t.w, -t.w], [t.w, -t.w], [t.w, t.w], [-t.w, t.w]];
+    const lo = sq.map(p => P(v.x + p[0], top + t.y0, v.y + p[1])), hi = sq.map(p => P(v.x + p[0], top + t.y1, v.y + p[1]));
+    if (lo.some(p => !p) || hi.some(p => !p)) return '';
+    for (let k = 0; k < 4; k++) {
+      const j = (k + 1) % 4, a = sq[k], b = sq[j];
+      if (!faces(C, N[k], [v.x + (a[0] + b[0]) / 2, top + (t.y0 + t.y1) / 2, v.y + (a[1] + b[1]) / 2])) continue;
+      g.push(shadeFace([hi[k], hi[j], lo[j], lo[k]], N[k], col));
+      // two lit windows a floor, set in from the corners
+      const at = (u, y) => P(v.x + a[0] + (b[0] - a[0]) * u, top + y, v.y + a[1] + (b[1] - a[1]) * u);
+      const fh = (t.y1 - t.y0) / t.rows;
+      for (let r = 0; r < t.rows; r++) for (const [u0, u1] of [[0.16, 0.44], [0.56, 0.84]]) {
+        const y0 = t.y0 + fh * r + fh * 0.3, y1 = t.y0 + fh * r + fh * 0.72;
+        const q = [at(u0, y1), at(u1, y1), at(u1, y0), at(u0, y0)];
+        if (q.every(Boolean)) g.push(`<polygon points="${pts(q)}" fill="rgba(255,238,178,.88)"/>`);
+      }
+    }
+    g.push(shadeFace(hi, [0, 1, 0], col));                          // the flat roof of this tier
+  }
+  const m0 = P(v.x, top + TIERS[1].y1, v.y), m1 = P(v.x, top + TIERS[1].y1 + 12, v.y);
+  if (m0 && m1) g.push(`<line x1="${n1(m0.x)}" y1="${n1(m0.y)}" x2="${n1(m1.x)}" y2="${n1(m1.y)}" stroke="var(--piece-line)" stroke-width="${n1(2.4 * m0.k)}" stroke-linecap="round"/>`);
   return `<g class="pc">${g.join('')}</g>`;
 }
 function shadeFace(q, n, col) {
@@ -1618,6 +1796,7 @@ function drawBoard() {
   view.last = t;
   host.innerHTML = boardSVG(st, view.fast ? { ...view.opts, fast: true } : view.opts);
   view.cost = performance.now() - t;
+  syncSiren();
   runLife();                                                   // the layer was just replaced
   if (key) {                                                   // put focus back where it was
     const again = document.querySelector(key[0] === 'v' ? `[data-v="${key.slice(1)}"]` : `[data-e="${key.slice(1)}"]`);
@@ -1752,7 +1931,7 @@ const CAM_KEYS = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowD
    panels around it or losing the focus ring. */
 function boardView(st, o) {
   view.opts = o || {};
-  setTimeout(runLife, 0);                       // this markup is not in the document yet
+  setTimeout(() => { syncSiren(); runLife(); }, 0);   // this markup is not in the document yet
   return `<div class="board3d">${boardSVG(st, view.opts)}</div>${camBarHTML()}`;
 }
 
@@ -2453,7 +2632,7 @@ function tallyHTML(st, me) {
 }
 const OPT_NAME = { street: 'Lay a street', operation: 'Open an operation', holding: 'Upgrade to a major holding' };
 const NO_SPOT = { street: 'Nowhere left to run one from your streets.', operation: 'No junction is both free and on one of your streets.', holding: 'You have no operation to upgrade.' };
-const PIECE_PATH = { street: 'M4 21 21 5l6 6L10 27z', operation: 'M5 27V14l11-9 11 9v13z', holding: 'M3 27V13l8-6v6h4V4l12 5v18z' };
+const PIECE_PATH = { street: 'M4 21 21 5l6 6L10 27z', operation: 'M5 27V14l11-9 11 9v13z', holding: 'M6 28V13h5V4h10v9h5v15z' };
 const pieceIcon = (kind, color) => `<svg class="pi" viewBox="0 0 32 32" aria-hidden="true"><path d="${PIECE_PATH[kind]}" style="fill:var(--p-${color})"/></svg>`;
 /* What you can make: the piece in your colour, then its price laid out in
    cards. A card you hold is lit and one you are missing is an empty outline, so
@@ -2779,7 +2958,7 @@ function fxSig(st) {
   const rolls = {};
   Object.keys(st.rolls || {}).forEach(k => { if (Array.isArray(st.rolls[k])) rolls[k] = st.rolls[k].join(''); });
   return { room: st.room, v: st.v, phase: st.phase, step: st.step, turn: st.turnNo + ':' + st.turnIdx, round: st.round,
-    dice: st.dice ? st.dice.slice() : null, rolls, hands, log0: Array.isArray(st.log) ? String(st.log[0] || '') : '' };
+    dice: st.dice ? st.dice.slice() : null, rolls, hands, police: st.board.police, log0: Array.isArray(st.log) ? String(st.log[0] || '') : '' };
 }
 function fxReset(quiet) {
   clearTimeout(FX.guard); FX.queue = []; FX.busy = false;
@@ -2824,6 +3003,9 @@ function fxPlan(st, was, now) {
     });
   }
 
+  // the police have been sent somewhere: mark the moment the tape goes up
+  if (now.phase === 'turn' && was.police !== now.police && now.police !== policeHome(st.board)) events.push({ t: 'raid', hex: now.police });
+
   /* what moved between hands */
   const gains = [], losses = [];
   st.players.forEach(p => RES_ORDER.forEach(r => {
@@ -2857,7 +3039,7 @@ function fxPlan(st, was, now) {
     if (mine) flights = flights.filter(f => f.from.pid === mine || f.to.pid === mine);
   }
   if (!events.length && !flights.length) return;
-  if (events.length) FX.veil = events.some(e => !e.quick);
+  if (events.length) FX.veil = events.some(e => e.t === 'roll' && !e.quick);
   flights.forEach(f => { if (f.to.pid) { const h = FX.hold[f.to.pid] = FX.hold[f.to.pid] || {}; h[f.r] = (h[f.r] || 0) + 1; } });
   events.forEach(e => FX.queue.push(e));
   if (flights.length) FX.queue.push({ t: 'fly', flights });
@@ -2870,7 +3052,7 @@ function fxPump() {
   if (!ev) { clearTimeout(FX.guard); if (FX.veil || Object.keys(FX.hold).length) fxReset(); return; }
   FX.busy = true;
   const next = () => { FX.busy = false; fxPump(); };
-  try { (ev.t === 'roll' ? fxRoll(ev) : fxFly(ev)).then(next, next); } catch (e) { console.error(e); next(); }
+  try { (ev.t === 'roll' ? fxRoll(ev) : ev.t === 'raid' ? fxRaid(ev) : fxFly(ev)).then(next, next); } catch (e) { console.error(e); next(); }
 }
 function fxLayer() {
   let l = document.getElementById('fx');
@@ -2965,6 +3147,29 @@ function fxLanded(f) {
     const b = document.querySelector(`#h-seats [data-seat="${f.to.pid}"] .backs`);
     if (b) { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
   }
+}
+
+/* ---------- the police arrive ----------
+   Once, as the officer lands: the lights go round and two lengths of tape are
+   pulled across the block. The board keeps its own tape and lamps up for as
+   long as he stays, so this only has to mark the moment. */
+function fxRaid(ev) {
+  const p = hexPoint(ev.hex), phone = joinRoom && !WATCH;
+  if (!p) return Promise.resolve();
+  const el = document.createElement('div');
+  el.className = 'raid' + (phone ? ' small' : '');
+  el.style.transform = `translate(${p.x.toFixed(0)}px,${p.y.toFixed(0)}px)`;
+  // real tape says it over and over, so it still reads where the two lengths cross
+  const say = (w, n) => Array(n).fill(w).join(' \u00b7 ');
+  // the rings stay on the block; the tape slides in from the edge of the screen if the block is near it
+  const half = (phone ? 220 : 310) / 2 + 10, dx = Math.min(window.innerWidth - half, Math.max(half, p.x)) - p.x;
+  el.innerHTML = '<i class="rr r"></i><i class="rr b"></i>' +
+    `<span class="rtw" style="transform:translateX(${dx.toFixed(0)}px)"><b class="rt">${say('Police line \u00b7 do not cross', 3)}</b>` +
+    `<b class="rt x">${say('Under investigation', 4)}</b></span>`;
+  fxLayer().appendChild(el);
+  if (phone) buzz([20, 50, 20]);
+  setTimeout(() => el.remove(), 2400);
+  return wait(1400);
 }
 
 /* ---------- the dice machine ---------- */
