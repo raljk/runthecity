@@ -1936,11 +1936,12 @@ function makeLife() {
   if (LIFE.cars.length) return;
   const r = seeded(0x51F2C17);
   const pick = () => Math.floor(r() * GEO.edges.length);
+  CRASH.list = []; CRASH.bits = []; CRASH.armed = null;
   for (let i = 0; i < 52; i++) {
-    const e = pick(), red = r() < 0.42;
+    const e = pick(); r();
     LIFE.cars.push({ e, from: r() < 0.5 ? GEO.edges[e].a : GEO.edges[e].b, t: r(),
       v: 0.17 + r() * 0.16, body: CAR_BODY[i % CAR_BODY.length],
-      head: HEADLIGHT[i % 3], tail: TAILLIGHT[i % 2], lane: red ? -1 : 1 });
+      head: HEADLIGHT[i % 3], tail: TAILLIGHT[i % 2], lane: 1 });
   }
   for (let i = 0; i < 30; i++) {
     const e = pick();
@@ -1949,7 +1950,7 @@ function makeLife() {
       way: r() < 0.5 ? 1 : -1, coat: COAT[i % COAT.length] });
   }
 }
-/* At the end of a street, take any street but the one just travelled. */
+/* At the end of a street, take any street but the one just travelled. The cars do the same, in drive(). */
 function advance(o, dt, ambient) {
   o.t += o.v * dt;
   while (o.t > 1) {
@@ -1963,6 +1964,466 @@ function advance(o, dt, ambient) {
     o.from = to; o.t -= 1;
   }
 }
+/* ---------- keeping a gap, taking turns at the corners, and the odd crash ----------
+   Everybody keeps to the right. A car brakes for whatever is in front of it
+   early enough to stop behind it, and a corner is taken by one car at a time
+   (or a line of cars all making the same turn): the first car in a lane asks
+   for the corner as it comes up to it, waits at the line if somebody else is
+   in it, and holds it until it is out the other side. Round the corner it
+   follows a curve from one lane into the next. So normally nobody touches.
+   The exception is on purpose, and rare: no sooner than a couple of minutes
+   after the last one, a driver who is about to be made to wait runs the
+   corner instead, and only when it can be seen that it will hit the car going
+   across it. That is a real collision, then a fire. Whoever is too close
+   behind may not stop in time. The wreck holds the corner and its street
+   until it is towed, and the traffic queues behind it. None of it is sent or
+   saved: every screen has its own traffic, so it has its own crashes. */
+const DRIVE = {
+  len: 7, room: 2.5,          // a car, and the gap it leaves the one in front when stopped
+  off: 3.4,                   // middle of the road to the middle of a lane
+  turn: 11,                   // a car is on the curve this far either side of the corner
+  line: 15,                   // a car waiting for a corner stops with its middle this far from it
+  clear: 15,                  // and holds it until its middle is this far out the other side
+  ask: 32,                    // how far before the line it asks for the corner
+  acc: 11, brake: 24, slam: 60,
+};
+const CRASH = {
+  clock: 0, next: 50,         // no crash before this (seconds of traffic, not of page)
+  quiet: [100, 220],          // and then this long before the next one may happen
+  dare: 0.35,                 // the chance a driver about to be stopped will think about running it
+  list: [], bits: [], armed: null, act: [], stats: { crashes: 0, piled: 0, brushes: 0, dares: 0, misses: 0 },
+};
+const between = (a, b) => a + Math.random() * (b - a);
+
+/* A point in the right-hand lane, d along street e from its end `from`: [x, z, ux, uz]. */
+function lanePoint(from, e, d) {
+  const E = GEO.edges[e], A = GEO.verts[from], B = GEO.verts[E.a === from ? E.b : E.a];
+  const L = Math.hypot(B.x - A.x, B.y - A.y) || 1, ux = (B.x - A.x) / L, uz = (B.y - A.y) / L;
+  return [A.x + ux * d - uz * DRIVE.off, A.y + uz * d + ux * DRIVE.off, ux, uz];
+}
+const farEnd = (e, from) => (GEO.edges[e].a === from ? GEO.edges[e].b : GEO.edges[e].a);
+/* The curve round corner v, from street e1 (coming from f) onto street e2, at b from 0 to 1:
+   a quadratic from one lane to the other, bent through the point where the two lanes cross. */
+function bend(f, e1, v, e2, b) {
+  const T = DRIVE.turn, p0 = lanePoint(f, e1, S - T), p2 = lanePoint(v, e2, T), q1 = lanePoint(f, e1, S), q2 = lanePoint(v, e2, 0);
+  const cr = p0[2] * p2[3] - p0[3] * p2[2];
+  let cx = (p0[0] + p2[0]) / 2, cz = (p0[1] + p2[1]) / 2;
+  if (Math.abs(cr) > 1e-6) {
+    const s = ((q2[0] - q1[0]) * p2[3] - (q2[1] - q1[1]) * p2[2]) / cr;
+    cx = q1[0] + p0[2] * s; cz = q1[1] + p0[3] * s;
+  }
+  const a = 1 - b, x = a * a * p0[0] + 2 * a * b * cx + b * b * p2[0], z = a * a * p0[1] + 2 * a * b * cz + b * b * p2[1];
+  let tx = a * (cx - p0[0]) + b * (p2[0] - cx), tz = a * (cz - p0[1]) + b * (p2[1] - cz);
+  const m = Math.hypot(tx, tz) || 1;
+  return { x, z, ux: tx / m, uz: tz / m };
+}
+/* Where a car is d along street e from `from`, having come off `prev` and going on to `next`. */
+function routePose(e, from, d, prev, next) {
+  const T = DRIVE.turn;
+  if (d > S - T && next >= 0 && next !== e) return bend(from, e, farEnd(e, from), next, (d - (S - T)) / (2 * T));
+  if (d < T && prev >= 0 && prev !== e) return bend(farEnd(prev, from), prev, from, e, 0.5 + d / (2 * T));
+  const p = lanePoint(from, e, d);
+  return { x: p[0], z: p[1], ux: p[2], uz: p[3] };
+}
+const carPose = c => c.wreck || routePose(c.e, c.from, c.t * S, c.prev == null ? -1 : c.prev, c.next == null ? -1 : c.next);
+/* where it will be `ahead` further on, on this street or the next */
+function poseAhead(c, ahead) {
+  const d = c.t * S + ahead;
+  return d <= S ? routePose(c.e, c.from, d, c.prev, c.next) : routePose(c.next, c.to, Math.min(S, d - S), c.e, -1);
+}
+/* Two cars touch when any of their ends do: each is two circles, nose and tail. */
+function touch(p, q) {
+  if (Math.abs(p.x - q.x) > 8 || Math.abs(p.z - q.z) > 8) return false;
+  for (const a of [2, -2]) for (const b of [2, -2]) {
+    if (Math.hypot(p.x + p.ux * a - q.x - q.ux * b, p.z + p.uz * a - q.z - q.uz * b) < 3.6) return true;
+  }
+  return false;
+}
+/* the next street, chosen on the way into this one so a car can see round the corner */
+function nextEdge(c) {
+  let outs = GEO.verts[c.to].edges.filter(x => x !== c.e);
+  if (!c.amb && LIFE.live.size) { const busy = outs.filter(x => LIFE.live.has(x)); if (busy.length) outs = busy; }
+  return outs[(Math.random() * outs.length) | 0];
+}
+/* A car fresh out of the car park goes somewhere clear, never inside a corner. If there is
+   nowhere clear it stays in the car park and tries again next frame. */
+function placeCar(c, i) {
+  const D = DRIVE, pool = i >= AMBIENT && LIFE.live.size ? Array.from(LIFE.live) : null;
+  const clear = () => { const p = lanePoint(c.from, c.e, c.t * S);
+    return LIFE.cars.every(o => { if (o === c || o.parked || o.fresh !== false) return true;
+      const q = carPose(o); return Math.hypot(q.x - p[0], q.z - p[1]) > 22; }); };
+  let ok = false;
+  for (let k = 0; k < 10 && !ok; k++) {
+    if (k) { c.e = pool ? pool[(Math.random() * pool.length) | 0] : (Math.random() * GEO.edges.length) | 0; c.from = Math.random() < 0.5 ? GEO.edges[c.e].a : GEO.edges[c.e].b; }
+    if (!GEO.edges[c.e]) { c.e = 0; c.from = GEO.edges[0].a; }
+    const d = c.t * S;
+    if (k || !(d > D.line + 1 && d < S - D.line - 1)) c.t = between(D.line + 1, S - D.line - 1) / S;
+    ok = clear();
+  }
+  if (!ok) return false;
+  Object.assign(c, { amb: i < AMBIENT, lane: 1, to: farEnd(c.e, c.from), prev: -1, s: c.v * S * 0.6, hold: -1, held: -1,
+    wait: 0, mad: false, late: 0, inc: null, dare: null, wreck: null, brk: false, fresh: false });
+  c.next = nextEdge(c); c.pose = carPose(c);
+  return true;
+}
+
+function drive(dt) {
+  const K = CRASH, D = DRIVE, act = [], on = new Map(), req = new Map(), held = new Map();
+  const at = (m, k) => { let l = m.get(k); if (!l) m.set(k, l = []); return l; };
+  K.clock += dt;
+  crashTick(dt);                                            // first, so a wreck towed this frame is not driven this frame
+  LIFE.cars.forEach((c, i) => {
+    if (c.parked) { if (!c.fresh) Object.assign(c, { fresh: true, hold: -1, held: -1, wreck: null, mad: false, late: 0, inc: null }); return; }
+    if (c.fresh !== false && !placeCar(c, i)) return;
+    act.push(c); at(on, c.e).push(c);
+  });
+  K.act = act;
+  if (K.armed && (K.armed.parked || !K.armed.mad || K.armed.wreck)) K.armed = null;
+
+  /* what is ahead of each car: the nearest car going its way in its lane, or a wreck in either lane */
+  act.forEach(c => {
+    if (c.wreck) return;
+    const d = c.t * S, rem = S - d;
+    c.gap = Infinity; c.lead = null;
+    for (const o of on.get(c.e)) {
+      if (o === c) continue;
+      const od = o.from === c.from ? o.t * S : o.wreck ? S - o.t * S : -1;
+      if (od > d && od - d < c.gap) { c.gap = od - d; c.lead = o; }
+    }
+    if (!c.lead) for (const o of on.get(c.next) || []) {
+      const od = o.from === c.to ? o.t * S : o.wreck ? S - o.t * S : -1;
+      if (od >= 0 && rem + od < c.gap) { c.gap = rem + od; c.lead = o; }
+    }
+    // a tight corner is shorter than the street it cuts: never closer than the cars really are
+    if (c.lead && c.pose && c.lead.pose) c.gap = Math.min(c.gap, Math.hypot(c.lead.pose.x - c.pose.x, c.lead.pose.z - c.pose.z));
+    // a car already inside a corner has it, whether it asked or not (it was shunted in, or never saw the line)
+    if (c.hold !== c.to && rem < D.line - 1 && c.mad !== true) { c.hold = c.to; c.move = c.e + '>' + c.next; c.since = K.clock; }
+    if (c.held < 0 && c.prev >= 0 && d < D.clear - 1) { c.held = c.from; c.move = c.prev + '>' + c.e; c.since = K.clock; }
+    // the first car in its lane asks for the corner as it comes up to it
+    if (c.hold !== c.to && !c.mad && !(c.late > 0) && !(c.lead && c.gap < rem) && rem - D.line < D.ask) at(req, c.to).push(c);
+  });
+
+  /* the corners: whoever holds one keeps it; a free one goes to whoever has waited longest */
+  act.forEach(c => { if (c.hold >= 0) at(held, c.hold).push(c); if (c.held >= 0) at(held, c.held).push(c); });
+  K.list.forEach(inc => inc.block.forEach(v => at(held, v).push(inc)));
+  const room = (c, v) => !(on.get(c.next) || []).some(o =>
+    (o.from === v && o.t * S < D.clear + D.len + D.room) || (o.wreck && (o.from === v ? o.t : 1 - o.t) * S < 30));
+  req.forEach((list, v) => {
+    const h = at(held, v);
+    list.sort((a, b) => b.wait - a.wait);
+    list.forEach(c => {
+      const move = c.e + '>' + c.next;
+      const starving = list.some(o => o !== c && o.e + '>' + o.next !== move && o.wait > 1.5);
+      const free = !h.length || (!starving && h.every(o => o.move === move));
+      if (free && room(c, v)) { c.hold = v; c.move = move; c.since = K.clock; c.wait = 0; h.push(c); return; }
+      c.wait += dt;
+      if (c.wait > 9 && !K.list.some(inc => inc.block.includes(v))) {   // stuck: go the other way instead
+        const alt = GEO.verts[v].edges.filter(x => x !== c.e && x !== c.next);
+        if (alt.length) c.next = alt[(Math.random() * alt.length) | 0];
+        c.wait = 4;
+      }
+      dare(c, h);
+    });
+  });
+
+  /* speed: never faster than it could stop from, for what is ahead and for a corner it does not hold */
+  act.forEach(c => {
+    if (c.wreck) return;
+    const cruise = c.v * S, rem = S - c.t * S, s0 = c.s;
+    let want = cruise;
+    if (c.late > 0) {
+      // not looking: keeps going until the wreck is closer than it can stop in, then stands on the brakes
+      const inc = c.inc, near = inc && K.list.includes(inc) && c.pose ? Math.min(...inc.cars.map(o => Math.hypot(o.wreck.x - c.pose.x, o.wreck.z - c.pose.z))) : Infinity;
+      if (near === Infinity || near > (c.near || Infinity) + 0.5) c.late = 0;          // gone past it, or it has been towed
+      else if (near - 7.6 <= c.s * c.s / (2 * D.slam) * c.late + 0.5) {
+        c.late = 0;
+        if (c.s > 8) sndCrash('skid', c.pose);
+        if ((rem < D.line || c.t * S < D.clear) && inc.block.includes(rem < D.line ? c.to : c.from)) { pileInto(c, inc); return; }
+      } else want = Math.max(c.s, cruise * 0.9);
+      c.near = near;
+    }
+    if (!(c.late > 0)) {
+      // running a corner: foot down, and blind to whoever is crossing it, but not to its own lane
+      if (c.mad === true) want = cruise * 1.15;
+      if (c.lead && !(c.mad === true && (c.lead.hold === c.to || c.lead.held === c.to))) {
+        const vl = c.lead.wreck ? 0 : c.lead.s, g = Math.max(0, c.gap - D.len - D.room - c.s * 0.35);
+        want = Math.min(want, Math.sqrt(vl * vl + 2 * D.brake * g) * (g > 0 ? 1 : 0));
+      }
+      if (c.hold !== c.to && c.mad !== true) want = Math.min(want, Math.sqrt(2 * D.brake * Math.max(0, rem - D.line)));
+      // two cars left in one corner going different ways (a crash shunted them in): the one on its way out
+      // goes first, then whoever was there first
+      else if (c.hold === c.to && (held.get(c.to) || []).some(o => o !== c && o.move && o.move !== c.move &&
+        (o.held === c.to || (o.hold === c.to && o.since < c.since)))) want = 0;
+    }
+    c.s = want > c.s ? Math.min(want, c.s + D.acc * dt) : Math.max(want, c.s - D.slam * dt);
+    c.brk = c.s < 0.6 || c.s < s0 - 2 * dt;
+    c.t += c.s * dt / S;
+    if (c.held >= 0 && c.t * S > D.clear) c.held = -1;
+    if (c.mad === 'out' && c.t * S > D.clear) { c.mad = false; K.armed = null; K.stats.misses++; }   // ran it and got away with it
+    while (c.t >= 1) {                                      // round the corner onto the next street
+      c.held = c.hold === c.to ? c.to : -1; c.hold = -1;
+      if (c.mad) c.mad = 'out';
+      c.prev = c.e; c.e = c.next; c.from = c.to; c.to = farEnd(c.e, c.from); c.t -= 1;
+      c.next = nextEdge(c); c.wait = 0; c.dare = null;
+    }
+  });
+
+  /* anything touching: a crash if somebody was driving badly, or ran into a wreck */
+  act.forEach(c => { c.pose = carPose(c); });
+  for (let i = 0; i < act.length; i++) for (let j = i + 1; j < act.length; j++) {
+    const a = act[i], b = act[j];
+    if ((a.wreck && b.wreck) || !touch(a.pose, b.pose)) continue;
+    collide(a, b);
+  }
+}
+
+/* A driver who is about to be made to wait might run the corner, but only when
+   crashes are allowed, nothing else is going on, and a quick look ahead says it
+   really will hit the car going across. Never at a corner somebody has built on:
+   the piece stands over it, and a fire would hide the piece. */
+function dare(c, h) {
+  const K = CRASH;
+  if (K.armed || K.list.length || K.clock < K.next || c.s < c.v * S * 0.75) return;
+  if (G.state && G.state.buildings[c.to]) return;
+  if (typeof FX !== 'undefined' && FX.veil) return;                 // never over the dice
+  if (typeof SND !== 'undefined' && SND.talking) return;            // or the announcer
+  if (c.dare == null) c.dare = Math.random() < K.dare;
+  if (!c.dare) return;
+  const cars = h.filter(o => o.pose && !o.wreck && o.e != null);
+  if (!cars.length) return;
+  const cruise = c.v * S * 1.15, step = 1 / 30;
+  const sim = cars.map(o => ({ o, v: o.s, d: 0 }));
+  let sp = c.s, d = 0;
+  for (let t = step; t < 2.2; t += step) {
+    sp = Math.min(cruise, sp + DRIVE.acc * step); d += sp * step;
+    const me = poseAhead(c, d);
+    for (const x of sim) {
+      x.v = Math.min(x.o.v * S, x.v + DRIVE.acc * step); x.d += x.v * step;
+      if (touch(me, poseAhead(x.o, x.d))) {
+        c.mad = true; K.armed = c; K.stats.dares++;
+        sndCrash('skid', me, Math.max(0, t - 0.5) * 1000);
+        return;
+      }
+    }
+  }
+  c.dare = false;                                                    // it would have missed: wait like everyone else
+}
+
+/* ---------- the crash itself: wrecks, the pile-up behind, and the fire ---------- */
+function collide(a, b) {
+  const K = CRASH;
+  const inc = (a.wreck && a.wreck.inc) || (b.wreck && b.wreck.inc) || a.inc || b.inc;
+  if (inc && inc.cars.some(c => Math.hypot(c.wreck.x - a.pose.x, c.wreck.z - a.pose.z) < 30)) {   // into a crash that has already happened
+    const hit = [a, b].filter(c => !c.wreck), into = a.wreck ? a : b.wreck ? b : null;
+    hit.forEach(c => pileInto(c, inc, into));
+    return;
+  }
+  if (!a.mad && !b.mad) { K.stats.brushes++; return; }               // two careful drivers touching: never a crash
+  const pa = a.pose, pb = b.pose, x = (pa.x + pb.x) / 2, z = (pa.z + pb.z) / 2;
+  const n = { t0: K.clock, x, z, cars: [], block: GEO.verts.map((v, i) => (Math.hypot(v.x - x, v.y - z) < 20 ? i : -1)).filter(i => i >= 0), boomAt: K.clock + 0.3, boomed: false, end: K.clock + 13, puff: 0, honk: [between(2.5, 4), between(6.5, 8.5)] };
+  K.list.push(n); K.armed = null; K.next = K.clock + between(K.quiet[0], K.quiet[1]); K.stats.crashes++;
+  // they stick together and slide on, the two momenta added, turning as they go
+  const vx = (pa.ux * a.s + pb.ux * b.s) * 0.45, vz = (pa.uz * a.s + pb.uz * b.s) * 0.45;
+  wreck(a, n, [vx, vz], between(2, 4) * (Math.random() < 0.5 ? -1 : 1));
+  wreck(b, n, [vx, vz], between(1, 3) * (Math.random() < 0.5 ? -1 : 1));
+  a.wreck.fire = b.wreck.fire = n.boomAt;
+  sparks(x, z, 12, 0.45);
+  sndCrash('hit', { x, z });
+  react(n, [a, b], 2, 0.55);
+}
+function pileInto(c, inc, into) {
+  const K = CRASH;
+  if (c.wreck || inc.cars.length >= 6) return;
+  const p = c.pose || carPose(c);
+  wreck(c, inc, [p.ux * c.s * 0.35, p.uz * c.s * 0.35], between(-1.5, 1.5)); K.stats.piled++;
+  if (into && into.wreck) { into.wreck.vx += p.ux * 3; into.wreck.vz += p.uz * 3; into.wreck.spin += between(-0.8, 0.8); }
+  sparks(p.x + p.ux * 3.5, p.z + p.uz * 3.5, 7, 0.5);
+  if (Math.random() < 0.35) c.wreck.fire = K.clock + between(0.2, 0.6);
+  sndCrash('bump', p);
+  react(inc, [c], 1, 0.35);
+  if (inc.cars.length >= 3 && !inc.said && Math.random() < 0.6) { inc.said = true; sndCrashLine(); }
+}
+function wreck(c, inc, v, spin) {
+  const p = c.pose || carPose(c);
+  c.wreck = { inc, x: p.x, z: p.z, ux: p.ux, uz: p.uz, ang: Math.atan2(p.uz, p.ux), vx: v[0], vz: v[1], spin, fire: 0, t0: CRASH.clock };
+  c.pose = c.wreck; c.s = 0; c.mad = false; c.late = 0; c.hold = -1; c.held = -1; c.brk = false;
+  inc.cars.push(c); inc.end = Math.max(inc.end, CRASH.clock + 9);
+}
+/* The cars following the ones that just stopped dead, and the ones hurrying up to the corner it
+   happened in: some of them will not see it in time. */
+function react(inc, hit, most, chance) {
+  let n = 0;
+  CRASH.act.forEach(c => {
+    if (n >= most || c.wreck || c.late > 0 || c.mad || c.s < 5) return;
+    if (!(hit.includes(c.lead) && c.gap < 80) && !(inc.block.includes(c.to) && c.t > 0.2)) return;
+    c.inc = inc;
+    if (Math.random() < chance) { c.late = between(0.25, 0.9); c.near = Infinity; n++; }   // how late it brakes
+  });
+}
+/* Everything that moves on its own clock: wrecks sliding to a stop, the fireball,
+   the smoke, the sparks, and the tow truck at the end. */
+function crashTick(dt) {
+  const K = CRASH;
+  K.list = K.list.filter(inc => {
+    inc.cars = inc.cars.filter(c => !c.parked && c.wreck && c.wreck.inc === inc);
+    inc.cars.forEach(c => {
+      const w = c.wreck, sp = Math.hypot(w.vx, w.vz);
+      if (sp > 0.01) {
+        w.x += w.vx * dt; w.z += w.vz * dt;
+        const f = Math.max(0, sp - 32 * dt) / sp; w.vx *= f; w.vz *= f;
+      }
+      if (w.spin) { w.ang += w.spin * dt; w.spin *= Math.exp(-5 * dt); if (Math.abs(w.spin) < 0.02) w.spin = 0; w.ux = Math.cos(w.ang); w.uz = Math.sin(w.ang); }
+      // smoke off anything burning, thinner once the fire is out
+      const age = K.clock - (w.fire || Infinity);
+      if (w.fire && age >= 0 && age < 11 && (w.puff = (w.puff || 0) - dt) <= 0) {
+        w.puff = age < 7 ? 0.16 : 0.4;
+        K.bits.push({ k: age < 7 ? 'hot' : 'smoke', x: w.x + between(-1.5, 1.5), y: STREET_Y + 4, z: w.z + between(-1.5, 1.5),
+          vx: between(1.5, 3.5), vy: between(8, 12), vz: between(-1, 1), age: 0, life: between(3.5, 4.8), r0: 4, r1: between(20, 28) });
+      }
+    });
+    if (!inc.boomed && K.clock >= inc.boomAt) { inc.boomed = true; explode(inc); }
+    if (inc.honk.length && K.clock - inc.t0 > inc.honk[0]) {        // somebody stuck behind it leans on the horn
+      inc.honk.shift();
+      const stuck = LIFE.cars.find(c => !c.parked && !c.wreck && c.s < 1 && c.pose && Math.hypot(c.pose.x - inc.x, c.pose.z - inc.z) < 70);
+      if (stuck && Math.random() < 0.75) sndCrash('horn', stuck.pose);
+    }
+    inc.block = [];
+    GEO.verts.forEach((v, i) => { if (inc.cars.some(c => Math.hypot(v.x - c.wreck.x, v.y - c.wreck.z) < 20)) inc.block.push(i); });
+    if (!inc.cars.length || K.clock > inc.end) {                     // towed: back into the car park, out again somewhere else
+      inc.cars.forEach(c => { c.wreck = null; c.fresh = true; });
+      LIFE.cars.forEach(c => { if (c.inc === inc) { c.inc = null; c.late = 0; } });
+      return false;
+    }
+    return true;
+  });
+  K.bits = K.bits.filter(b => {
+    b.age += dt;
+    if (b.age > b.life) return false;
+    if (b.age < 0) return true;
+    if (b.k === 'spark') {
+      b.vy -= 70 * dt; b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+      if (b.y < STREET_Y + 0.2) { b.y = STREET_Y + 0.2; b.vy *= -0.35; b.vx *= 0.6; b.vz *= 0.6; }
+    } else if (b.vx != null) {                                       // (the flash, the ring and the bloom stay put)
+      const drag = Math.exp(-(b.k === 'fire' ? 2.2 : 0.5) * dt);
+      b.vx *= drag; b.vz *= drag; b.vy *= b.k === 'fire' ? drag : 1;
+      b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+    }
+    return true;
+  });
+  if (K.bits.length > 300) K.bits.splice(0, K.bits.length - 300);
+}
+function sparks(x, z, n, life) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, sp = between(10, 30);
+    CRASH.bits.push({ k: 'spark', x, y: STREET_Y + 1.5, z, vx: Math.cos(a) * sp, vy: between(6, 22), vz: Math.sin(a) * sp, age: 0, life: between(life * 0.6, life * 1.4) });
+  }
+}
+/* The fuel goes up: a flash on the road, a ring of blast, a ball of fire that turns to smoke, and burning bits. */
+function explode(inc) {
+  const B = CRASH.bits, ws = inc.cars.map(c => c.wreck);
+  const x = ws.length ? ws.reduce((s, w) => s + w.x, 0) / ws.length : inc.x, z = ws.length ? ws.reduce((s, w) => s + w.z, 0) / ws.length : inc.z;
+  B.push({ k: 'flash', x, y: STREET_Y + 0.3, z, age: 0, life: 0.7, r0: 24, r1: 72 });
+  B.push({ k: 'bloom', x, y: STREET_Y + 16, z, age: 0, life: 1, r0: 50, r1: 95 });
+  B.push({ k: 'ring', x, y: STREET_Y + 0.3, z, age: 0, life: 0.6, r0: 8, r1: 72 });
+  for (let i = 0; i < 16; i++) {
+    const a = Math.random() * Math.PI * 2, sp = between(5, 16);
+    B.push({ k: 'fire', x: x + Math.cos(a) * 2, y: STREET_Y + between(3, 8), z: z + Math.sin(a) * 2, vx: Math.cos(a) * sp, vy: between(14, 34), vz: Math.sin(a) * sp,
+      age: 0, life: between(0.9, 1.6), r0: between(7, 11), r1: between(22, 36) });
+  }
+  for (let i = 0; i < 9; i++) {
+    const a = Math.random() * Math.PI * 2;
+    B.push({ k: 'hot', x: x + Math.cos(a) * 4, y: STREET_Y + between(8, 14), z: z + Math.sin(a) * 4, vx: Math.cos(a) * 4 + 2, vy: between(9, 15), vz: Math.sin(a) * 4,
+      age: -between(0.25, 0.6), life: between(3.2, 4.4), r0: 8, r1: between(22, 30) });
+  }
+  sparks(x, z, 22, 1.3);
+  sndCrash('boom', { x, z });
+}
+
+/* ---------- drawing it ---------- */
+const TAIL_DIM = '#a3261d';                // tail lights; the brake lights are the car's own, brighter
+const FIRE_DEFS =
+  '<radialGradient id="fx-fire"><stop offset="0" stop-color="#fff4c8"/><stop offset=".35" stop-color="#ffc247" stop-opacity=".95"/>' +
+    '<stop offset=".7" stop-color="#ff5a1f" stop-opacity=".6"/><stop offset="1" stop-color="#b3200c" stop-opacity="0"/></radialGradient>' +
+  '<radialGradient id="fx-hot"><stop offset="0" stop-color="#c0713c" stop-opacity=".9"/><stop offset=".6" stop-color="#7a4a34" stop-opacity=".55"/>' +
+    '<stop offset="1" stop-color="#4a3028" stop-opacity="0"/></radialGradient>' +
+  '<radialGradient id="fx-smoke"><stop offset="0" stop-color="#8e8894" stop-opacity=".8"/><stop offset=".6" stop-color="#65616c" stop-opacity=".45"/>' +
+    '<stop offset="1" stop-color="#46434c" stop-opacity="0"/></radialGradient>' +
+  '<radialGradient id="fx-glow"><stop offset="0" stop-color="#ff9a3c" stop-opacity=".62"/><stop offset=".5" stop-color="#ff6a1c" stop-opacity=".24"/>' +
+    '<stop offset="1" stop-color="#ff4a10" stop-opacity="0"/></radialGradient>' +
+  '<radialGradient id="fx-flash"><stop offset="0" stop-color="#fffbe8"/><stop offset=".3" stop-color="#ffd878" stop-opacity=".85"/>' +
+    '<stop offset=".7" stop-color="#ff7a2a" stop-opacity=".35"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient>';
+/* A wreck: blackening as it burns, flames licking off the roof and throwing light on the road, then towed. */
+function wreckHTML(C, c) {
+  const K = CRASH, w = c.wreck, at = project(w.x, STREET_Y + 1.3, w.z, C);
+  if (!at) return null;
+  const burn = w.fire && K.clock >= w.fire ? K.clock - w.fire : -1;
+  const char = Math.min(0.55, Math.max(0, burn) / 4), body = c.body.map((v, i) => Math.round(v + ([22, 18, 16][i] - v) * char));
+  const fl = flameOf(c);
+  let s = '';
+  if (fl > 0) {
+    const g = project(w.x, STREET_Y + 0.1, w.z, C);
+    if (g) { const rx = (34 + 6 * flick(c, 0)) * fl * g.k; s += `<ellipse cx="${n1(g.x)}" cy="${n1(g.y)}" rx="${n1(rx)}" ry="${n1(rx * Math.max(.18, C.by))}" fill="url(#fx-glow)"/>`; }
+  }
+  s += roadBox(C, w.x, w.z, STREET_Y + 0.15, w.ux, w.uz, 7, 3.2, 2.1, body, '#4a3426', '#3a1e18');
+  const fade = Math.min(1, (w.inc.end - K.clock) / 1.5);
+  if (fade < 1) s = `<g opacity="${Math.max(0, fade).toFixed(2)}">${s}</g>`;
+  return { d: at.d, s };
+}
+/* how much a wreck is burning, 0 to 1, and a flicker for each flame that never strobes */
+function flameOf(c) {
+  const w = c.wreck, burn = w && w.fire && CRASH.clock >= w.fire ? CRASH.clock - w.fire : -1;
+  return burn >= 0 && burn < 8 ? Math.min(1, burn / 0.3) * Math.min(1, (8 - burn) / 2) * Math.min(1, (w.inc.end - CRASH.clock) / 1.5) : 0;
+}
+const flick = (c, i) => 0.55 + 0.45 * Math.sin(CRASH.clock * (11 + i * 3.7) + i * 2.3 + c.v * 40) * Math.sin(CRASH.clock * (6.1 + i) + i);
+/* the flash, the blast ring, the fireball, the smoke and the sparks, then the flames on top of it all.
+   The light of it (bloom, and the glow over a fire) goes in the front slot: light is never hidden. */
+function crashParts(C, put) {
+  const flat = Math.max(.18, C.by);
+  CRASH.bits.forEach(b => {
+    if (b.age < 0) return;
+    const f = b.age / b.life, p = project(b.x, b.y, b.z, C);
+    if (!p) return;
+    const grow = 1 - (1 - f) * (1 - f), r = (b.r0 + (b.r1 - b.r0) * grow) * p.k;
+    let s;
+    if (b.k === 'bloom') { put(-Infinity, `<circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(r)}" fill="url(#fx-flash)" opacity="${(0.6 * Math.pow(1 - f, 1.5)).toFixed(2)}"/>`); return; }
+    if (b.k === 'flash') s = `<ellipse cx="${n1(p.x)}" cy="${n1(p.y)}" rx="${n1(r)}" ry="${n1(r * flat)}" fill="url(#fx-flash)" opacity="${Math.pow(1 - f, 1.5).toFixed(2)}"/>`;
+    else if (b.k === 'ring') s = `<ellipse cx="${n1(p.x)}" cy="${n1(p.y)}" rx="${n1(r)}" ry="${n1(r * flat)}" fill="none" stroke="#ffb45a" ` +
+      `stroke-width="${n1(2.4 * (1 - f) * p.k)}" opacity="${(1 - f).toFixed(2)}"/>`;
+    else if (b.k === 'fire') s = `<circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(r)}" fill="url(#fx-${f < 0.55 ? 'fire' : 'hot'})" opacity="${Math.min(1, (1 - f) * 1.6).toFixed(2)}"/>`;
+    else if (b.k === 'spark') {
+      const q = project(b.x - b.vx * 0.045, b.y - b.vy * 0.045, b.z - b.vz * 0.045, C);
+      if (!q) return;
+      s = `<line x1="${n1(p.x)}" y1="${n1(p.y)}" x2="${n1(q.x)}" y2="${n1(q.y)}" stroke="${f < 0.4 ? '#ffe39a' : f < 0.75 ? '#ff9a3c' : '#c8401c'}" ` +
+        `stroke-width="${n1(1.3 * p.k)}" stroke-linecap="round" opacity="${(1 - f * f).toFixed(2)}"/>`;
+    } else {                                         // smoke, lit orange from underneath while it is fresh
+      const hot = b.k === 'hot' && f < 0.35;
+      s = `<circle cx="${n1(p.x)}" cy="${n1(p.y)}" r="${n1(r)}" fill="url(#fx-${hot ? 'hot' : 'smoke'})" ` +
+        `opacity="${(Math.min(1, f * 6) * (1 - f) * (b.k === 'hot' ? 1 : 0.8)).toFixed(2)}"/>`;
+    }
+    put(p.d, s);                                     // at its own height: smoke above the roofs is in front of them
+  });
+  LIFE.cars.forEach(c => {
+    const fl = !c.parked && c.wreck ? flameOf(c) : 0, w = c.wreck;
+    if (fl <= 0) return;
+    const at = project(w.x, STREET_Y + 1.3, w.z, C);
+    if (!at) return;
+    let s = '';
+    // the fire lights the air above it, which no building hides
+    const air = project(w.x, STREET_Y + 12, w.z, C);
+    if (air) put(-Infinity, `<circle cx="${n1(air.x)}" cy="${n1(air.y)}" r="${n1((20 + 4 * flick(c, 5)) * fl * air.k)}" fill="url(#fx-glow)" opacity=".55"/>`);
+    const core = project(w.x, STREET_Y + 5, w.z, C);
+    if (core) s += `<circle cx="${n1(core.x)}" cy="${n1(core.y)}" r="${n1((9 + 2 * flick(c, 4)) * fl * core.k)}" fill="url(#fx-fire)" opacity=".6"/>`;
+    [-2.4, 0.3, 2.6].forEach((o, i) => {
+      const b = project(w.x + w.ux * o, STREET_Y + 2.2, w.z + w.uz * o, C);
+      if (!b) return;
+      const f = flick(c, i + 1), h = (10 + 9 * f) * fl * b.k, r = (3 + 1 * f) * fl * b.k;
+      s += `<ellipse cx="${n1(b.x)}" cy="${n1(b.y - h / 2)}" rx="${n1(r)}" ry="${n1(h / 2)}" fill="url(#fx-fire)"/>` +
+        `<ellipse cx="${n1(b.x)}" cy="${n1(b.y - h / 4)}" rx="${n1(r * .45)}" ry="${n1(h / 4)}" fill="#fff1b8" opacity=".75"/>`;
+    });
+    put(at.d, s);
+  });
+}
+
 /* A box on the road, turned to face the way it is travelling. Four upright
    sides and a roof, back-face culled like everything else. The front and back
    faces are not painted body colour but light colour, which is what gives a
@@ -2000,12 +2461,10 @@ function lifeParts(C, B) {
   const put = (d, html) => { const n = slotFor(d); out[n] = (out[n] || '') + html; };
   LIFE.cars.forEach(c => {
     if (c.parked) return;
-    const e = GEO.edges[c.e], A = GEO.verts[c.from], D = GEO.verts[e.a === c.from ? e.b : e.a];
-    const dx = D.x - A.x, dz = D.y - A.y, L = Math.hypot(dx, dz) || 1, ux = dx / L, uz = dz / L;
-    // two lanes: which side you drive on follows which way you are going
-    const ox = -uz * 3.4 * c.lane, oz = ux * 3.4 * c.lane;
-    const cx = A.x + dx * c.t + ox, cz = A.y + dz * c.t + oz;
-    const body = roadBox(C, cx, cz, STREET_Y + 0.15, ux, uz, 7, 3.2, 2.6, c.body, c.head, c.tail);
+    if (c.wreck) { const w = wreckHTML(C, c); if (w) put(w.d, w.s); return; }
+    // in the right-hand lane, and round a corner on a curve (carPose)
+    const { x: cx, z: cz, ux, uz } = carPose(c);
+    const body = roadBox(C, cx, cz, STREET_Y + 0.15, ux, uz, 7, 3.2, 2.6, c.body, c.head, c.brk ? c.tail : TAIL_DIM);
     if (!body) return;
     // the pool of light the headlights throw on the road ahead
     const g1 = project(cx + ux * 4, STREET_Y + 0.05, cz + uz * 4, C);
@@ -2013,9 +2472,14 @@ function lifeParts(C, B) {
     const beam = g1 && g2
       ? `<line x1="${n1(g1.x)}" y1="${n1(g1.y)}" x2="${n1(g2.x)}" y2="${n1(g2.y)}" stroke="${c.head}" ` +
         `stroke-width="${n1(3.4 * g1.k)}" stroke-linecap="round" opacity=".13"/>` : '';
+    // and the red the brake lights throw on the road behind
+    const r1 = c.brk && project(cx - ux * 4, STREET_Y + 0.05, cz - uz * 4, C), r2 = r1 && project(cx - ux * 7, STREET_Y + 0.05, cz - uz * 7, C);
+    const glow = r1 && r2 ? `<line x1="${n1(r1.x)}" y1="${n1(r1.y)}" x2="${n1(r2.x)}" y2="${n1(r2.y)}" stroke="${c.tail}" ` +
+      `stroke-width="${n1(3 * r1.k)}" stroke-linecap="round" opacity=".2"/>` : '';
     const at = project(cx, STREET_Y + 1.3, cz, C);
-    put(at ? at.d : 0, beam + body);
+    put(at ? at.d : 0, beam + glow + body);
   });
+  crashParts(C, put);
   LIFE.feet.forEach(f => {
     if (f.parked) return;
     const e = GEO.edges[f.e], A = GEO.verts[f.from], D = GEO.verts[e.a === f.from ? e.b : e.a];
@@ -2049,7 +2513,7 @@ function tickLife(now) {
   const dt = LIFE.last ? Math.min(0.1, (now - LIFE.last) / 1000) : 0;
   LIFE.last = now;
   if (dt) {
-    LIFE.cars.forEach((c, i) => { if (!c.parked) advance(c, dt, i < AMBIENT); });
+    drive(dt);
     LIFE.feet.forEach((f, i) => { if (!f.parked) advance(f, dt, i < 1); });
   }
   if (paintLife()) loopLife();
@@ -2204,6 +2668,7 @@ function boardSVG(st, o) {
   /* ---------- the city blocks ---------- */
   const cs = B.police !== policeHome(B) ? crimeScene(P, C, st, B.police, lite) : null;
   if (cs) defs.push(GLOWS);
+  if (!lite) defs.push(FIRE_DEFS);
   GEO.hexes.forEach((h, i) => {
     if (tileD[i] < 0) return;
     const t = B.hexes[i], top = TOP_Y[t.t], g = [];
@@ -4905,8 +5370,8 @@ function sndWarm() {
   next();
 }
 /* One clip, now or `at` ms from now. `dur` cuts it short with a quick fade, `detune` (cents)
-   varies a sound that repeats, and one name never starts twice within `gap` ms: a dozen cards
-   landing together should sound like a handful, not a drum roll. */
+   varies a sound that repeats, `pan` puts it left or right (-1 to 1), and one name never starts
+   twice within `gap` ms: a dozen cards landing together should sound like a handful, not a drum roll. */
 function sfx(name, o = {}) {
   const c = SND.ctx;
   if (!c || c.state !== 'running' || document.hidden || !SND.prefs.fx) return;
@@ -4919,7 +5384,9 @@ function sfx(name, o = {}) {
     const s = c.createBufferSource(), g = c.createGain(), t = Math.max(c.currentTime, when);
     s.buffer = b;
     if (o.detune && s.detune) s.detune.value = (Math.random() * 2 - 1) * o.detune;
-    g.gain.setValueAtTime(vol, c.currentTime); s.connect(g); g.connect(SND.bus[cat]); s.start(t);
+    let out = SND.bus[cat];
+    if (o.pan && c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = Math.max(-1, Math.min(1, o.pan)); p.connect(out); out = p; }
+    g.gain.setValueAtTime(vol, c.currentTime); s.connect(g); g.connect(out); s.start(t);
     if (o.dur) { const end = t + o.dur / 1000; g.gain.setValueAtTime(vol, Math.max(t, end - 0.12)); g.gain.linearRampToValueAtTime(0.0001, end); s.stop(end + 0.02); }
   };
   if (SND.buf[name]) go(SND.buf[name]); else sndBuf(name).then(go);
@@ -4996,6 +5463,18 @@ function sndRaid(hex) {
   if (sndHearsTable()) setTimeout(() => vox(sndOne(['v_cop_1', 'v_cop_2', 'v_cop_3']), { stale: 5000 }), 700);
 }
 function sndPing() { sfx('your_turn'); buzz([16, 70, 16]); }
+/* A crash in the traffic (drive). It is scenery, so only the room's speaker hears it, from
+   the side of the board it happened on: the screech, the hit, the fuel going up a moment
+   later, a car piling in, a horn from somebody stuck behind it. */
+const SND_CRASH = { skid: ['crash_skid', 0.5], hit: ['crash_hit', 0.8], boom: ['crash_boom', 0.85], bump: ['crash_bump', 0.6], horn: [['horn_1', 'horn_2'], 0.4] };
+function sndCrash(kind, p, at) {
+  if (!SND.ctx || !sndHearsTable() || !p) return;
+  const svg = document.querySelector('svg.board'), vb = svg && svg.viewBox && svg.viewBox.baseVal, q = project(p.x, STREET_Y, p.z, basis());
+  const pan = vb && vb.width && q ? Math.max(-1, Math.min(1, ((q.x - vb.x) / vb.width) * 2 - 1)) * 0.7 : 0;
+  const [name, vol] = SND_CRASH[kind];
+  sfx(Array.isArray(name) ? sndOne(name) : name, { vol, pan, at: at || 0, gap: kind === 'bump' ? 150 : 300, detune: kind === 'bump' ? 80 : 0 });
+}
+function sndCrashLine() { if (sndHearsTable()) setTimeout(() => vox(sndOne(['v_crash_1', 'v_crash_2', 'v_crash_3']), { stale: 2500 }), 1400); }
 /* one of several lines, never the one it picked last time */
 function sndOne(list) {
   const k = list[0]; let i = Math.floor(Math.random() * list.length);
