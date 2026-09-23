@@ -9116,6 +9116,8 @@ function boardSVG(st, o) {
       if (ink) g.push(kerbTube(vT[k], vT[(k + 1) % 6], ink, o.fightE === h.es[k]));
     }
     if (cs && i === B.police) g.push(cs.under);                     // the light and the far tape lie behind the buildings
+    const foot = h.vs.map(v => [ix(v), iz(v)]);                     // the raised ground, for a piece standing behind it
+    cover.push({ key: tileD[i], n: cover.length, foot, box: boxOf(vT.concat(vB)), s: g.join('') });
     if (!lite) {                                                    // the model stands up even without the art
       const keep = [];
       g.push(massing(P, C, h, t.t, top, defs, i, fast, deco, keep));
@@ -9152,15 +9154,16 @@ function boardSVG(st, o) {
   });
   /* A building goes in just after the blocks round its junction, which is
      right for the block behind it but not for the ones in front, whose
-     towers it would otherwise stand in front of. So anything that really is
-     nearer the eye and was drawn before it (a city building, a number sign,
-     another piece) is drawn again over it, cut to the piece's own outline:
-     the piece is hidden exactly where something stands in front of it. */
+     raised ground and towers it would otherwise stand in front of. So
+     anything that really is nearer the eye and was drawn before it (a
+     block's ground, a city building, a number sign, another piece) is drawn
+     again over it, cut to the piece's own outline: the piece is hidden
+     exactly where something stands in front of it. */
   const pieces = [];
   Object.keys(st.buildings).forEach(id => {
     const v = GEO.verts[id], bd = st.buildings[id], p = bd && playerOf(st, bd.pid); if (!v || !p) return;
     const ink = pieceInk(p.color, lite), big = bd.k === 'c';
-    back.push(pad(P, v, big ? 19 : 16, ink));
+    back.push(pad(P, v, big ? 18 : 16, ink));
     const b = building(P, C, v, ink, STREET_Y, big);
     if (!b) return;
     const r = (big ? HOLD_TIERS : OP_TIERS)[0].r;
@@ -9336,9 +9339,12 @@ function pad(P, v, r, ink) {
 /* An operation is a six-sided pavilion on the junction; a major holding is a
    six-sided tower three tiers high with a beacon on its mast. Each tier is
    dark glass, a lit band of windows a floor and neon round its roof, drawn
-   bottom up, which is already back to front for anything inside one piece. */
-const OP_TIERS = [{ r: 12, y0: 0, y1: 15, floors: 2 }, { r: 6, y0: 15, y1: 20, floors: 0 }];
-const HOLD_TIERS = [{ r: 14.5, y0: 0, y1: 28, floors: 4 }, { r: 10.5, y0: 28, y1: 46, floors: 3 }, { r: 6.5, y0: 46, y1: 56, floors: 1 }];
+   bottom up, which is already back to front for anything inside one piece.
+   The widest tier stays inside its junction (a face is 0.866 r out, a block's
+   corner INSET / sin 60 = 10.4), so a piece never stands inside a block and
+   ahead() can always tell which of the two is in front. */
+const OP_TIERS = [{ r: 11.9, y0: 0, y1: 15, floors: 2 }, { r: 6, y0: 15, y1: 20, floors: 0 }];
+const HOLD_TIERS = [{ r: 11.9, y0: 0, y1: 31, floors: 4 }, { r: 9, y0: 31, y1: 50, floors: 3 }, { r: 6, y0: 50, y1: 60, floors: 1 }];
 function hexTier(P, C, v, t, top, ink, g, outline) {
   const c = HEX6.map(([x, z]) => [v.x + x * t.r, v.y + z * t.r]);
   const lo = c.map(p => P(p[0], top + t.y0, p[1])), hi = c.map(p => P(p[0], top + t.y1, p[1]));
