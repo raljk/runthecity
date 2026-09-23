@@ -876,7 +876,7 @@ const CARDS = {
     text: 'Name a resource. Every rival who holds one hands one over, and if that comes to fewer than two the bank makes it up to two.' },
   fight:       { name: 'Street Fight', kind: 'skill', tier: 'uncommon', price: { muscle: 1, talent: 1, cash: 1 }, n: 4, when: 'act',
     verb: 'Fight a rival for their street',
-    text: 'Pick a fight over a rival street that touches your streets or buildings. Win and it becomes your street; lose and they take one of your resources. Only against somebody with at least as many points as you.' },
+    text: 'Pick a fight over a rival street that touches your streets or buildings. Win and it becomes your street; lose and they take one of your resources.' },
   roadcrew:    { name: 'Road Crew', kind: 'skill', tier: 'uncommon', price: { product: 1, talent: 1, cash: 1 }, n: 3, when: 'act',
     verb: 'Lay two streets for free',
     text: 'Lay up to two streets this turn without paying for them. Any you do not lay are lost when the turn ends.' },
@@ -1233,14 +1233,13 @@ function policeBlocks(st, pid) {
   return ok.length ? ok : all;
 }
 /* Street Fight: a rival street you can reach, where a street of your own
-   could have gone (their operation at the junction blocks you), owned by
-   somebody with at least as many points as you. */
+   could have gone (their operation at the junction blocks you). Anybody's,
+   whatever their points: the user dropped the rule that you could only punch up. */
 function fightTargets(st, pid) {
-  const mine = vpOf(st, pid);
   const reach = v => { const b = st.buildings[v]; if (b) return b.pid === pid; return GEO.verts[v].edges.some(e => st.streets[e] === pid); };
   return Object.keys(st.streets).map(Number).filter(e => {
     const q = st.streets[e];
-    return q !== pid && !!playerOf(st, q) && vpOf(st, q) >= mine && (reach(GEO.edges[e].a) || reach(GEO.edges[e].b));
+    return q !== pid && !!playerOf(st, q) && (reach(GEO.edges[e].a) || reach(GEO.edges[e].b));
   });
 }
 const homeTurf = (st, e, pid) => [GEO.edges[e].a, GEO.edges[e].b].some(v => st.buildings[v] && st.buildings[v].pid === pid);
@@ -1281,7 +1280,7 @@ function canPlay(st, p, k) {
   if (!(st.step === 'act' || (st.step === 'roll' && c.when === 'any'))) return no(st.step === 'roll' ? 'A skill waits until you have rolled. Talents can go before.' : 'Not right now.');
   switch (k) {
     case 'fight': return fightTargets(st, p.pid).length ? yes('Pick a rival street next to yours.')
-      : no('No rival street touches yours, or every rival near you has fewer points than you.');
+      : no('No rival street touches yours.');
     case 'rewind': return rewindTargets(st).length ? yes('Pick the piece to take back.') : no('Nothing has gone on the board since your last turn that can come off.');
     case 'roadcrew': {
       const n = Math.min(2, left(st, p.pid, 'street'));
