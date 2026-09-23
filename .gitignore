@@ -1,4 +1,6 @@
-# Publish only the game page. Everything else in this folder stays local (notes, raw art, the API key file).
+# Publish only the game page and its two sound packs. Everything else in this folder stays local (notes, raw art, the API key file).
 /*
 !/index.html
+!/sound-fx.bin
+!/sound-table.bin
 !/.gitignore
