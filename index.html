@@ -835,6 +835,334 @@ body.hostfight #h-board{display:none}
 .sndvol{display:flex;align-items:center;gap:14px;min-height:48px;padding:4px 8px 0;font-weight:700}
 .sndvol input{flex:1;min-width:0;accent-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){.sndsw,.sndsw::after{transition:none}}
+/* =====================================================================
+   The phone, second pass (play-test, 2026-09-25)
+   One header line, a dock that floats at the foot of the screen, sheets
+   for anything you stop to read, the board's own instructions drawn over
+   the board, a full-screen board, and every overlay leaving the way it came.
+   ===================================================================== */
+html{overflow-anchor:none}            /* the phone keeps its own place when the page above you changes (renderPlayer) */
+.pbar{position:relative;z-index:8;flex-wrap:nowrap;gap:8px;padding:8px max(12px,env(safe-area-inset-right,0px)) 8px max(14px,env(safe-area-inset-left,0px))}
+.pbar .brand{font-size:1.02rem;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.pbar .pill{flex:none;font-size:.72rem;padding:3px 9px;letter-spacing:.04em;font-weight:700}
+.pbar .keybtn{margin-left:0;flex:none}
+.pbar .sndbtn{flex:none}
+/* one line on any phone: the key keeps its five cards and loses its words first, then the name goes */
+@media (max-width:400px){.pbar .keybtn .lab,.pbar .keybtn .chev{display:none}.pbar .keybtn{padding:3px 5px}.pbar .brand{font-size:.95rem}}
+@media (max-width:350px){.pbar .brand{display:none}}
+.phone{padding-top:12px;gap:12px}
+
+/* ---------- the dock ---------- */
+.phone #ps-bar{position:sticky;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:9;display:flex;gap:8px;align-items:stretch;padding:8px;margin-top:2px;
+  border-radius:20px;border:1px solid color-mix(in srgb,var(--line) 70%,#6f7fa8);
+  background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 18px 40px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.4)}
+.phone #ps-bar .btn{box-shadow:none;min-height:54px;border-radius:14px}
+.phone #ps-bar .btn.big{padding:12px 16px;font-size:1.06rem}
+.phone #ps-bar .btn:not(.ghost):not(:disabled):not(.endt){background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 88%,#fff) 0,var(--accent) 60%);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 60%,#000) inset,0 6px 22px color-mix(in srgb,var(--accent) 38%,transparent)}
+.btn{transition:transform .12s ease,filter .12s ease}
+.btn:not(:disabled):active{transform:scale(.97);filter:brightness(1.12)}
+.btn.endt{flex:0 1 auto;margin-left:auto;min-width:48%;display:inline-flex;align-items:center;justify-content:center;gap:9px;background:transparent;color:var(--ink);
+  border:1.5px solid color-mix(in srgb,var(--accent) 55%,var(--line));font-size:1rem}
+.btn.endt .endi,.btn.big .endi{width:18px;height:18px;flex:none;fill:currentColor;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round}
+.btn.endt .endi{color:var(--accent)}
+.btn.sq,.phone #ps-bar .btn.sq{flex:none;width:54px;min-width:54px;padding:0;display:inline-grid;place-items:center}
+.btn.sq svg,.bfullbtn svg,.hudx svg,.shx svg,.shback svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.dockwait{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:0 6px 0 8px}
+.dockwait .turnchip{flex:none;width:14px;height:14px;margin:0;border-radius:4px}
+.dockwait .dw{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.dockwait b{font:800 .92rem var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dockwait .dw span{font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* a dock whose buttons just changed plays them in, and ignores a tap for a moment (the tap guard is in the click handler) */
+.phone #ps-bar:empty{display:none}
+#ps-bar.arming>*{animation:dockin .34s cubic-bezier(.2,.9,.3,1.2) both}
+#ps-bar.arming>*:nth-child(2){animation-delay:.04s}
+@keyframes dockin{from{opacity:0;transform:translateY(10px) scale(.96)}}
+
+/* ---------- the board, when it is the thing to tap ---------- */
+.phone .boardbox{position:relative}
+.bhint{position:relative;z-index:3;display:flex;align-items:center;gap:10px;padding:9px 10px 9px 12px;line-height:1.2;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));
+  background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 17%,var(--panel)),color-mix(in srgb,var(--accent) 5%,var(--panel)) 70%);
+  animation:hintin .42s cubic-bezier(.2,.9,.3,1.2) both}
+.bhint .bfullbtn{position:static;flex:none;width:40px;height:40px;margin-left:auto}
+.bhint .bhi{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(255,255,255,.06)}
+.bhint .bhi .pi{width:24px;height:24px}
+.bhint .bhi .sc{width:26px;height:36px;border-radius:4px}
+.bhint .bht{flex:1;min-width:0;display:flex;flex-direction:column}
+.bhint b{font:800 .95rem/1.15 var(--display);color:var(--ink)}
+.bhint .bht span{font-size:.78rem;color:color-mix(in srgb,var(--ink) 70%,var(--muted))}
+.bhint .bhp .rc.s{width:18px;height:25px}
+.bhint .bhp .fan.s .rc+.rc{margin-left:-11px}
+.freebie.sm{min-width:0;height:26px;padding:0 8px;font-size:.66rem;border-radius:7px}
+@keyframes hintin{from{opacity:0;transform:translateY(-8px) scale(.97)}}
+.boardbox.live{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 55%,transparent),var(--shadow)}
+.bfullbtn{position:absolute;right:10px;top:10px;z-index:3;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;cursor:pointer;color:var(--ink);
+  border:1px solid color-mix(in srgb,var(--line) 70%,#6f7fa8);background:color-mix(in srgb,#060910 70%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+@media (hover:hover){.bfullbtn:hover{border-color:var(--accent);color:var(--accent)}}
+/* the board is the control: it comes first, straight under whose move it is, and the list that goes with it follows */
+.phone.focusboard #ps-board{order:1}
+.phone.focusboard #ps-panel{order:2}
+.phone.focusboard #ps-hand{order:3}
+.phone.focusboard #ps-table{order:4}
+.phone.focusboard #ps-bar{order:5}
+
+/* ---------- look here ---------- */
+@keyframes attn{0%{box-shadow:0 0 0 0 rgba(255,46,147,0),0 0 0 0 rgba(255,46,147,0)}
+  22%{box-shadow:0 0 0 3px rgba(255,46,147,.95),0 0 34px 6px rgba(255,46,147,.42)}
+  100%{box-shadow:0 0 0 14px rgba(255,46,147,0),0 0 50px 14px rgba(255,46,147,0)}}
+.slot.attn>section:not(.bare),.slot.attn>.card,.slot.attn .boardbox{animation:attn 1.15s cubic-bezier(.2,.7,.3,1) 2}
+#ps-bar.attn .btn.big:not(:disabled){animation:attnbtn 1.15s cubic-bezier(.2,.7,.3,1) 2}
+@keyframes attnbtn{0%{box-shadow:0 0 0 0 rgba(255,46,147,.0)}25%{box-shadow:0 0 0 4px rgba(255,255,255,.9),0 0 36px 8px rgba(255,46,147,.7)}100%{box-shadow:0 0 0 16px rgba(255,46,147,0)}}
+
+/* ---------- skills and talents in your hand: ready ones glow ---------- */
+.stlab{display:flex;align-items:baseline;gap:10px;justify-content:space-between}
+.sthint{font:500 .7rem var(--body);text-transform:none;letter-spacing:0;color:var(--muted)}
+.stbtn{position:relative;transition:transform .15s ease}
+.stbtn:active{transform:scale(.94)}
+.stbtn.ready .sc{box-shadow:0 0 0 2px var(--ok),0 0 14px 2px color-mix(in srgb,var(--ok) 55%,transparent);animation:readyglow 2.4s ease-in-out infinite}
+@keyframes readyglow{50%{box-shadow:0 0 0 2px var(--ok),0 0 22px 5px color-mix(in srgb,var(--ok) 40%,transparent)}}
+
+/* ---------- sheets ---------- */
+.modal{z-index:26}
+.modal .sheet{gap:10px;padding-top:8px;border-color:color-mix(in srgb,var(--line) 70%,#6f7fa8);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 92%,#1a2340) 0,var(--panel) 38%);will-change:transform}
+.modal .sheet::before{content:"";position:absolute;left:18px;right:18px;top:0;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--accent) 70%,transparent),transparent);pointer-events:none}
+.grab{flex:none;align-self:center;width:44px;height:5px;border-radius:99px;background:color-mix(in srgb,var(--muted) 55%,transparent);margin:2px 0 0;touch-action:none}
+/* A sheet is a fixed top (title, X), a middle that scrolls (your cards, the big one, what it says) and a fixed foot
+   (the button that plays or buys), so the button is on screen however short the phone. Each part is rebuilt apart. */
+.modal .sheet{overflow:hidden;padding-bottom:0}
+.sheet>.sh-top{flex:none;display:flex;flex-direction:column;gap:8px}
+.sheet>.sh-top:empty{display:none}
+.sheet>.sh-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;margin:0 -18px;padding:2px 18px 10px}
+.sh-scroll>.sh-hero:empty{display:none}
+.sh-scroll>.sh-hero{display:flex;flex-direction:column;gap:8px}
+.sh-scroll>.sh-body{display:flex;flex-direction:column;gap:10px}
+.modal.dlg .sh-scroll>.sh-body{gap:12px}
+.modal.dlg .sheet{padding-bottom:20px}
+.modal.dlg .sheet>.sh-scroll{padding-bottom:2px}
+.shtop{display:flex;align-items:center;gap:8px;min-height:44px;margin:0 -6px 0 0;touch-action:none}
+.shtop h2{flex:1;min-width:0;font-size:.74rem}
+.shx,.shback{appearance:none;flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;color:var(--ink);
+  border:1px solid var(--line);background:color-mix(in srgb,var(--bg) 60%,transparent)}
+.shback{border-color:transparent;background:none;margin-left:-8px}
+@media (hover:hover){.shx:hover,.shback:hover{border-color:var(--accent);color:var(--accent)}}
+.shstrip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 6px;margin:0 -4px;scrollbar-width:none;justify-content:center}
+.shstrip::-webkit-scrollbar{display:none}
+.shstrip .stbtn[aria-pressed=true] .sc{outline:3px solid var(--accent);outline-offset:2px}
+.shstrip .stbtn:not([aria-pressed=true]) .sc{opacity:.62;filter:saturate(.7)}
+.mkhero{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.mkhero::before{content:"";position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(closest-side,var(--glow,rgba(255,46,147,.28)),transparent);animation:heroglow 3.2s ease-in-out infinite}
+.mkhero.skill{--glow:rgba(226,50,63,.3)}
+.mkhero.talent{--glow:rgba(232,184,74,.3)}
+.mkhero .sc{z-index:1}
+@keyframes heroglow{50%{transform:scale(1.12);opacity:.7}}
+.mkhero .swipe{position:absolute;top:50%;z-index:2;width:40px;height:40px;margin-top:-20px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);
+  background:color-mix(in srgb,var(--bg) 70%,transparent);color:var(--ink);cursor:pointer;touch-action:manipulation}
+.mkhero .swipe.l{left:2px}.mkhero .swipe.r{right:2px}
+.mkhero .swipe svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.shnote{margin:0;display:flex;align-items:center;gap:10px;padding:9px 10px 9px 12px;border-radius:12px;font-size:.84rem;font-weight:600;
+  border:1px solid color-mix(in srgb,var(--accent) 50%,var(--line));background:color-mix(in srgb,var(--accent) 12%,var(--bg))}
+.shnote span{flex:1;min-width:0}
+.shnote .btn{min-height:34px;padding:4px 12px;font-size:.8rem;border-radius:9px}
+.modal .stwhy{text-align:center;margin:0}
+.modal .picks{margin-top:2px}
+.modal .deal{margin-top:2px}
+.sheet>.sh-foot{flex:none;position:relative;margin:0 -18px;padding:10px 18px calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet>.sh-foot::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:18px;pointer-events:none;background:linear-gradient(transparent,var(--panel))}
+.sheet>.sh-foot:empty{display:none}
+.sheet:has(>.sh-foot:empty)>.sh-scroll{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet>.sh-foot .mkacts{margin:0}
+@media (max-height:720px){.mkhero .sc.xl{zoom:.8}.modal .sheet{gap:8px}}
+@media (max-height:600px){.mkhero .sc.xl{zoom:.66}}
+@media (max-height:440px){.mkhero .sc.xl{zoom:.5}.modal .sheet{max-height:calc(100dvh - 12px)}.modal{padding:6px 20px}}
+.mkacts .btn.big .arrow{width:18px;height:18px;margin-left:8px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.mklist{margin-top:2px}
+.mkintro{text-align:center}
+.sh-scroll>.fwd{animation:viewfwd .3s cubic-bezier(.2,.9,.3,1) both}
+.sh-scroll>.bwd{animation:viewbwd .3s cubic-bezier(.2,.9,.3,1) both}
+@keyframes viewfwd{from{opacity:0;transform:translateX(34px)}}
+@keyframes viewbwd{from{opacity:0;transform:translateX(-34px)}}
+
+/* coming and going */
+.modal.enter .sheet{animation:sheetup .42s cubic-bezier(.16,1,.3,1) both}
+.modal.enter .scrim{animation:scrimin .3s ease-out both}
+.modal.m-card.enter .sheet{animation:sheetfade .34s cubic-bezier(.16,1,.3,1) both}
+@keyframes sheetup{from{transform:translateY(105%)}}
+@keyframes sheetfade{from{transform:translateY(22px);opacity:0}}
+#p-modal-out{position:fixed;inset:0;z-index:27;pointer-events:none}
+#p-modal-out:empty{display:none}
+#p-modal-out .modal{pointer-events:none}
+.modal.leave .scrim{animation:scrimout .34s ease-in both}
+.modal.leave .sheet{animation:sheetdown .34s cubic-bezier(.5,0,.75,0) both}
+.modal.leave.x-swipe .sheet{animation:none}
+.modal.leave.x-bought .sheet,.modal.leave.x-played .sheet{animation:sheetsink .42s cubic-bezier(.5,0,.75,0) .08s both}
+@keyframes scrimout{to{opacity:0}}
+@keyframes sheetdown{to{transform:translateY(105%)}}
+@keyframes sheetsink{to{transform:translateY(40%);opacity:0}}
+
+/* ---------- "end your turn?" ---------- */
+.modal.dlg{align-items:center;padding:20px}
+.modal.dlg .sheet{max-width:400px;border-radius:24px;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,#6f7fa8);padding:26px 20px 20px;gap:12px;text-align:center;
+  box-shadow:0 0 0 1px rgba(0,0,0,.4),0 30px 80px rgba(0,0,0,.75),0 0 60px color-mix(in srgb,var(--accent) 16%,transparent)}
+.modal.dlg.enter .sheet{animation:dlgin .4s cubic-bezier(.2,.9,.3,1.25) both}
+.modal.dlg.leave .sheet{animation:dlgout .26s cubic-bezier(.5,0,.75,0) both}
+.modal.dlg.leave.x-ended .sheet{animation:dlgend .62s cubic-bezier(.5,0,.3,1) both}
+@keyframes dlgin{from{opacity:0;transform:scale(.86) translateY(14px)}}
+@keyframes dlgout{to{opacity:0;transform:scale(.94)}}
+@keyframes dlgend{0%{transform:none}28%{transform:scale(1.03)}100%{opacity:0;transform:scale(.8) translateY(-30px)}}
+.endico{align-self:center;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;color:var(--accent);
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 24%,transparent),transparent);border:1.5px solid color-mix(in srgb,var(--accent) 55%,var(--line))}
+.endico .endi{width:28px;height:28px;fill:currentColor;stroke:currentColor;stroke-width:1.2;stroke-linejoin:round}
+.dlgt{font:800 1.5rem/1.1 var(--display);color:var(--ink);text-transform:none;letter-spacing:-.01em}
+.dlgs{margin:-4px 0 0;color:var(--muted);font-size:.9rem;display:flex;gap:7px;align-items:center;justify-content:center}
+.dlgs .turnchip{margin:0;width:12px;height:12px}
+.endwarn{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;text-align:left}
+.endwarn li{display:flex;gap:10px;align-items:flex-start;font-size:.86rem;line-height:1.35;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+.endwarn li::before{content:"";flex:none;width:8px;height:8px;margin-top:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.endwarn li.w-road::before,.endwarn li.w-deal::before{background:#ffc94d;box-shadow:0 0 8px #ffc94d}
+.dlgacts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.dlgacts .btn{min-height:52px;font-size:1rem;border-radius:14px}
+.stampx{position:fixed;left:50%;top:44%;z-index:41;pointer-events:none;font:900 2.4rem/1 var(--display);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+  color:var(--accent);text-shadow:0 0 22px color-mix(in srgb,var(--accent) 70%,transparent),0 3px 0 #000;border:4px solid currentColor;border-radius:12px;padding:8px 16px;
+  animation:stampx .9s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes stampx{0%{opacity:0;transform:translate(-50%,-50%) rotate(-9deg) scale(2.6)}22%{opacity:1;transform:translate(-50%,-50%) rotate(-9deg) scale(.94)}
+  34%{transform:translate(-50%,-50%) rotate(-9deg) scale(1)}78%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) rotate(-9deg) scale(1.06)}}
+
+/* ---------- "your turn" and whose turn it is now ---------- */
+.yturn{position:fixed;inset:0;z-index:42;pointer-events:none;display:grid;place-items:center;overflow:hidden}
+.yturn .yflash{position:absolute;inset:0;background:radial-gradient(60% 40% at 50% 46%,color-mix(in srgb,var(--pc) 40%,transparent),transparent);animation:yflash 1.6s ease-out both}
+.yturn .yband{position:relative;width:140vw;padding:18px 0 16px;text-align:center;transform:rotate(-7deg);
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--pc) 88%,#000) 14%,color-mix(in srgb,var(--pc) 88%,#000) 86%,transparent);
+  box-shadow:0 0 40px color-mix(in srgb,var(--pc) 60%,transparent);animation:yband 1.6s cubic-bezier(.2,.9,.3,1) both}
+.yturn .yt{display:block;font:900 clamp(2.6rem,13vw,4.2rem)/.95 var(--display);letter-spacing:.02em;color:#fff;text-transform:uppercase;
+  text-shadow:3px 0 rgba(255,46,147,.65),-3px 0 rgba(38,224,255,.55),0 4px 0 rgba(0,0,0,.55)}
+.yturn .ys{display:block;margin-top:6px;font:800 .9rem var(--display);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.9)}
+@keyframes yband{0%{transform:rotate(-7deg) translateX(-110%)}22%{transform:rotate(-7deg) translateX(3%)}30%{transform:rotate(-7deg) translateX(0)}
+  78%{transform:rotate(-7deg) translateX(0);opacity:1}100%{transform:rotate(-7deg) translateX(110%);opacity:.2}}
+@keyframes yflash{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+.handoff{position:fixed;left:50%;top:calc(58px + env(safe-area-inset-top,0px));z-index:41;pointer-events:none;display:flex;align-items:center;gap:9px;
+  padding:8px 16px 8px 10px;border-radius:99px;font:800 .92rem var(--display);white-space:nowrap;color:var(--ink);
+  border:1px solid color-mix(in srgb,var(--pc) 60%,var(--line));background:color-mix(in srgb,#060910 84%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 22px color-mix(in srgb,var(--pc) 35%,transparent);
+  animation:handoff 2s cubic-bezier(.2,.9,.3,1) both}
+.handoff .turnchip{margin:0;width:14px;height:14px}
+.handoff span{font:600 .8rem var(--body);color:var(--muted)}
+@keyframes handoff{0%{opacity:0;transform:translate(-50%,-16px) scale(.94)}16%{opacity:1;transform:translate(-50%,0)}80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px) scale(.97)}}
+/* somebody else's card, told quietly at the top of a phone instead of over the middle of it */
+.fxmini{position:absolute;left:50%;top:calc(58px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:10px;max-width:calc(100vw - 24px);
+  padding:7px 14px 7px 7px;border-radius:16px;border:1px solid color-mix(in srgb,var(--fr,#b9c2d3) 55%,var(--line));background:rgba(6,9,16,.92);
+  box-shadow:0 12px 34px rgba(0,0,0,.6);animation:handoff 2.6s cubic-bezier(.2,.9,.3,1) both}
+.fxmini .sc{width:30px;height:42px;border-radius:5px}
+.fxmini p{margin:0;display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.fxmini b{font:800 .88rem var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fxmini span{font-size:.76rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fxmini.talent{--fr:#e8b84a}.fxmini.skill{--fr:#e2323f}
+
+/* ---------- a street fight you are only watching ---------- */
+#p-fightpill:empty{display:none}
+.fightpill{position:fixed;left:50%;top:calc(56px + env(safe-area-inset-top,0px));z-index:25;transform:translateX(-50%);display:flex;align-items:center;gap:9px;
+  padding:8px 14px 8px 10px;border-radius:99px;cursor:pointer;color:#fff;font:800 .86rem var(--display);white-space:nowrap;
+  border:1px solid #ff4057;background:linear-gradient(90deg,rgba(60,6,16,.94),rgba(12,8,22,.94));box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 22px rgba(255,64,87,.4);
+  animation:pillin .4s cubic-bezier(.2,.9,.3,1.3) both}
+.fightpill .live{font:900 .62rem var(--display);letter-spacing:.12em;padding:2px 6px;border-radius:5px;background:#ff4057;color:#fff;animation:blink 1s steps(2) infinite}
+.fightpill .fpgo{color:#ffd24d}
+@keyframes pillin{from{opacity:0;transform:translate(-50%,-12px) scale(.9)}}
+#p-arena.mini{display:none}
+.arx{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));z-index:8;width:44px;height:44px;border-radius:14px;
+  display:grid;place-items:center;cursor:pointer;color:#fff;border:1px solid rgba(255,255,255,.25);background:rgba(5,7,12,.6)}
+.arx svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.arena.leaving{animation:arenaout .36s cubic-bezier(.5,0,.75,0) both}
+@keyframes arenaout{to{opacity:0;transform:scale(1.04)}}
+
+/* ---------- the full-screen board ---------- */
+body.bfull{overflow:hidden;overscroll-behavior:none}
+.bfull .phone .boardbox{position:fixed;inset:0;z-index:20;margin:0;border-radius:0;display:flex;flex-direction:column;box-shadow:none;
+  background:radial-gradient(120% 90% at 50% 40%,color-mix(in srgb,var(--apron) 55%,var(--bg)),var(--bg))}
+.bfull .phone .board3d{flex:1;min-height:0;position:relative}
+.bfull .phone svg.board{position:absolute;inset:0;width:100%;height:100%;max-height:none}
+.bfull .bfullbtn{display:none}
+.bfull .bhint{position:absolute;top:calc(env(safe-area-inset-top,0px) + 140px);left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));max-width:560px;pointer-events:none;
+  border:1px solid color-mix(in srgb,var(--accent) 55%,var(--line));border-radius:14px;background:color-mix(in srgb,#060910 80%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 18px color-mix(in srgb,var(--accent) 22%,transparent)}
+/* the camera's buttons go where the board is not: under it, in a row, on a phone held upright */
+.bfull .phone .camctl{position:absolute;left:50%;right:auto;top:auto;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:3;
+  display:flex;flex-wrap:nowrap;gap:5px;padding:6px;border:1px solid var(--line);border-radius:14px;
+  background:color-mix(in srgb,var(--panel) 70%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:.9}
+.bfull .phone .camctl button{width:38px;height:38px;border-radius:10px}
+.bfull .phone .camctl button.wide{display:none}
+.bfull .phone #ps-bar{position:fixed;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:24;margin:0;
+  max-width:560px;margin-inline:auto}
+.bfull .phone>*:not(#ps-board):not(#ps-bar):not(#p-main){visibility:hidden}
+.bfull .phone #ps-board>.sec>.sechead{visibility:hidden}
+.bfull #ps-move,.bfull #ps-hand,.bfull #ps-panel,.bfull #ps-table{visibility:hidden}
+/* the board's place on the page is kept while it is away, so coming back is a shrink into a slot, not a jump */
+body.bfull #ps-board>section{min-height:var(--fullph,0px)}
+.bfull.leaving .phone>*,.bfull.leaving #ps-move,.bfull.leaving #ps-hand,.bfull.leaving #ps-panel,.bfull.leaving #ps-table,.bfull.leaving #ps-board>.sec>.sechead{visibility:visible}
+#p-hud:empty{display:none}
+#p-hud{position:fixed;left:0;right:0;top:0;z-index:23;pointer-events:none;padding:calc(8px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 0 max(10px,env(safe-area-inset-left,0px));
+  display:flex;flex-direction:column;gap:8px;align-items:stretch}
+#p-hud>*{pointer-events:auto}
+.hudtop{display:flex;align-items:center;gap:10px;padding:8px 8px 8px 12px;border-radius:18px;border:1px solid color-mix(in srgb,var(--line) 70%,#6f7fa8);
+  background:color-mix(in srgb,#060910 76%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.hudwho{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.hudwho b{font:800 1rem var(--display);display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hudwho.you b{color:var(--accent)}
+.hudwho .turnchip{margin:0;width:12px;height:12px;flex:none}
+.hudwho span{font-size:.8rem;color:color-mix(in srgb,var(--ink) 75%,var(--muted));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.huddice{--d:24px;flex:none;display:flex;align-items:center;gap:4px}
+.huddice .die{border-radius:6px}
+.huddice strong{font:800 1.5rem/1 var(--display);margin-left:3px;font-variant-numeric:tabular-nums;color:var(--token)}
+.huddice.hot strong{color:#ff5a6a}
+.hudx{appearance:none;flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;color:var(--ink);border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.hudhand{align-self:flex-start;display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:14px;border:1px solid var(--line);
+  background:color-mix(in srgb,#060910 70%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.hudrow{display:flex;align-items:flex-start;gap:8px;justify-content:space-between}
+.hudhand .rc.s .n{right:-7px;top:-7px}
+.hudhand .pk{appearance:none;background:none;border:0;border-left:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer;
+  display:inline-flex;align-items:center;gap:4px;font:800 .8rem var(--display);padding:4px 0 4px 8px;min-height:36px}
+.hudscore{display:flex;flex-direction:column;gap:3px;padding:6px 9px;border-radius:14px;border:1px solid var(--line);
+  background:color-mix(in srgb,#060910 70%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:800 .74rem var(--display);font-variant-numeric:tabular-nums}
+.hudscore span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.hudscore span.now{color:var(--accent)}
+.hudscore .chip{width:10px;height:10px;border-radius:3px;border-width:1.5px}
+.huddice .die{padding:3px}
+.bfull .phone .boardbox.entering{animation:fullin .5s cubic-bezier(.16,1,.3,1) both}
+.bfull #p-hud.entering>*{animation:hudin .45s cubic-bezier(.2,.9,.3,1.1) .12s both}
+@keyframes hudin{from{opacity:0;transform:translateY(-14px)}}
+.bfull.leaving #p-hud{animation:scrimout .22s ease-in both}
+.bfull.leaving .phone #ps-bar{animation:scrimout .22s ease-in both}
+@keyframes fullout{to{opacity:0;transform:scale(.94)}}
+@media (orientation:landscape) and (max-height:500px){
+  .bfull .phone .camctl{left:auto;right:max(10px,env(safe-area-inset-right,0px));top:50%;bottom:auto;transform:translateY(-50%);display:grid;grid-template-columns:repeat(2,38px)}
+  .bfull .phone .camctl [data-cam=home]{grid-column:span 2;width:auto}
+  .bfull .bhint{top:calc(env(safe-area-inset-top,0px) + 64px);right:auto;max-width:min(420px,calc(100vw - 80px))}
+  #p-hud{flex-direction:row;align-items:flex-start}
+  .hudtop{flex:1}
+  .bfull .phone #ps-bar{left:auto;width:min(440px,52vw)}
+}
+
+/* ---------- folding, and the toast ---------- */
+.sec .secbody-in{animation:secin .32s cubic-bezier(.2,.9,.3,1) both}
+@keyframes secin{from{opacity:0;transform:translateY(-6px)}}
+.keypanel.kin{animation:secin .3s cubic-bezier(.2,.9,.3,1) both}
+.toast{transition:opacity .22s ease,transform .22s cubic-bezier(.2,.9,.3,1.2)}
+.toast.tin{animation:toastin .32s cubic-bezier(.2,.9,.3,1.25) both}
+.toast.tout{opacity:0;transform:translate(-50%,10px) scale(.96)}
+@keyframes toastin{from{opacity:0;transform:translate(-50%,14px) scale(.94)}}
+body.modalopen .toast{z-index:45}
+
+@media (prefers-reduced-motion:reduce){
+  .modal.enter .sheet,.modal.enter .scrim,.modal.leave .sheet,.modal.leave .scrim,.modal.dlg.enter .sheet,.modal.dlg.leave .sheet,
+  #ps-bar.arming>*,.bhint,.slot.attn>section,.slot.attn>.card,.slot.attn .boardbox,#ps-bar.attn .btn.big,.stbtn.ready .sc,.mkhero::before,
+  .sh-scroll>.fwd,.sh-scroll>.bwd,.sec .secbody-in,.keypanel.kin,.toast.tin,.fightpill,.fightpill .live,.bfull .phone .boardbox.entering,.bfull #p-hud.entering>*,
+  .bfull.leaving .phone .boardbox,.bfull.leaving #p-hud,.bfull.leaving .phone #ps-bar,.arena.leaving{animation:none}
+  .btn,.stbtn,.toast{transition:none}
+}
+.hudhand .bump .rc{animation:bump .45s cubic-bezier(.2,.9,.3,1.4)}
+.bfull .toast{z-index:30}
 </style>
 </head>
 <body>
@@ -9613,7 +9941,10 @@ const ui = { sel: null, hex: null, pending: false, toast: null, toastTimer: 0, m
 function toast(msg) {
   clearTimeout(ui.toastTimer); let t = $('#toast');
   if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
-  t.textContent = msg; t.hidden = false; ui.toastTimer = setTimeout(() => { t.hidden = true; }, 3200);
+  t.textContent = msg; t.hidden = false;
+  // it rises in, and sinks out again rather than blinking off
+  t.classList.remove('tout', 'tin'); void t.offsetWidth; t.classList.add('tin');
+  ui.toastTimer = setTimeout(() => { t.classList.add('tout'); ui.toastTimer = setTimeout(() => { t.hidden = true; t.classList.remove('tout'); }, 240); }, 3200);
 }
 // A sleeping phone drops its socket. The state lives on the relay and in localStorage, so a reload resumes cleanly.
 // The relay client reconnects by itself, but its back-off grows to two minutes. If it is still down a while
@@ -10446,10 +10777,11 @@ function act(body) {
 /* Every move looks the same from the phone's side: grey the buttons while the
    table thinks, and say something if it never answers. */
 function pact(body) {
-  if (!act(body)) return;
+  if (!act(body)) return false;
   ui.pending = true; ui.pendV = G.state ? G.state.v : 0; renderPlayer();
   clearTimeout(ui.pendTimer);
   ui.pendTimer = setTimeout(() => { if (ui.pending) { ui.pending = false; renderPlayer(); toast('The table did not answer. Try again.'); } }, 4000);
+  return true;
 }
 function playerScreen() {
   const st = G.state;
@@ -10697,12 +11029,14 @@ const kindTag = k => `<span class="bd ${CARDS[k].kind}">${CARDS[k].kind}</span>`
 const shownCard = (p, k) => heldCard(p, k) - (FX.cardHold && FX.cardHold.pid === p.pid && FX.cardHold.k === k ? 1 : 0);
 const shownCards = p => CARD_ORDER.reduce((n, k) => n + shownCard(p, k), 0);
 function skillRowHTML(me) {
-  const ks = CARD_ORDER.filter(k => shownCard(me, k) > 0);
+  const st = G.state, ks = CARD_ORDER.filter(k => shownCard(me, k) > 0);
   const perks = [(me.luck | 0) > 0 ? `<span class="perk luck">☘ ${me.luck} lucky roll${me.luck === 1 ? '' : 's'}</span>` : '',
     me.paid ? '<span class="perk paid">The police are paid off</span>' : '',
     (me.legend | 0) > 0 ? `<span class="perk legend">★ Local Legend +${me.legend}</span>` : ''].join('');
-  return `<div class="stwrap"><p class="stlab">Skills &amp; talents</p>${ks.length
-    ? `<div class="strow">${ks.map(k => `<button class="stbtn" data-p="card" data-arg="${k}" aria-label="${esc(CARDS[k].name)}: ${esc(CARDS[k].verb)}">${scard(k, { size: 's', n: shownCard(me, k), fresh: readyCard(me, k) <= 0 && CARDS[k].when !== 'never' })}</button>`).join('')}</div>`
+  // one you could play right now glows, so a ready card is seen before it is read
+  return `<div class="stwrap"><p class="stlab"><span>Skills &amp; talents</span>${ks.length ? '<span class="sthint">Tap one to read or play it</span>' : ''}</p>${ks.length
+    ? `<div class="strow">${ks.map(k => { const ready = !!st && st.phase === 'turn' && canPlay(st, me, k).ok;
+      return `<button class="stbtn${ready ? ' ready' : ''}" data-p="card" data-arg="${k}" aria-haspopup="dialog" aria-label="${esc(CARDS[k].name)}: ${esc(CARDS[k].verb)}${ready ? '. Ready to play' : ''}">${scard(k, { size: 's', n: shownCard(me, k), fresh: readyCard(me, k) <= 0 && CARDS[k].when !== 'never' })}</button>`; }).join('')}</div>`
     : '<p class="small muted">None yet. Buy them at the market after you roll, and your first two upgrades to a major holding each draw one.</p>'}${perks ? `<div class="perks">${perks}</div>` : ''}</div>`;
 }
 function seatBadges(p) {
@@ -10729,97 +11063,23 @@ function skillOptsHTML(st, me, live) {
   const sale = CARD_ORDER.filter(k => CARDS[k].price && deckOf(st, k) > 0), afford = sale.filter(k => canBuy(st, me, k).ok);
   const why2 = turnOf(st, me) && st.step === 'act' ? (afford.length ? `You can afford ${afford.length} of the ${sale.length} on sale.` : `${sale.length} on sale. You cannot afford any yet.`)
     : `${sale.length} on sale. You buy on your turn, after you roll.`;
-  return `<li><button class="opt stack${ready.length ? ' can' : ''}" data-p="mode" data-arg="cards" aria-pressed="${ui.mode === 'cards'}" ${held.length ? '' : 'disabled'}>` +
+  return `<li><button class="opt stack${ready.length ? ' can' : ''}" data-p="sheet" data-arg="card" aria-haspopup="dialog" ${held.length ? '' : 'disabled'}>` +
     `<span class="top">${scard('back', { size: 'xs' })}<span class="nm">Play a skill or talent</span>${ready.length ? `<span class="go">${ready.length} ready</span>` : ''}</span><span class="why">${esc(why1)}</span></button></li>` +
-    `<li><button class="opt stack${afford.length ? ' can' : ''}" data-p="mode" data-arg="market" aria-pressed="${ui.mode === 'market'}">` +
+    `<li><button class="opt stack${afford.length ? ' can' : ''}" data-p="sheet" data-arg="market" aria-haspopup="dialog">` +
     `<span class="top"><span class="mkfan">${['fight', 'luck', 'rewind'].map(k => scard(k, { size: 'xs' })).join('')}</span><span class="nm">The market</span>${afford.length && live ? `<span class="go">${afford.length} you can buy</span>` : ''}</span><span class="why">${esc(why2)}</span></button></li>`;
-}
-function cardDetailHTML(k, verdict) {
-  const c = CARDS[k];
-  return `<div class="stdetail">${scard(k, { size: 'l' })}<div class="grow"><p class="stname">${esc(c.name)}</p>` +
-    `<p class="sttags">${kindTag(k)} ${TIER_NAME[c.tier]}</p><p>${esc(c.text)}</p><p class="small muted">${esc(WHEN_TEXT[c.when])}</p>` +
-    (verdict && verdict.why ? `<p class="stwhy ${verdict.ok ? 'ok' : 'no'}">${esc(verdict.why)}</p>` : '') + '</div></div>';
-}
-function cardsHTML(st, me, sel) {
-  const held = CARD_ORDER.filter(k => heldCard(me, k));
-  return `<section class="card"><h2>Your skills &amp; talents</h2>
-    <div class="stpick">${held.map(k => `<button class="stbtn" data-p="card" data-arg="${k}" aria-pressed="${k === sel}">${scard(k, { size: 'm', n: heldCard(me, k), fresh: readyCard(me, k) <= 0 && CARDS[k].when !== 'never' })}</button>`).join('')}</div>
-    ${sel ? cardDetailHTML(sel, canPlay(st, me, sel)) : ''}
-    <p class="small muted">One skill or talent a turn, yours or anybody's. Talents can go before you roll, skills after. Anything you got this turn is ready once the turn passes.</p></section>`;
-}
-function marketHTML(st, me) {
-  return `<section class="card"><h2>The market</h2>
-    <p class="small muted">Skills are moves your crew can make; talents are gifts. What you buy is ready once the turn passes.</p>
-    <ul class="moves">${CARD_ORDER.map(k => {
-      const c = CARDS[k], cb = canBuy(st, me, k), n = deckOf(st, k);
-      return `<li><button class="opt mk${cb.ok ? ' can' : ''}" data-p="mkpick" data-arg="${k}" aria-haspopup="dialog">${scard(k, { size: 'm', dim: !n })}` +
-        `<span class="grow"><span class="nm">${esc(c.name)}</span><span class="tags">${kindTag(k)} ${TIER_NAME[c.tier]}</span><span class="why">${esc(c.verb)}</span>` +
-        `<span class="price">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : '<span class="small muted">Only from an upgrade</span>'}<span class="left">${c.price ? (n ? n + ' left' : 'Sold out') : n + ' in the crates'}</span></span></span></button></li>`;
-    }).join('')}</ul></section>`;
-}
-/* A card tapped in the market opens over the list. The card is the picture: it
-   already carries its name, whether it is a skill or a talent, and what it is for,
-   so the sheet adds only the rules text, the price and the button that buys it.
-   The price says what you are short of by itself (a dashed card is one you lack),
-   and the button says in a few words why it cannot be bought yet. */
-function marketModalHTML(st, me, k) {
-  const c = CARDS[k], cb = canBuy(st, me, k), n = deckOf(st, k), busy = ui.pending;
-  const when = c.when === 'act' ? 'Play it after you roll.' : c.when === 'any' ? 'Play it before or after you roll.' : '';
-  const label = busy ? 'Buying…' : cb.ok ? `Buy ${esc(c.name)}` : !n ? 'Sold out'
-    : !turnOf(st, me) ? 'Buy on your turn' : st.step === 'roll' ? 'Roll first, then buy' : st.step !== 'act' ? 'Not right now' : 'Can’t afford it yet';
-  return `<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(c.name)}"><div class="scrim" data-p="mkclose"></div><div class="sheet">` +
-    `<div class="mkhero">${scard(k, { size: 'xl', dim: !n })}</div>` +
-    `<p class="mkdesc">${esc(c.text)}${when ? ` <span class="muted">${when}</span>` : ''}</p>` +
-    `<div class="mkprice">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : ''}<span class="mkleft">${n ? n + (c.price ? ' left' : ' in the crates') : 'None left'}</span></div>` +
-    // a card that is never for sale says so in its own text, so it gets no buy button at all
-    `<div class="mkacts">${c.price ? `<button class="btn big" data-p="buy" ${cb.ok && !busy ? '' : 'disabled'}>${label}</button>` : ''}` +
-    `<button class="btn ghost${c.price ? '' : ' big'}" data-p="mkclose">Close</button></div></div></div>`;
-}
-/* Put the market's sheet up or take it down. While it is up the page behind it
-   cannot be scrolled, tapped or tabbed into; when it goes, focus goes back to the
-   card it was opened from, so a keyboard or screen reader is not left at the top. */
-const MODAL = { kbd: false };   // whether the last thing that happened was a key, so focus is drawn only for keyboards
-document.addEventListener('keydown', () => { MODAL.kbd = true; }, true);
-document.addEventListener('pointerdown', () => { MODAL.kbd = false; }, true);
-function modalSync(html) {
-  const box = $('#p-modal'); if (!box) return;
-  const how = { preventScroll: true, focusVisible: MODAL.kbd };
-  const was = !!box.firstChild, open = !!html;
-  setHTML('#p-modal', html);
-  document.body.classList.toggle('modalopen', open);
-  document.querySelectorAll('#app > header, #app > main').forEach(e => { e.inert = open; });
-  if (!open) {
-    const b = was && ui.mkFrom && document.querySelector(`[data-p=mkpick][data-arg="${ui.mkFrom}"]`);
-    if (b) b.focus(how);
-    if (was) ui.mkFrom = null;
-    return;
-  }
-  if (!was) box.firstChild.classList.add('enter');   // straight on the element, so setHTML still sees the same markup
-  const sheet = box.querySelector('.sheet');
-  if (sheet && !sheet.contains(document.activeElement)) (sheet.querySelector('[data-p=buy]:not(:disabled)') || sheet.querySelector('.mkacts [data-p=mkclose]')).focus(how);
 }
 const streetWhere = (st, e) => `street by ${nearHexes(st.board, GEO.edges[e].hexes, 2)}`;
 const AIMED = ['fight', 'rewind', 'tipoff', 'shakedown', 'connections'];
 /* A skill or talent being looked at, bought, or aimed at something. The choice
    is made first and sent with the play, so backing out never costs the card. */
 function cardMode(st, me) {
-  const m = ui.mode, back = '<button class="btn ghost" data-p="back">Back</button>', busy = ui.pending;
-  if (m === 'market') {
-    const sel = isCard(ui.buy) ? ui.buy : null;
-    return { panel: marketHTML(st, me), modal: sel ? marketModalHTML(st, me, sel) : '',
-      bar: `<button class="btn big" disabled>Tap a card to see it</button>${back}` };
-  }
-  if (m === 'cards') {
-    const held = CARD_ORDER.filter(k => heldCard(me, k)), sel = held.includes(ui.card) ? ui.card : held[0] || null;
-    const cp = sel ? canPlay(st, me, sel) : null, aim = sel && AIMED.includes(sel);
-    return { panel: cardsHTML(st, me, sel),
-      bar: `<button class="btn big" data-p="${aim ? 'aim' : 'play'}" data-arg="${sel || ''}" ${cp && cp.ok && !busy ? '' : 'disabled'}>${busy ? 'Playing…' : !sel ? 'You hold none' : cp.ok ? `${aim ? 'Use' : 'Play'} ${esc(CARDS[sel].name)}` : 'Not playable right now'}</button>${back}` };
-  }
-  const k = m.slice(5), head = t => `<section class="card"><div class="aimhead">${scard(k, { size: 's' })}<div><h2>${esc(CARDS[k].name)}</h2><p class="small">${t}</p></div></div>`;
-  if (!canPlay(st, me, k).ok) { ui.mode = 'cards'; ui.card = k; return cardMode(st, me); }
+  const back = '<button class="btn ghost" data-p="back">Back</button>', busy = ui.pending;
+  const k = ui.mode.slice(5), head = t => `<section class="card"><div class="aimhead">${scard(k, { size: 's' })}<div><h2>${esc(CARDS[k].name)}</h2><p class="small">${t}</p></div></div>`;
+  // the card went out of reach while you were aiming it (it was played, or what it aims at went): back to your moves
+  if (!isCard(k) || !canPlay(st, me, k).ok) { ui.mode = null; return null; }
   if (k === 'fight') {
     const ts = fightTargets(st, me.pid), e = ui.sel && ui.sel.kind === 'e' && ts.includes(ui.sel.id) ? ui.sel.id : null, q = e !== null ? playerOf(st, st.streets[e]) : null;
-    return { bo: { labels: true, color: me.color, sel: ui.sel, legalE: ts, tone: 'foe' },
+    return { bo: { labels: true, color: me.color, sel: ui.sel, legalE: ts, tone: 'foe' }, hint: hintHTML(scard(k, { size: 'xs' }), 'Street Fight', 'Tap a rival street glowing red'),
       panel: head('Tap a rival street glowing red on the board, or pick one here.') + `<ul class="moves">${ts.map(t => { const o = playerOf(st, st.streets[t]), turf = homeTurf(st, t, o.pid);
         return `<li><button class="opt" data-p="tgt" data-arg="${t}" aria-pressed="${e === t}"><span class="chip" style="background:var(--p-${o.color})"></span><span class="grow">${esc(o.name)}'s ${esc(streetWhere(st, t))}` +
           `<span class="why">${vpOf(st, o.pid)} points. ${turf ? `Home turf: their crew is ${FIGHT.hp + FIGHT.turf} strong, yours ${FIGHT.hp}.` : `Both crews ${FIGHT.hp} strong.`}</span></span></button></li>`; }).join('')}</ul>
@@ -10834,7 +11094,7 @@ function cardMode(st, me) {
       return r.k === 'street' ? `${whose} ${esc(streetWhere(st, r.at))}` : r.k === 'op' ? `${whose} operation by ${esc(nearHexes(st.board, GEO.verts[r.at].hexes))}`
         : r.k === 'up' ? `${whose} major holding by ${esc(nearHexes(st.board, GEO.verts[r.at].hexes))}` : `The street ${r.by ? esc(playerOf(st, r.by).name) + ' took from' : 'lost by'} ${r.pid === me.pid ? 'you' : esc(o.name)}`; };
     const back2 = r => r.k === 'up' ? 'goes back to an operation' : r.k === 'flip' ? 'goes back to them' : 'comes off the board';
-    return { bo: { labels: true, color: me.color, sel: t ? { kind: vk(t) ? 'v' : 'e', id: t.at } : null, legalV: ts.filter(vk).map(r => r.at), legalE: ts.filter(r => !vk(r)).map(r => r.at), tone: 'rew' },
+    return { hint: hintHTML(scard(k, { size: 'xs' }), 'Rewind', 'Tap a piece glowing gold'), bo: { labels: true, color: me.color, sel: t ? { kind: vk(t) ? 'v' : 'e', id: t.at } : null, legalV: ts.filter(vk).map(r => r.at), legalE: ts.filter(r => !vk(r)).map(r => r.at), tone: 'rew' },
       panel: head('Everything put on the board since the start of your last turn. Tap one here or on the board.') + `<ul class="moves">${ts.map(r => { const o = playerOf(st, r.pid);
         return `<li><button class="opt stack" data-p="rwpick" data-arg="${r.i}" aria-pressed="${!!t && t.i === r.i}"><span class="top"><span class="chip" style="background:var(--p-${o.color})"></span><span class="nm">${what(r)}</span></span>` +
           `<span class="why">It ${back2(r)}${bundleSize(r.paid || {}) ? `, and ${r.pid === me.pid ? 'you get' : esc(o.name) + ' gets'} ${esc(handList(r.paid))} back` : ''}${r.drop ? `, and ${esc(CARDS[r.drop].name)} goes back to the market if they still hold it` : ''}.</span></button></li>`; }).join('')}</ul></section>`,
@@ -10843,7 +11103,7 @@ function cardMode(st, me) {
   if (k === 'tipoff') {
     const hs = policeBlocks(st, me.pid), h = ui.sel && ui.sel.kind === 'h' && hs.includes(ui.sel.id) ? ui.sel.id : null;
     const vs = h !== null ? victims(st, h, me.pid) : [], from = vs.includes(ui.from) ? ui.from : vs.length === 1 ? vs[0] : null;
-    return { bo: { labels: true, color: me.color, sel: ui.sel, legalH: hs },
+    return { bo: { labels: true, color: me.color, sel: ui.sel, legalH: hs }, hint: hintHTML(scard(k, { size: 'xs' }), 'Tip-off', h === null ? 'Tap a block for the police' : 'Now pick who to take from, below'),
       panel: head('Tap the block to send the police to. It stops paying out while they are there.') + (h === null ? '' : vs.length
         ? `<p class="small">Take a resource, unseen, from:</p><ul class="moves">${vs.map(id => { const q = playerOf(st, id);
             return `<li><button class="opt" data-p="from" data-arg="${esc(id)}" aria-pressed="${from === id}"><span class="chip" style="background:var(--p-${q.color})"></span><span class="grow">${esc(q.name)}<span class="why">Holding ${handCount(q)}.</span></span>${rcard('back', { size: 's', n: handCount(q) })}</button></li>`; }).join('')}</ul>`
@@ -10899,7 +11159,7 @@ function turnParts(st, me) {
   const inTurn = st.phase === 'turn', veil = FX.veil && inTurn;
   const yours = (inTurn || st.phase === 'place') && activePid(st) === me.pid;
   const owe = inTurn && st.pend ? (st.pend[me.pid] || 0) : 0;
-  const out = { move: moveCard(st, me, inTurn || st.phase === 'over' ? rollHTML(st, me) : ''), panel: '', bar: '' };
+  const out = { move: moveCard(st, me, inTurn || st.phase === 'over' ? rollHTML(st, me) : ''), panel: '', bar: '', hint: '', focus: '' };
   out.hand = handSec(me);
   out.table = tableSec(st, me);
   let bo = { labels: true }, need = false;        // what the board shows, and whether it is the control right now
@@ -10909,28 +11169,32 @@ function turnParts(st, me) {
     `<ul class="moves">${['street', 'operation', 'holding'].map(k => optHTML(st, me, k, live)).join('')}${tradeOptHTML(st, me, live)}${live && !(st.offer && st.offer.from === me.pid) ? offerOptHTML(st, me) : ''}${st.stock ? skillOptsHTML(st, me, live) : ''}</ul>`,
     { peek: ['street', 'operation', 'holding'].map(k => `<span class="pk${canPay(me, k) ? '' : ' no'}" title="${OPT_NAME[k]}">${pieceIcon(k, me.color)}</span>`).join('') });
 
-  // a skill or talent being read, bought or aimed: the same panel whoever's turn it is, when nothing more urgent is on
-  const calm = cardsCalm(st, me);
-  const cm = calm && typeof ui.mode === 'string' && (ui.mode === 'cards' || ui.mode === 'market' || ui.mode.startsWith('card:')) ? cardMode(st, me) : null;
+  // a skill or talent being aimed at the board, when nothing more urgent is on
+  const cm = cardsCalm(st, me) && typeof ui.mode === 'string' && ui.mode.startsWith('card:') ? cardMode(st, me) : null;
   if (cm) {
-    out.panel = cm.panel; out.bar = cm.bar; out.modal = cm.modal || '';
+    out.panel = cm.panel; out.bar = cm.bar; out.hint = cm.hint || '';
     if (cm.bo) { bo = cm.bo; need = true; }
+    out.focus = cm.bo ? 'board' : 'panel';
   } else if (st.phase === 'place') {
     if (yours) {
       bo = { labels: true, color: me.color, sel: ui.sel, legalV: st.step === 'operation' ? legalOperations(st) : [], legalE: st.step === 'street' ? legalSetupStreets(st) : [] };
-      need = true;
+      need = true; out.focus = 'board';
+      out.hint = st.step === 'operation' ? hintHTML(pieceIcon('operation', me.color), `Your ${ordinal(st.placeIdx < st.order.length ? 1 : 2)} operation`, 'Tap a glowing junction')
+        : hintHTML(pieceIcon('street', me.color), 'Your street', 'Tap a glowing path beside it');
       out.bar = `<button class="btn big" data-p="confirm" ${ui.sel && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Placing…' : ui.sel ? `Place your ${st.step} here` : `Pick a spot for your ${st.step}`}</button>`;
-    }
+    } else out.bar = statusDock(st, me);
   } else if (inTurn && veil) {
-    /* nothing to press until the dice have landed */
+    out.bar = statusDock(st, me);                     // nothing to press until the dice have landed
   } else if (inTurn && st.step === 'fight') {
     out.panel = makes(false);                          // the fight itself is the arena, drawn over the page
+    out.bar = statusDock(st, me);
   } else if (inTurn && st.step === 'luck') {
     out.panel = luckHTML(st, me, yours);
     if (yours) {
       const o = keepOptions(st, me.pid).find(x => Array.isArray(ui.keep) && x.i.join() === ui.keep.join());
       out.bar = `<button class="btn big" data-p="dokeep" ${o && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Keeping…' : o ? `Keep ${st.dice3[o.i[0]]} and ${st.dice3[o.i[1]]}: ${o.sum}` : 'Pick a pair'}</button>`;
-    }
+      out.focus = 'panel';
+    } else out.bar = statusDock(st, me);
   } else if (inTurn && st.step === 'discard') {
     if (owe) {
       const chosen = RES_ORDER.reduce((n, r) => n + (ui.drop[r] || 0), 0);
@@ -10939,23 +11203,29 @@ function turnParts(st, me) {
           return `<button class="pick cardy" data-p="drop" data-arg="${r}" aria-label="Drop one ${r}" ${have > 0 && chosen < owe ? '' : 'disabled'}>${rcard(r, { size: 'm', miss: have <= 0 })}<span>${r}</span><span class="n">${have} left</span></button>`; }).join('')}</div>
         ${dealHTML({ lab: 'Dropping', b: ui.drop, none: 'tap the cards you can spare' }, { lab: 'Still to pick', b: {}, none: chosen < owe ? String(owe - chosen) : 'that is the lot' }, { oneway: true })}
         <p class="small">${chosen ? `Dropping ${esc(handList(ui.drop))}. ` : 'Tap the cards you can spare. '}${chosen < owe ? `${owe - chosen} still to pick.` : 'That is the lot.'}</p>
-        <div class="row"><button class="btn" style="flex:1" data-p="dodiscard" ${chosen === owe && !ui.pending ? '' : 'disabled'}>Drop ${owe} ${owe === 1 ? 'card' : 'cards'}</button>
-        <button class="btn ghost" data-p="cleardrop" ${chosen ? '' : 'disabled'}>Start over</button></div></section>`;
-    } else out.panel = makes(false);
+        <div class="row"><button class="btn ghost" data-p="cleardrop" ${chosen ? '' : 'disabled'}>Start over</button></div></section>`;
+      out.bar = `<button class="btn big" data-p="dodiscard" ${chosen === owe && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Dropping…' : chosen === owe ? `Drop ${owe} ${owe === 1 ? 'card' : 'cards'}` : `Pick ${owe - chosen} more to drop`}</button>`;
+      out.focus = 'panel';
+    } else { out.panel = makes(false); out.bar = statusDock(st, me); }
   } else if (inTurn && !yours) {
     if (st.offer && st.step === 'act') {
       const o = st.offer, said = o.replies[me.pid];
       out.panel = offerAnswerHTML(st, me, o);
-      if (said === undefined) out.bar = `<button class="btn big" data-p="reply" data-arg="yes" ${holds(me, o.want) && !ui.pending ? '' : 'disabled'}>Take the trade</button>` +
-        `<button class="btn ghost" data-p="reply" data-arg="no" ${ui.pending ? 'disabled' : ''}>Pass</button>`;
-    } else out.panel = makes(false);
+      if (said === undefined) {
+        out.bar = `<button class="btn big" data-p="reply" data-arg="yes" ${holds(me, o.want) && !ui.pending ? '' : 'disabled'}>Take the trade</button>` +
+          `<button class="btn ghost" data-p="reply" data-arg="no" ${ui.pending ? 'disabled' : ''}>Pass</button>`;
+        out.focus = 'offer';
+      } else out.bar = statusDock(st, me);
+    } else { out.panel = makes(false); out.bar = statusDock(st, me); }
   } else if (inTurn && st.step === 'roll') {
     out.panel = makes(false);
-    out.bar = `<button class="btn big" data-p="rollturn" ${ui.pending ? 'disabled' : ''}>${ui.pending ? 'Rolling…' : 'Roll the dice'}</button>`;
+    out.bar = `${dockFullBtn()}<button class="btn big" data-p="rollturn" ${ui.pending ? 'disabled' : ''}>${ui.pending ? 'Rolling…' : 'Roll the dice'}</button>`;
+    out.focus = 'bar';
   } else if (inTurn && st.step === 'police') {
     const sel = ui.sel && ui.sel.kind === 'h' ? ui.sel.id : null;
     bo = { labels: true, color: me.color, sel: ui.sel, legalH: policeBlocks(st, me.pid) };
-    need = true;
+    need = true; out.focus = 'board';
+    out.hint = hintHTML(COPICO, 'Move the police', 'Tap a block: it stops paying out');
     out.bar = `<button class="btn big" data-p="dopolice" ${sel !== null && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Moving…' : sel !== null ? `Send the police to ${esc(blockName(st, sel))}` : 'Tap a block on the map'}</button>`;
   } else if (inTurn && st.step === 'steal') {
     const vs = victims(st, st.board.police, me.pid);
@@ -10963,19 +11233,21 @@ function turnParts(st, me) {
       return `<li><button class="opt" data-p="steal" data-arg="${esc(id)}" ${ui.pending ? 'disabled' : ''}><span class="chip" style="background:var(--p-${q.color})"></span>` +
         `<span class="grow">${esc(q.name)}<span class="why">Holding ${handCount(q)} cards. You take one, unseen.</span></span>${rcard('back', { size: 's', n: handCount(q) })}</button></li>`;
     }).join('')}</ul></section>`;
+    out.bar = statusDock(st, me); out.focus = 'panel';
   } else if (inTurn) {                                  // the building part of your own turn
     const off = st.offer && st.offer.from === me.pid ? st.offer : null;
-    const end = label => `<button class="btn big" data-p="endturn" ${ui.pending ? 'disabled' : ''}>${label}</button>`;
-    if (ui.mode === 'offer' && !off) out.panel = offerComposeHTML(st, me);
+    if (ui.mode === 'offer' && !off) { out.panel = offerComposeHTML(st, me); out.bar = endDock(st, me, false); }
     else if (ui.mode && COST[ui.mode]) {
-      const kind = ui.mode, spots = legalFor(st, me.pid, kind);
-      bo = { labels: true, color: me.color, sel: ui.sel }; need = true;
+      // building: the board comes up, says what it is waiting for, and the button that builds sits under it
+      const kind = ui.mode, spots = legalFor(st, me.pid, kind), free = kind === 'street' && (st.free | 0) > 0;
+      bo = { labels: true, color: me.color, sel: ui.sel }; need = true; out.focus = 'board';
       if (kind === 'street') bo.legalE = spots; else bo.legalV = spots;
       const ready = ui.sel && ui.sel.kind === (kind === 'street' ? 'e' : 'v');
-      out.panel = `<section class="card"><div class="opt stack can" style="border:0;padding:0;min-height:0"><span class="top">${pieceIcon(kind, me.color)}<span class="nm">${OPT_NAME[kind]}</span></span>` +
-        `<span class="recipe">${kind === 'street' && st.free > 0 ? '<span class="freebie">Free</span>' : bundleHTML(COST[kind], { size: 'm', have: me.hand })}<span class="why">Tap a glowing spot on the board, then build.</span></span></div></section>`;
+      out.hint = hintHTML(pieceIcon(kind, me.color), free ? `Road Crew: ${st.free} free street${st.free === 1 ? '' : 's'}` : OPT_NAME[kind],
+        kind === 'street' ? 'Tap a glowing path, then build' : 'Tap a glowing junction, then build',
+        free ? '<span class="freebie sm">Free</span>' : `<span class="bhp">${bundleHTML(COST[kind], { size: 's', have: me.hand })}</span>`);
       out.bar = `<button class="btn big" data-p="build" ${ready && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Building…' : ready ? `Build the ${PIECE[kind]} here` : 'Tap a glowing spot'}</button>` +
-        `<button class="btn ghost" data-p="back">Back</button>`;
+        `<button class="btn ghost" data-p="back">${free ? 'Later' : 'Back'}</button>`;
     } else if (ui.mode === 'trade') {
       const rate = ui.give ? tradeRate(st, me.pid, ui.give) : 0, ready = ui.give && ui.get && ui.give !== ui.get;
       out.panel = `<section class="card"><h2>Trade at a terminal</h2>
@@ -10987,13 +11259,13 @@ function turnParts(st, me) {
         ${dealHTML({ lab: 'You give', b: ui.give ? { [ui.give]: rate } : {}, none: 'pick a card above' }, { lab: 'You get', b: ui.get && ui.get !== ui.give ? { [ui.get]: 1 } : {}, none: 'pick one' }, { oneway: true })}
         <div class="row"><button class="btn" style="flex:1" data-p="dotrade" ${ready && !ui.pending ? '' : 'disabled'}>${ready ? `Give ${rate} ${ui.give} for 1 ${ui.get}` : 'Pick both sides'}</button>
         <button class="btn ghost" data-p="back">Back</button></div></section>`;
-      out.bar = end('End my turn');
+      out.bar = endDock(st, me, false);
     } else {
       out.panel = (off ? offerStatusHTML(st, me, off) : '') + makes(true);
-      out.bar = end(ui.pending ? 'Ending…' : anyMove(st, me) || canOffer(st, me) ? 'End my turn' : 'Nothing to do, end my turn');
+      out.bar = endDock(st, me, !(anyMove(st, me) || canOffer(st, me)));
     }
   }
-  out.board = sec('board', 'The board', () => `<div class="boardbox">${boardView(st, bo)}</div>`, { bare: true, force: need });
+  out.board = boardSec(st, bo, need, out.hint);
   out.need = need;
   return out;
 }
@@ -11003,53 +11275,616 @@ function turnHTML(st, me) {
   return PSLOTS.map(k => (k === 'bar' ? (p.bar ? barHTML(p.bar) : '') : p[k] || '')).join('');
 }
 
-/* When the board is the control rather than the picture, scroll it into view.
-   The card above it can be taller than a phone screen, so a player was being
-   asked to tap something that was not on screen yet. Once per step, never
-   while they are already working, so it cannot fight their own scrolling. */
-function boardIntoView(key) {
-  if (P.scrolled === key) return;
-  P.scrolled = key;
-  setTimeout(() => {
-    const b = $('.phone .boardbox');
-    if (b && b.scrollIntoView) { try { b.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { b.scrollIntoView(false); } }
-  }, 80);
+/* =====================================================================
+   The phone, second pass (from the play-test of 2026-09-25)
+
+   What the play-test found, and what answers it here:
+   - End turn got pressed by accident. It is a smaller button now, it always
+     asks first, and the dock ignores a tap for a moment whenever its buttons
+     change, so a double tap on Build or Roll cannot fall through onto it.
+   - Reading a skill or talent rebuilt the page. A card now opens as a sheet
+     over the page, with an X at the top and Play at the foot.
+   - Somebody else's move threw you out of what you were reading. Sheets stay
+     up through other players' moves, the page holds its place when the part
+     above you changes, and a fight you are not in waits behind a pill.
+   - Road Crew meant hunting up and down the page. A card that needs the board
+     takes you to the board, with the instruction on it and the button under
+     it, until the card is used up.
+   - Whatever needs you is brought into view and lit up.
+   - The board goes full screen, for the players who watch it that way.
+   ===================================================================== */
+const XICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+const BACKICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+const NEXTICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+const ICO_EXPAND = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+const ICO_SHRINK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+const ENDICO = '<svg class="endi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l9 7-9 7zM18 5v14"/></svg>';
+const ARROW = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const COPICO = '<svg class="pi" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3l11 4v8c0 7-5 12-11 14C10 27 5 22 5 15V7z" style="fill:#2f6bff"/><path d="M16 9l2 4 4.5.6-3.3 3 .9 4.4-4.1-2.2-4.1 2.2.9-4.4-3.3-3 4.5-.6z" style="fill:#ffd24d;stroke:none"/></svg>';
+const fullBtnHTML = () => `<button class="bfullbtn" data-p="full" aria-pressed="${!!ui.full}" aria-label="${ui.full ? 'Leave full screen' : 'Full-screen board'}">${ui.full ? ICO_SHRINK : ICO_EXPAND}</button>`;
+// in full screen the bar across the top has the way out, so the dock does not repeat it
+const dockFullBtn = () => ui.full ? '' : `<button class="btn ghost sq" data-p="full" aria-label="Full-screen board">${ICO_EXPAND}</button>`;
+/* the instruction for a board that is waiting on your finger, drawn over the board itself */
+const hintHTML = (icon, what, how, extra) => `<div class="bhint" role="status"><span class="bhi">${icon}</span><span class="bht"><b>${what}</b><span>${how}</span></span>${extra || ''}<!--fb--></div>`;
+/* the board section, with its full-screen button, and the instruction when it is the control */
+function boardSec(st, bo, need, hint) {
+  // the instruction sits in a strip across the top of the board, never over it, and carries the full-screen button
+  return sec('board', 'The board', () => `<div class="boardbox${need ? ' live' : ''}">${hint ? hint.replace('<!--fb-->', fullBtnHTML()) : fullBtnHTML()}${boardView(st, bo)}</div>`,
+    { bare: true, force: need || !!ui.full });
 }
+/* End turn, in the dock: a plain outline while you still have moves, the main button once you have none.
+   Either way it only asks; the sheet it opens is what ends the turn. */
+function endDock(st, me, nothing) {
+  const label = ui.pending ? 'Ending…' : nothing ? 'Nothing to do, end my turn' : 'End my turn';
+  // full screen has no list of moves under it: this takes you back down to it
+  if (ui.full && !nothing) return `<button class="btn ghost" data-p="fullmoves">Your moves</button><button class="btn endt" data-p="endask" aria-haspopup="dialog" ${ui.pending ? 'disabled' : ''}>${ENDICO}${label}</button>`;
+  return nothing ? `${dockFullBtn()}<button class="btn big" data-p="endask" aria-haspopup="dialog" ${ui.pending ? 'disabled' : ''}>${label}</button>`
+    : `${dockFullBtn()}<button class="btn endt" data-p="endask" aria-haspopup="dialog" ${ui.pending ? 'disabled' : ''}>${ENDICO}${label}</button>`;
+}
+/* while it is somebody else's move and nothing is asked of you: who, and what they are doing */
+function statusDock(st, me) {
+  if (ui.full) return '';                                   // the bar across the top of the full-screen board says it already
+  const g = guide(st, me.pid), veil = FX.veil && st.phase === 'turn';
+  const now = veil ? (FX.veil === 'roll' ? 'The dice are rolling…' : 'Opening the crate…') : g.now;
+  return `<div class="dockwait">${g.ap ? `<span class="turnchip" style="background:var(--p-${g.ap.color})"></span>` : ''}<span class="dw"><b>${esc(g.title)}</b><span>${esc(now)}</span></span></div>${dockFullBtn()}`;
+}
+
+/* ---------- sheets ----------
+   Anything you stop to read opens over the page instead of rebuilding it: a skill
+   or talent you hold, the market, and "end your turn?". The page underneath keeps
+   its place, and nobody else's move can take a sheet away from you. Your own move,
+   the X, the scrim, a swipe down, Escape or the back button closes it. */
+const AIMED_BOARD = ['fight', 'rewind', 'tipoff'];            // these are aimed on the board; Shakedown and Connections choose in the sheet
+const MODAL = { kbd: false, kind: '', view: '', heroK: '', at: 0, exit: '', from: null, fromRect: null, slide: 0, swallow: false };
+document.addEventListener('keydown', () => { MODAL.kbd = true; }, true);
+document.addEventListener('pointerdown', () => { MODAL.kbd = false; }, true);
+const shTop = (title, back) => `<div class="grab" aria-hidden="true"></div><div class="shtop">${back ? `<button class="shback" data-p="${back}" aria-label="Back to the list">${BACKICO}</button>` : ''}` +
+  `<h2>${title}</h2><button class="shx" data-p="shclose" aria-label="Close">${XICO}</button></div>`;
+/* where a sheet was opened from, so focus can go back there and the card can fly back into it */
+const originOf = el => el && el.dataset && el.dataset.p ? `[data-p="${el.dataset.p}"]${el.dataset.arg ? `[data-arg="${el.dataset.arg}"]` : ''}` : null;
+function openSheet(kind, from) {
+  if (!ui.sheet) layerPush();
+  ui.sheet = kind; MODAL.exit = '';
+  MODAL.from = originOf(from);
+  const art = from && from.querySelector && from.querySelector('.sc');
+  MODAL.fromRect = art ? art.getBoundingClientRect() : null;
+  buzz(kind === 'end' ? 14 : 6);                             // a tick in the hand as it opens (phones that can)
+  renderPlayer();
+}
+function closeSheet(exit, fromHistory) {
+  if (!ui.sheet) return;
+  MODAL.exit = exit || 'close';
+  ui.sheet = null; ui.buy = null; ui.sheetPlay = null; ui.sheetBuy = null;
+  if (!fromHistory) layerPop();
+  renderPlayer();                                            // which also gives any attention that waited for the sheet
+}
+function sheetOf(st, me) {
+  if (!st || !me || !ui.sheet || !(st.phase === 'turn' || st.phase === 'over' || st.phase === 'place')) return null;
+  if (ui.sheet === 'end') return turnOf(st, me) && st.step === 'act' ? endSheet(st, me) : null;
+  if (ui.sheet === 'card') return cardSheet(st, me);
+  if (ui.sheet === 'market') return st.stock ? marketSheet(st, me) : null;
+  return null;
+}
+/* why a card of yours cannot be played, in the few words a button has room for */
+function cardNo(st, me, k) {
+  const c = CARDS[k];
+  if (c.when === 'react') return 'Only when a rival picks a fight';
+  if (!turnOf(st, me)) return 'Play it on your turn';
+  if (playedBy(st, me.pid)) return 'One a turn: already played';
+  if (readyCard(me, k) <= 0) return 'Ready once this turn passes';
+  if (st.step === 'roll') return 'Roll first, then play it';
+  return 'Not playable right now';
+}
+/* a move of yours that is waiting while you read, said at the top of the sheet rather than by taking it away */
+function sheetNote(st, me) {
+  const g = guide(st, me.pid), owe = st.pend && st.pend[me.pid];
+  if (!g.yours || st.phase !== 'turn' || FX.veil || (st.step === 'act' && !owe && !(st.offer && st.offer.from !== me.pid))) return '';
+  return `<p class="shnote"><span>${esc(g.now)}</span><button class="btn" data-p="shgo">Go</button></p>`;
+}
+/* One of your own skills or talents, big, with what it does and the button that plays it. */
+function cardSheet(st, me) {
+  const held = CARD_ORDER.filter(k => heldCard(me, k));
+  if (!held.length) return null;
+  const k = held.includes(ui.card) ? ui.card : held[0]; ui.card = k;
+  const c = CARDS[k], cp = canPlay(st, me, k), busy = ui.pending;
+  const fresh = readyCard(me, k) <= 0 && c.when !== 'never';
+  const when = c.when === 'act' ? 'Play it on your turn, after you roll.' : c.when === 'any' ? 'Play it on your turn, before or after you roll.' : '';
+  let pick = '', ok = cp.ok, label;
+  if (k === 'shakedown' && cp.ok) {
+    const r = RES_ORDER.includes(ui.res) ? ui.res : null; ok = !!r;
+    pick = `<p class="small muted" style="text-align:center">Name the resource you want</p><div class="picks">${RES_ORDER.map(x => `<button class="pick cardy" data-p="res" data-arg="${x}" aria-pressed="${r === x}">${rcard(x, { size: 'm' })}<span>${x}</span><span class="n">have ${me.hand[x] || 0}</span></button>`).join('')}</div>`;
+    label = r ? `Shake them down for ${r}` : 'Name a resource first';
+  } else if (k === 'connections' && cp.ok) {
+    const t = ui.take || {}, n = bundleSize(t); ok = n === 2;
+    pick = `<div class="picks">${RES_ORDER.map(x => `<button class="pick cardy" data-p="take" data-arg="${x}" ${n >= 2 ? 'disabled' : ''}>${rcard(x, { size: 'm', n: t[x] || undefined })}<span>${x}</span><span class="n">have ${me.hand[x] || 0}</span></button>`).join('')}</div>` +
+      dealHTML({ lab: 'From the bank', b: t, sub: 'take', none: 'pick two' }, { lab: 'Still to pick', b: {}, none: String(2 - n) }, { oneway: true });
+    label = n === 2 ? `Take ${handList(t)}` : `Pick ${2 - n} more`;
+  } else if (cp.ok) label = k === 'fight' ? 'Pick a rival street' : k === 'rewind' ? 'Pick a piece to take back' : k === 'tipoff' ? 'Pick a block for the police' : `Play ${c.name}`;
+  else label = cardNo(st, me, k);
+  if (busy) label = 'Playing…';
+  const aim = cp.ok && AIMED_BOARD.includes(k), many = held.length > 1;
+  // only the title and the X stay put while you scroll; your cards and the big one scroll with what they say
+  const top = shTop('Your skills &amp; talents') + sheetNote(st, me);
+  const hero = (many ? `<div class="shstrip">${held.map(x => `<button class="stbtn" data-p="card" data-arg="${x}" aria-pressed="${x === k}" aria-label="${esc(CARDS[x].name)}">${scard(x, { size: 's', n: heldCard(me, x), fresh: readyCard(me, x) <= 0 && CARDS[x].when !== 'never' })}</button>`).join('')}</div>` : '') +
+    `<div class="mkhero ${c.kind}" data-k="${k}">${many ? `<button class="swipe l" data-p="cardstep" data-arg="-1" aria-label="Previous card">${BACKICO}</button>` : ''}${scard(k, { size: 'xl', fresh, n: heldCard(me, k) })}` +
+    `${many ? `<button class="swipe r" data-p="cardstep" data-arg="1" aria-label="Next card">${NEXTICO}</button>` : ''}</div>`;
+  const body = `<p class="mkdesc">${esc(c.text)}${when ? ` <span class="muted">${when}</span>` : ''}</p>` +
+    (!cp.ok && cp.why && c.when !== 'never' ? `<p class="stwhy no">${esc(cp.why)}</p>` : '') + pick;
+  const foot = `<div class="mkacts">${c.when === 'never' ? '<button class="btn ghost big" data-p="shclose">Close</button>'
+      : `<button class="btn big" data-p="shplay" data-arg="${k}" ${ok && !busy ? '' : 'disabled'}>${label}${aim && !busy ? ARROW : ''}</button>`}</div>`;
+  return { kind: 'card', label: c.name, view: 'card', top, hero, body, foot };
+}
+/* The market: the list, and a card from it. Same sheet, so going between them slides rather than reopens. */
+function marketSheet(st, me) {
+  const k = isCard(ui.buy) ? ui.buy : null;
+  if (!k) return { kind: 'market', label: 'The market', view: 'list', top: shTop('The market'), hero: '', body:
+    '<p class="small muted mkintro">Skills are moves your crew can make; talents are gifts. What you buy is ready once the turn passes.</p>' +
+    `<ul class="moves mklist">${CARD_ORDER.map(x => {
+      const c = CARDS[x], cb = canBuy(st, me, x), n = deckOf(st, x);
+      return `<li><button class="opt mk${cb.ok ? ' can' : ''}" data-p="mkpick" data-arg="${x}">${scard(x, { size: 'm', dim: !n })}` +
+        `<span class="grow"><span class="nm">${esc(c.name)}</span><span class="tags">${kindTag(x)} ${TIER_NAME[c.tier]}</span><span class="why">${esc(c.verb)}</span>` +
+        `<span class="price">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : '<span class="small muted">Only from an upgrade</span>'}<span class="left">${c.price ? (n ? n + ' left' : 'Sold out') : n + ' in the crates'}</span></span></span></button></li>`;
+    }).join('')}</ul>` };
+  const c = CARDS[k], cb = canBuy(st, me, k), n = deckOf(st, k), busy = ui.pending;
+  const when = c.when === 'act' ? 'Play it after you roll.' : c.when === 'any' ? 'Play it before or after you roll.' : '';
+  const label = busy ? 'Buying…' : cb.ok ? `Buy ${esc(c.name)}` : !n ? 'Sold out'
+    : !turnOf(st, me) ? 'Buy on your turn' : st.step === 'roll' ? 'Roll first, then buy' : st.step !== 'act' ? 'Not right now' : 'Can’t afford it yet';
+  return { kind: 'market', label: c.name, view: 'card', top: shTop('The market', 'mkback'), hero: `<div class="mkhero ${c.kind}" data-k="${k}">${scard(k, { size: 'xl', dim: !n })}</div>`, body:
+    `<p class="mkdesc">${esc(c.text)}${when ? ` <span class="muted">${when}</span>` : ''}</p>` +
+    `<div class="mkprice">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : ''}<span class="mkleft">${n ? n + (c.price ? ' left' : ' in the crates') : 'None left'}</span></div>`,
+    // a card that is never for sale says so in its own text, so it gets no buy button at all
+    foot: `<div class="mkacts">${c.price ? `<button class="btn big" data-p="buy" ${cb.ok && !busy ? '' : 'disabled'}>${label}</button>` : ''}` +
+    `<button class="btn ghost${c.price ? '' : ' big'}" data-p="mkback">Back</button></div>` };
+}
+/* "End your turn?" Asked every time, with whatever you would be leaving on the table. */
+function endSheet(st, me) {
+  const warn = [];
+  if ((st.free | 0) > 0 && left(st, me.pid, 'street') > 0 && legalStreets(st, me.pid).length) warn.push(['road', `${st.free} free street${st.free === 1 ? '' : 's'} from Road Crew still to lay. ${st.free === 1 ? 'It is' : 'They are'} lost when your turn ends.`]);
+  const ready = CARD_ORDER.filter(k => canPlay(st, me, k).ok);
+  if (ready.length) warn.push(['card', `You can still play ${andList(ready.map(k => CARDS[k].name))}.`]);
+  const builds = ['street', 'operation', 'holding'].filter(k => left(st, me.pid, k) > 0 && canPay(me, k) && legalFor(st, me.pid, k).length);
+  if (builds.length) warn.push(['build', `You can still afford ${andList(builds.map(k => k === 'holding' ? 'a major holding' : k === 'operation' ? 'an operation' : 'a street'))}.`]);
+  const o = st.offer && st.offer.from === me.pid ? st.offer : null, yes = o ? st.players.filter(p => o.replies[p.pid] === 1) : [];
+  if (yes.length) warn.push(['deal', `${andList(yes.map(p => p.name))} said yes to your trade. Ending your turn drops it.`]);
+  const next = playerOf(st, st.order[(st.turnIdx + 1) % st.order.length]);
+  const body = `<div class="endico">${ENDICO}</div><h2 class="dlgt" id="dlg-t">End your turn?</h2>` +
+    (next && next.pid !== me.pid ? `<p class="dlgs"><span class="turnchip" style="background:var(--p-${next.color})"></span>${esc(next.name)} is next.</p>` : '') +
+    (warn.length ? '' : '<p class="dlgs">Nothing else you can do this turn.</p>') +
+    (warn.length ? `<ul class="endwarn">${warn.map(([t, s]) => `<li class="w-${t}">${esc(s)}</li>`).join('')}</ul>` : '') +
+    `<div class="dlgacts"><button class="btn ghost" data-p="shclose">No, keep playing</button><button class="btn" data-p="endturn" ${ui.pending ? 'disabled' : ''}>Yes, end turn</button></div>`;
+  return { kind: 'end', role: 'alertdialog', cls: 'dlg', label: 'End your turn?', top: '', hero: '', body };
+}
+/* Put the sheet up, change what is on it, or take it down. Only the sheet's own inside
+   is rebuilt as the game moves, so a sheet you are reading never jumps or starts over. */
+function modalSync(sh) {
+  const box = $('#p-modal'); if (!box) return;
+  const how = { preventScroll: true, focusVisible: MODAL.kbd };
+  let el = box.firstElementChild;
+  if (el && (!sh || el.dataset.kind !== sh.kind)) { sheetLeave(el); el = null; }
+  const open = !!sh;
+  document.body.classList.toggle('modalopen', open);
+  document.querySelectorAll('#app > header, #app > main, #p-hud, #p-fightpill').forEach(e => { e.inert = open; });
+  if (!open) {
+    if (MODAL.kind && MODAL.from) { const b = (ui.full && document.querySelector('#p-hud ' + MODAL.from)) || document.querySelector(MODAL.from); if (b) b.focus(how); }
+    MODAL.kind = ''; MODAL.view = ''; MODAL.heroK = ''; MODAL.from = null; MODAL.fromRect = null;
+    return;
+  }
+  const fresh = !el;
+  if (fresh) {
+    el = document.createElement('div');
+    el.className = `modal m-${sh.kind}${sh.cls ? ' ' + sh.cls : ''}`; el.dataset.kind = sh.kind;
+    el.setAttribute('role', sh.role || 'dialog'); el.setAttribute('aria-modal', 'true');
+    if (sh.kind === 'end') el.setAttribute('aria-labelledby', 'dlg-t');
+    el.innerHTML = '<div class="scrim" data-p="shclose"></div><div class="sheet"><div class="sh-top"></div><div class="sh-scroll"><div class="sh-hero"></div><div class="sh-body"></div></div><div class="sh-foot"></div></div>';
+    box.appendChild(el);
+    MODAL.kind = sh.kind; MODAL.at = performance.now(); MODAL.view = sh.view || '';
+  }
+  if (sh.kind !== 'end') el.setAttribute('aria-label', sh.label);
+  const sheet = el.querySelector('.sheet'), view0 = MODAL.view, hero0 = MODAL.heroK;
+  // the control that has focus now, so a rebuilt part can hand it straight back
+  const fa = document.activeElement, fkey = fa && sheet.contains(fa) && fa.dataset && fa.dataset.p ? `[data-p="${fa.dataset.p}"]${fa.dataset.arg ? `[data-arg="${fa.dataset.arg}"]` : ''}` : null;
+  const part = (sel, html) => { const p = sheet.querySelector(sel); if (p.__h === html) return false; p.__h = html; p.innerHTML = html; return true; };
+  part('.sh-top', sh.top || '');
+  const heroNew = part('.sh-hero', sh.hero || ''), bodyNew = part('.sh-body', sh.body || '');
+  part('.sh-foot', sh.foot || '');
+  if (!fresh && sh.view !== view0) MODAL.at = performance.now();   // a new view under the finger: the second tap of a double tap is not for it
+  if (!fresh && FX.on && sh.view !== view0) {                  // the market's list and a card from it slide past each other
+    ['.sh-hero', '.sh-body'].forEach(s => { const p = sheet.querySelector(s); p.classList.remove('fwd', 'bwd'); void p.offsetWidth; p.classList.add(sh.view === 'list' ? 'bwd' : 'fwd'); });
+    sheet.querySelector('.sh-scroll').scrollTop = 0;
+  }
+  const hero = sheet.querySelector('.mkhero');
+  // another of your cards: it comes in from the side you swiped towards
+  if (heroNew && !fresh && FX.on && hero && MODAL.slide && hero.dataset.k !== hero0) {
+    const s = MODAL.slide, sc = hero.querySelector('.sc');
+    if (sc) sc.animate([{ transform: `translateX(${s * 90}px) rotate(${s * 7}deg)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 320, easing: 'cubic-bezier(.2,.9,.3,1.1)' });
+  }
+  if (heroNew || bodyNew) { MODAL.view = sh.view || ''; MODAL.slide = 0; MODAL.heroK = hero ? hero.dataset.k : ''; }
+  if (fresh) sheetEnter(el);
+  if (!sheet.contains(document.activeElement)) {
+    // focus stays on the control it was on; only a sheet just opened picks one (the safe one, for "end your turn?")
+    const f = (fkey && sheet.querySelector(fkey)) || (fresh ? (sh.kind === 'end' ? sheet.querySelector('.dlgacts [data-p=shclose]') : sheet.querySelector('[data-p=shplay]:not(:disabled),[data-p=buy]:not(:disabled)') || sheet.querySelector('.shx')) : null);
+    if (f) f.focus(how);
+  }
+}
+const SHEET_MS = 440, SHEET_EASE = 'cubic-bezier(.16,1,.3,1)';
+function sheetEnter(el) {
+  if (!FX.on || document.hidden) return;
+  // the card lifts out of your hand and grows into the sheet, riding up with it
+  const hero = el.querySelector('.mkhero .sc'), r0 = MODAL.fromRect, sheet = el.querySelector('.sheet');
+  let from = null;
+  if (hero && r0 && r0.width) {
+    const r1 = hero.getBoundingClientRect(), lift = el.classList.contains('dlg') ? 0 : sheet.offsetHeight * 1.05;
+    from = { dx: r0.left + r0.width / 2 - (r1.left + r1.width / 2), dy: r0.top + r0.height / 2 - (r1.top + r1.height / 2) - lift, s: r0.width / r1.width };
+  }
+  el.classList.add('enter');
+  setTimeout(() => el.classList.remove('enter'), 700);
+  if (from) hero.animate([{ transform: `translate(${from.dx.toFixed(1)}px,${from.dy.toFixed(1)}px) scale(${from.s.toFixed(3)}) rotate(-8deg)`, filter: 'brightness(1.5)' },
+    { transform: 'translate(0,0) scale(1) rotate(0)', filter: 'brightness(1)' }], { duration: SHEET_MS, easing: SHEET_EASE });
+  else if (hero) hero.animate([{ transform: 'scale(.8) rotate(-4deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 420, delay: 90, easing: 'cubic-bezier(.2,.9,.3,1.2)', fill: 'backwards' });
+}
+/* A sheet on its way out. It is moved aside so the page, or the next sheet, carries
+   straight on underneath it while it plays its exit. */
+function sheetLeave(el) {
+  const out = $('#p-modal-out'), exit = MODAL.exit || 'close', kind = el.dataset.kind;
+  MODAL.exit = '';
+  el.inert = true; el.classList.remove('enter');
+  if (!out || !FX.on || document.hidden) { el.remove(); return; }
+  const sheet = el.querySelector('.sheet'), hero = el.querySelector('.mkhero .sc');
+  const r = hero && hero.getBoundingClientRect();              // measured before it moves, while it is still where the eye is
+  out.appendChild(el);
+  el.classList.add('leave', 'x-' + exit);
+  if (exit === 'swipe' && sheet) sheet.animate([{ transform: sheet.style.transform || 'none' }, { transform: 'translateY(105%)' }], { duration: 230, easing: 'cubic-bezier(.3,0,.8,.4)', fill: 'forwards' });
+  if (hero && r && r.width) {
+    if (kind === 'card' && (exit === 'close' || exit === 'swipe')) {
+      // back into your hand, if it is on screen to go back to
+      const k = el.querySelector('.mkhero').dataset.k, dst = document.querySelector(`#ps-hand [data-p=card][data-arg="${k}"] .sc`), t = dst && dst.getBoundingClientRect();
+      if (t && t.width && inView(t.left + t.width / 2, t.top + t.height / 2)) heroFly(hero, r, t, () => {
+        const b = dst.closest('.stbtn'); if (b) b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.18)' }, { transform: 'scale(1)' }], { duration: 300, easing: 'cubic-bezier(.2,.9,.3,1.4)' });
+      });
+    } else if (exit === 'played' || exit === 'bought' || exit === 'aim') heroFly(hero, r, null);
+  }
+  if (exit === 'ended') {
+    const s = document.createElement('div'); s.className = 'stampx'; s.textContent = 'Turn over';
+    fxLayer().appendChild(s); setTimeout(() => s.remove(), 950);
+  }
+  setTimeout(() => el.remove(), exit === 'ended' ? 680 : 520);
+}
+/* the big card, lifted out of a sheet that is leaving: to its place in your hand, or up and away */
+function heroFly(hero, r, t, done) {
+  const c = hero.cloneNode(true);
+  c.style.cssText = `position:fixed;left:${r.left.toFixed(1)}px;top:${r.top.toFixed(1)}px;margin:0;z-index:2`;
+  fxLayer().appendChild(c); hero.style.visibility = 'hidden';
+  const a = t ? c.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${(t.left + t.width / 2 - (r.left + r.width / 2)).toFixed(1)}px,${(t.top + t.height / 2 - (r.top + r.height / 2)).toFixed(1)}px) scale(${(t.width / r.width).toFixed(3)}) rotate(-5deg)`, opacity: 1, offset: 0.92 },
+    { transform: `translate(${(t.left + t.width / 2 - (r.left + r.width / 2)).toFixed(1)}px,${(t.top + t.height / 2 - (r.top + r.height / 2)).toFixed(1)}px) scale(${(t.width / r.width).toFixed(3)})`, opacity: 0 }],
+    { duration: 460, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' })
+    : c.animate([{ transform: 'none', opacity: 1, filter: 'brightness(1)' }, { transform: 'translateY(-26px) scale(1.06)', opacity: 1, filter: 'brightness(1.7)', offset: 0.35 }, { transform: 'translateY(-90px) scale(.72)', opacity: 0, filter: 'brightness(2.2)' }],
+      { duration: 420, easing: 'cubic-bezier(.3,.1,.6,1)', fill: 'forwards' });
+  let fin = false; const end = () => { if (fin) return; fin = true; c.remove(); if (done) done(); };
+  a.onfinish = end; setTimeout(end, 700);
+}
+/* the next or previous card of yours, from the arrows or a swipe across the big one */
+function switchCard(dir) {
+  const st = G.state, me = st && playerOf(st, PID); if (!me) return;
+  const held = CARD_ORDER.filter(k => heldCard(me, k)); if (held.length < 2) return;
+  const i = Math.max(0, held.indexOf(ui.card));
+  ui.card = held[(i + dir + held.length) % held.length]; ui.res = null; ui.take = {}; MODAL.slide = dir;
+  renderPlayer();
+}
+/* Dragging a sheet: down, from its top or its card, puts it away; across the card, turns to the next one. */
+const DRAG = { d: null };
+document.addEventListener('pointerdown', ev => {
+  const h = ev.target.closest && ev.target.closest('#p-modal .modal:not(.dlg) .grab, #p-modal .modal:not(.dlg) .shtop, #p-modal .modal:not(.dlg) .mkhero');
+  if (!h || ev.target.closest('button') || (ev.pointerType === 'mouse' && ev.button !== 0)) return;
+  const m = h.closest('.modal'), hero = h.classList.contains('mkhero');
+  if (hero && !m.querySelector('.swipe')) return;              // one card: nothing to swipe to, and up and down scrolls
+  DRAG.d = { m, sheet: m.querySelector('.sheet'), el: h, x0: ev.clientX, y0: ev.clientY, t0: performance.now(), id: ev.pointerId, axis: '', hero, x: 0, y: 0 };
+  // the top is captured straight away; the card only once the gesture turns out to go across, so a scroll stays a scroll
+  if (!hero) try { h.setPointerCapture(ev.pointerId); } catch (e) { /* capture is a nicety */ }
+});
+document.addEventListener('pointermove', ev => {
+  const d = DRAG.d; if (!d || ev.pointerId !== d.id) return;
+  const dx = ev.clientX - d.x0, dy = ev.clientY - d.y0;
+  if (!d.axis) {
+    if (Math.hypot(dx, dy) < 8) return;
+    d.axis = !d.hero ? 'y' : Math.abs(dx) > Math.abs(dy) ? 'x' : '';
+    if (!d.axis) { DRAG.d = null; return; }                    // up or down on the card: the sheet scrolls
+    if (d.hero) try { d.el.setPointerCapture(d.id); } catch (e) { /* capture is a nicety */ }
+  }
+  if (d.axis === 'y') {
+    d.y = Math.max(0, dy);
+    d.sheet.style.transform = `translateY(${d.y.toFixed(1)}px)`;
+    const s = d.m.querySelector('.scrim'); if (s) s.style.opacity = String(Math.max(0.15, 1 - d.y / 420));
+  } else {
+    d.x = dx;
+    const sc = d.sheet.querySelector('.mkhero .sc'); if (sc) sc.style.transform = `translateX(${dx.toFixed(1)}px) rotate(${(dx / 18).toFixed(2)}deg)`;
+  }
+});
+const dragEnd = ev => {
+  const d = DRAG.d; if (!d || (ev && ev.pointerId !== undefined && ev.pointerId !== d.id)) return;
+  DRAG.d = null;
+  if (!d.axis) return;
+  MODAL.swallow = true; setTimeout(() => { MODAL.swallow = false; }, 0);          // that was a drag, not a tap
+  const ms = Math.max(1, performance.now() - d.t0);
+  if (d.axis === 'y') {
+    if (d.y > 110 || d.y / ms > 0.65) { closeSheet('swipe'); return; }
+    const s = d.m.querySelector('.scrim'); if (s) s.style.opacity = '';
+    d.sheet.animate([{ transform: d.sheet.style.transform || 'none' }, { transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.9,.3,1.25)' });
+    d.sheet.style.transform = '';
+  } else {
+    const sc = d.sheet.querySelector('.mkhero .sc');
+    if (Math.abs(d.x) > 60 || Math.abs(d.x) / ms > 0.5) { switchCard(d.x < 0 ? 1 : -1); return; }
+    if (sc) { sc.animate([{ transform: sc.style.transform || 'none' }, { transform: 'none' }], { duration: 240, easing: 'cubic-bezier(.2,.9,.3,1.25)' }); sc.style.transform = ''; }
+  }
+};
+document.addEventListener('pointerup', dragEnd);
+document.addEventListener('pointercancel', dragEnd);
+
+/* ---------- the back button ----------
+   A sheet or the full-screen board each leave a step in the browser's history, so
+   the phone's own back gesture closes them instead of leaving the game. */
+const LAYER = { n: 0, skip: 0 };
+function layerPush() { try { history.pushState({ rtcLayer: ++LAYER.n }, ''); } catch (e) { LAYER.n = Math.max(0, LAYER.n - 1); } }
+function layerPop() {
+  if (LAYER.n <= 0) return;
+  LAYER.n--;
+  // Only ever step back off an entry of our own. A count that has drifted (the browser refused a push, the page was
+  // reloaded) must never walk the phone out of the game, so it is put right instead.
+  if (!(history.state && history.state.rtcLayer)) { if (LAYER.n) console.warn('rtcity: layer count drifted by', LAYER.n); LAYER.n = 0; return; }
+  LAYER.skip++; try { history.back(); } catch (e) { LAYER.skip--; }
+}
+// a reload while a sheet or the full-screen board was up lands on one of our steps: make it the page again
+try { if (history.state && history.state.rtcLayer) history.replaceState(null, ''); } catch (e) { /* no history here */ }
+if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('popstate', () => {
+  if (LAYER.skip > 0) { LAYER.skip--; return; }
+  if (LAYER.n <= 0) return;
+  LAYER.n--;
+  if (ui.sheet) closeSheet('close', true); else if (ui.full) fullOff(true);
+});
+
+/* ---------- the board, full screen ----------
+   Some players watched the game on the board alone. Full screen is the board and,
+   over it, only what you need: whose move it is, your hand, and the dock. An Android
+   phone hides its own bars too; an iPhone keeps them and the board fills the rest. */
+const FS = { api: false, leaving: false };
+function fullOn() {
+  if (ui.full || !G.state) return;
+  const box = document.querySelector('.phone .boardbox'), r0 = box && box.getBoundingClientRect(), sec = document.querySelector('#ps-board > section');
+  ui.full = true; P.fullY = window.scrollY; layerPush();
+  document.body.style.setProperty('--fullph', sec ? sec.offsetHeight + 'px' : '0px');
+  document.body.classList.add('bfull');
+  const de = document.documentElement;
+  if (de.requestFullscreen && document.fullscreenEnabled && !document.fullscreenElement) {
+    try { de.requestFullscreen({ navigationUI: 'hide' }).then(() => { FS.api = true; }, () => {}); } catch (e) { /* not here */ }
+  }
+  safeRender();
+  const nb = document.querySelector('.phone .boardbox'), hud = $('#p-hud');
+  if (!FX.on || document.hidden || !nb) return;
+  if (r0 && r0.width) {
+    const W = window.innerWidth, H = window.innerHeight, cut = `inset(${Math.max(0, r0.top).toFixed(0)}px ${Math.max(0, W - r0.right).toFixed(0)}px ${Math.max(0, H - r0.bottom).toFixed(0)}px ${Math.max(0, r0.left).toFixed(0)}px round 18px)`;
+    nb.animate([{ clipPath: cut }, { clipPath: 'inset(0px 0px 0px 0px round 0px)' }], { duration: 560, easing: SHEET_EASE });
+    const b3 = nb.querySelector('.board3d'); if (b3) b3.animate([{ transform: 'scale(.92)', opacity: 0.7 }, { transform: 'none', opacity: 1 }], { duration: 560, easing: SHEET_EASE });
+  }
+  if (hud) { hud.classList.add('entering'); setTimeout(() => hud.classList.remove('entering'), 800); }
+}
+function fullOff(fromHistory) {
+  if (!ui.full || FS.leaving) return;
+  if (!fromHistory) layerPop();
+  if (document.fullscreenElement && FS.api) { FS.api = false; try { document.exitFullscreen().catch(() => {}); } catch (e) { /* gone already */ } }
+  const finish = () => {
+    FS.leaving = false; ui.full = false; document.body.classList.remove('bfull', 'leaving'); document.body.style.removeProperty('--fullph');
+    safeRender(); window.scrollTo(0, P.fullY || 0);
+  };
+  const box = document.querySelector('.phone .boardbox');
+  if (!FX.on || document.hidden || !box) { finish(); return; }
+  FS.leaving = true;
+  // where the board will sit on the page: measured with the page put back for a moment, before anything is painted
+  document.body.classList.remove('bfull');
+  const r = box.getBoundingClientRect(), dy = window.scrollY - (P.fullY || 0), W = window.innerWidth, H = window.innerHeight;
+  document.body.classList.add('bfull', 'leaving');
+  const px = v => Math.max(0, v).toFixed(0) + 'px';
+  const cut = r.width ? `inset(${px(r.top + dy)} ${px(W - r.right)} ${px(H - r.bottom - dy)} ${px(r.left)} round 18px)` : 'inset(40% 10% 40% 10% round 18px)';
+  const a = box.animate([{ clipPath: 'inset(0px 0px 0px 0px round 0px)' }, { clipPath: cut }], { duration: 420, easing: 'cubic-bezier(.45,0,.15,1)', fill: 'forwards' });
+  let done = false; const end = () => { if (done) return; done = true; finish(); };
+  a.onfinish = end; setTimeout(end, 560);
+}
+const fullToggle = () => (ui.full ? fullOff() : fullOn());
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && FS.api) { FS.api = false; if (ui.full) fullOff(); } });
+/* what floats over the full-screen board: whose move, the last roll, your hand */
+function hudHTML(st, me) {
+  const g = guide(st, me ? me.pid : null), veil = FX.veil && st.phase === 'turn';
+  const now = veil ? (FX.veil === 'roll' ? 'The dice are rolling…' : 'Opening the crate…') : g.now;
+  const sum = st.dice ? st.dice[0] + st.dice[1] : 0;
+  const dice = st.phase === 'turn' && st.dice && !veil ? `<span class="huddice${sum >= 6 && sum <= 8 ? ' hot' : ''}" aria-label="The last roll: ${sum}">${dieHTML(st.dice[0])}${dieHTML(st.dice[1])}<strong>${sum}</strong></span>` : '';
+  const hand = me && (st.phase === 'turn' || st.phase === 'place' || st.phase === 'over') ? `<div class="hudhand" aria-label="Your cards: ${esc(handList(me.hand) || 'none')}">${RES_ORDER.map(r => {
+    const n = Math.max(0, (me.hand[r] || 0) - heldBack(me, r)); return `<span data-res="${r}">${rcard(r, { size: 's', n, miss: !n })}</span>`; }).join('')}` +
+    (shownCards(me) ? `<button class="pk" data-p="sheet" data-arg="card" aria-label="Your skills and talents">${scard('back', { size: 'xs' })}${shownCards(me)}</button>` : '') + '</div>' : '';
+  const act = activePid(st), score = st.phase === 'turn' || st.phase === 'over' || st.phase === 'place' ? `<div class="hudscore" aria-label="Points">${st.players.map(p =>
+    `<span class="${p.pid === act ? 'now' : ''}"><i class="chip" style="background:var(--p-${p.color})"></i>${vpOf(st, p.pid)}</span>`).join('')}</div>` : '';
+  return `<div class="hudtop"><div class="hudwho${g.yours ? ' you' : ''}"><b>${!g.yours && g.ap ? `<span class="turnchip" style="background:var(--p-${g.ap.color})"></span>` : ''}${esc(g.title)}</b><span>${esc(now)}</span></div>` +
+    `${dice}<button class="hudx" data-p="full" aria-label="Leave full screen">${ICO_SHRINK}</button></div><div class="hudrow">${hand}${score}</div>`;
+}
+
+/* ---------- look here ----------
+   When the game wants something of you, the part of the page where you give it is
+   brought into view and lit for a moment. Never while you are reading a sheet: then
+   it waits, and the sheet says what is waiting. */
+function attend(focus, later) {
+  if (!focus) return;
+  if (document.body.classList.contains('modalopen')) { P.attnLater = focus; return; }
+  if (ui.full) {
+    if (focus === 'panel') { fullOff(); setTimeout(() => attend(focus, true), 340); return; }   // a step you must take, and it is on the page
+    const b = $('#ps-bar'); if (b && (focus === 'bar' || focus === 'offer')) light(b);     // an offer is answered from the dock, full screen or not
+    return;
+  }
+  const slot = focus === 'bar' ? $('#ps-bar') : $('#ps-' + (focus === 'offer' ? 'panel' : focus));
+  if (!slot || !slot.firstChild) return;
+  setTimeout(() => {
+    const smooth = FX.on && !document.hidden ? 'smooth' : 'auto';
+    if (focus === 'board') {
+      const b = slot.querySelector('.boardbox') || slot;
+      try { b.scrollIntoView({ block: 'center', behavior: smooth }); } catch (e) { b.scrollIntoView(false); }
+    } else if (focus === 'panel' || focus === 'offer') {
+      const r = slot.getBoundingClientRect(), dock = $('#ps-bar'), room = window.innerHeight - (dock && dock.firstChild ? dock.offsetHeight + 16 : 0);
+      if (r.top < 8 || r.top > room - 120) window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 12), behavior: smooth });
+    }
+    light(slot);
+  }, later ? 40 : 90);
+}
+function light(slot) {
+  slot.classList.remove('attn'); void slot.offsetWidth; slot.classList.add('attn');
+  clearTimeout(slot.__attn); slot.__attn = setTimeout(() => slot.classList.remove('attn'), 2600);
+}
+document.addEventListener('click', () => { P.tapAt = performance.now(); }, true);
+document.addEventListener('keydown', () => { P.tapAt = performance.now(); }, true);
+/* change the page without moving the part of it you are looking at */
+function holdStill(fn) {
+  const a = anchorOf(); fn();
+  if (a) { const d = a.el.getBoundingClientRect().top - a.top; if (Math.abs(d) >= 1) window.scrollBy(0, d); }
+}
+/* the part of the page to hold still when a move of somebody else's changes what is above it */
+function anchorOf() {
+  if (window.scrollY < 24 || ui.full) return null;
+  let best = null, over = null;
+  PSLOTS.forEach(k => {
+    if (k === 'bar') return;
+    const el = document.getElementById('ps-' + k); if (!el || !el.firstChild) return;
+    const r = el.getBoundingClientRect(); if (!r.height) return;
+    if (r.top >= 0 && (!best || r.top < best.top)) best = { el, top: r.top };
+    else if (r.top < 0 && r.bottom > 0) over = { el, top: r.top };
+  });
+  return best || over;
+}
+
+/* ---------- your turn, and whose turn it is now ---------- */
+function fxYourTurn(st, me) {
+  if (!FX.on || document.hidden || !me) return;
+  const place = st.phase === 'place', el = document.createElement('div');
+  el.className = 'yturn'; el.style.setProperty('--pc', `var(--p-${me.color})`);
+  el.innerHTML = `<div class="yflash"></div><div class="yband"><span class="yt">${place ? 'Your move' : 'Your turn'}</span><span class="ys">${place ? (st.step === 'operation' ? 'Place an operation' : 'Lay a street') : 'Roll the dice'}</span></div>`;
+  fxLayer().appendChild(el); setTimeout(() => el.remove(), 1700);
+}
+function fxHandoff(p) {
+  if (!FX.on || document.hidden || !p) return;
+  const el = document.createElement('div');
+  el.className = 'handoff'; el.style.setProperty('--pc', `var(--p-${p.color})`);
+  el.innerHTML = `<span class="turnchip" style="background:var(--p-${p.color})"></span>${esc(p.name)}&rsquo;s turn`;
+  fxLayer().appendChild(el); setTimeout(() => el.remove(), 2100);
+}
+/* somebody else's skill or talent, on a phone: told in a line at the top, unless it lands on you */
+function fxHitsMe(st, ev) {
+  if (ev.k === 'shakedown') return true;
+  if (ev.k === 'fight') return !!st.fight && st.fight.d === PID;
+  if (ev.k === 'tipoff') return GEO.hexes[st.board.police].vs.some(v => st.buildings[v] && st.buildings[v].pid === PID);
+  if (ev.k === 'rewind' && ev.gone) return ev.gone[2] === PID || ev.gone[0] === 'flip';   // placeSig is kind:at:pid:t; a street won in a fight has two owners
+  return false;
+}
+function fxPlayMini(ev, p, c) {
+  const el = document.createElement('div');
+  el.className = 'fxmini ' + c.kind;
+  el.innerHTML = `${scard(ev.k, { size: 's' })}<p><b>${esc(p.name)} ${ev.k === 'legend' ? 'is a Local Legend' : 'plays ' + esc(c.name)}</b><span>${esc(c.verb)}</span></p>`;
+  fxLayer().appendChild(el);
+  setTimeout(() => el.remove(), 2700);
+  return wait(ev.k === 'fight' ? 700 : 900).then(() => {
+    // the card has been told: now the crews walk out
+    if (ev.k === 'fight' && FX.fightPre) { FX.fightNew = FX.fightPre; FX.fightPre = null; AR.mounted = ''; arenaRefresh(); }
+  });
+}
+
+/* ---------- the dock's buttons changing under a thumb ----------
+   The play-test's lost turns: a second tap on Build or Roll landed on whatever the dock
+   had just become. When its buttons change they play in, and ignore taps for a moment. */
+function dockSync() {
+  const bar = $('#ps-bar');
+  const sig = bar ? Array.from(bar.querySelectorAll('button')).map(b => (b.dataset.p || '') + ':' + (b.dataset.arg || '')).join(',') : '';
+  if (sig === P.dockSig) return;
+  const had = P.dockSig; P.dockSig = sig;
+  if (!had || !sig) return;
+  P.dockArm = performance.now() + 450;
+  if (FX.on && !document.hidden) { bar.classList.remove('arming'); void bar.offsetWidth; bar.classList.add('arming'); clearTimeout(P.armT); P.armT = setTimeout(() => bar.classList.remove('arming'), 560); }
+}
+/* the fight screen leaving, rather than vanishing */
+function arenaAway(fn) {
+  const a = $('#p-arena .arena');
+  const go = () => { fn(); safeRender(); };
+  if (a && FX.on && !document.hidden && !$('#p-arena').classList.contains('mini')) { a.classList.add('leaving'); setTimeout(go, 340); } else go();
+}
+/* Folding a section: its contents fade and the card draws in, then it folds. Opening,
+   it grows to its new size and the contents come in after it. */
+function foldSec(pb) {
+  const id = pb.dataset.arg, shut = shutOf(id);
+  const flip = () => { SHUT[id] = !shut; store('rtcity.shut', SHUT); renderPlayer(); };
+  const anim = FX.on && !document.hidden;
+  if (id === 'key') {
+    const kp = $('#p-keypanel .keypanel');
+    if (anim && !shut && kp) { kp.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 170, easing: 'ease-in', fill: 'forwards' }); setTimeout(flip, 160); return; }
+    flip(); const k2 = $('#p-keypanel .keypanel'); if (anim && k2) k2.classList.add('kin'); return;
+  }
+  const secEl = pb.closest('section'), slot = pb.closest('.slot');
+  if (!anim || !secEl || !slot) { flip(); return; }
+  if (!shut) {
+    const head = secEl.querySelector('.sechead'), h0 = secEl.offsetHeight, h1 = head.offsetHeight + (secEl.classList.contains('bare') ? 20 : 22);
+    Array.from(secEl.children).forEach(c => { if (c !== head) c.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-6px)' }], { duration: 150, fill: 'forwards' }); });
+    secEl.style.overflow = 'hidden';
+    const a = secEl.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }], { duration: 230, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+    let done = false; const go = () => { if (done) return; done = true; flip(); };
+    a.onfinish = go; setTimeout(go, 320);
+    return;
+  }
+  const h0 = secEl.offsetHeight;
+  flip();
+  const h2 = slot.querySelector(`.sechead[data-arg="${id}"]`), s2 = h2 && h2.closest('section'); if (!s2) return;
+  const h1 = s2.offsetHeight; s2.style.overflow = 'hidden';
+  const a = s2.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }], { duration: 320, easing: 'cubic-bezier(.2,.9,.3,1)' });
+  a.onfinish = () => { s2.style.overflow = ''; };
+  Array.from(s2.children).slice(1).forEach(c => c.classList.add('secbody-in'));
+}
+
 function renderPlayer() {
   const st = G.state, screen = playerScreen(), me = st && playerOf(st, PID);
   if (st) useGeo(st.board);
   fxObserve(st); sndObserve(st);
   if (!$('#p-main')) {
-    $('#app').innerHTML = `<header class="bar"><span class="brand">Run the <i>City</i></span><span class="muted small">Table ${esc(joinRoom)}</span><span class="grow"></span><span id="p-status" class="pill">Connecting</span><span id="p-key" style="display:contents"></span>${sndBtnHTML()}</header>
-      <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-arena"></div><div id="p-modal"></div>`;
+    $('#app').innerHTML = `<header class="bar pbar"><span class="brand">Run the <i>City</i></span><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span>${sndBtnHTML()}</header>
+      <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
   }
-  $('#p-status').className = 'pill' + (G.online ? ' on' : ''); setHTML('#p-status', G.online ? 'Connected' : 'Connecting');
+  // Was this state the table's answer to a move of your own? Only that may move you on from what you were doing.
+  const ownMove = !!(ui.pending && st && st.v > (ui.pendV | 0));
+  // Something other than your own tap is about to change the page (a move, the dice landing, the table going
+  // offline): hold still the part of it you are looking at. Measured before anything on the page is written;
+  // a render your tap asked for is left alone, since it changes what you touched.
+  const anchor = st && (ownMove || performance.now() - (P.tapAt || -1e9) > 450) ? anchorOf() : null;
+  // the table's code stands in for "Connected": the dot says whether you are, the letters say to which table
+  const pill = $('#p-status');
+  pill.className = 'pill' + (G.online ? ' on' : ''); pill.title = G.online ? `Connected to table ${joinRoom}` : 'Connecting to the table';
+  setHTML('#p-status', G.online ? esc(joinRoom) : 'Connecting');
   setHTML('#p-key', st ? keyBtnHTML() : ''); setHTML('#p-keypanel', st ? keyPanelHTML(st, me) : '');
   setHTML('#p-alert', P.newer ? '<div class="warn"><p><strong>This table runs a newer version of the game.</strong> Reload to catch up. Your seat is safe.</p><button class="btn" data-p="reload">Reload</button></div>'
     : st && P.hostUp === false ? '<div class="warn"><p><strong>The table screen is offline.</strong> Your seat is safe. Play resumes when it reconnects.</p></div>' : '');
-  if (ui.pending && st && st.v > (ui.pendV | 0)) { ui.pending = false; clearTimeout(ui.pendTimer); }   // the table answered, whatever it changed
+  if (ownMove) { ui.pending = false; clearTimeout(ui.pendTimer); }
   const turnKey = st ? [st.phase, st.round, st.placeIdx, st.step, st.turnIdx, st.turnNo, Object.keys(st.buildings || {}).length,
     Object.keys(st.streets || {}).length, me ? handCount(me) : 0, st.rolls && st.rolls[PID] ? 1 : 0,
     st.offer ? 'o' + Object.keys(st.offer.replies).length : '-', JSON.stringify(st.played || {}), st.free | 0, me ? cardCount(me) + ':' + (me.luck | 0) : '-',
     // the other crew locking in is not a reason to forget the boost you were about to use: only a new round is
     st.fight ? String(st.fight.rounds.length) : '-', st.dice3 ? st.dice3.join('') : '-', st.board.police].join('|') : '';
   if (turnKey !== P.turnKey) {
-    // a trade leaves you in the trade panel, because one trade usually wants another;
-    // anything else that moves the game on puts you back at the list of moves.
     const stepKey = st ? [st.phase, st.step, st.turnIdx].join('|') : '';
-    // a skill or talent being read or aimed stays open through somebody else's move, as the market and the terminal do
-    const aiming = typeof ui.mode === 'string' && ui.mode.startsWith('card:');
-    const stay = stepKey === P.stepKey && (ui.mode === 'trade' || ui.mode === 'market' || ui.mode === 'cards' || aiming);
-    P.turnKey = turnKey; ui.pending = false; ui.drop = {}; ui.offGive = {}; ui.offWant = {}; clearTimeout(ui.pendTimer);
-    if (!(stay && aiming)) { ui.sel = null; ui.from = null; ui.res = null; ui.take = {}; ui.pickI = null; }
+    const moved = stepKey !== P.stepKey;
+    // Somebody else's move never takes you out of what you were doing. Your own move, or the game going on to
+    // another step, puts you back at the list of moves; a bank trade stays open after one of your own, because one
+    // trade usually wants another. A sheet you are reading is left alone either way: only you, or your own move, close it.
+    const stay = !moved && !!ui.mode && (!ownMove || ui.mode === 'trade'), keep = !moved && !ownMove;
+    P.turnKey = turnKey; ui.pending = false; clearTimeout(ui.pendTimer);
+    if (!keep) { ui.drop = {}; ui.offGive = {}; ui.offWant = {}; ui.sel = null; ui.from = null; ui.pickI = null; if (ui.sheet !== 'card') { ui.res = null; ui.take = {}; } }
     if (!stay) { ui.mode = null; ui.give = null; ui.get = null; }
-    // a card open in the market stays open through somebody else's move; buying one of your own closes it
-    const held = me ? cardCount(me) : 0;
-    if (!(stay && ui.mode === 'market' && held === P.held)) ui.buy = null;
-    P.held = held;
     ui.keep = null; ui.boost = null; ui.backup = false;
     P.stepKey = stepKey;
+    // Road Crew: while there are free streets to lay, laying them is what the phone is for
+    if (st && me && st.phase === 'turn' && st.step === 'act' && activePid(st) === me.pid && (st.free | 0) > 0 && !ui.mode &&
+      P.freeBack !== `${st.turnIdx}:${st.turnNo}:${st.free}` && left(st, me.pid, 'street') > 0 && legalStreets(st, me.pid).length) ui.mode = 'street';
   }
+  // a sheet closes itself once your own move has done what it was opened for
+  if (st && me && ui.sheet === 'card' && ui.sheetPlay && st.played && st.played[me.pid] === ui.sheetPlay) { ui.sheet = null; ui.sheetPlay = null; ui.res = null; ui.take = {}; MODAL.exit = 'played'; layerPop(); }
+  if (st && me && ui.sheet === 'market' && ui.sheetBuy && heldCard(me, ui.sheetBuy.k) > ui.sheetBuy.n) { ui.sheet = null; ui.buy = null; ui.sheetBuy = null; MODAL.exit = 'bought'; layerPop(); }
   const changed = screen !== P.screen; P.screen = screen;
 
   if (screen === 'join') {
@@ -11062,7 +11897,8 @@ function renderPlayer() {
         <button class="btn big" data-p="join">Join the table</button></section><div class="boardbox" id="p-board"></div>`;
     }
     setHTML('#p-sw', COLORS.map(c => `<button class="sw" data-p="pick" data-arg="${c}" aria-pressed="${c === P.color}" ${free.includes(c) ? '' : 'disabled'}><span class="chip" style="background:var(--p-${c})"></span>${free.includes(c) ? cap(c) : 'Taken'}</button>`).join(''));
-    setHTML('#p-board', boardView(st));
+    setHTML('#p-board', fullBtnHTML() + boardView(st));
+    setHTML('#p-hud', ui.full ? hudHTML(st, null) : '');
     return;
   }
 
@@ -11070,14 +11906,14 @@ function renderPlayer() {
   if (screen === 'connecting') h = '<section class="card"><h1>Finding the table…</h1><p class="muted">Connecting your phone to the table screen.</p></section>';
   else if (screen === 'error') h = `<section class="card"><h1>Could not connect</h1><p>${esc(P.error)}</p><button class="btn" data-p="reload">Try again</button></section>`;
   else if (screen === 'notable') h = `<section class="card"><h1>No table answers to ${esc(joinRoom)}</h1><p class="muted">The table may have closed, or the code is from an older game. Scan the code on the table screen again.</p><button class="btn" data-p="reload">Look again</button></section>`;
-  else if (screen === 'full') h = '<section class="card"><h1>All six seats are taken</h1><p class="muted">You can watch from here. If someone leaves, a seat opens up.</p></section><div class="boardbox">' + boardView(st) + '</div>';
-  else if (screen === 'spectate') h = '<section class="card"><h1>This game has already started</h1><p class="muted">You are watching. If you were seated before, open the join link on the same phone and browser you used.</p></section><div class="boardbox">' + boardView(st) + '</div>';
+  else if (screen === 'full') h = '<section class="card"><h1>All six seats are taken</h1><p class="muted">You can watch from here. If someone leaves, a seat opens up.</p></section><div class="boardbox">' + fullBtnHTML() + boardView(st) + '</div>';
+  else if (screen === 'spectate') h = '<section class="card"><h1>This game has already started</h1><p class="muted">You are watching. If you were seated before, open the join link on the same phone and browser you used.</p></section><div class="boardbox">' + fullBtnHTML() + boardView(st) + '</div>';
   else if (screen === 'lobby') {
     const free = COLORS.filter(c => !st.players.some(p => p.color === c));
     h = `<section class="card">${meHTML(me, "You're in. Waiting for the table to start.")}
       <div><p class="small muted">Change colour</p><div class="swatches">${COLORS.map(c => `<button class="sw" data-p="recolor" data-arg="${c}" aria-pressed="${c === me.color}" ${c === me.color || free.includes(c) ? '' : 'disabled'}><span class="chip" style="background:var(--p-${c})"></span>${c === me.color ? 'Yours' : free.includes(c) ? cap(c) : 'Taken'}</button>`).join('')}</div></div>
       <p class="small muted">${st.players.length} of ${MAX_PLAYERS} seated: ${esc(st.players.map(p => p.name).join(', '))}</p>
-      <button class="btn ghost" data-p="leave">Leave the table</button></section><div class="boardbox">${boardView(st)}</div>`;
+      <button class="btn ghost" data-p="leave">Leave the table</button></section><div class="boardbox">${fullBtnHTML()}${boardView(st)}</div>`;
   } else if (screen === 'rolloff') {
     const mine = st.rolls[PID], inIt = st.contenders.includes(PID), must = inIt && !mine;
     h = `<section class="card">${meHTML(me, !inIt ? 'You are out of this tie-break.' : must ? 'Highest roll places first.' : `You rolled ${mine[0] + mine[1]}. Waiting for the others.`)}
@@ -11087,15 +11923,36 @@ function renderPlayer() {
     const parts = turnParts(st, me), main = $('#p-main');
     if (!$('#ps-move')) { main.__h = null; main.innerHTML = PSLOTS.map(k => `<div id="ps-${k}" class="slot${k === 'bar' ? ' actionbar' : ''}"></div>`).join(''); }
     PSLOTS.forEach(k => setHTML('#ps-' + k, parts[k] || ''));
-    h = null; P.need = parts.need; P.modal = parts.modal || '';
+    h = null; P.need = parts.need; P.focus = parts.focus;
   }
-  if (h !== null) { P.need = false; setHTML('#p-main', h); }
-  modalSync(h === null ? P.modal : '');
+  if (h !== null) { P.need = false; P.focus = ''; setHTML('#p-main', h); }
+  const pm = $('main.phone'); if (pm) pm.classList.toggle('focusboard', !!P.need);
+  if (anchor) { const d = anchor.el.getBoundingClientRect().top - anchor.top; if (Math.abs(d) >= 1) window.scrollBy(0, d); }
+  setHTML('#p-hud', ui.full && st ? hudHTML(st, me) : '');
+  // a sheet with nothing left to show (the table's undo took the step away, the last card went) is forgotten, not kept to pop up later
+  const sh = sheetOf(st, me);
+  if (ui.sheet && !sh) { ui.sheet = null; ui.buy = null; ui.sheetPlay = null; ui.sheetBuy = null; layerPop(); }
+  modalSync(sh);
   arenaSync(st, me, false);
-  // the steps whose answer is a tap on the board
-  const st2 = G.state;
-  if (st2 && me && P.need) boardIntoView([screen, st2.step, st2.placeIdx, st2.turnIdx, st2.turnNo, ui.mode || ''].join('|'));
-  else if (P.scrolled) P.scrolled = null;
+  dockSync();
+  // what needs you, brought into view once each time it changes
+  const fk = st && me && P.focus ? [screen, st.step, st.turnIdx, st.turnNo, st.placeIdx, P.focus, ui.mode || '', st.free | 0].join('|') : '';
+  if (fk && fk !== P.focusKey) attend(P.focus);
+  else if (!P.need && P.wasNeed && ownMove && !ui.full) {             // your own move finished with the board: back up to your moves
+    const pn = $('#ps-panel');
+    if (pn && pn.firstChild) window.scrollTo({ top: Math.max(0, window.scrollY + pn.getBoundingClientRect().top - 12), behavior: FX.on && !document.hidden ? 'smooth' : 'auto' });
+  }
+  P.focusKey = fk; P.wasNeed = !!P.need;
+  if (!ui.sheet && P.attnLater) { const f = P.attnLater; P.attnLater = null; attend(f, true); }   // what waited for a sheet to close
+  // your turn, said with the whole screen; somebody else's, with a line at the top
+  const up = st && me && (st.phase === 'turn' || st.phase === 'place') && activePid(st) === me.pid ? `${st.phase}:${st.phase === 'place' ? st.placeIdx : st.turnIdx + ':' + st.turnNo}` : '';
+  if (P.upKey !== undefined && up && up !== P.upKey) fxYourTurn(st, me);
+  // your turn, ended by you: glide back up to whose move it is now
+  if (ownMove && P.upKey && P.upKey.startsWith('turn:') && !up && !ui.full && window.scrollY > 40) window.scrollTo({ top: 0, behavior: FX.on && !document.hidden ? 'smooth' : 'auto' });
+  P.upKey = up;
+  const who = st && st.phase === 'turn' ? `${st.turnIdx}:${st.turnNo}` : '';
+  if (P.whoKey !== undefined && who && who !== P.whoKey && me && activePid(st) !== me.pid) fxHandoff(playerOf(st, activePid(st)));
+  P.whoKey = who;
 }
 
 async function bootPlayer() {
@@ -11360,7 +12217,7 @@ function fxPoint(end, r) {
   if (end.bank) return boardCentre() || offTop();
   if (joinRoom && !WATCH) {
     if (end.pid !== PID) return offTop();                             // the others are across the table, not on this phone
-    return centreOf(document.querySelector(`#ps-hand [data-res="${r}"] .rc`)) || centreOf(document.querySelector('#ps-hand .sechead')) || offTop();
+    return centreOf(document.querySelector(`${ui.full ? '#p-hud' : '#ps-hand'} [data-res="${r}"] .rc`)) || centreOf(document.querySelector('#ps-hand .sechead')) || offTop();
   }
   return centreOf(document.querySelector(`#h-seats [data-seat="${end.pid}"] .backs`)) || centreOf(document.querySelector(`#h-seats [data-seat="${end.pid}"]`)) || offTop();
 }
@@ -11404,9 +12261,9 @@ function fxLanded(f) {
   const st = G.state; if (!st) return;
   if (joinRoom && !WATCH) {
     const me = playerOf(st, PID); if (!me || f.to.pid !== PID) return;
-    setHTML('#ps-hand', handSec(me));
-    setHTML('#ps-table', tableSec(st, me));
-    const slot = document.querySelector(`#ps-hand [data-res="${f.r}"]`);
+    holdStill(() => { setHTML('#ps-hand', handSec(me)); setHTML('#ps-table', tableSec(st, me)); });   // the hand can grow: the page does not move
+    if (ui.full) setHTML('#p-hud', hudHTML(st, me));
+    const slot = document.querySelector(`${ui.full ? '#p-hud' : '#ps-hand'} [data-res="${f.r}"]`);
     if (slot) { slot.classList.remove('bump'); void slot.offsetWidth; slot.classList.add('bump'); }
     buzz(10); sfx('card_land', { detune: 60 });
   } else if (f.to.pid) {
@@ -11444,6 +12301,7 @@ function fxPlay(ev) {
   const st = G.state, p = st && playerOf(st, ev.pid), c = CARDS[ev.k];
   if (!p || !c) return Promise.resolve();
   sndPlay(ev);
+  if (joinRoom && !WATCH && ev.pid !== PID && !fxHitsMe(st, ev)) return fxPlayMini(ev, p, c);
   const layer = fxLayer(), box = document.createElement('div');
   box.className = `fxplay k-${ev.k} ${c.kind}`;
   box.innerHTML = `<div class="burst"></div><div class="fxcard">${scard(ev.k, { size: 'xl' })}</div>` +
@@ -11472,7 +12330,8 @@ function fxPlay(ev) {
       setTimeout(() => b.remove(), 2600);
     }
   } else if (ev.k === 'shakedown' || ev.k === 'fight') {
-    const app = document.getElementById('app');
+    // on a phone only the page shakes: a transform on #app would carry everything fixed inside it (a sheet, the full-screen board) along
+    const app = joinRoom && !WATCH ? (ui.sheet || ui.full ? null : document.querySelector('main.phone')) : document.getElementById('app');
     if (app) app.animate([{ transform: 'none' }, { transform: 'translate(-6px,2px)' }, { transform: 'translate(6px,-2px)' }, { transform: 'translate(-3px,1px)' }, { transform: 'none' }], { duration: 380, delay: 300 });
   }
   return wait(ev.k === 'fight' ? 1500 : 1900).then(() => {
@@ -11488,7 +12347,7 @@ function fxBuy(ev) {
   sndBuy(ev);
   const phone = joinRoom && !WATCH, layer = fxLayer();
   const from = phone ? centre() : centreOf(document.querySelector(`#h-market [data-k="${ev.k}"]`)) || centre();
-  const to = phone ? centreOf(document.querySelector('#ps-hand .strow')) || centreOf(document.querySelector('#ps-hand .sechead')) || offTop()
+  const to = phone ? centreOf(document.querySelector(ui.full ? '#p-hud .hudhand' : '#ps-hand .strow')) || centreOf(document.querySelector('#ps-hand .sechead')) || offTop()
     : centreOf(document.querySelector(`#h-seats [data-seat="${ev.pid}"] .cbacks`)) || centreOf(document.querySelector(`#h-seats [data-seat="${ev.pid}"]`)) || offTop();
   const el = document.createElement('div'); el.className = 'flyc'; el.innerHTML = scard(ev.k, { size: phone ? 'm' : 's' });
   layer.appendChild(el);
@@ -11610,7 +12469,7 @@ function fxFightEnd(v) {
    middle of a fight, or has animation turned off, still sees exactly where it
    stands. Animation only decides how fast the numbers catch up (AR.shown).
    ===================================================================== */
-const AR = { key: '', shown: 1e9, closed: {}, ended: {}, say: '', mounted: '', shut: 0 };
+const AR = { key: '', shown: 1e9, closed: {}, ended: {}, say: '', mounted: '', shut: 0, watch: {} };
 const arenaKey = (st, f) => `${f.a}${f.d}${f.e}:${st.tick | 0}`;
 function arenaState(st) {
   const f = st && st.phase === 'turn' ? st.fight : null, v = f && fightView(f);
@@ -11674,18 +12533,23 @@ function arenaSync(st, me, host) {
   const root = document.getElementById(host ? 'h-arena' : 'p-arena');
   if (!root) return;
   const A = arenaState(st);
-  if (!A) { if (root.firstChild) root.innerHTML = ''; AR.mounted = ''; document.body.classList.remove('infight', 'hostfight'); return; }
+  if (!A) { if (root.firstChild) root.innerHTML = ''; AR.mounted = ''; document.body.classList.remove('infight', 'hostfight'); if (!host) setHTML('#p-fightpill', ''); return; }
   const { f, v } = A, side = me ? (f.a === me.pid ? 0 : f.d === me.pid ? 1 : -1) : -1;
   const near = side === 1 ? 1 : 0, far = 1 - near, pl = s => playerOf(st, s ? f.d : f.a);
   const mountKey = `${A.key}:${near}:${host ? 'h' : 'p'}`;
   if (AR.mounted !== mountKey) {
     const crew = (s, where) => `<div class="crew ${where}" data-s="${s}" style="--crew:var(--crew-${pl(s).color});--pc:var(--p-${pl(s).color})"><i></i></div>`;
     root.innerHTML = `<div class="arena${host ? ' ontable' : ''}${FX.on && FX.fightPre === A.key ? ' pre' : FX.on && FX.fightNew === A.key ? ' intro' : ''}" role="dialog" aria-label="Street fight">` +
+      (!host && side < 0 ? `<button class="arx" data-p="arhide" aria-label="Stop watching">${XICO}</button>` : '') +
       `<div class="ar-stage"><div class="ar-bg"></div><div class="plat far"></div><div class="plat near"></div>${crew(far, 'far')}${crew(near, 'near')}<div class="ar-vs">VS</div>` +
       `<div id="ar-hud" class="ar-hud"></div></div><div class="ar-box"><p id="ar-text" class="ar-text" aria-live="polite"></p><div id="ar-clock" class="ar-clock"></div><div id="ar-menu" class="ar-menu"></div></div></div>`;
     AR.mounted = mountKey; if (FX.fightNew === A.key) FX.fightNew = null;
-    document.body.classList.add(host ? 'hostfight' : 'infight');
   }
+  // a fight you are not in waits behind a pill at the top, until you ask to watch it
+  const mini = !host && side < 0 && !AR.watch[A.key];
+  root.classList.toggle('mini', mini);
+  document.body.classList.toggle(host ? 'hostfight' : 'infight', !mini);
+  if (!host) setHTML('#p-fightpill', mini && A.live ? `<button class="fightpill" data-p="arwatch"><span class="live">Live</span>${esc(pl(0).name)} vs ${esc(pl(1).name)}<span class="fpgo">Watch</span></button>` : '');
   const plate = (s, where) => {
     const p = pl(s), hp = A.hp[s], mx = A.max[s], pct = Math.max(0, Math.min(100, 100 * hp / mx));
     const spent = v.spent[s], tags = (s === 1 && f.max[1] > FIGHT.hp ? '<span class="tag">home turf</span>' : '') + (A.max[s] > f.max[s] ? '<span class="tag">backup</span>' : '');
@@ -11758,7 +12622,10 @@ function fxRoll(ev) {
   const c = (!phone && boardCentre()) || { x: window.innerWidth / 2, y: Math.min(window.innerHeight * 0.4, 330) };
   const x = Math.max(8, Math.min(window.innerWidth - w - 8, c.x - w / 2)), y = Math.max(8, c.y - h / 2);
   const place = (s, dy) => { box.style.transform = `translate(${x.toFixed(0)}px,${(y + dy).toFixed(0)}px) scale(${s})`; };
-  place(1, 0);
+  // a phone reading a sheet gets the machine small and at the top, where it would step aside to anyway
+  const aside = phone && document.body.classList.contains('modalopen');
+  if (aside) box.style.transformOrigin = '50% 0';
+  place(aside ? 0.62 : 1, aside ? 8 - y : 0);
   box.animate([{ opacity: 0, transform: box.style.transform + ' scale(.6)' }, { opacity: 1, transform: box.style.transform }], { duration: 220, easing: 'cubic-bezier(.2,.9,.3,1.3)' });
   const t1 = quick ? 800 : 1150, t2 = quick ? 1200 : 1950;
   sndRoll(ev, t1, t2);
@@ -12334,6 +13201,9 @@ document.addEventListener('click', ev => {
     return;
   }
   if (!pb) return;
+  // a tap that lands on the dock the moment its buttons change was meant for the button that was there before
+  if (performance.now() < (P.dockArm || 0) && pb.closest('#ps-bar')) return;
+  if (pb.closest('#p-modal') && (MODAL.swallow || performance.now() - MODAL.at < 320)) return;
   const st = G.state;
   switch (pb.dataset.p) {
     case 'reload': location.reload(); break;
@@ -12356,17 +13226,49 @@ document.addEventListener('click', ev => {
     case 'offswap': pact({ t: 'swap', with: pb.dataset.arg }); break;
     case 'unoffer': pact({ t: 'unoffer' }); break;
     case 'reply': pact({ t: 'reply', ok: pb.dataset.arg === 'yes' }); break;
-    case 'sec': SHUT[pb.dataset.arg] = !shutOf(pb.dataset.arg); store('rtcity.shut', SHUT); renderPlayer(); break;
+    case 'sec': foldSec(pb); break;
     case 'back':
-      if (typeof ui.mode === 'string' && ui.mode.startsWith('card:')) { ui.card = ui.mode.slice(5); ui.mode = 'cards'; } else ui.mode = null;
-      ui.sel = null; ui.give = null; ui.get = null; renderPlayer(); break;
+      // laying Road Crew's streets can wait: they stay yours until the turn ends
+      if (ui.mode === 'street' && st && (st.free | 0) > 0) P.freeBack = `${st.turnIdx}:${st.turnNo}:${st.free}`;
+      ui.sel = null; ui.give = null; ui.get = null;
+      if (typeof ui.mode === 'string' && ui.mode.startsWith('card:')) { ui.card = ui.mode.slice(5); ui.mode = null; ui.res = null; ui.take = {}; openSheet('card'); }   // back to the card you were aiming
+      else { ui.mode = null; renderPlayer(); }
+      break;
     /* ---------- skills and talents ---------- */
-    case 'card':
-      if (!cardsCalm(st, st && playerOf(st, PID))) { toast('Finish this step first, then tap it again.'); break; }
-      ui.mode = 'cards'; ui.card = pb.dataset.arg; ui.sel = null; renderPlayer(); break;
-    case 'mkpick': if (isCard(pb.dataset.arg)) { ui.buy = ui.mkFrom = pb.dataset.arg; renderPlayer(); } break;
-    case 'mkclose': ui.buy = null; renderPlayer(); break;
-    case 'buy': if (isCard(ui.buy)) pact({ t: 'buy', k: ui.buy }); break;
+    case 'card': {
+      // reading a card of yours is always allowed: it opens over the page and leaves the page alone
+      const k = pb.dataset.arg; if (!isCard(k)) break;
+      if (ui.sheet === 'card') { const me = st && playerOf(st, PID), held = me ? CARD_ORDER.filter(x => heldCard(me, x)) : [];
+        MODAL.slide = held.indexOf(k) < held.indexOf(ui.card) ? -1 : 1; ui.card = k; ui.res = null; ui.take = {}; renderPlayer(); break; }
+      ui.card = k; ui.res = null; ui.take = {}; openSheet('card', pb); break;
+    }
+    case 'cardstep': switchCard(+pb.dataset.arg < 0 ? -1 : 1); break;
+    case 'sheet':
+      if (pb.dataset.arg === 'market') { ui.buy = null; openSheet('market', pb); }
+      else if (pb.dataset.arg === 'card') { ui.res = null; ui.take = {}; openSheet('card', pb); }
+      break;
+    case 'shclose': closeSheet(); break;
+    case 'shgo': P.attnLater = P.focus || null; closeSheet(); break;
+    case 'shplay': {
+      const k = pb.dataset.arg, me = st && playerOf(st, PID);
+      if (!isCard(k) || !me || !canPlay(st, me, k).ok) break;
+      if (AIMED_BOARD.includes(k)) {                   // aimed on the board: the sheet makes way, and the board comes up to aim it
+        MODAL.exit = 'aim'; ui.sheet = null; layerPop();
+        ui.mode = 'card:' + k; ui.sel = null; ui.from = null; ui.res = null; ui.take = {}; ui.pickI = null;
+        renderPlayer(); break;
+      }
+      if (k === 'shakedown') { if (!RES_ORDER.includes(ui.res)) break; ui.sheetPlay = k; pact({ t: 'play', k, r: ui.res }); break; }
+      if (k === 'connections') { if (bundleSize(ui.take || {}) !== 2) break; ui.sheetPlay = k; pact({ t: 'play', k, take: ui.take }); break; }
+      ui.sheetPlay = k; pact({ t: 'play', k }); break;
+    }
+    case 'mkpick': if (isCard(pb.dataset.arg)) { ui.buy = pb.dataset.arg; renderPlayer(); } break;
+    case 'mkback': ui.buy = null; renderPlayer(); break;
+    case 'buy': if (isCard(ui.buy)) { const me = st && playerOf(st, PID); ui.sheetBuy = { k: ui.buy, n: me ? heldCard(me, ui.buy) : 0 }; pact({ t: 'buy', k: ui.buy }); } break;
+    case 'endask': { const me = st && playerOf(st, PID); if (me && turnOf(st, me) && st.step === 'act') openSheet('end', pb); break; }
+    case 'full': fullToggle(); break;
+    case 'fullmoves': fullOff(); setTimeout(() => attend('panel', true), 340); break;
+    case 'arwatch': AR.watch[AR.key] = true; arenaRefresh(); break;
+    case 'arhide': arenaAway(() => { AR.watch[AR.key] = false; }); break;
     case 'play': if (isCard(pb.dataset.arg)) pact({ t: 'play', k: pb.dataset.arg }); break;
     case 'aim': if (isCard(pb.dataset.arg)) { ui.mode = 'card:' + pb.dataset.arg; ui.sel = null; ui.from = null; ui.res = null; ui.take = {}; ui.pickI = null; renderPlayer(); } break;
     case 'tgt': ui.sel = { kind: 'e', id: +pb.dataset.arg }; renderPlayer(); break;
@@ -12399,13 +13301,19 @@ document.addEventListener('click', ev => {
       if (ui.backup && pb.dataset.arg !== 'off') body.u = 1;
       pact(body); break;
     }
-    case 'arclose': AR.closed[AR.key] = true; safeRender(); break;
+    case 'arclose': arenaAway(() => { AR.closed[AR.key] = true; }); break;
     case 'give': ui.give = pb.dataset.arg; if (ui.get === ui.give) ui.get = null; renderPlayer(); break;
     case 'get': ui.get = pb.dataset.arg; renderPlayer(); break;
     case 'drop': ui.drop[pb.dataset.arg] = (ui.drop[pb.dataset.arg] || 0) + 1; renderPlayer(); break;
     case 'cleardrop': ui.drop = {}; renderPlayer(); break;
     case 'rollturn': pact({ t: 'rollturn' }); break;
-    case 'endturn': pact({ t: 'endturn' }); break;
+    case 'endturn': {                                   // only the sheet's Yes sends this
+      const was = ui.sheet; ui.sheet = null; MODAL.exit = 'ended';
+      if (!pact({ t: 'endturn' })) { ui.sheet = was; MODAL.exit = ''; break; }   // not connected: the question stays up, and the toast says why
+      if (was) layerPop();
+      buzz([12, 40, 22]);
+      break;
+    }
     case 'steal': pact({ t: 'steal', from: pb.dataset.arg }); break;
     case 'dodiscard': pact({ t: 'discard', cards: ui.drop }); break;
     case 'dotrade': if (ui.give && ui.get && ui.give !== ui.get) pact({ t: 'trade', give: ui.give, get: ui.get }); break;
@@ -12426,7 +13334,7 @@ document.addEventListener('click', ev => {
   }
 });
 document.addEventListener('keydown', ev => {
-  if (ev.key === 'Escape' && ui.buy && $('#p-modal') && $('#p-modal').firstChild) { ui.buy = null; renderPlayer(); return; }
+  if (ev.key === 'Escape' && joinRoom && !WATCH && (ui.sheet || ui.full)) { if (ui.sheet) closeSheet(); else fullOff(); return; }
   if (CAM_KEYS[ev.key] && !ev.metaKey && !ev.ctrlKey && !ev.altKey && ev.target.closest && ev.target.closest('.boardbox')) {
     ev.preventDefault(); camAction(CAM_KEYS[ev.key]); return;
   }
