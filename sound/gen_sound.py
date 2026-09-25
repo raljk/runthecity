@@ -33,14 +33,14 @@ SFX = {
     # the dice machine: a one-armed bandit whose two reels stop one after the other
     # digital and kept low (asked for 2026-09-23): the reels are an electronic flicker, not a one-armed bandit
     # generated as a loop, so the ticking runs evenly the whole two seconds instead of bursting and dying
-    "reel_spin":  dict(kind="fx", rms=-28, d=2.2, p=0.65, loop=True, post="lowpass=f=6500",
+    "reel_spin":  dict(kind="fx", lu=-27, d=2.2, p=0.65, loop=True, post="lowpass=f=6500",
         text="Digital slot machine reels spinning: a continuous, steady stream of soft rapid electronic ticks, evenly spaced, over a light synthetic whir, the same all the way through, clean video game sound. No bells, no mechanical parts, no music."),
-    "reel_stop":  dict(kind="fx", rms=-25, d=0.5, p=0.7, text="A soft digital reel stop: one short clean electronic click with a tiny low blip underneath, like a digital counter locking into place, interface sound. No mechanical parts, no music."),
+    "reel_stop":  dict(kind="fx", lu=-26, d=0.5, p=0.7, text="A soft digital reel stop: one short clean electronic click with a tiny low blip underneath, like a digital counter locking into place, interface sound. No mechanical parts, no music."),
     "payout":     dict(kind="fx", d=1.2, p=0.5, text="Short bright casino payout chime: three quick rising bell tones with a soft electric shimmer, clean, no voice."),
     # a bass drone rather than a stinger (asked for 2026-09-23); the growl on top is what a phone speaker can actually play
     # the sub-bass alone is nearly silent on a phone or laptop, so a saturated copy adds its harmonics
     # (200 Hz-2 kHz) back in: the ear hears the growl and fills in the low note
-    "seven":      dict(kind="fx", rms=-22, d=3.5, p=0.65,
+    "seven":      dict(kind="fx", lu=-20, d=3.5, p=0.65,
         post="highpass=f=35,asplit=2[dry][sat];[sat]lowpass=f=180,volume=24dB,asoftclip=type=tanh,highpass=f=200,lowpass=f=2000,volume=1dB[h];[dry][h]amix=inputs=2:normalize=0",
         text="Ominous deep bass drone: one sustained low synth bassline note that swells in and slowly fades out, with a gritty low growl in its upper harmonics, dark and tense. No melody, no drums, no hits, no siren."),
     # cards in the air
@@ -87,7 +87,7 @@ SFX = {
     "ui_tap":     dict(kind="ui", d=0.5, p=0.7, text="A very soft short click of a small plastic button, subtle interface tap, clean." + DRY),
     # the most common tap there is (every section, the key, the speaker): asked shorter and softer 2026-09-24,
     # so it is capped at 0.15 s and levelled well under the other taps; the page plays it at full volume
-    "ui_fold":    dict(kind="ui", rms=-35, d=0.5, p=0.75, post="highpass=f=250,lowpass=f=5000,atrim=0:0.15", fade_out=0.06,
+    "ui_fold":    dict(kind="ui", lu=-36, d=0.5, p=0.75, post="highpass=f=250,lowpass=f=5000,atrim=0:0.15", fade_out=0.06,
         text="A tiny soft tick of a paper card flipping over: very short and quiet, a subtle muted interface click with a hint of paper, nothing else." + DRY),
     "ui_deny":    dict(kind="ui", d=0.5, p=0.6, text="A soft short muted double buzz, gentle low error interface sound, clean." + DRY),
     "ui_pick":    dict(kind="ui", d=0.5, p=0.7, text="A tiny glassy blip, soft high interface select sound, clean." + DRY),
@@ -137,6 +137,12 @@ SFX = {
         text="An annoyed driver stuck in traffic honks a car horn twice: two short sharp beeps of an ordinary car horn, city street at night. No music."),
     "horn_2":     dict(kind="fx", d=1.4, p=0.7, fade_out=0.15,
         text="An impatient driver leans on the car horn: one long angry honk of an ordinary car horn, about a second, city street at night. No music."),
+    # ---- the lights coming on (release 1, 2026-09-26): set-up is done, the plain map goes dark and the city
+    # powers up block by block; this runs under it and melts into amb_city, which fades in at the same time ----
+    # take 4 of the second prompt: a steady sweep from 170 Hz up through the middle over four seconds, as the blocks
+    # light; the top is taken down 6 dB so the whine it ends on stays soft
+    "lights_on":  dict(kind="fx", lu=-23, d=5.0, p=0.7, fade_in=0.3, fade_out=1.2, post="highshelf=f=4000:g=-6",
+        text="Power coming back on across a city at night: a big electric power-up sweep that rises slowly in pitch like generators spinning up, a warm mid-range electric whine swelling louder, soft clicks and buzzing as rows of lights flicker on one after another, then it settles into a calm steady hum. Cinematic sci-fi power-up. No music, no voices, no explosions, no static noise."),
     # the city at night, under everything on the table screen
     "amb_city":   dict(kind="amb", d=20, p=0.4, loop=True, text="Night city ambience heard from a rooftop: a steady distant traffic hum, the occasional far-off car horn, a faint distant siren, light rain drizzle, a soft electric neon buzz. No music, no voices."),
 }
@@ -203,13 +209,48 @@ LINES.update({
 })
 
 # ---------------------------------------------------------------- levels and encoding
-# target RMS (dBFS) for each kind, and how it is encoded. Peaks never go above -1 dB.
+# How loud each kind is, and how it is encoded. Peaks never go above -1 dB.
+# lu is the loudest 400 ms of the clip, K-weighted (LUFS, near enough to EBU R128's momentary
+# loudness): how hard a sound hits the ear, which is what "too loud" is about. Levelling by the
+# average (RMS) let short, sharp sounds hit as hard as the announcer and louder, which is how the
+# first play-test heard it: "too loud and abrupt" (2026-09-25). So the announcer sets the level,
+# the effects sit 4 dB and more under him, the busy ones (cards, reels, taps) well under that, and
+# a sound can ask to sit lower or higher than its kind with its own lu. The loop keeps RMS.
 LEVEL = {
-    "fx":    dict(rms=-20, rate=44100, kbps=48),
-    "ui":    dict(rms=-24, rate=44100, kbps=48),
-    "voice": dict(rms=-18, rate=24000, kbps=40),
+    "fx":    dict(lu=-21, rate=44100, kbps=48),
+    "ui":    dict(lu=-28, rate=44100, kbps=48),
+    "voice": dict(lu=-17, rate=24000, kbps=40),
     "amb":   dict(rms=-26, rate=32000, kbps=32),
 }
+# A clip is encoded hot, at HOT or with its peak at -1 dB, whichever is lower, and played down to its lu by the page:
+# the encoder drops the quiet highs it thinks nobody can hear, judged from full scale, so a sparkle encoded 5 dB
+# down came out dull and 4 dB quieter still. process() measures what the encoder made and writes the difference
+# to web/trims.json (dB); embed.py puts it in the page's index beside each clip.
+HOT = -14
+TRIMS = os.path.join(WEB, "trims.json")
+# where each effect sits against its kind (lu), decided from measuring them all (2026-09-26):
+# the moments of the game a little under the announcer, what a move sounds like under that, and
+# the sounds that come in flurries or on every turn lowest of all
+LOUD = {
+    # the moments
+    "win": -19, "seven": -20, "ko": -20, "reveal_big": -20, "punch_big": -20,
+    "legend": -21, "build_holding": -21, "fight_bell": -21, "tension": -21, "crash_hit": -21, "crash_boom": -21,
+    # a move, a card, a blow
+    "siren": -22, "card_play": -22, "reveal": -22, "tipoff": -22, "lucky": -22, "silver": -22, "connections": -22,
+    "shakedown": -22, "roadcrew": -22, "paidoff": -22, "punch": -22, "hype": -22, "backup": -22, "fight_end": -22,
+    "your_turn": -22,
+    # every turn, every trade, every build
+    "turn": -23, "bank": -23, "build_street": -23, "build_op": -23, "trade_offer": -23, "join": -23, "steal": -23,
+    "card_buy": -23, "crate": -23, "block": -23, "patch": -23, "pull": -23, "backoff": -23, "crash_bump": -23, "crash_skid": -23,
+    # in flurries, or under everything else
+    "payout": -24, "discard": -24, "leave": -24, "undo": -24, "tape": -24, "whiff": -24, "trade_yes": -24, "trade_no": -24,
+    "card_whoosh": -26, "card_land": -26, "horn_1": -26, "horn_2": -26,
+    # buttons
+    "ui_tap": -29, "ui_pick": -29, "ui_confirm": -28, "ui_deny": -30,
+}
+# a softer start for the sounds whose first instant is not the point (seconds of fade-in)
+SOFT = {"start": 0.25, "legend": 0.06, "siren": 0.05, "hype": 0.04, "win": 0.03, "tension": 0.03,
+        "build_holding": 0.02, "reveal_big": 0.02, "join": 0.01, "fight_end": 0.01}
 
 
 def post(path, body, out, query=""):
@@ -279,6 +320,24 @@ def stats(path, pre=""):
     return mean, peak
 
 
+def loudness(path, pre=""):
+    """The loudest 400 ms of a file after an optional filter chain, K-weighted (a high shelf and a
+    high pass, as in ITU-R BS.1770), in LUFS; and its sample peak in dB. A clip shorter than 400 ms
+    is measured as if silence followed it, as a listener would hear it."""
+    import numpy as np
+    base = (pre + "," if pre else "") + "aformat=channel_layouts=mono,aresample=48000"
+    def pcm(af):
+        r = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-af", af, "-f", "f32le", "-"], capture_output=True)
+        return np.frombuffer(r.stdout, dtype=np.float32).astype(np.float64)
+    x = pcm(base)
+    peak = float(20 * np.log10(np.abs(x).max() + 1e-12)) if len(x) else -120.0
+    k = pcm(base + ",highshelf=f=1681:g=4:t=q:w=0.7071,highpass=f=38:p=2")
+    n = 19200
+    if len(k) < n: k = np.concatenate([k, np.zeros(n - len(k))])
+    c = np.concatenate([[0.0], np.cumsum(k * k)]); at = np.arange(0, len(k) - n + 1, 480)
+    return float(-0.691 + 10 * np.log10(((c[at + n] - c[at]) / n).max() + 1e-12)), peak
+
+
 def duration(path):
     r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path], capture_output=True, text=True)
     return float(r.stdout.strip())
@@ -288,7 +347,9 @@ def process(name, src=None, dst=None):
     src = src or os.path.join(RAW, name + ".mp3"); dst = dst or os.path.join(WEB, name + ".mp3")
     kind = "voice" if name in LINES else SFX[name]["kind"]
     L = dict(LEVEL[kind])
-    if name in SFX and "rms" in SFX[name]: L["rms"] = SFX[name]["rms"]   # a sound that should sit lower than its kind
+    if name in LOUD: L["lu"] = LOUD[name]
+    if name in SFX and "lu" in SFX[name]: L["lu"] = SFX[name]["lu"]     # a sound that should sit lower than its kind
+    if name in LINES and LINES[name].get("radio"): L["lu"] = L["lu"] - 1  # the radio's crunch makes it sound louder than it measures
     chain = []
     if kind == "amb":
         # a loop keeps its whole length and both ends, or the seam shows
@@ -309,7 +370,7 @@ def process(name, src=None, dst=None):
         if extra.get("unring"):
             cut = unring(src, ",".join(chain))
             if cut: chain.append(cut)
-        chain += ["afade=t=in:d=%s" % extra.get("fade_in", 0.004), "areverse", "afade=t=in:d=%s" % extra.get("fade_out", "0.03" if kind != "ui" else "0.015"), "areverse"]
+        chain += ["afade=t=in:d=%s" % extra.get("fade_in", SOFT.get(name, 0.004)), "areverse", "afade=t=in:d=%s" % extra.get("fade_out", "0.06" if kind != "ui" else "0.02"), "areverse"]
     pre = ",".join(chain)
     if name in LINES and LINES[name].get("radio"):
         # squelch in + voice + squelch out, as one clip
@@ -320,14 +381,23 @@ def process(name, src=None, dst=None):
             ff("-i", os.path.join(RAW, s + ".mp3"), "-af", "aformat=channel_layouts=mono,silenceremove=start_periods=1:start_threshold=-48dB,areverse,silenceremove=start_periods=1:start_threshold=-48dB,areverse,atrim=0:0.35,afade=t=out:st=0.25:d=0.1,volume=-6dB", "-ar", "44100", os.path.join(WEB, s + ".wav"))
         ff("-i", a, "-i", tmp, "-i", b, "-filter_complex", "[0][1][2]concat=n=3:v=0:a=1", "-ar", "44100", tmp + ".cat.wav")
         os.replace(tmp + ".cat.wav", tmp); src, pre = tmp, ""
-    mean, peak = stats(src, pre)
-    gain = min(L["rms"] - mean, -1.0 - peak + 6.0)
+    if "lu" in L:
+        lu, peak = loudness(src, pre)
+        gain = min(HOT - lu, -1.0 - peak)                               # hot, and never limited: the transients stay as they were
+    else:
+        mean, peak = stats(src, pre)
+        gain = min(L["rms"] - mean, -1.0 - peak + 6.0)
     lim = ",alimiter=limit=0.89:attack=1:release=30:level=false:latency=true" if gain > -1.0 - peak else ""
     chain_full = (pre + "," if pre else "") + "volume=%.2fdB" % gain + lim
     rate, kbps = L["rate"], L["kbps"]
     if name in LINES and LINES[name].get("radio"): rate, kbps = 16000, 24   # nothing above 3.4 kHz survives the radio anyway
     ff("-i", src, "-af", chain_full, "-ac", "1", "-ar", str(rate), "-c:a", "libmp3lame", "-b:a", "%dk" % kbps, dst)
     if src.endswith(".wav"): os.remove(src)
+    if "lu" in L and os.path.abspath(os.path.dirname(dst)) == os.path.abspath(WEB):   # a clip the game plays (not a take being compared)
+        got, _ = loudness(dst)
+        trims = json.load(open(TRIMS)) if os.path.exists(TRIMS) else {}
+        trims[name] = round(min(2.5, L["lu"] - got), 1)              # a peaky line may sit a dB low rather than clip when played up
+        json.dump(trims, open(TRIMS, "w"), indent=1, sort_keys=True)
     return dst
 
 

@@ -106,6 +106,9 @@ SCORE = {
     "crash_boom":  lambda m: -m["onset"] / 40 + m["small"] + m["bass"] / 2 - abs(m["dur"] - 3.2) / 3,
     "crash_bump":  lambda m: -m["onset"] / 30 + m["small"] - abs(m["dur"] - 0.7),
     "crash_skid":  lambda m: -m["onset"] / 80 + m["small"] - abs(m["dur"] - 0.9),
+    # the lights coming on (2026-09-26): it swells in rather than hits, rises as the grid comes up, runs the length
+    # of the blocks lighting (about five seconds) and has sunk by its end, where the city's own sound takes over
+    "lights_on":   lambda m: min(max(m["rise"], -2), 12) / 6 + min(m["onset"], 900) / 600 + m["fade"] / 12 - abs(m["dur"] - 5) / 2 + m["small"] / 2,
 }
 # anything without its own rule: starts on the beat, about as long as asked for, and a phone can play it
 generic = lambda name: lambda m: -m["onset"] / 60 - abs(m["dur"] - SFX[name]["d"] * 0.85) / max(0.5, SFX[name]["d"]) + m["small"] / 2

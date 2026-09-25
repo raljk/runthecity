@@ -20,6 +20,16 @@ Every command reads `ELEVENLABS_API_KEY` from the environment. Keep it in the re
 | `board.py` | Writes `board.html`, a page to audition every clip. |
 | `land.py` | Retired: the one-off script that first put the sound engine into the page. |
 
+**Levels (2026-09-26).** Clips are levelled by how hard they hit the ear, not by their average: the
+loudest 400 ms, K-weighted (`loudness()` in `gen_sound.py`, about EBU R128's momentary loudness).
+The announcer sets the level (-17), the effects sit 4 dB and more under him (`LOUD`), the busy ones
+(cards, reels, taps) lower still. Every clip is encoded hot, near full scale, because the MP3 encoder
+throws away quiet highs it thinks nobody can hear; `process()` then measures what it made and writes
+how far down (or up) the page should play it to `web/trims.json`, which `embed.py` puts in the page's
+index as each clip's fifth number. So a mix change is a change to `LOUD` and a `--process`, and the
+page's own `vol` numbers only say what matters more in a moment. The page also softens every start,
+dips everything under the announcer, and plays no more than four effects at once (three on a phone).
+
 After changing a clip, run `python3 sound/embed.py index.html`. Then commit `index.html`,
 `sound-fx.bin` and `sound-table.bin` together: the page's index carries a hash of each pack, and
 a page whose packs do not match plays nothing.

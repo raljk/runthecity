@@ -8,17 +8,21 @@ moment a browser lets a page make a sound at all.
   sound-table.bin  what only the table screen plays (and a phone that asks to hear the whole
                    table): the announcer, the dice machine, the city at night, the start sting
 
-Each pack is the MP3s end to end; the index says where each clip starts, how long it is, and its
-length in seconds. Each pack's URL carries a hash of its contents, so a new version is never
+Each pack is the MP3s end to end; the index says where each clip starts, how long it is, its
+length in seconds, and the trim in dB the page plays it at (gen_sound.py encodes every clip hot and
+works out how far down it goes to sit at its level in the mix: web/trims.json). Each pack's URL carries a hash of its contents, so a new version is never
 served from an old cache.
 Usage: python3 sound/embed.py index.html    (writes the packs next to it)"""
 import hashlib, json, os, sys
 here = os.path.dirname(os.path.abspath(__file__)); web = os.path.join(here, "web")
 meta = json.load(open(os.path.join(web, "meta.json")))
+tp = os.path.join(web, "trims.json")
+trims = json.load(open(tp)) if os.path.exists(tp) else {}
 PARTS = {"squelch_in", "squelch_out"}          # only exist to be built into other clips
 # heard only from the table (sndHearsTable): the announcer, save the taunt a robbed phone hears too
 TABLE = {"amb_city", "start", "turn", "join", "leave", "tension", "reel_spin", "reel_stop", "payout", "seven",
-         "crash_skid", "crash_hit", "crash_boom", "crash_bump", "horn_1", "horn_2"}     # the traffic crashing (drive)
+         "crash_skid", "crash_hit", "crash_boom", "crash_bump", "horn_1", "horn_2",     # the traffic crashing (drive)
+         "lights_on"}                                                                  # the city powering up after set-up
 def pack_of(n):
     if n.startswith("v_") and not n.startswith("v_taunt_"): return "table"
     return "table" if n in TABLE else "fx"
@@ -28,7 +32,7 @@ names = [n for n in sorted(meta) if n not in PARTS and os.path.exists(os.path.jo
 blobs, clips, packs = {"fx": bytearray(), "table": bytearray()}, {}, {}
 for n in names:
     p = pack_of(n); data = open(os.path.join(web, n + ".mp3"), "rb").read()
-    clips[n] = [p, len(blobs[p]), len(data), meta[n]]
+    clips[n] = [p, len(blobs[p]), len(data), meta[n]] + ([trims[n]] if n in trims else [])
     blobs[p] += data
 for p, b in blobs.items():
     fn = "sound-%s.bin" % p
