@@ -1,4 +1,4 @@
-# Publish only the game page, its two sound packs and the scripts that make them. Everything else in this folder stays local (notes, raw art, the API key file).
+# Publish the game, landing-page artwork, sound packs and sound scripts. Everything else stays local (notes, raw art, the API key file).
 /*
 !/index.html
 !/sound-fx.bin
@@ -9,3 +9,12 @@
 !/sound/*.py
 !/sound/README.md
 !/.gitignore
+!/art/
+/art/*
+!/art/landing/
+/art/landing/*
+!/art/landing/city-poster.jpg
+!/art/landing/crews-poster.png
+!/art/landing/PROMPTS.md
+!/art/landing/city-street.jpg
+!/art/landing/run-the-city.svg

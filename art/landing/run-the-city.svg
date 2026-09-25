@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 160" role="img" aria-labelledby="title">
+  <title id="title">Run the City</title>
+  <defs>
+    <path id="r" fill-rule="evenodd" d="M0 0H36L48 11V28L36 39L51 60H33L18 40H14V60H0ZM14 13V27H29L34 23V17L29 13Z"/>
+    <path id="u" d="M0 0H14V43L19 48H29L34 43V0H48V48L36 60H12L0 48Z"/>
+    <path id="n" d="M0 60V0H14L34 35V0H48V60H34L14 25V60Z"/>
+    <path id="t" d="M0 0H50V14H32V60H18V14H0Z"/>
+    <path id="h" d="M0 0H14V23H34V0H48V60H34V37H14V60H0Z"/>
+    <path id="e" d="M0 0H48V13H14V23H40V36H14V47H48V60H0Z"/>
+    <path id="c" d="M14 0H50V15H21L15 21V40L21 46H50V60H14L0 46V14Z"/>
+    <path id="i" d="M0 0H34V13H24V47H34V60H0V47H10V13H0Z"/>
+    <path id="y" d="M0 0H16L28 23L40 0H56L35 39V60H21V39Z"/>
+    <g id="wordmark">
+      <g transform="translate(79 0) scale(.48)" fill="#f6f5eb">
+        <use href="#r"/><use href="#u" x="54"/><use href="#n" x="108"/>
+        <use href="#t" x="176"/><use href="#h" x="230"/><use href="#e" x="284"/>
+      </g>
+      <g transform="translate(7 37) scale(1.48)" fill="#e8fc37">
+        <use href="#c"/><use href="#i" x="57"/><use href="#t" x="98"/><use href="#y" x="153"/>
+      </g>
+      <path d="M7 132H305L292 138H0ZM-4 114H1V127H-17ZM321 38H333L324 57H313Z" fill="#ff3297"/>
+      <path d="M79 12H32L27 17H77M247 12H299L302 17H247" fill="#ff3297"/>
+    </g>
+  </defs>
+  <g transform="translate(31 10) skewX(-11)">
+    <use href="#wordmark" transform="translate(3 5)" opacity=".45"/>
+    <use href="#wordmark"/>
+    <path d="M13 72H315M9 113H269" stroke="#07121c" stroke-width="1.5" opacity=".7"/>
+  </g>
+</svg>
