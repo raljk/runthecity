@@ -1664,6 +1664,251 @@ body:has(>#app>.hframe) .slotm .sum{font-family:'Barlow Condensed','Arial Narrow
 body:has(>#app>.hframe) .slotm.seven{border-color:#ff2e93;box-shadow:0 0 0 4px #040b11,0 0 46px 8px rgba(255,46,147,.5),0 24px 60px rgba(0,0,0,.7)}
 body:has(>#app>.hframe) .slotm.lucky{border-color:#7be495;box-shadow:0 0 0 4px #040b11,0 0 40px 5px rgba(123,228,149,.4),0 24px 60px rgba(0,0,0,.7)}
 @media (prefers-reduced-motion:reduce){.hframe .btn{transition:none}}
+/* ---------- the phone, dressed like the front door (2026-09-26) ----------
+   The player's view in the same night as the landing page and the table screen: teal-black ground,
+   paper-white type, square hairline panels, condensed capitals and small monospaced labels, the wordmark
+   in the corner. Nothing moves and nothing is added: every section, line and button stays where it was.
+   The bright colours each keep one job, as on the table: acid yellow is the filled button, the move to make
+   now; hot pink is a warning (a seven, cards to drop, a phone gone quiet, time running out); cyan is a live
+   signal (connected, ready, what you took); a player's own colour says whose move it is. Resource and skill
+   cards are the game's pieces and keep their own look. Scoped to body.pview, which only renderPlayer sets,
+   so the table screen, the board view and the landing page are untouched. */
+body.pview{
+  --tb-ground:#06121b; --tb-panel:#0a1924; --tb-raise:#0e2130; --tb-glass:rgba(6,18,27,.86);
+  --tb-line:rgba(178,232,255,.13); --tb-line2:rgba(178,232,255,.24); --tb-line3:rgba(178,232,255,.42);
+  --tb-paper:#f3f3e9; --tb-muted:#8fa5b1; --tb-dim:#5f7582;
+  --tb-acid:#e8fc37; --tb-acid-ink:#0f1a0c; --tb-cyan:#64e8f3; --tb-warn:#ff2e93;
+  --tb-cond:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
+  --tb-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ink:var(--tb-paper); --muted:var(--tb-muted); --line:var(--tb-line2); --panel:var(--tb-panel); --bg:var(--tb-ground); --off:var(--tb-dim);
+  /* a chosen thing (a colour, a card to give, a move) is outlined in paper, not lit */
+  --accent:var(--tb-paper); --accent-ink:var(--tb-ground); --ok:var(--tb-cyan);
+  background:var(--tb-ground);color:var(--tb-paper)}
+/* the board keeps its own magenta: the raised block's flag and the legal spots read it */
+body.pview svg.board{--accent:#ff2e93}
+body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
+
+/* a small label, the landing's eyebrow: monospaced, spaced out, quiet, with the terminal's square before it */
+.pview .phone .card>h2,.pview .sechead .h,.pview .stlab,.pview .shtop h2,.pview .deal .lab,.pview .sndpanel h2{
+  font:500 11px/1.35 var(--tb-mono);letter-spacing:2.6px;text-transform:uppercase;color:var(--tb-muted)}
+.pview .sechead .h::before,.pview .phone .card>h2::before{content:"";display:inline-block;width:6px;height:6px;margin-right:10px;vertical-align:.12em;background:var(--tb-dim)}
+.pview .stlab{font-size:10px;letter-spacing:2px}
+.pview .sthint{font:500 10px/1.3 var(--tb-mono);letter-spacing:.4px;color:var(--tb-dim)}
+.pview .shtop h2{font-size:10.5px;letter-spacing:2.2px}
+
+/* the header: the wordmark, the table's code, the key, talk and sound */
+.pview .pbar{background:linear-gradient(#071823,var(--tb-ground));border-bottom:1px solid var(--tb-line)}
+.pview .pbar .pvlogo{display:block;height:30px;width:auto}
+.pview .pbar .brand{display:inline-flex;align-items:center;line-height:0;flex:none;overflow:visible}
+.pview .pill{border-radius:0;border-color:var(--tb-line2);padding:5px 9px;font:500 10px/1.2 var(--tb-mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--tb-muted)}
+.pview .pill::before{width:6px;height:6px;border-radius:0;background:var(--tb-warn)}
+.pview .pill.on{color:var(--tb-paper)}
+.pview .pill.on::before{background:var(--tb-cyan);box-shadow:0 0 8px rgba(100,232,243,.7)}
+.pview .keybtn,.pview .sndbtn,.pview .talkbtn{border-radius:0;border-color:var(--tb-line2);background:rgba(6,18,27,.6);color:var(--tb-muted)}
+.pview .keybtn{font:500 9.5px/1 var(--tb-mono);letter-spacing:1.4px}
+.pview .keybtn .rc{border-radius:3px}
+.pview .keybtn[aria-expanded=true],.pview .sndbtn[aria-expanded=true]{border-color:var(--tb-line3);color:var(--tb-paper)}
+.pview .sndbtn:hover,.pview .talkbtn:hover{color:var(--tb-paper)}
+/* the bar's own rules still hold: a whisper takes the wordmark's place, and the narrowest phones do without it */
+.pview .pbar.wsping .brand{display:none}
+@media (max-width:350px){.pview .pbar .brand{display:none}}
+/* a narrow phone: the labels close up so a folded section's peek stays on its line */
+@media (max-width:380px){.pview .sechead .h,.pview .phone .card>h2{letter-spacing:1.5px}.pview .sechead .h::before,.pview .phone .card>h2::before{margin-right:7px}}
+
+/* panels: square, hairline, on the landing's ground */
+.pview .phone .card,.pview .keypanel{border-radius:0;background:rgba(10,25,36,.72);border-color:var(--tb-line)}
+.pview .phone .card>h2{padding-bottom:10px;border-bottom:1px solid var(--tb-line)}
+.pview .phone h1{font:800 1.9rem/1 var(--tb-cond);letter-spacing:.01em;text-transform:uppercase;color:var(--tb-paper)}
+.pview .phone label.small{font:500 10px/1.3 var(--tb-mono);letter-spacing:2px;text-transform:uppercase}
+.pview .phone p.small.muted:has(+.swatches),.pview .phone #p-swl{font:500 10px/1.3 var(--tb-mono);letter-spacing:2px;text-transform:uppercase}
+.pview .warn{border-radius:0;background:rgba(255,46,147,.07);border:1px solid rgba(255,46,147,.3);border-left:2px solid var(--tb-warn);color:#ffd3e8}
+.pview .warn strong{color:#ff7dbb}
+.pview input[type=text]{border-radius:0;background:rgba(3,10,15,.7);border-color:var(--tb-line2);font-family:var(--tb-mono);font-size:16px}
+.pview .chev{stroke:var(--tb-dim)}
+
+/* buttons: square, like the landing's. A filled one is the move to make now; the rest are outlines */
+.pview .btn{border-radius:0;background:var(--tb-acid);color:var(--tb-acid-ink);border:1px solid var(--tb-acid);font-weight:750;letter-spacing:.01em}
+.pview .btn:disabled{opacity:1;background:transparent;color:var(--tb-dim);border:1px dashed var(--tb-line2)}
+.pview .btn.ghost{background:rgba(6,18,27,.55);color:var(--tb-paper);border:1px solid var(--tb-line2);font-weight:650}
+.pview .btn.ghost:disabled{background:transparent;color:var(--tb-dim);border-style:dashed}
+.pview .btn.small{border-radius:0}
+@media (hover:hover){.pview .btn:not(:disabled):not(.ghost):hover{background:#f3ff90;border-color:#f3ff90}.pview .btn.ghost:not(:disabled):hover{background:var(--tb-raise);border-color:var(--tb-line3)}}
+.pview .seg{border-radius:0;border-color:var(--tb-line2);gap:1px;background:var(--tb-line)}
+.pview .seg button{font-weight:650;color:var(--tb-muted);background:#07141d}
+.pview .seg button[aria-pressed=true]{background:#102330;color:var(--tb-paper);box-shadow:inset 0 -2px 0 var(--tb-paper)}
+
+/* colours to pick, and who you are */
+.pview .sw{border-radius:0;border-width:1px;border-color:var(--tb-line2);background:rgba(4,12,18,.45);font:500 10px/1.2 var(--tb-mono);letter-spacing:1.4px;text-transform:uppercase}
+.pview .sw[aria-pressed=true]{border-color:var(--tb-paper);background:var(--tb-raise);box-shadow:inset 0 -2px 0 var(--tb-paper)}
+.pview .sw:disabled{opacity:.4;border-style:dashed}
+.pview .chip,.pview .turnchip{border-radius:2px;border-width:1.5px}
+.pview .me .chip{border-radius:2px}
+.pview .me .nm{font:800 1.7rem/1 var(--tb-cond);letter-spacing:.01em;text-transform:uppercase}
+.pview .clkask{border-radius:0;border-color:var(--tb-line2);background:rgba(3,10,15,.55);box-shadow:inset 2px 0 0 var(--tb-acid)}
+.pview .clkask.done{box-shadow:none;border-color:var(--tb-line)}
+.pview .clkask .ca1{font:700 1.3rem/1.1 var(--tb-cond);letter-spacing:.01em;text-transform:uppercase}
+.pview .okd{border-radius:0;font:500 9.5px/1 var(--tb-mono);letter-spacing:1.2px}
+
+/* the move card: whose move, in their colour down the side (as the table marks the active seat), and the last roll */
+.pview .mvcard{box-shadow:inset 3px 0 0 var(--pc,transparent);background:color-mix(in srgb,var(--pc,transparent) 7%,rgba(10,25,36,.72))}
+.pview .mtitle{font:800 2rem/1 var(--tb-cond);letter-spacing:.005em;text-transform:uppercase;color:var(--tb-paper)}
+.pview .move.you .mtitle{color:var(--tb-acid)}
+.pview .mtitle .turnchip{width:.5em;height:.5em;vertical-align:.14em}
+.pview .mnow{font-weight:600}
+.pview .justnow span{border-radius:0;background:none;border:1px solid var(--tb-line2);font:500 9px/1.2 var(--tb-mono);letter-spacing:1.6px;color:var(--tb-muted);padding:2px 6px}
+.pview .roll{border-top-color:var(--tb-line)}
+.pview .roll .sum{font-family:var(--tb-cond);font-size:4rem}
+.pview .roll .rgain .lab{font:500 9.5px/1.3 var(--tb-mono);letter-spacing:1.6px;color:var(--tb-cyan)}
+
+/* sections that fold: a hairline head, the peek in mono */
+.pview .sechead .peek{font:500 11px/1.2 var(--tb-mono);letter-spacing:.6px;color:var(--tb-muted)}
+.pview .sechead .peek .chip{border-radius:1px}
+
+/* your hand */
+.pview .hslot{font:500 9px/1.2 var(--tb-mono);letter-spacing:.9px;text-transform:uppercase;color:var(--tb-dim)}
+.pview .hslot strong{font:800 1.6rem/1 var(--tb-cond);color:var(--tb-paper)}
+.pview .hslot.none strong{color:var(--tb-dim)}
+.pview .stwrap{border-top-color:var(--tb-line)}
+.pview .perk{border-radius:0;font:500 9.5px/1.3 var(--tb-mono);letter-spacing:.8px;text-transform:uppercase}
+.pview .stbtn{border-radius:0}
+
+/* what you can do: square rows, a quiet cyan edge on what you can afford, a mono tag for how many are ready */
+.pview .opt,.pview .pick,.pview .deal,.pview .stdetail,.pview .chipx{border-radius:0}
+.pview .opt{background:rgba(4,12,18,.45);border-color:var(--tb-line2)}
+.pview .opt:disabled,.pview div.opt.cant{border-color:var(--tb-line2)}
+.pview .opt.can{border-color:rgba(100,232,243,.38)}
+.pview .opt .top .nm,.pview .opt.mk .grow>.nm{font-family:var(--tb-cond);font-weight:700;font-size:1.22rem;letter-spacing:.01em}
+.pview .opt .go{border-radius:0;background:none;border:1px solid rgba(100,232,243,.55);color:var(--tb-cyan);font:500 9.5px/1.2 var(--tb-mono);letter-spacing:1.4px;padding:3px 7px}
+.pview .opt[aria-pressed=true],.pview .pick[aria-pressed=true],.pview .keepopt.on{border-color:var(--tb-paper);box-shadow:inset 0 -2px 0 var(--tb-paper);background:var(--tb-raise)}
+.pview .pick{border-width:1px;border-color:var(--tb-line2);background:rgba(4,12,18,.45);font:500 9.5px/1.2 var(--tb-mono);letter-spacing:.6px;text-transform:uppercase}
+.pview .pick .n{font-family:var(--tb-mono);letter-spacing:0}
+.pview .deal{background:rgba(3,10,15,.5);border-color:var(--tb-line)}
+.pview .swapi{stroke:var(--tb-muted)}
+.pview .stdetail{background:rgba(3,10,15,.5);border-color:var(--tb-line)}
+.pview .stname{font:700 1.4rem/1.05 var(--tb-cond);letter-spacing:.01em}
+.pview .stwhy.no{color:#ff7dbb}
+.pview .freebie{border-radius:0;font-family:var(--tb-mono);font-weight:500;letter-spacing:1.4px}
+.pview .tally .now{color:var(--tb-paper)}
+.pview .tally .num{font-family:var(--tb-mono);font-size:.8rem}
+.pview .keypanel .k strong{font:700 .95rem/1.05 var(--tb-cond);letter-spacing:.02em}
+.pview .keypanel .k i.ksw{border-radius:1px}
+
+/* the dock: the landing's glass bar, square */
+.pview .phone #ps-bar{border-radius:0;border:1px solid var(--tb-line2);background:var(--tb-glass);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.pview .phone #ps-bar .btn{border-radius:0}
+.pview .phone #ps-bar .btn:not(.ghost):not(:disabled):not(.endt){background:var(--tb-acid);box-shadow:0 0 24px rgba(232,252,55,.2)}
+.pview .phone #ps-bar .btn.big{font-weight:800}
+.pview .actionbar .btn:disabled{background:rgba(6,18,27,.92);color:var(--tb-dim);border:1px dashed var(--tb-line2)}
+.pview .actionbar .btn.ghost,.pview .actionbar .btn.ghost:disabled{background:rgba(6,18,27,.92);border-color:var(--tb-line2)}
+.pview .btn.endt{background:rgba(6,18,27,.92);color:var(--tb-paper);border:1px solid var(--tb-line3);font-weight:700}
+.pview .btn.endt .endi{color:var(--tb-muted)}
+.pview .dockwait b{font:700 1.12rem/1.05 var(--tb-cond);letter-spacing:.01em}
+.pview .dockwait .dw span{color:var(--tb-muted)}
+.pview .dockwait .turnchip{border-radius:2px}
+/* Hurry up is asked of somebody else: hot pink, the warning, never the acid of a move */
+.pview .phone #ps-bar .btn.hurry{font:700 1.08rem/1.1 var(--tb-cond);letter-spacing:.03em;text-transform:uppercase}
+.pview .phone #ps-bar .btn.hurry:not(.ghost):not(:disabled):not(.endt){background:rgba(70,6,34,.9);color:#fff;border:1px solid var(--tb-warn);box-shadow:0 0 18px rgba(255,46,147,.35)}
+.pview .phone #ps-bar .btn.hurry:disabled{background:rgba(28,4,16,.82);color:#ff7dbb;border:1px solid rgba(255,46,147,.45)}
+.pview .clk{background:radial-gradient(closest-side,color-mix(in srgb,var(--pc) 14%,#050f16) 78%,transparent 80%)}
+.pview .clk .cr0{stroke:rgba(178,232,255,.14)}
+.pview .clk b{font:600 .86rem/1 var(--tb-mono);letter-spacing:-.02em}
+.pview .clk.up .cr1{stroke:var(--tb-warn)}
+.pview .clk.held::after{border-radius:0}
+
+/* the board: the table screen's ground, a live board edged in acid while it is the control */
+.pview .phone .boardbox{background:radial-gradient(120% 95% at 50% 28%,#0b1c28 0,#07131c 55%,#040b11 100%)}
+.pview .boardbox.live{box-shadow:inset 0 0 0 1px rgba(232,252,55,.5)}
+.pview .bhint{border-bottom:1px solid var(--tb-line2);background:linear-gradient(90deg,rgba(14,33,48,.96),rgba(6,18,27,.92));box-shadow:inset 3px 0 0 var(--tb-acid)}
+.pview .bhint .bhi{border-radius:0;background:rgba(178,232,255,.06)}
+.pview .bhint b{font:700 1.15rem/1.05 var(--tb-cond);letter-spacing:.01em;text-transform:uppercase;color:var(--tb-paper)}
+.pview .bhint .bht span{color:#b9c7ce}
+.pview.bfull .bhint{border-radius:0;border:1px solid var(--tb-line2);background:var(--tb-glass);box-shadow:inset 3px 0 0 var(--tb-acid),0 8px 24px rgba(0,0,0,.5)}
+.pview .bfullbtn{border-radius:0;border-color:var(--tb-line2);background:rgba(3,20,33,.82);color:#c9dbe2}
+.pview .camctl{border-radius:0;border-color:var(--tb-line2);background:rgba(3,20,33,.82)}
+.pview .camctl button{border-radius:0;border-color:var(--tb-line);background:transparent;color:#c9dbe2}
+.pview .camctl button:hover{border-color:var(--tb-line3);color:var(--tb-paper)}
+.pview .camctl button.wide{font:500 10px/1 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase}
+.pview .camctl button[aria-pressed=true]{background:rgba(100,232,243,.07);color:var(--tb-cyan);border-color:rgba(100,232,243,.55)}
+.pview .camctl .camnote{font:500 9.5px/1.4 var(--tb-mono);letter-spacing:.8px;text-transform:uppercase;color:var(--tb-dim)}
+/* look here: a pulse of paper round what needs you, the dock's button in acid */
+@keyframes pvattn{0%{box-shadow:0 0 0 0 rgba(243,243,233,0)}22%{box-shadow:0 0 0 2px rgba(243,243,233,.9),0 0 30px 4px rgba(100,232,243,.25)}100%{box-shadow:0 0 0 12px rgba(243,243,233,0)}}
+@keyframes pvattnbtn{0%{box-shadow:0 0 0 0 rgba(232,252,55,0)}25%{box-shadow:0 0 0 3px rgba(243,243,233,.9),0 0 34px 8px rgba(232,252,55,.55)}100%{box-shadow:0 0 0 14px rgba(232,252,55,0)}}
+.pview .slot.attn>section:not(.bare),.pview .slot.attn>.card,.pview .slot.attn .boardbox{animation-name:pvattn}
+.pview #ps-bar.attn .btn.big:not(:disabled){animation-name:pvattnbtn}
+
+/* sheets: the landing's terminal, square, with a hairline of cyan along the top */
+.pview .modal .scrim{background:rgba(2,8,12,.78)}
+.pview .modal .sheet{border-radius:0;border-color:var(--tb-line2);background:linear-gradient(180deg,#0b1f2d 0,#081825 40%,#071520)}
+.pview .modal .sheet::before{left:0;right:0;background:linear-gradient(90deg,transparent,rgba(100,232,243,.6),transparent)}
+.pview .sheet>.sh-foot::before{background:linear-gradient(transparent,#071520)}
+.pview .grab{width:36px;height:3px;border-radius:0;background:var(--tb-line3)}
+.pview .shx,.pview .shback,.pview .hudx,.pview .arx{border-radius:0;border-color:var(--tb-line2);background:rgba(6,18,27,.6)}
+.pview .shback{border-color:transparent;background:none}
+@media (hover:hover){.pview .shx:hover,.pview .shback:hover{border-color:var(--tb-line3);color:var(--tb-paper)}}
+.pview .mkhero .swipe{border-radius:0;border-color:var(--tb-line2);background:rgba(6,18,27,.7)}
+.pview .mkdesc{font-size:.98rem}
+.pview .mkleft{font:500 10px/1.3 var(--tb-mono);letter-spacing:1px;text-transform:uppercase}
+.pview .shnote{border-radius:0;border-color:var(--tb-line2);background:rgba(3,10,15,.6);box-shadow:inset 2px 0 0 var(--tb-acid)}
+.pview .shnote .btn{border-radius:0}
+.pview .mkacts .btn{border-radius:0}
+/* "end your turn?" */
+.pview .modal.dlg .sheet{border-radius:0;border:1px solid var(--tb-line2);box-shadow:0 30px 80px rgba(0,0,0,.75)}
+.pview .endico{border-radius:0;color:var(--tb-paper);background:none;border:1px solid var(--tb-line3)}
+.pview .dlgt{font:800 2rem/1 var(--tb-cond);letter-spacing:.005em;text-transform:uppercase}
+.pview .dlgs{font:500 10.5px/1.4 var(--tb-mono);letter-spacing:1px;text-transform:uppercase}
+.pview .endwarn li{border-radius:0;background:rgba(3,10,15,.55);border-color:var(--tb-line)}
+.pview .endwarn li::before{border-radius:0;width:6px;height:6px;margin-top:7px}
+.pview .endwarn li.w-road::before,.pview .endwarn li.w-deal::before{background:var(--tb-warn);box-shadow:0 0 8px rgba(255,46,147,.7)}
+.pview .dlgacts .btn{border-radius:0}
+.pview .stampx{font-family:var(--tb-cond);font-weight:800;border-radius:0;color:var(--tb-paper);text-shadow:0 0 22px rgba(243,243,233,.4),0 3px 0 #000}
+
+/* your turn, somebody else's, their card: condensed capitals, square edges */
+.pview .yturn .yt{font-family:var(--tb-cond);font-weight:800;letter-spacing:.03em}
+.pview .yturn .ys{font:500 11px/1.3 var(--tb-mono);letter-spacing:3px}
+.pview .handoff,.pview .fxmini,.pview .fightpill{border-radius:0}
+.pview .handoff{font:700 1.05rem/1.1 var(--tb-cond);letter-spacing:.02em;border-color:color-mix(in srgb,var(--pc) 55%,var(--tb-line2));background:var(--tb-glass)}
+.pview .handoff span{color:var(--tb-muted)}
+.pview .fxmini{background:var(--tb-glass)}
+.pview .fxmini b{font:700 1rem/1.1 var(--tb-cond);letter-spacing:.02em}
+.pview .fightpill{font:700 1rem/1.1 var(--tb-cond);letter-spacing:.03em;text-transform:uppercase}
+.pview .fightpill .live{border-radius:0;font:500 9px/1.2 var(--tb-mono);letter-spacing:1.6px}
+
+/* the full-screen board's bar across the top, your hand and the score */
+.pview.bfull .phone .boardbox{background:radial-gradient(120% 90% at 50% 40%,#0b1c28,#06121b)}
+.pview .hudtop,.pview .hudhand,.pview .hudscore{border-radius:0;border-color:var(--tb-line2);background:var(--tb-glass)}
+.pview .hudwho b{font:700 1.2rem/1.05 var(--tb-cond);letter-spacing:.01em;text-transform:uppercase}
+.pview .hudwho.you b{color:var(--tb-acid)}
+.pview .hudwho span{color:#b9c7ce}
+.pview .huddice strong{font-family:var(--tb-cond)}
+.pview .hudhand .pk{font:500 11px/1 var(--tb-mono);border-left-color:var(--tb-line)}
+.pview .hudscore{font:500 11px/1.2 var(--tb-mono)}
+.pview .hudscore span{color:var(--tb-muted)}
+.pview .hudscore span.now{color:var(--tb-paper)}
+.pview .hudscore .chip{border-radius:1px}
+.pview.bfull .phone .camctl{border-radius:0;border-color:var(--tb-line2);background:rgba(3,20,33,.82)}
+
+/* trash talk: the whisper chip, the sheet's buttons */
+.pview .wspchip{border-radius:0;border-color:var(--tb-line2);background:rgba(6,18,27,.7)}
+.pview #p-hud .talkbtn{border-radius:0;background:var(--tb-glass)}
+.pview .ttb,.pview .ttw,.pview .ttto .sw{border-radius:0;border-color:var(--tb-line2);background:rgba(4,12,18,.45)}
+.pview .ttto .sw[aria-pressed=true]{border-color:var(--tb-paper);background:var(--tb-raise)}
+.pview .ttlab,.pview .tth{font:500 10.5px/1.4 var(--tb-mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--tb-muted)}
+
+/* the page-level pieces the phone opens: the sound panel, a toast, the dice machine */
+.pview .sndpanel{border-radius:0;background:rgba(8,22,32,.97);border-color:var(--tb-line2)}
+.pview .sndrow{border-radius:0}
+.pview .sndpanel input,.pview .sndvol input{accent-color:#7f9ea9}
+.pview .sndrow[aria-checked=true] .sndsw{background:#3d8f99}
+.pview .toast{border-radius:0;background:rgba(8,22,32,.97);color:var(--tb-paper);border:1px solid rgba(178,232,255,.3);box-shadow:0 12px 34px rgba(0,0,0,.55)}
+.pview .slotm{border-radius:6px;border:1px solid var(--tb-line3);background:linear-gradient(#0d1f2c,#06121b);box-shadow:0 0 0 4px #040b11,8px 9px 0 4px rgba(16,55,65,.55),0 26px 60px rgba(0,0,0,.7)}
+.pview .slotm .cap{font-family:var(--tb-cond);font-weight:700;letter-spacing:.02em}
+.pview .slotm .win{border-radius:4px;border:1px solid rgba(178,232,255,.18)}
+.pview .slotm .sum{font-family:var(--tb-cond)}
+.pview .slotm.seven{border-color:var(--tb-warn);box-shadow:0 0 0 4px #040b11,0 0 46px 8px rgba(255,46,147,.5),0 24px 60px rgba(0,0,0,.7)}
+.pview .slotm.lucky{border-color:#7be495;box-shadow:0 0 0 4px #040b11,0 0 40px 5px rgba(123,228,149,.4),0 24px 60px rgba(0,0,0,.7)}
+/* cards to drop is a warning: its label in hot pink */
+.pview .phone .card:has([data-p=drop])>h2{color:#ff7dbb}
+.pview .phone .card:has([data-p=drop])>h2::before{background:var(--tb-warn)}
 </style>
 </head>
 <body>
@@ -12479,7 +12724,8 @@ function moveCard(st, me, extra) {
   const g = guide(st, me ? me.pid : null), veil = FX.veil && st.phase === 'turn';
   // what just happened, from the log the table keeps: how you find out what somebody else's skill did to you
   const last = st.phase === 'turn' && !veil && Array.isArray(st.log) && typeof st.log[0] === 'string' ? st.log[0] : '';
-  return `<section class="card"><div class="move${g.yours ? ' you' : ''}">
+  const pc = g.ap ? g.ap.color : me ? me.color : '';
+  return `<section class="card mvcard"${pc ? ` style="--pc:var(--p-${pc})"` : ''}><div class="move${g.yours ? ' you' : ''}">
     <p class="mtitle">${!g.yours && g.ap ? `<span class="turnchip" style="background:var(--p-${g.ap.color})"></span>` : ''}${esc(g.title)}</p>
     <p class="mnow">${veil ? (FX.veil === 'roll' ? 'The dice are rolling&hellip;' : 'Opening the crate&hellip;') : esc(g.now)}</p>${g.hint && !veil ? `<p class="small muted">${esc(g.hint)}</p>` : ''}
     ${last ? `<p class="justnow"><span>Just now</span>${esc(last)}</p>` : ''}</div>${extra || ''}</section>`;
@@ -13442,8 +13688,9 @@ function renderPlayer() {
   if (st) useGeo(st.board);
   stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st);
   if (!$('#p-main')) {
-    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page">Run the <i>City</i></a><span id="p-status" class="pill">Connecting</span><span id="p-wsp"></span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: stickers, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
+    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span id="p-wsp"></span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: stickers, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
       <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
+    document.body.classList.add('pview');
   }
   // Was this state the table's answer to a move of your own? Only that may move you on from what you were doing.
   const ownMove = !!(ui.pending && st && st.v > (ui.pendV | 0));
