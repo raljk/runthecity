@@ -78,16 +78,15 @@ a.homelink{color:inherit;text-decoration:none;cursor:pointer}
   .host .banner>*{pointer-events:auto}
   .host .banner .what{text-shadow:0 1px 3px #000,0 0 14px rgba(0,0,0,.8)}
   .host .boardbox{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
-  /* the camera buttons sit as a small block in the bottom-right corner, which the hexagon never reaches */
-  .host .camctl{position:absolute;right:12px;bottom:12px;z-index:2;display:grid;grid-template-columns:repeat(4,34px);gap:4px;padding:6px;
+  /* the camera buttons: one flat row centred along the foot of the board (fitMeasure keeps the city above it) */
+  .host .camctl{position:absolute;left:50%;right:auto;bottom:8px;transform:translateX(-50%);z-index:2;display:flex;flex-wrap:nowrap;align-items:center;gap:1px;padding:2px;
     border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 82%,transparent);
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,.45)}
-  .host .camctl button{width:34px;height:34px;border-radius:8px}
-  .host .camctl [data-cam=home]{grid-column:span 2;width:auto}
-  .host .camctl button.wide{grid-column:span 4;width:auto;height:30px;padding:0 8px;font-size:.76rem}
-  .host .camctl button.wide.half{grid-column:span 2;padding:0 3px;white-space:nowrap}
-  .host .camctl .camnote{grid-column:span 4;max-width:140px;justify-self:center}
-  .host .camctl svg{width:18px;height:18px}
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .host .camctl button{width:28px;height:24px;border-radius:8px}
+  .host .camctl button.wide{width:auto;height:24px;padding:0 10px;font-size:.76rem;white-space:nowrap}
+  .host .camctl [data-cam=in],.host .camctl [data-cam=flat]{margin-left:7px}
+  .host .camctl .camnote{flex-basis:auto;max-width:none;white-space:nowrap;padding:0 10px 0 8px}
+  .host .camctl svg{width:15px;height:15px}
   body.hostfight .host .bwrap{flex:none}
   body.hostfight .host .banner{position:static;padding:0;background:none}
   .host .board3d{flex:1;min-height:0;position:relative}
@@ -1609,6 +1608,11 @@ body.hostfight .hframe .bwrap>#h-seats{display:none}
 .hframe .camctl button.wide{font:500 10px/1 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase}
 .hframe .camctl button[aria-pressed=true]{background:rgba(100,232,243,.07);color:var(--tb-cyan);border-color:rgba(100,232,243,.55)}
 .hframe .camctl .camnote{font:500 9.5px/1.4 var(--tb-mono);letter-spacing:.8px;text-transform:uppercase;color:var(--tb-dim)}
+@media (min-width:981px) and (min-height:600px){.hframe .host .camctl button:not([aria-pressed=true]):not(:hover){border-color:transparent}
+  /* the roll just made stands at the top centre of the board, and the words beside it wrap short of it */
+  .hframe .host .banner .bdice{position:absolute;left:50%;top:21px;transform:translateX(-50%);margin:0;height:max(32px,1.08em);text-shadow:none}
+  .hframe .host .banner .what:has(>.bdice){max-width:calc(50% - 100px)}
+  .hframe .host .banner .what:has(>.bdice)+*{margin-left:auto}}
 
 /* a trade on the table */
 .hframe .offerbar{border-radius:0;border-color:var(--tb-line2);background:rgba(10,25,36,.9)}
@@ -10812,6 +10816,8 @@ function fitMeasure(st) {
     if (ban && getComputedStyle(ban).position === 'absolute') Array.from(ban.children).forEach(c => { const q = c.getBoundingClientRect(); if (q.height) top = Math.max(top, q.bottom - r.top + 6); });
     top = Math.ceil(top / 24) * 24;                                 // in steps, so a banner that changes its words does not nudge the city
     const ring = ringFit(box, w, h, top); left = ring.left; right = ring.right; bottom = Math.max(bottom, ring.bottom);
+    const cam = box.parentNode ? box.parentNode.querySelector('.camctl') : null;
+    if (cam && getComputedStyle(cam).position === 'absolute') bottom = Math.max(bottom, h - cam.offsetTop + 4);
   } else {
     // A phone's full screen: its bar and hand across the top (the whole block, whatever it is animating), and at
     // the foot the dock's room, kept whether or not it has buttons in it just now, so the dice do not move the city;
@@ -10835,7 +10841,6 @@ function ringFit(box, w, h, top) {
   if (!ring || !wrap) return out;
   const bw = wrap.querySelector('.bwrap'), card = document.getElementById('h-seatcard');
   const desk = !!(window.matchMedia && matchMedia('(min-width:981px) and (min-height:600px)').matches);
-  const cam = box.parentNode ? box.parentNode.querySelector('.camctl') : null, camH = cam ? cam.offsetHeight : 0;
   const natural = cityNaturalWidth(h, top, 0) || w * 0.62, want = Math.min(160, Math.max(128, window.innerWidth * 0.085));
   const col = Math.round(Math.max(118, Math.min(want, (w - natural) / 2 - 24))), side = desk && (w - 2 * (col + 24)) / natural >= 0.9;
   const home = desk && !side && card ? card : bw;
@@ -10844,7 +10849,7 @@ function ringFit(box, w, h, top) {
   if (!side) return out;
   ring.style.setProperty('--seat-w', col + 'px');
   ring.style.setProperty('--ring-t', top + 'px');
-  ring.style.setProperty('--ring-b', (camH ? camH + 22 : 14) + 'px');
+  ring.style.setProperty('--ring-b', '14px');
   out.left = out.right = 14 + col + 10;
   return out;
 }
