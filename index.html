@@ -87,6 +87,9 @@ a.homelink{color:inherit;text-decoration:none;cursor:pointer}
   .host .camctl [data-cam=in],.host .camctl [data-cam=flat]{margin-left:7px}
   .host .camctl .camnote{flex-basis:auto;max-width:none;white-space:nowrap;padding:0 10px 0 8px}
   .host .camctl svg{width:15px;height:15px}
+  /* a toast rises from the foot of the window, which is where this row is: here it stands just above the row,
+     centred on it and no wider than the board (toastPlace), and taps go through it */
+  body:has(>#app>.hframe) .toast{left:var(--tst-x,50%);bottom:var(--tst-b,calc(84px + env(safe-area-inset-bottom,0px)));max-width:var(--tst-w,calc(100vw - 32px));pointer-events:none}
   body.hostfight .host .bwrap{flex:none}
   body.hostfight .host .banner{position:static;padding:0;background:none}
   .host .board3d{flex:1;min-height:0;position:relative}
@@ -11086,11 +11089,23 @@ const ui = { sel: null, hex: null, pending: false, toast: null, toastTimer: 0, m
 function toast(msg) {
   clearTimeout(ui.toastTimer); let t = $('#toast');
   if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
-  t.textContent = msg; t.hidden = false;
+  t.textContent = msg; t.hidden = false; toastPlace(t);
   // it rises in, and sinks out again rather than blinking off
   t.classList.remove('tout', 'tin'); void t.offsetWidth; t.classList.add('tin');
   ui.toastTimer = setTimeout(() => { t.classList.add('tout'); ui.toastTimer = setTimeout(() => { t.hidden = true; t.classList.remove('tout'); }, 240); }, 3200);
 }
+/* Where the table screen's camera buttons are a row along the foot of the board (a computer), the toast stands just
+   above that row, centred on it: the CSS reads these. Anywhere else (a phone, a narrow window, the board put away
+   for a fight) it keeps its usual place. */
+function toastPlace(t) {
+  const hb = document.getElementById('h-board'), cam = hb && hb.querySelector('.camctl');
+  if (!cam || !cam.offsetHeight || getComputedStyle(cam).position !== 'absolute') { if (t.style.length) t.removeAttribute('style'); return; }
+  const r = cam.getBoundingClientRect();
+  t.style.setProperty('--tst-x', Math.round(r.left + r.width / 2) + 'px');
+  t.style.setProperty('--tst-b', Math.round(document.documentElement.clientHeight - r.top + 12) + 'px');
+  t.style.setProperty('--tst-w', Math.round(hb.getBoundingClientRect().width - 32) + 'px');
+}
+if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('resize', () => { const t = document.getElementById('toast'); if (t && !t.hidden) toastPlace(t); });
 // A sleeping phone drops its socket. The state lives on the relay and in localStorage, so a reload resumes cleanly.
 // The relay client reconnects by itself, but its back-off grows to two minutes. If it is still down a while
 // after the page is looked at again (or after 25 s online), reload: boot retries until it connects.
