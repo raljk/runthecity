@@ -1361,6 +1361,202 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
   body.clkend::after{animation:none}
   .clk .cr1,.bigcount .bcr .cr1{transition:none}
 }
+/* ---------- the table screen, dressed like the front door (2026-09-26) ----------
+   The landing page's night on the table screen and the board view: teal-black ground, paper-white type,
+   square hairline panels, condensed capitals and small monospaced labels, the wordmark in the corner.
+   Its bright colours are held back on purpose. The city is the bright thing on this screen; acid yellow
+   is kept for the one filled button, the move somebody has to make now, and a player's own colour still
+   says whose turn it is. Everything here is scoped to .hframe (or to a page that holds one), so the
+   phone and the landing page are untouched. */
+.hframe{
+  --tb-ground:#06121b; --tb-panel:#0a1924; --tb-raise:#0e2130;
+  --tb-line:rgba(178,232,255,.13); --tb-line2:rgba(178,232,255,.24); --tb-line3:rgba(178,232,255,.42);
+  --tb-paper:#f3f3e9; --tb-muted:#8fa5b1; --tb-dim:#5f7582;
+  --tb-acid:#e8fc37; --tb-acid-ink:#0f1a0c; --tb-cyan:#64e8f3;
+  --tb-cond:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
+  --tb-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ink:var(--tb-paper); --muted:var(--tb-muted); --line:var(--tb-line); --panel:var(--tb-panel); --bg:var(--tb-ground);
+  background:var(--tb-ground);color:var(--tb-paper)}
+body:has(>#app>.hframe){background:#06121b}
+.hframe :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
+.hframe a{color:var(--tb-paper)}
+/* a small label, the landing's eyebrow: monospaced, spaced out, quiet */
+.hframe .side h2,.hframe .dhead .dt,.hframe .hstrip .stl,.hframe .recs>p.small:first-child,.hframe .clkpick>p.small:first-child{
+  font:500 11px/1.35 var(--tb-mono);letter-spacing:2.6px;text-transform:uppercase;color:var(--tb-muted)}
+.hframe .recs>p.small:first-child strong,.hframe .clkpick>p.small:first-child strong{font-weight:500}
+
+/* the header: the wordmark, where you are, the key, the sound and the relay */
+.hframe>.bar{background:linear-gradient(#071823,var(--tb-ground));border-bottom:1px solid var(--tb-line);gap:14px;padding-top:7px;padding-bottom:7px}
+.hframe .tbbrand{display:inline-flex;align-items:center;line-height:0;flex:none}
+.hframe .tblogo{display:block;height:40px;width:auto}
+.hframe .tbwhere{font:500 10.5px/1.3 var(--tb-mono);letter-spacing:2.6px;text-transform:uppercase;color:var(--tb-muted);padding:3px 0 3px 14px;border-left:1px solid var(--tb-line2);white-space:nowrap}
+.hframe .hk{gap:8px}
+.hframe .hk .rc{border-radius:3px}
+.hframe .hk strong{font:700 1.02rem/1 var(--tb-cond);letter-spacing:.04em;text-transform:uppercase;color:var(--tb-paper)}
+.hframe .hk em{margin-top:3px;font:500 9px/1.2 var(--tb-mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--tb-dim)}
+.hframe .sndbtn{border-radius:0;border-color:var(--tb-line2);background:rgba(6,18,27,.6);color:var(--tb-muted)}
+.hframe .sndbtn:hover,.hframe .sndbtn[aria-expanded=true],.hframe .fsbtn[aria-pressed=true]{color:var(--tb-paper);border-color:var(--tb-line3)}
+.hframe .hvol input{accent-color:#7f9ea9}
+.hframe #h-status{border-radius:0;border-color:var(--tb-line2);padding:6px 11px;font:500 10px/1.2 var(--tb-mono);letter-spacing:2px;text-transform:uppercase;color:var(--tb-muted)}
+.hframe #h-status::before{width:6px;height:6px;border-radius:0;background:var(--tb-dim)}
+.hframe #h-status.on{color:var(--tb-paper)}
+.hframe #h-status.on::before{background:var(--tb-cyan);box-shadow:0 0 8px rgba(100,232,243,.7)}
+
+/* buttons: square, like the landing's. A filled one is the move to make now; the rest are outlines */
+.hframe .btn{border-radius:0;background:var(--tb-acid);color:var(--tb-acid-ink);border:1px solid var(--tb-acid);font-weight:750;letter-spacing:.01em;
+  transition:background .15s,border-color .15s,color .15s,box-shadow .15s}
+.hframe .btn:not(:disabled):hover{background:#f3ff90;border-color:#f3ff90;box-shadow:0 0 22px rgba(232,252,55,.22)}
+.hframe .btn:disabled{opacity:1;background:transparent;color:var(--tb-dim);border:1px dashed var(--tb-line2)}
+.hframe .btn.ghost{background:rgba(6,18,27,.55);color:var(--tb-paper);border:1px solid var(--tb-line2);font-weight:650}
+.hframe .btn.ghost:not(:disabled):hover{background:var(--tb-raise);border-color:var(--tb-line3);box-shadow:none}
+.hframe .btn.ghost:disabled{background:transparent;color:var(--tb-dim);border-style:dashed}
+.hframe .seg{border-radius:0;border-color:var(--tb-line2);gap:1px;background:var(--tb-line)}
+.hframe .seg button{font-weight:650;color:var(--tb-muted);background:#07141d}
+.hframe .seg button:hover:not(:disabled){color:var(--tb-paper)}
+.hframe .seg button[aria-pressed=true]{background:#102330;color:var(--tb-paper);box-shadow:inset 0 -2px 0 var(--tb-paper)}
+.hframe .seg button:disabled{color:var(--tb-dim)}
+.hframe input[type=text]{border-radius:0;background:rgba(3,10,15,.7);border-color:var(--tb-line2);font-family:var(--tb-mono);font-size:15px}
+
+/* the board: a chamfered hairline frame, the landing's table, drawn over the board so nothing moves */
+.hframe .boardbox{border-radius:0;box-shadow:none;background:radial-gradient(120% 95% at 50% 28%,#0b1c28 0,#07131c 55%,#040b11 100%)}
+.hframe .boardbox::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;--c:24px;--l:var(--tb-line2);--g:var(--tb-ground);
+  background:
+    linear-gradient(to bottom right,var(--g) calc(50% - 1.3px),var(--l) calc(50% - .5px),var(--l) calc(50% + .5px),transparent calc(50% + 1.3px)) 0 0/var(--c) var(--c) no-repeat,
+    linear-gradient(to bottom right,transparent calc(50% - 1.3px),var(--l) calc(50% - .5px),var(--l) calc(50% + .5px),var(--g) calc(50% + 1.3px)) 100% 100%/var(--c) var(--c) no-repeat,
+    linear-gradient(var(--l),var(--l)) var(--c) 0/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(var(--l),var(--l)) 100% 0/1px calc(100% - var(--c)) no-repeat,
+    linear-gradient(var(--l),var(--l)) 0 100%/calc(100% - var(--c)) 1px no-repeat,
+    linear-gradient(var(--l),var(--l)) 0 var(--c)/1px calc(100% - var(--c)) no-repeat}
+.hframe .radio{border-radius:0}
+.hframe .arena.ontable{border-radius:0}
+
+/* the turn banner over the board */
+.hframe .banner .what{font:700 clamp(1.4rem,.4rem + 1.35vw,1.85rem)/1.08 var(--tb-cond);letter-spacing:.005em}
+.hframe .turnchip{border-radius:1px;border-width:1.5px;width:.62em;height:.62em;vertical-align:.06em;margin-right:.4em}
+.hframe .banner .bdice strong{font-family:var(--tb-cond);font-weight:800;font-size:2.3rem}
+@media (min-width:981px) and (min-height:600px){
+  .hframe .host .banner{padding:14px 18px 34px;border-radius:0;
+    background:linear-gradient(to bottom,rgba(6,18,27,.9) 0,rgba(6,18,27,.62) 55%,transparent)}
+}
+
+/* the side: hairline panels with square corners, numbered like the landing's chapters */
+.hframe .side{counter-reset:tbsec}
+.hframe .side>.card{border-radius:0;background:rgba(10,25,36,.72);border-color:var(--tb-line)}
+.hframe .side>.card>h2{padding-bottom:10px;border-bottom:1px solid var(--tb-line)}
+.hframe .side>.card>h2::before{counter-increment:tbsec;content:counter(tbsec,decimal-leading-zero) " / ";color:var(--tb-dim)}
+/* the join code and the table's controls: the landing's terminal, a marker before its label */
+.hframe .drawer{background:rgba(9,24,35,.86)}
+.hframe .dhead .dt{font-size:10.5px;letter-spacing:1.6px}
+.hframe .dhead .dt::before{content:"";display:inline-block;width:6px;height:6px;margin-right:10px;vertical-align:.12em;background:var(--tb-dim)}
+.hframe .dhead{border-radius:0}
+.hframe .dhead:hover .dt{color:var(--tb-paper)}
+.hframe .dhead .dcode{font:600 1rem/1 var(--tb-mono);letter-spacing:.18em;color:var(--tb-paper)}
+.hframe .dbody .dctl{border-top-color:var(--tb-line)}
+.hframe .qrbox{border-radius:0;padding:7px;outline:1px solid var(--tb-line3);outline-offset:5px;margin:6px}
+.hframe .roomcode{font:600 2.1rem/1 var(--tb-mono);letter-spacing:.26em;color:var(--tb-paper)}
+.hframe .join.mini .roomcode{font-size:1.35rem}
+.hframe .joinurl{font:500 11px/1.45 var(--tb-mono);color:var(--tb-muted);text-decoration:underline;text-decoration-color:var(--tb-line3);text-underline-offset:3px}
+.hframe .joinurl:hover{color:var(--tb-paper)}
+.hframe .warn{border-radius:0;background:rgba(217,164,65,.07);border:1px solid rgba(217,164,65,.28);border-left:2px solid #d9a441;color:#f0d9ae}
+.hframe .warn code{border-radius:0;background:rgba(0,0,0,.25)}
+.hframe .recs{border-top-color:var(--tb-line)}
+.hframe .reclist .chip{border-radius:1px}
+.hframe .reclist .rhow{font-family:var(--tb-cond);font-size:1.02rem;letter-spacing:.02em}
+
+/* the seats: whose turn it is in their own colour, a thin bar and a tint, not a glow */
+.hframe .seat{border-radius:0;border-color:var(--tb-line);background:rgba(4,12,18,.35);padding:9px 12px 9px 10px;transition:background .25s,border-color .25s,box-shadow .25s}
+.hframe .seat.active{border-color:color-mix(in srgb,var(--pc,var(--tb-paper)) 50%,var(--tb-line));background:color-mix(in srgb,var(--pc,var(--tb-paper)) 9%,rgba(4,12,18,.35));
+  box-shadow:inset 3px 0 0 var(--pc,var(--tb-paper))}
+.hframe .seat .chip{width:22px;height:22px;border-radius:2px;border-width:1.5px;justify-self:center}
+.hframe .seat .nm{font:700 1.3rem/1.05 var(--tb-cond);letter-spacing:.015em}
+.hframe .seat .sub{margin-top:2px;font:500 9.5px/1.3 var(--tb-mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--tb-dim)}
+.hframe .seat .sub .dot{width:6px;height:6px;border-radius:0;vertical-align:.05em}
+.hframe .seat .sub .dot.on{background:var(--tb-cyan)}
+.hframe .seat .end{gap:8px}
+.hframe .seat .end>.small{font:500 11px/1 var(--tb-mono);letter-spacing:1px;color:var(--tb-muted);white-space:nowrap}
+.hframe .seat .vp b{font:800 1.45rem/1 var(--tb-cond);letter-spacing:0;color:var(--tb-paper);margin-right:1px}
+.hframe .seat.open{border-color:var(--tb-line2);font:500 10.5px/1.3 var(--tb-mono);letter-spacing:2px;text-transform:uppercase;color:var(--tb-dim)}
+.hframe .seat .btn.small{min-height:30px;padding:3px 9px}
+
+/* What happened: the newest line in paper, the rest quiet, hairlines between */
+.hframe .log{gap:0;font-size:.86rem;line-height:1.38}
+.hframe .log li{padding:5px 0;border-top:1px solid rgba(178,232,255,.06)}
+.hframe .log li:first-child{border-top:0;padding-top:0;color:var(--tb-paper)}
+@media (min-width:981px) and (min-height:600px){.hframe .host .logcard .log{-webkit-mask-image:linear-gradient(#000 calc(100% - 34px),transparent);mask-image:linear-gradient(#000 calc(100% - 34px),transparent);padding-bottom:18px}}
+
+/* the skills and talents left at the market, along the foot */
+.hframe .hstrip{background:linear-gradient(var(--tb-ground),#050f16);border-top:1px solid var(--tb-line)}
+.hframe .hstrip .stl{width:92px;font-size:10px;letter-spacing:2.2px}
+.hframe .hm strong{font:700 .98rem/1.02 var(--tb-cond);letter-spacing:.02em}
+.hframe .hm em{margin-top:2px;font:500 9.5px/1.2 var(--tb-mono);letter-spacing:1px;text-transform:uppercase;color:var(--tb-dim)}
+/* a smaller screen keeps the old sizes, so the city loses no height to a second line */
+@media (max-width:1439px){
+  .hframe .banner .bdice{--d:32px}
+  .hframe .banner .bdice strong{font-size:2rem}
+  .hframe .hm strong{font-size:.88rem;letter-spacing:.01em}
+  .hframe .dhead .dt{font-size:10px;letter-spacing:1.2px}
+  .hframe .dhead .dcode{letter-spacing:.14em}
+  .hframe .seat .sub{letter-spacing:.9px}
+}
+
+/* the camera buttons: the landing's atmosphere controls */
+.hframe .camctl{border-radius:0;border-color:var(--tb-line2);background:rgba(3,20,33,.82)}
+.hframe .camctl button{border-radius:0;border-color:var(--tb-line);background:transparent;color:#c9dbe2}
+.hframe .camctl button:hover{border-color:var(--tb-line3);color:var(--tb-paper)}
+.hframe .camctl button.wide{font:500 10px/1 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase}
+.hframe .camctl button[aria-pressed=true]{background:rgba(100,232,243,.07);color:var(--tb-cyan);border-color:rgba(100,232,243,.55)}
+.hframe .camctl .camnote{font:500 9.5px/1.4 var(--tb-mono);letter-spacing:.8px;text-transform:uppercase;color:var(--tb-dim)}
+
+/* a trade on the table */
+.hframe .offerbar{border-radius:0;border-color:var(--tb-line2);background:rgba(10,25,36,.9)}
+.hframe .offerbar .who{font:700 1.2rem/1.1 var(--tb-cond);letter-spacing:.02em}
+.hframe .offerbar .say{border-radius:0;font:500 10px/1.3 var(--tb-mono);letter-spacing:1px;text-transform:uppercase}
+.hframe .offerbar .say .chip{border-radius:1px}
+.hframe .offerbar .deal .lab{font:500 10px/1.3 var(--tb-mono);letter-spacing:2px;color:var(--tb-muted)}
+.hframe .offerbar .swapi{stroke:var(--tb-muted)}
+
+/* release 2 on the table: the clock, who wants a hurry-up, the last ten seconds, the standings */
+.hframe .clk{background:radial-gradient(closest-side,color-mix(in srgb,var(--pc) 14%,#050f16) 78%,transparent 80%)}
+.hframe .clk .cr0{stroke:rgba(178,232,255,.14)}
+.hframe .clk b{font:600 .92rem/1 var(--tb-mono);letter-spacing:-.02em}
+.hframe .clk.lg b{font-size:1.02rem}
+.hframe .clk.held::after{border-radius:0}
+.hframe .tclk small{font:500 9.5px/1.3 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase}
+.hframe .hurv{border-radius:0;font:500 10.5px/1.2 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase}
+.hframe .hurv .chip{border-radius:1px}
+.hframe .bigcount b{font-family:var(--tb-cond);font-weight:800}
+.hframe .bigcount .bcr small{font:500 calc(var(--r,240px) * .052)/1 var(--tb-mono);letter-spacing:.3em}
+.hframe .bigcount.stamp b{font-family:var(--tb-cond);font-weight:800;border-radius:0;border-width:4px;letter-spacing:.06em}
+.hframe .scorecard{border-radius:0;background:linear-gradient(160deg,rgba(9,24,35,.96),rgba(5,14,21,.93));
+  border-color:color-mix(in srgb,var(--pc) 40%,var(--tb-line2));box-shadow:0 18px 40px rgba(0,0,0,.55),inset 3px 0 0 var(--pc)}
+.hframe .scorecard .sck{font:500 10px/1.3 var(--tb-mono);letter-spacing:2.6px;text-shadow:none}
+.hframe .scorecard .sct{font:700 1.55rem/1.05 var(--tb-cond);letter-spacing:.01em;color:var(--tb-paper);margin:4px 0 10px}
+.hframe .scorecard li{border-radius:0}
+.hframe .scorecard .chip{border-radius:1px}
+.hframe .scorecard .scbar,.hframe .scorecard .scbar i{height:4px;border-radius:0}
+.hframe .scorecard .scbar i{box-shadow:none}
+.hframe .scorecard b{font:800 1.2rem/1 var(--tb-cond)}
+.hframe .scorecard li.sclead b{text-shadow:none}
+.hframe .scorecard em{font:500 10px var(--tb-mono)}
+.hframe .clkask{border-radius:0}
+.hframe .okd{border-radius:0;font:500 9.5px/1 var(--tb-mono);letter-spacing:1.2px}
+
+/* the page-level pieces the table screen opens: the sound panel, a toast, the dice machine */
+body:has(>#app>.hframe) .sndpanel{border-radius:0;background:rgba(8,22,32,.97);border-color:rgba(178,232,255,.24);color:#f3f3e9}
+body:has(>#app>.hframe) .sndpanel h2{font:500 11px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:2.6px;color:#8fa5b1}
+body:has(>#app>.hframe) .sndrow{border-radius:0}
+body:has(>#app>.hframe) .sndrow small{color:#8fa5b1}
+body:has(>#app>.hframe) .sndpanel input{accent-color:#7f9ea9}
+body:has(>#app>.hframe) .sndrow[aria-checked=true] .sndsw{background:#3d8f99}
+body:has(>#app>.hframe) .toast{border-radius:0;background:rgba(8,22,32,.97);color:#f3f3e9;border:1px solid rgba(178,232,255,.3);box-shadow:0 12px 34px rgba(0,0,0,.55)}
+body:has(>#app>.hframe) .slotm{border-radius:6px;border:1px solid rgba(178,232,255,.42);background:linear-gradient(#0d1f2c,#06121b);
+  box-shadow:0 0 0 4px #040b11,8px 9px 0 4px rgba(16,55,65,.55),0 26px 60px rgba(0,0,0,.7)}
+body:has(>#app>.hframe) .slotm .cap{font-family:'Barlow Condensed','Arial Narrow',Impact,sans-serif;font-weight:700;letter-spacing:.02em}
+body:has(>#app>.hframe) .slotm .win{border-radius:4px;border:1px solid rgba(178,232,255,.18)}
+body:has(>#app>.hframe) .slotm .sum{font-family:'Barlow Condensed','Arial Narrow',Impact,sans-serif}
+body:has(>#app>.hframe) .slotm.seven{border-color:#ff3347;box-shadow:0 0 0 4px #040b11,0 0 46px 8px rgba(255,51,71,.5),0 24px 60px rgba(0,0,0,.7)}
+body:has(>#app>.hframe) .slotm.lucky{border-color:#7be495;box-shadow:0 0 0 4px #040b11,0 0 40px 5px rgba(123,228,149,.4),0 24px 60px rgba(0,0,0,.7)}
+@media (prefers-reduced-motion:reduce){.hframe .btn,.hframe .seat{transition:none}}
 </style>
 </head>
 <body>
@@ -11370,7 +11566,7 @@ function qrSVG(text) {
 
 function renderHostShell() {
   $('#app').innerHTML = `<div class="hframe">
-  <header class="bar"><a class="brand homelink" href="./" data-l="home" title="Front page">Run the <i>City</i></a><span class="muted small">${WATCH ? 'Board view, table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}${sndVolHTML()}${fsBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
+  <header class="bar"><a class="brand tbbrand homelink" href="./" data-l="home" title="Front page"><img class="tblogo" src="art/landing/run-the-city.svg" width="90" height="40" alt="Run the City"></a><span class="tbwhere">${WATCH ? 'Board view &middot; table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}${sndVolHTML()}${fsBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
   <main class="host">
     <section class="stage"><div id="h-offer" class="slot"></div><div class="bwrap"><div id="h-banner" class="banner"></div><div id="h-board" class="boardbox"></div><div id="h-count" class="bigcount" aria-hidden="true"></div></div><div id="h-arena"></div></section>
     <aside class="side">
@@ -11407,8 +11603,8 @@ function seatsHTML(st, ro) {
     const okd = st.phase === 'lobby' && st.clock && st.clock.s ? (st.clock.ok[p.pid] ? '<span class="okd" title="Said OK to the turn clock">OK</span>' : '<span class="okd no" title="Has not said OK to the turn clock yet">no OK yet</span>') : '';
     if (st.phase === 'lobby') end = okd + (ro ? '' : `${i > 0 ? `<button class="btn ghost small" data-h="up" data-arg="${esc(p.pid)}" aria-label="Move ${esc(p.name)} up one seat">&uarr;</button>` : ''}<button class="btn ghost small" data-h="kick" data-arg="${esc(p.pid)}" aria-label="Remove ${esc(p.name)}">&times;</button>`);
     else if (st.phase === 'rolloff') end = !st.contenders.includes(p.pid) ? `<span class="muted small">out${roll ? ' with ' + (roll[0] + roll[1]) : ''}</span>` : roll ? `<span class="dice" aria-hidden="true">${DIE[roll[0]]}${DIE[roll[1]]}</span><strong>${roll[0] + roll[1]}</strong>` : ro ? '<span class="muted small">rolling…</span>' : `<button class="btn ghost small" data-h="rollfor" data-arg="${esc(p.pid)}">Roll for them</button>`;
-    else end = `<span class="small">${st.pend && st.pend[p.pid] ? `dropping ${st.pend[p.pid]} &middot; ` : ''}${vpOf(st, p.pid)} of ${WIN_VP}</span>${seatBadges(p)}<span class="backs" title="Cards in hand">${rcard('back', { size: 's', n: shownCount(p) })}</span>`;
-    return `<li class="seat${p.pid === act ? ' active' : ''}" data-seat="${esc(p.pid)}"><span class="chip" style="background:var(--p-${p.color})"></span><div><p class="nm">${esc(p.name)}${p.pid === st.starter ? ' &#9733;' : ''}</p><p class="sub"><span class="dot${p.online ? ' on' : ''}"></span>${p.online ? 'connected' : 'phone asleep or offline'}</p></div><div class="end">${end}</div></li>`;
+    else end = `<span class="small vp">${st.pend && st.pend[p.pid] ? `dropping ${st.pend[p.pid]} &middot; ` : ''}<b>${vpOf(st, p.pid)}</b> of ${WIN_VP}</span>${seatBadges(p)}<span class="backs" title="Cards in hand">${rcard('back', { size: 's', n: shownCount(p) })}</span>`;
+    return `<li class="seat${p.pid === act ? ' active' : ''}" data-seat="${esc(p.pid)}" style="--pc:var(--p-${p.color})"><span class="chip" style="background:var(--p-${p.color})"></span><div><p class="nm">${esc(p.name)}${p.pid === st.starter ? ' &#9733;' : ''}</p><p class="sub"><span class="dot${p.online ? ' on' : ''}"></span>${p.online ? 'connected' : 'phone asleep or offline'}</p></div><div class="end">${end}</div></li>`;
   });
   for (let i = st.players.length; i < MAX_PLAYERS && st.phase === 'lobby'; i++) seats.push('<li class="seat open"><span></span><p>Open seat</p><span></span></li>');
   return seats.join('');
