@@ -318,6 +318,35 @@ LINES.update({
     "v_cop_3":   dict(text="Car twelve responding. Rolling tape now.", voice=DISPATCH, radio=True),
 })
 
+# ---- the Director (release 4, 2026-09-26): the announcer knows the city while the camera glides there.
+# Said as three clips run close together: what is happening, which side of the table it is on, and the district
+# ("Shots fired." + "Far side," + "up by the nightlife strip."). Each part is read in the context of the others.
+DIR_WHAT = {"chase": "Car chase!", "robbery": "Robbery in progress.", "gangwar": "Shots fired.",
+            "race": "Street racers.", "concert": "Party on the roof.", "fire": "Something's burning."}
+DIR_SIDE = {"far": "Far side,", "front": "Right down front,", "left": "Over on the left,", "right": "Over on the right,",
+            "mid": "Right in the middle,"}
+DIR_DIST = {"nightlife": "up by the nightlife strip.", "warehouse": "down by the freight yards.",
+            "residential": "in the residential blocks.", "works": "out at the works.", "tower": "under the towers.",
+            "deadzone": "way out by the dead zone."}
+for k, t in DIR_WHAT.items():
+    LINES["v_e_" + k] = dict(text=t, next="Far side, up by the nightlife strip.", style=0.55)
+for k, t in DIR_SIDE.items():
+    LINES["v_p_" + k] = dict(text=t, prev="Shots fired.", next="up by the nightlife strip.", style=0.45)
+for k, t in DIR_DIST.items():
+    LINES["v_d_" + k] = dict(text=t, prev="Shots fired. Over on the left,", style=0.45)
+LINES.update({
+    # the ladder: the world wakes up, then the camera starts to move
+    "v_dir_wake":  dict(text="The city's waking up.", style=0.5),
+    "v_dir_look":  dict(text="Let's take a closer look.", style=0.5),
+    # story panels for moves that had no line of their own: the bank, a terminal, a card bought
+    "v_bank_1":    dict(text="The bank always wins.", style=0.55),
+    "v_bank_2":    dict(text="Cash at the window.", style=0.5),
+    "v_port_1":    dict(text="Straight off the boat.", style=0.5),
+    "v_port_2":    dict(text="Fresh off the docks.", style=0.5),
+    "v_buy_1":     dict(text="Something from the back room.", style=0.55),
+    "v_buy_2":     dict(text="Under the counter.", style=0.55),
+})
+
 # ---------------------------------------------------------------- levels and encoding
 # How loud each kind is, and how it is encoded. Peaks never go above -1 dB.
 # lu is the loudest 400 ms of the clip, K-weighted (LUFS, near enough to EBU R128's momentary
