@@ -160,6 +160,42 @@ SFX = {
     # the standings card sliding onto the table's board
     "score_sting": dict(kind="fx", d=1.4, p=0.6, fade_out=0.25,
         text="A short scoreboard update sting for a sports broadcast: a quick electric flicker, then two bright rising synth-brass notes in the middle register, punchy and clean, like a neon scoreboard lighting up. No voices."),
+    # ---- trash talk (release 3, 2026-09-26): a sound bite with each sticker that flies from a seat on the table
+    # screen (e_*, the room hears them), the whisper arriving on its one phone, and the splats landing on the
+    # phone of the player whose turn it is (s_*, that phone and the table). Our own bites, short, never a meme clip.
+    "e_cheer":    dict(kind="fx", d=1.5, p=0.6, fade_out=0.3,
+        text="A small excited crowd cheering and whooping for a second, a few people at a party, bright and happy, fading quickly. No music."),
+    "e_boo":      dict(kind="fx", d=1.5, p=0.6, fade_out=0.3,
+        text="A small crowd booing for a second, a few people at a party going booo, playful and theatrical, fading quickly. No music."),
+    "e_lol":      dict(kind="fx", d=1.4, p=0.55, fade_out=0.2,
+        text="A cartoon mocking laugh: a quick high teasing hee-hee-hee ha-ha from a comedy character, playful, one voice, short. No music, no words."),
+    # no take was a slow clap (the first was one clap, four more were steady applause), so raw/e_clap.mp3 is composed
+    # from the first take's one clean clap (raw/_prev/e_clap.mp3, 0.50-0.95 s): four of it, each a little lower and
+    # quieter, the gaps growing (0.2, 0.24, 0.3 s), like trade_no. --force would replace it with a generated take.
+    "e_clap":     dict(kind="fx", d=2.4, p=0.8, fade_out=0.2,
+        text="Slow sarcastic applause from one person: clap... clap... clap... clap. Four separate loud hand claps, half a second apart, in a quiet room, nothing between them." + DRY),
+    "e_crickets": dict(kind="fx", d=2.0, p=0.7, fade_in=0.1, fade_out=0.4,
+        text="Awkward silence: a few crickets chirping alone in a quiet empty room at night, nothing else. No music, no voices."),
+    "e_rain":     dict(kind="fx", d=1.4, p=0.6, fade_out=0.2,
+        text="Making it rain: a stack of paper banknotes riffled fast and thrown into the air, notes fluttering down, with a bright cash register ka-ching at the start. No music, no voices."),
+    "e_fire":     dict(kind="fx", d=1.2, p=0.6, fade_out=0.3,
+        text="A big whoosh of flame bursting up, a quick fiery roar that crackles and dies away. No music, no voices."),
+    "e_sweat":    dict(kind="fx", d=1.0, p=0.6, fade_out=0.15,
+        text="A nervous cartoon gulp: one loud comedic swallow, a big gulp sound effect from an animated cartoon." + DRY),
+    "e_cry":      dict(kind="fx", d=2.0, p=0.65, fade_out=0.3,
+        text="A tiny sad violin playing three short mournful notes, thin and melodramatic, a comedy sad violin, solo. No voices."),
+    "e_micdrop":  dict(kind="fx", d=1.6, p=0.65, fade_out=0.4,
+        text="A microphone dropped on a wooden stage: a heavy hollow thud through a PA speaker with a short boom and a quick burst of feedback whine." + " No music, no voices."),
+    "whisper":    dict(kind="fx", d=0.8, p=0.7, fade_in=0.03, fade_out=0.15, post="highpass=f=150,lowpass=f=6000",
+        text="A folded paper note slid quickly across a table with a soft breathy psst: a short gentle paper swish and a soft whispered hiss, intimate and close." + DRY),
+    "s_tag":      dict(kind="fx", d=1.0, p=0.7, fade_out=0.15,
+        text="A spray paint can: two quick rattles of the ball inside, then one short sharp hiss of paint spraying." + DRY),
+    "s_smoke":    dict(kind="fx", d=1.2, p=0.65, fade_out=0.3,
+        text="A smoke bomb going off: a soft pop and a thick whooshing hiss of smoke billowing out, then trailing off. No music, no voices."),
+    "s_glitter":  dict(kind="fx", d=1.2, p=0.6, fade_out=0.3,
+        text="A glitter bomb bursting: a light party popper pop followed by a bright sparkling magical shimmer of tinkling glitter falling. No music, no voices."),
+    "s_pigeon":   dict(kind="fx", d=1.2, p=0.65, fade_out=0.2,
+        text="A city pigeon flapping its wings hard right next to the microphone, a loud flurry of feathers and one startled coo. No music, no voices."),
 }
 
 # ---------------------------------------------------------------- voices
@@ -246,6 +282,36 @@ LINES.update({
     "v_fast_3":    dict(text="Fast money.", style=0.5),
     "v_fast_4":    dict(text="Somebody came prepared.", style=0.5),
     "v_fast_5":    dict(text="Smooth. Very smooth.", style=0.55),
+    # ---- trash talk (release 3, 2026-09-26): now and then the announcer reads a whisper out loud: an intro, then
+    # the colour and "says" ("Red" + "says"), then the phrase, each read in the context of the next so they splice.
+    # The phrases are the fixed menu on the phones (a whisper can only be what the announcer has recorded).
+    "v_icpt_1":    dict(text="Ooh, what's this? A little whisper.", style=0.6, stab=0.35),
+    "v_icpt_2":    dict(text="Intercepted!", style=0.6, stab=0.35),
+    "v_icpt_3":    dict(text="I'm reading your mail.", style=0.6, stab=0.35),
+    "v_icpt_4":    dict(text="Passing notes, are we?", style=0.6, stab=0.35),
+    "v_says":      dict(text="says:", prev="Red", next="Watch out.", style=0.45),
+    "v_w_yes":     dict(text="Yes.", prev="And Red says:", style=0.5),
+    "v_w_no":      dict(text="No.", prev="And Red says:", style=0.5),
+    "v_w_trade":   dict(text="Trade?", prev="And Red says:", style=0.5),
+    "v_w_deal":    dict(text="Deal?", prev="And Red says:", style=0.5),
+    "v_w_watch":   dict(text="Watch out.", prev="And Red says:", style=0.5),
+    "v_w_hurry":   dict(text="Hurry up.", prev="And Red says:", style=0.5),
+    "v_w_nice":    dict(text="Nice one.", prev="And Red says:", style=0.5),
+    "v_w_never":   dict(text="Not a chance.", prev="And Red says:", style=0.5),
+    "v_w_pineapple": dict(text="Pineapple.", prev="And Red says:", style=0.55),
+    "v_w_spaghetti": dict(text="Spaghetti.", prev="And Red says:", style=0.55),
+    "v_w_moustache": dict(text="Moustache.", prev="And Red says:", style=0.55),
+    "v_w_kaboom":  dict(text="Kaboom.", prev="And Red says:", style=0.55),
+    "v_w_flamingo": dict(text="Flamingo.", prev="And Red says:", style=0.55),
+    "v_w_wobble":  dict(text="Wobble.", prev="And Red says:", style=0.55),
+    # a table going wild with stickers
+    "v_crowd_1":   dict(text="Tough crowd tonight.", style=0.55),
+    "v_crowd_2":   dict(text="The crowd is restless.", style=0.55),
+    "v_crowd_3":   dict(text="Somebody's feeling it.", style=0.55),
+    # a splat landing on the player whose turn it is
+    "v_splat_1":   dict(text="Eyes on the board.", style=0.55),
+    "v_splat_2":   dict(text="Dirty tricks.", style=0.6, stab=0.35),
+    "v_splat_3":   dict(text="Don't let them rattle you.", style=0.55),
     # the dispatcher, heard over the police radio when the police are sent in
     "v_cop_1":   dict(text="All units, that block is taped off. Nobody in, nobody out.", voice=DISPATCH, radio=True),
     "v_cop_2":   dict(text="Dispatch to all cars. Shut that block down.", voice=DISPATCH, radio=True),
@@ -294,6 +360,11 @@ LOUD = {
     # the turn clock (release 2): the buzzer is a moment; the countdown's beeps must cut through on a phone, the
     # table's ticks sit well under everything; the standings sting is a move's worth
     "time_up": -21, "hurry_start": -22, "clock_beep": -23, "score_sting": -23, "clock_tick": -27,
+    # trash talk (release 3): a sticker's bite sits under a move (several can fly at once), a splat is a move
+    # on the phone it lands on, the whisper is private and soft
+    "e_cheer": -24, "e_boo": -24, "e_lol": -24, "e_clap": -24, "e_crickets": -25, "e_rain": -24, "e_fire": -24,
+    "e_sweat": -24, "e_cry": -24, "e_micdrop": -23, "whisper": -25,
+    "s_tag": -22, "s_smoke": -22, "s_glitter": -22, "s_pigeon": -22,
 }
 # a softer start for the sounds whose first instant is not the point (seconds of fade-in)
 SOFT = {"start": 0.25, "legend": 0.06, "siren": 0.05, "hype": 0.04, "win": 0.03, "tension": 0.03,

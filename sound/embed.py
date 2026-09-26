@@ -23,7 +23,9 @@ PARTS = {"squelch_in", "squelch_out"}          # only exist to be built into oth
 TABLE = {"amb_city", "start", "turn", "join", "leave", "tension", "reel_spin", "reel_stop", "payout", "seven",
          "crash_skid", "crash_hit", "crash_boom", "crash_bump", "horn_1", "horn_2",     # the traffic crashing (drive)
          "lights_on",                                                                  # the city powering up after set-up
-         "clock_tick", "score_sting"}                                                  # the room's clock and standings (release 2)
+         "clock_tick", "score_sting",                                                  # the room's clock and standings (release 2)
+         "e_cheer", "e_boo", "e_lol", "e_clap", "e_crickets", "e_rain", "e_fire",       # the stickers' bites (release 3)
+         "e_sweat", "e_cry", "e_micdrop"}
 def pack_of(n):
     if n.startswith("v_") and not n.startswith("v_taunt_"): return "table"
     return "table" if n in TABLE else "fx"
