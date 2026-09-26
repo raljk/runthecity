@@ -44,6 +44,7 @@ button,input{font:inherit;color:inherit}
 .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px max(20px,env(safe-area-inset-right,0px)) 10px max(20px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);background:var(--panel)}
 .brand{font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-.02em}
 .brand i{font-style:normal;color:var(--accent)}
+a.homelink{color:inherit;text-decoration:none;cursor:pointer}
 .bar .grow{flex:1}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--off)}
@@ -11029,7 +11030,7 @@ function qrSVG(text) {
 
 function renderHostShell() {
   $('#app').innerHTML = `<div class="hframe">
-  <header class="bar"><span class="brand">Run the <i>City</i></span><span class="muted small">${WATCH ? 'Board view, table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}${sndVolHTML()}${fsBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
+  <header class="bar"><a class="brand homelink" href="./" data-l="home" title="Front page">Run the <i>City</i></a><span class="muted small">${WATCH ? 'Board view, table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}${sndVolHTML()}${fsBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
   <main class="host">
     <section class="stage"><div id="h-offer" class="slot"></div><div class="bwrap"><div id="h-banner" class="banner"></div><div id="h-board" class="boardbox"></div></div><div id="h-arena"></div></section>
     <aside class="side">
@@ -11465,7 +11466,7 @@ function renderLanding() {
         <div class="join-crew" aria-hidden="true"><img src="art/landing/crews-poster.png" width="1536" height="1024" alt="" loading="lazy"></div>
         <div class="street-sign join-street-sign" aria-hidden="true">${landingNeon('OPEN LATE','#e8fc37')}</div>
         <div class="chapter-content lp-wrap join-layout"><div class="chapter-heading" data-reveal><p class="lp-eyebrow">03 / Your name is on the door</p><h2 id="lp-join-title">YOUR CREW.<br><em>YOUR CITY.</em></h2><p>The table is waiting. Enter its code and make yourself known.</p></div>
-        <form class="lp-codeform" data-form="code" data-reveal><div class="terminal-top"><span class="signal-dot"></span>TAKE YOUR SEAT<span>↗</span></div><label for="code-input">Your table code</label><input type="text" id="code-input" name="room" maxlength="8" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="KQTMX2" aria-describedby="lp-code-help" required><div class="lp-actions"><button class="lp-button" type="submit" data-mode="play">Join the game ${arrow}</button><button class="lp-button secondary" type="submit" data-mode="watch">Watch the board</button></div><p class="lp-help" id="lp-code-help">Find the code beside the QR code on your table screen.</p><div class="terminal-bars" aria-hidden="true"></div></form></div>
+        <form class="lp-codeform" data-form="code" data-reveal><div class="terminal-top"><span class="signal-dot"></span>TAKE YOUR SEAT<span>↗</span></div><label for="code-input">Your table code</label><input type="text" id="code-input" name="room" maxlength="8" value="${esc(load('rtcity.room') || '')}" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="KQTMX2" aria-describedby="lp-code-help" required><div class="lp-actions"><button class="lp-button" type="submit" data-mode="play">Join the game ${arrow}</button><button class="lp-button secondary" type="submit" data-mode="watch">Watch the board</button></div><p class="lp-help" id="lp-code-help">Find the code beside the QR code on your table screen.</p><div class="terminal-bars" aria-hidden="true"></div></form></div>
       </section>
       <section class="city-chapter city-faq" id="street-rules" data-city-scene aria-labelledby="lp-faq-title">
         ${scene('city-poster.jpg','chapter-art-high')}
@@ -11484,6 +11485,17 @@ function renderLanding() {
   mountLandingPoster();
 }
 
+// The logo on every screen goes to the front page. A table keeps its game there ("Back to your table"),
+// and a phone's seat is kept too: the front page fills in its table code. Mid-game it asks first,
+// because the table leaving stops the game for everyone and a stray tap on a phone's logo is easy.
+function goHome() {
+  const live = G.state && G.state.phase && !['lobby', 'over'].includes(G.state.phase);
+  if (live && !WATCH && !confirm(joinRoom ? 'Leave the game? Your seat stays yours: the front page keeps your table code to come back.'
+      : 'Leave the table screen? The game waits for everyone until you come back with "Back to your table".')) return;
+  try { sessionStorage.removeItem('rtcity.ontable'); } catch (e) { /* private mode */ }
+  location.href = pageBase();
+}
+
 async function bootHost() {
   const fromPoster = !!POSTER.root;
   stopLandingPoster();
@@ -11498,7 +11510,7 @@ async function bootHost() {
   if (saved && saved.state && saved.state.room && saved.state.board) { G.state = saved.state; G.hist = saved.hist || []; G.b = saved.b | 0; G.state.players.forEach(p => { p.online = false; }); upgradeState(G.state); }
   else G.state = newTableState('random');
   useGeo(G.state.board); recResume(G.state);
-  try { sessionStorage.removeItem('rtcity.autohost'); } catch (e) { /* private mode */ }
+  try { sessionStorage.removeItem('rtcity.autohost'); sessionStorage.setItem('rtcity.ontable', '1'); } catch (e) { /* private mode */ }
   renderHostShell(); renderHost(); keepAwake();
   connectHost();
 }
@@ -12687,7 +12699,7 @@ function renderPlayer() {
   if (st) useGeo(st.board);
   stageSync(st); fxObserve(st); sndObserve(st);
   if (!$('#p-main')) {
-    $('#app').innerHTML = `<header class="bar pbar"><span class="brand">Run the <i>City</i></span><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span>${sndBtnHTML()}</header>
+    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page">Run the <i>City</i></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span>${sndBtnHTML()}</header>
       <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
   }
   // Was this state the table's answer to a move of your own? Only that may move you on from what you were doing.
@@ -12800,6 +12812,7 @@ function renderPlayer() {
 
 async function bootPlayer() {
   const render = WATCH ? renderHost : renderPlayer;
+  if (!WATCH) store('rtcity.room', joinRoom);                       // the front page offers it back
   render(); if (WATCH) keepAwake();
   // the relay is named by the last character of the table code (older links carried it as &b=)
   let b = parseInt(params.get('b'), 10);
@@ -14095,6 +14108,7 @@ function policePick() {
   return joinRoom ? activePid(st) === PID : true;
 }
 document.addEventListener('click', ev => {
+  if (ev.target.closest && ev.target.closest('[data-l=home]')) { ev.preventDefault(); goHome(); return; }
   if (pickSpot(ev.target, ev)) return;
   const hex = ev.target.closest && ev.target.closest('[data-hex]');
   if (policePick() && !view.swallow) {
@@ -14290,10 +14304,11 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) stopL
 Object.assign(CAM, MAP_CAM);                              // every game starts on the map; stageSync picks up a view this tab had before a reload
 
 let autohost = false; try { autohost = sessionStorage.getItem('rtcity.autohost') === '1'; } catch (e) { /* private mode */ }
-// a phone always opens on the landing page: it is far more often a seat than a table, and "Open a table" still resumes one
-const pocket = matchMedia('(pointer: coarse) and (max-width: 599px), (pointer: coarse) and (max-height: 599px)').matches;
+let onTable = false; try { onTable = sessionStorage.getItem('rtcity.ontable') === '1'; } catch (e) { /* private mode */ }
+// the address always opens on the front page, where "Back to your table" resumes a saved one; only a reload
+// of the tab that is running the table goes straight back to it
 if (joinRoom) bootPlayer();
-else if (autohost || (load('rtcity.host') && !pocket)) bootHost(); // this browser already runs a table: go straight back to it
+else if (autohost || (onTable && load('rtcity.host'))) bootHost();
 else renderLanding();
 })();
 </script>
