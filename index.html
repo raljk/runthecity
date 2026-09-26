@@ -11616,10 +11616,11 @@ function mountLandingPoster() {
     { kind: 'card', sound: 'tipoff', title: 'Tip-off played · card in motion', note: 'A real game card hits the table and calls in the police', color: '#48dcff' },
   ];
   let boardAt = 0, boardTimer = 0;
-  const boardOld = { lite: LITE.on, lab: SHOW.lab, hush: SHOW.hush, q: SHOW.q, still: LIFE.still };
+  const boardOld = { lite: LITE.on, lab: SHOW.lab, hush: SHOW.hush, q: SHOW.q, still: LIFE.still, cam: { ...CAM } };
   const demo = landingBoardState();
   if (board) {
     LITE.on = false; SHOW.lab = true; SHOW.hush = true; SHOW.q = 2; LIFE.still = paused;
+    Object.assign(CAM, CAM_HOME);                       // the showcase stays isometric even though games open in map view
     G.state = demo; useGeo(demo.board);
     view.opts = { show: 2, neon: SHOW.neon ? SHOW.neon(demo) : null };
     board.innerHTML = '<div class="board3d"></div><div class="table-card-play" aria-hidden="true"></div>';
@@ -11755,7 +11756,7 @@ function mountLandingPoster() {
     cancelAnimationFrame(frame); clearTimeout(signTimer); clearInterval(boardTimer); if (observer) observer.disconnect();
     stopLife(); SHOW.ev = []; MOB_QUEUE.length = 0; SHOW.lab = boardOld.lab; SHOW.hush = boardOld.hush; SHOW.q = boardOld.q; LIFE.still = boardOld.still;
     if (SHOW.cv && SHOW.cv.parentNode) SHOW.cv.remove(); if (SHOW.radio && SHOW.radio.parentNode) SHOW.radio.remove();
-    SHOW.on = false; SHOW.svg = SHOW.box = null; LITE.on = boardOld.lite;
+    SHOW.on = false; SHOW.svg = SHOW.box = null; LITE.on = boardOld.lite; Object.assign(CAM, boardOld.cam);
     hero.removeEventListener('pointermove', point); hero.removeEventListener('pointerleave', leave); root.removeEventListener('click', click);
     window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll);
     document.removeEventListener('visibilitychange', visibility); media.removeEventListener('change', preference);
