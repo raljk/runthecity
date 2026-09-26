@@ -1436,18 +1436,20 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 @media (prefers-reduced-motion:reduce){.ttsplat,.ttsplat.sp-smoke,.ttsplat.sp-pigeon{animation-name:ttfade}.wspchip{animation:none}}
 @keyframes ttfade{0%{opacity:0}8%,80%{opacity:1}100%{opacity:0}}
 /* ---------- end of trash talk ---------- */
+
 /* ---------- the table screen, dressed like the front door (2026-09-26) ----------
    The landing page's night on the table screen and the board view: teal-black ground, paper-white type,
    square hairline panels, condensed capitals and small monospaced labels, the wordmark in the corner.
-   Its bright colours are held back on purpose. The city is the bright thing on this screen; acid yellow
-   is kept for the one filled button, the move somebody has to make now, and a player's own colour still
-   says whose turn it is. Everything here is scoped to .hframe (or to a page that holds one), so the
+   Its bright colours are held back on purpose, and each one that is left has a job. The city is the
+   bright thing on this screen; acid yellow is the one filled button, the move somebody has to make now;
+   hot pink is a warning (a phone gone quiet, cards to drop, the clock running out, a seven); a player's
+   own colour says whose turn it is. Everything here is scoped to .hframe (or to a page that holds one), so the
    phone and the landing page are untouched. */
 .hframe{
   --tb-ground:#06121b; --tb-panel:#0a1924; --tb-raise:#0e2130;
   --tb-line:rgba(178,232,255,.13); --tb-line2:rgba(178,232,255,.24); --tb-line3:rgba(178,232,255,.42);
   --tb-paper:#f3f3e9; --tb-muted:#8fa5b1; --tb-dim:#5f7582;
-  --tb-acid:#e8fc37; --tb-acid-ink:#0f1a0c; --tb-cyan:#64e8f3;
+  --tb-acid:#e8fc37; --tb-acid-ink:#0f1a0c; --tb-cyan:#64e8f3; --tb-warn:#ff2e93;
   --tb-cond:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
   --tb-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --ink:var(--tb-paper); --muted:var(--tb-muted); --line:var(--tb-line); --panel:var(--tb-panel); --bg:var(--tb-ground);
@@ -1473,9 +1475,12 @@ body:has(>#app>.hframe){background:#06121b}
 .hframe .sndbtn:hover,.hframe .sndbtn[aria-expanded=true],.hframe .fsbtn[aria-pressed=true]{color:var(--tb-paper);border-color:var(--tb-line3)}
 .hframe .hvol input{accent-color:#7f9ea9}
 .hframe #h-status{border-radius:0;border-color:var(--tb-line2);padding:6px 11px;font:500 10px/1.2 var(--tb-mono);letter-spacing:2px;text-transform:uppercase;color:var(--tb-muted)}
-.hframe #h-status::before{width:6px;height:6px;border-radius:0;background:var(--tb-dim)}
+.hframe #h-status::before{width:6px;height:6px;border-radius:0;background:var(--tb-warn)}
 .hframe #h-status.on{color:var(--tb-paper)}
 .hframe #h-status.on::before{background:var(--tb-cyan);box-shadow:0 0 8px rgba(100,232,243,.7)}
+/* one header line on a smaller screen too: the label goes first, then the districts' names under the key */
+@media (max-width:1439px){.hframe .tbwhere{display:none}.hframe .hk em{letter-spacing:.5px}}
+@media (max-width:1279px){.hframe .hk em{display:none}.hframe #h-status{letter-spacing:1px}.hframe .tblogo{height:36px}}
 
 /* buttons: square, like the landing's. A filled one is the move to make now; the rest are outlines */
 .hframe .btn{border-radius:0;background:var(--tb-acid);color:var(--tb-acid-ink);border:1px solid var(--tb-acid);font-weight:750;letter-spacing:.01em;
@@ -1532,26 +1537,50 @@ body:has(>#app>.hframe){background:#06121b}
 .hframe .join.mini .roomcode{font-size:1.35rem}
 .hframe .joinurl{font:500 11px/1.45 var(--tb-mono);color:var(--tb-muted);text-decoration:underline;text-decoration-color:var(--tb-line3);text-underline-offset:3px}
 .hframe .joinurl:hover{color:var(--tb-paper)}
-.hframe .warn{border-radius:0;background:rgba(217,164,65,.07);border:1px solid rgba(217,164,65,.28);border-left:2px solid #d9a441;color:#f0d9ae}
+.hframe .warn{border-radius:0;background:rgba(255,46,147,.07);border:1px solid rgba(255,46,147,.3);border-left:2px solid var(--tb-warn);color:#ffd3e8}
+.hframe .warn strong{color:#ff7dbb}
 .hframe .warn code{border-radius:0;background:rgba(0,0,0,.25)}
 .hframe .recs{border-top-color:var(--tb-line)}
 .hframe .reclist .chip{border-radius:1px}
 .hframe .reclist .rhow{font-family:var(--tb-cond);font-size:1.02rem;letter-spacing:.02em}
 
-/* the seats: whose turn it is in their own colour, a thin bar and a tint, not a glow */
-.hframe .seat{border-radius:0;border-color:var(--tb-line);background:rgba(4,12,18,.35);padding:9px 12px 9px 10px;transition:background .25s,border-color .25s,box-shadow .25s}
-.hframe .seat.active{border-color:color-mix(in srgb,var(--pc,var(--tb-paper)) 50%,var(--tb-line));background:color-mix(in srgb,var(--pc,var(--tb-paper)) 9%,rgba(4,12,18,.35));
-  box-shadow:inset 3px 0 0 var(--pc,var(--tb-paper))}
-.hframe .seat .chip{width:22px;height:22px;border-radius:2px;border-width:1.5px;justify-self:center}
-.hframe .seat .nm{font:700 1.3rem/1.05 var(--tb-cond);letter-spacing:.015em}
-.hframe .seat .sub{margin-top:2px;font:500 9.5px/1.3 var(--tb-mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--tb-dim)}
-.hframe .seat .sub .dot{width:6px;height:6px;border-radius:0;vertical-align:.05em}
-.hframe .seat .sub .dot.on{background:var(--tb-cyan)}
-.hframe .seat .end{gap:8px}
-.hframe .seat .end>.small{font:500 11px/1 var(--tb-mono);letter-spacing:1px;color:var(--tb-muted);white-space:nowrap}
-.hframe .seat .vp b{font:800 1.45rem/1 var(--tb-cond);letter-spacing:0;color:var(--tb-paper);margin-right:1px}
-.hframe .seat.open{border-color:var(--tb-line2);font:500 10.5px/1.3 var(--tb-mono);letter-spacing:2px;text-transform:uppercase;color:var(--tb-dim)}
-.hframe .seat .btn.small{min-height:30px;padding:3px 9px}
+/* the seats round the board (seatsHTML; ringFit places the list and sets --seat-w, --ring-t, --ring-b): a name at
+   the edge of the table with a line in the player's colour on the side that faces the city, and one quiet line of
+   numbers. No boxes, no pictures: the city is the picture. Whoever's turn it is has their name lit and their line
+   thickened. A board too narrow for the two columns lists them in the side column (#h-seatcard); a narrow window
+   lists them under the board. */
+.hframe #h-seats{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px 22px}
+.hframe #h-seats .seat{position:relative;display:flex;flex-direction:column;gap:4px;min-width:0;padding:3px 0 3px 11px;border:0;border-radius:0;background:none;box-shadow:inset 2px 0 0 var(--pc)}
+.hframe #h-seats .nm{display:flex;align-items:center;gap:6px;min-width:0;font:700 1.2rem/1.05 var(--tb-cond);letter-spacing:.02em;color:#b9c7ce}
+.hframe #h-seats .nmt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hframe #h-seats .star{font-size:.8em;color:var(--tb-muted)}
+.hframe #h-seats .dot{flex:none;width:6px;height:6px;background:var(--tb-warn)}
+.hframe #h-seats .seat.off .nm{color:var(--tb-dim)}
+.hframe #h-seats .sub{display:flex;align-items:center;gap:4px 9px;flex-wrap:wrap;font:500 9.5px/1.2 var(--tb-mono);letter-spacing:.9px;text-transform:uppercase;color:var(--tb-dim);white-space:nowrap}
+.hframe #h-seats .sub b{font:800 1.1rem/1 var(--tb-cond);letter-spacing:0;color:#d9e2e6;margin-right:1px}
+.hframe #h-seats .sdrop{font-style:normal;color:var(--tb-warn)}
+.hframe #h-seats .dice{font-size:1.2rem;letter-spacing:.05em;color:#d9e2e6}
+.hframe #h-seats .btn.small{min-height:22px;min-width:22px;padding:0 6px;font-size:.74rem}
+.hframe #h-seats .okd{padding:3px 5px;font-size:9px;letter-spacing:.6px}
+.hframe #h-seats .sub:has(.btn){gap:5px}
+.hframe #h-seats .seat.active{box-shadow:inset 4px 0 0 var(--pc)}
+.hframe #h-seats .seat.active .nm{color:var(--tb-paper)}
+.hframe #h-seats .seat.active .sub b{color:var(--tb-paper)}
+.hframe .seatcard #h-seats{flex-direction:column;gap:12px}
+body.hostfight .hframe .bwrap>#h-seats{display:none}
+@media (min-width:981px) and (min-height:600px){
+  .hframe .bwrap>#h-seats{position:absolute;inset:0;z-index:4;pointer-events:none;display:grid;gap:10px 0;
+    grid-template-columns:var(--seat-w,140px) minmax(0,1fr) var(--seat-w,140px);grid-template-rows:repeat(3,minmax(0,1fr));padding:var(--ring-t,110px) 14px var(--ring-b,180px)}
+  .hframe .bwrap>#h-seats .seat{pointer-events:auto;max-width:100%}
+  /* the left column faces right: its line on the city side, its words against it */
+  .hframe .bwrap>#h-seats .seat-l{grid-column:1;justify-self:end;align-items:flex-end;text-align:right;padding:3px 11px 3px 0;box-shadow:inset -2px 0 0 var(--pc)}
+  .hframe .bwrap>#h-seats .seat-l.active{box-shadow:inset -4px 0 0 var(--pc)}
+  .hframe .bwrap>#h-seats .seat-l .nm,.hframe .bwrap>#h-seats .seat-l .sub{justify-content:flex-end}
+  .hframe .bwrap>#h-seats .seat-r{grid-column:3;justify-self:start}
+  .hframe .bwrap>#h-seats .at-lt,.hframe .bwrap>#h-seats .at-rt{grid-row:1;align-self:start}
+  .hframe .bwrap>#h-seats .at-lm,.hframe .bwrap>#h-seats .at-rm{grid-row:2;align-self:center}
+  .hframe .bwrap>#h-seats .at-lb,.hframe .bwrap>#h-seats .at-rb{grid-row:3;align-self:end}
+}
 
 /* What happened: the newest line in paper, the rest quiet, hairlines between */
 .hframe .log{gap:0;font-size:.86rem;line-height:1.38}
@@ -1571,7 +1600,6 @@ body:has(>#app>.hframe){background:#06121b}
   .hframe .hm strong{font-size:.88rem;letter-spacing:.01em}
   .hframe .dhead .dt{font-size:10px;letter-spacing:1.2px}
   .hframe .dhead .dcode{letter-spacing:.14em}
-  .hframe .seat .sub{letter-spacing:.9px}
 }
 
 /* the camera buttons: the landing's atmosphere controls */
@@ -1597,11 +1625,15 @@ body:has(>#app>.hframe){background:#06121b}
 .hframe .clk.lg b{font-size:1.02rem}
 .hframe .clk.held::after{border-radius:0}
 .hframe .tclk small{font:500 9.5px/1.3 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase}
-.hframe .hurv{border-radius:0;font:500 10.5px/1.2 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase}
+.hframe .hurv{border-radius:0;font:500 10.5px/1.2 var(--tb-mono);letter-spacing:1.2px;text-transform:uppercase;color:#ff7dbb;border-color:rgba(255,46,147,.45);background:rgba(28,4,16,.82)}
+.hframe .hurv.hot{color:#fff;border-color:var(--tb-warn);background:rgba(70,6,34,.9);box-shadow:0 0 18px rgba(255,46,147,.42)}
+.hframe .clk.up .cr1{stroke:var(--tb-warn)}
+.hframe .bigcount.hot .bcr small{color:var(--tb-warn)}
 .hframe .hurv .chip{border-radius:1px}
 .hframe .bigcount b{font-family:var(--tb-cond);font-weight:800}
 .hframe .bigcount .bcr small{font:500 calc(var(--r,240px) * .052)/1 var(--tb-mono);letter-spacing:.3em}
-.hframe .bigcount.stamp b{font-family:var(--tb-cond);font-weight:800;border-radius:0;border-width:4px;letter-spacing:.06em}
+.hframe .bigcount.stamp b{font-family:var(--tb-cond);font-weight:800;border-radius:0;border-width:4px;letter-spacing:.06em;color:var(--tb-warn);
+  background:rgba(22,3,12,.6);text-shadow:0 0 26px rgba(255,46,147,.75),0 4px 0 #000}
 .hframe .scorecard{border-radius:0;background:linear-gradient(160deg,rgba(9,24,35,.96),rgba(5,14,21,.93));
   border-color:color-mix(in srgb,var(--pc) 40%,var(--tb-line2));box-shadow:0 18px 40px rgba(0,0,0,.55),inset 3px 0 0 var(--pc)}
 .hframe .scorecard .sck{font:500 10px/1.3 var(--tb-mono);letter-spacing:2.6px;text-shadow:none}
@@ -1629,9 +1661,9 @@ body:has(>#app>.hframe) .slotm{border-radius:6px;border:1px solid rgba(178,232,2
 body:has(>#app>.hframe) .slotm .cap{font-family:'Barlow Condensed','Arial Narrow',Impact,sans-serif;font-weight:700;letter-spacing:.02em}
 body:has(>#app>.hframe) .slotm .win{border-radius:4px;border:1px solid rgba(178,232,255,.18)}
 body:has(>#app>.hframe) .slotm .sum{font-family:'Barlow Condensed','Arial Narrow',Impact,sans-serif}
-body:has(>#app>.hframe) .slotm.seven{border-color:#ff3347;box-shadow:0 0 0 4px #040b11,0 0 46px 8px rgba(255,51,71,.5),0 24px 60px rgba(0,0,0,.7)}
+body:has(>#app>.hframe) .slotm.seven{border-color:#ff2e93;box-shadow:0 0 0 4px #040b11,0 0 46px 8px rgba(255,46,147,.5),0 24px 60px rgba(0,0,0,.7)}
 body:has(>#app>.hframe) .slotm.lucky{border-color:#7be495;box-shadow:0 0 0 4px #040b11,0 0 40px 5px rgba(123,228,149,.4),0 24px 60px rgba(0,0,0,.7)}
-@media (prefers-reduced-motion:reduce){.hframe .btn,.hframe .seat{transition:none}}
+@media (prefers-reduced-motion:reduce){.hframe .btn{transition:none}}
 </style>
 </head>
 <body>
@@ -2412,16 +2444,20 @@ const VB = { x: -470, y: -380, w: 940, h: 760 };
 /* How this screen frames the board. The table screen, a board view and a phone's full-screen board
    frame the city itself and fill the board's whole box with it; a phone's page keeps the entire tray
    in view, a picture in a card. w and h are the box the board is drawn in; top and bottom are the
-   strips of it that something floats over (the turn banner, the phone's bars), kept clear of the blocks;
+   strips of it that something floats over (the turn banner, the phone's bars), kept clear of the blocks,
+   and left and right the table's two columns of seats (ringFit);
    roofs are the tops of what stands on the city, which may rise behind a banner but not off the screen.
    Set by fitMeasure, read by viewBox. */
-const FIT = { city: false, w: 0, h: 0, top: 0, bottom: 0, roofs: null, t: 0 };
-const fitKey = () => [FIT.city, FIT.w, FIT.h, FIT.top, FIT.bottom].join();
+const FIT = { city: false, w: 0, h: 0, top: 0, bottom: 0, left: 0, right: 0, roofs: null, t: 0 };
+const fitKey = () => [FIT.city, FIT.w, FIT.h, FIT.top, FIT.bottom, FIT.left, FIT.right].join();
 /* The city, framed to fill the board's own box: the blocks, the terminals out on their piers and the air
    the tallest towers need, scaled to whichever of width or height runs out first, and put in the middle of
    the part of the box nothing floats over. The rest of the tray runs on past the edges instead of leaving
    empty bands down the sides. Zoom and pan work on it just as they do on the whole tray. */
-function cityBox(C) {
+/* The city's outline on the screen for camera C, before any scaling: its ground (every block's corners and the
+   terminals' signs out past the coast) and the rooftops standing on it. cityBox frames it; ringFit asks how wide
+   it stands, to give the seats the room either side of it. */
+function cityExtents(C) {
   // the ground the city stands on: every block's corners, and the terminals' signs out past the coast
   let lo = Infinity, hi = -Infinity, left = Infinity, right = -Infinity, sky = Infinity;
   const ground = (x, z) => { const p = project(x, APRON_Y, z, C); if (!p) return; lo = Math.min(lo, p.y); hi = Math.max(hi, p.y); left = Math.min(left, p.x); right = Math.max(right, p.x); };
@@ -2435,15 +2471,26 @@ function cityBox(C) {
   // and what stands on it: the rooftops, which may rise behind the banner but must stay on the screen
   (FIT.roofs || []).forEach(r => { const p = project(r[0], r[1], r[2], C); if (!p) return; sky = Math.min(sky, p.y); left = Math.min(left, p.x); right = Math.max(right, p.x); });
   if (!isFinite(sky) || sky > lo) sky = lo - (hi - lo) * 0.18;
-  const pad = 1.03, band = Math.max(60, FIT.h - FIT.top - FIT.bottom), cx = (left + right) / 2;
-  // the biggest the city can be: as wide as the box, its ground inside the band, its rooftops under the top edge
-  const s0 = Math.min(FIT.w / ((right - left) * pad), band / ((hi - lo) * pad), (FIT.h - FIT.bottom) / ((hi - sky) * pad));
+  return { lo, hi, left, right, sky };
+}
+/* how wide the city stands when it is as tall as its band lets it be: cityBox's sums, before the width has its say */
+function cityNaturalWidth(h, top, bottom) {
+  const e = cityExtents(basis()); if (!e) return 0;
+  const pad = 1.03, band = Math.max(60, h - top - bottom);
+  return (e.right - e.left) * pad * Math.min(band / ((e.hi - e.lo) * pad), (h - bottom) / ((e.hi - e.sky) * pad));
+}
+function cityBox(C) {
+  const e = cityExtents(C); if (!e) return null;
+  const { lo, hi, left, right, sky } = e;
+  const pad = 1.03, band = Math.max(60, FIT.h - FIT.top - FIT.bottom), wide = Math.max(60, FIT.w - FIT.left - FIT.right), cx = (left + right) / 2;
+  // the biggest the city can be: as wide as the room between the seats, its ground inside the band, its rooftops under the top edge
+  const s0 = Math.min(wide / ((right - left) * pad), band / ((hi - lo) * pad), (FIT.h - FIT.bottom) / ((hi - sky) * pad));
   // where the ground's top edge lands: in the middle of the band, unless the rooftops would then leave the screen
   let yg = FIT.top + (band - (hi - lo) * s0) / 2;
   yg = Math.max(yg, (lo - sky) * s0 + 6);
   yg = Math.min(yg, FIT.h - FIT.bottom - (hi - lo) * s0);
   // zoom and pan about the middle of the free part of the box, as they do on the whole tray
-  const s = s0 * CAM.zoom, mx0 = FIT.w / 2, my0 = FIT.top + band / 2, wy = lo + (my0 - yg) / s0;
+  const s = s0 * CAM.zoom, mx0 = FIT.left + wide / 2, my0 = FIT.top + band / 2, wy = lo + (my0 - yg) / s0;
   const w = FIT.w / s, h = FIT.h / s;
   const x = cx - mx0 / s - CAM.ox * w, y = wy - my0 / s - CAM.oy * h;
   return `${n1(x)} ${n1(y)} ${n1(w)} ${n1(h)}`;
@@ -10513,12 +10560,13 @@ function fitMeasure(st) {
   // the box's own layout size: a transform on it (the full-screen board growing in) must not shrink the frame
   const box = document.querySelector('.board3d'), w = box ? box.offsetWidth : 0, h = box ? box.offsetHeight : 0;
   if (w < 60 || h < 60) { FIT.w = 0; FIT.h = 0; return; }
-  let top = 0, bottom = 0;
+  let top = 0, bottom = 0, left = 0, right = 0;
   if (!joinRoom || WATCH) {
     // the turn banner floats over the top of the table's board: the blocks start below its words and its button
     const r = box.getBoundingClientRect(), ban = document.getElementById('h-banner');
     if (ban && getComputedStyle(ban).position === 'absolute') Array.from(ban.children).forEach(c => { const q = c.getBoundingClientRect(); if (q.height) top = Math.max(top, q.bottom - r.top + 6); });
     top = Math.ceil(top / 24) * 24;                                 // in steps, so a banner that changes its words does not nudge the city
+    const ring = ringFit(box, w, h, top); left = ring.left; right = ring.right; bottom = Math.max(bottom, ring.bottom);
   } else {
     // A phone's full screen: its bar and hand across the top (the whole block, whatever it is animating), and at
     // the foot the dock's room, kept whether or not it has buttons in it just now, so the dice do not move the city;
@@ -10530,6 +10578,30 @@ function fitMeasure(st) {
   }
   FIT.w = w; FIT.h = h;
   FIT.top = Math.round(Math.max(0, Math.min(top, FIT.h * 0.3))); FIT.bottom = Math.round(Math.max(0, Math.min(bottom, FIT.h * 0.4)));
+  FIT.left = Math.round(Math.max(0, Math.min(left, FIT.w * 0.3))); FIT.right = Math.round(Math.max(0, Math.min(right, FIT.w * 0.3)));
+}
+/* The seats round the table's board (seatsHTML): where the list stands, how wide its two columns are, the band
+   they stand in (below the banner, above the camera's buttons) and the room that leaves the city. The seats take
+   the room the city leaves either side of itself, narrowing to a point before the city gives any; past that the
+   city gives a little (a tenth at most), and a box that would squeeze it more (a squarer screen) puts the seats
+   back in the side column as a list. A narrow window lists them under the board, which takes nothing from it. */
+function ringFit(box, w, h, top) {
+  const ring = document.getElementById('h-seats'), wrap = ring && ring.closest('.hframe'), out = { left: 0, right: 0, bottom: 0 };
+  if (!ring || !wrap) return out;
+  const bw = wrap.querySelector('.bwrap'), card = document.getElementById('h-seatcard');
+  const desk = !!(window.matchMedia && matchMedia('(min-width:981px) and (min-height:600px)').matches);
+  const cam = box.parentNode ? box.parentNode.querySelector('.camctl') : null, camH = cam ? cam.offsetHeight : 0;
+  const natural = cityNaturalWidth(h, top, 0) || w * 0.62, want = Math.min(160, Math.max(128, window.innerWidth * 0.085));
+  const col = Math.round(Math.max(118, Math.min(want, (w - natural) / 2 - 24))), side = desk && (w - 2 * (col + 24)) / natural >= 0.9;
+  const home = desk && !side && card ? card : bw;
+  if (home && ring.parentNode !== home) home.insertBefore(ring, home === bw ? document.getElementById('h-count') : null);
+  if (card) card.hidden = home !== card;
+  if (!side) return out;
+  ring.style.setProperty('--seat-w', col + 'px');
+  ring.style.setProperty('--ring-t', top + 'px');
+  ring.style.setProperty('--ring-b', (camH ? camH + 22 : 14) + 'px');
+  out.left = out.right = 14 + col + 10;
+  return out;
 }
 /* a window made bigger or smaller, or put into full screen: the city fills its new box */
 if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('resize', () => {
@@ -11647,10 +11719,10 @@ function renderHostShell() {
   $('#app').innerHTML = `<div class="hframe">
   <header class="bar"><a class="brand tbbrand homelink" href="./" data-l="home" title="Front page"><img class="tblogo" src="art/landing/run-the-city.svg" width="90" height="40" alt="Run the City"></a><span class="tbwhere">${WATCH ? 'Board view &middot; table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}${sndVolHTML()}${fsBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
   <main class="host">
-    <section class="stage"><div id="h-offer" class="slot"></div><div class="bwrap"><div id="h-banner" class="banner"></div><div id="h-board" class="boardbox"></div><div id="h-count" class="bigcount" aria-hidden="true"></div></div><div id="h-arena"></div></section>
+    <section class="stage"><div id="h-offer" class="slot"></div><div class="bwrap"><div id="h-banner" class="banner"></div><div id="h-board" class="boardbox"></div><ul id="h-seats" class="seats seatring" aria-label="Seats, clockwise from the top left"></ul><div id="h-count" class="bigcount" aria-hidden="true"></div></div><div id="h-arena"></div></section>
     <aside class="side">
       <section class="card drawer"><div id="h-dhead"></div><div id="h-dbody" class="dbody"><div id="h-join"></div><div id="h-warn"></div><div id="h-ctrl" class="dctl"></div></div></section>
-      <section class="card"><h2>Seats, clockwise</h2><ul id="h-seats" class="seats"></ul></section>
+      <section id="h-seatcard" class="card seatcard" hidden><h2>Seats, clockwise</h2></section>
       <section class="card logcard"><h2>What happened</h2><ul id="h-log" class="log"></ul></section>
     </aside>
   </main>
@@ -11674,19 +11746,30 @@ function clockPickHTML(st) {
       (!st.players.length ? 'Every phone taps OK to it.' : owed.length ? `Waiting for ${esc(andList(owed.map(p => p.name)))} to tap OK on their phone (no OK button there: reload the page).` : 'Every phone has said OK.')
       : 'No clock. A minute into a turn, the others can still ask for a hurry-up: ten seconds.'}</p></div>`;
 }
+/* The seats round the table's board (the seat ring): each player a name at the edge of the table, in two columns
+   either side of the city, the corners and the middles, clockwise from the top left, with a line in their colour
+   on the side that faces the board. Kept to a name and a line of numbers so the city stays the picture. In the
+   lobby everyone keeps the place they took; once the game starts the table spreads the players out evenly.
+   CSS stands each one in its place from its at- class; ringFit keeps the city clear of them. */
+const RING = ['lt', 'rt', 'rm', 'rb', 'lb', 'lm'];
+const RING_AT = { 1: ['lm'], 2: ['lm', 'rm'], 3: ['lt', 'rm', 'lb'], 4: ['lt', 'rt', 'rb', 'lb'], 5: ['lt', 'rt', 'rm', 'rb', 'lb'], 6: RING };
 /* the seat list on its own, so a card that lands can bump one count without redrawing the table */
 function seatsHTML(st, ro) {
-  const act = activePid(st);
-  const seats = st.players.map((p, i) => {
-    const roll = st.rolls[p.pid]; let end = '';
-    const okd = st.phase === 'lobby' && st.clock && st.clock.s ? (st.clock.ok[p.pid] ? '<span class="okd" title="Said OK to the turn clock">OK</span>' : '<span class="okd no" title="Has not said OK to the turn clock yet">no OK yet</span>') : '';
-    if (st.phase === 'lobby') end = okd + (ro ? '' : `${i > 0 ? `<button class="btn ghost small" data-h="up" data-arg="${esc(p.pid)}" aria-label="Move ${esc(p.name)} up one seat">&uarr;</button>` : ''}<button class="btn ghost small" data-h="kick" data-arg="${esc(p.pid)}" aria-label="Remove ${esc(p.name)}">&times;</button>`);
-    else if (st.phase === 'rolloff') end = !st.contenders.includes(p.pid) ? `<span class="muted small">out${roll ? ' with ' + (roll[0] + roll[1]) : ''}</span>` : roll ? `<span class="dice" aria-hidden="true">${DIE[roll[0]]}${DIE[roll[1]]}</span><strong>${roll[0] + roll[1]}</strong>` : ro ? '<span class="muted small">rolling…</span>' : `<button class="btn ghost small" data-h="rollfor" data-arg="${esc(p.pid)}">Roll for them</button>`;
-    else end = `<span class="small vp">${st.pend && st.pend[p.pid] ? `dropping ${st.pend[p.pid]} &middot; ` : ''}<b>${vpOf(st, p.pid)}</b> of ${WIN_VP}</span>${seatBadges(p)}<span class="backs" title="Cards in hand">${rcard('back', { size: 's', n: shownCount(p) })}</span>`;
-    return `<li class="seat${p.pid === act ? ' active' : ''}" data-seat="${esc(p.pid)}" style="--pc:var(--p-${p.color})"><span class="chip" style="background:var(--p-${p.color})"></span><div><p class="nm">${esc(p.name)}${p.pid === st.starter ? ' &#9733;' : ''}</p><p class="sub"><span class="dot${p.online ? ' on' : ''}"></span>${p.online ? 'connected' : 'phone asleep or offline'}</p></div><div class="end">${end}</div></li>`;
-  });
-  for (let i = st.players.length; i < MAX_PLAYERS && st.phase === 'lobby'; i++) seats.push('<li class="seat open"><span></span><p>Open seat</p><span></span></li>');
-  return seats.join('');
+  const act = activePid(st), at = st.phase === 'lobby' ? RING : RING_AT[st.players.length] || RING;
+  return st.players.map((p, i) => {
+    const roll = st.rolls[p.pid], spot = at[i] || RING[i % RING.length]; let line = '';
+    if (st.phase === 'lobby') {
+      const ok = st.clock && st.clock.s ? (st.clock.ok[p.pid] ? '<span class="okd" title="Said OK to the turn clock">OK</span>' : '<span class="okd no" title="Has not said OK to the turn clock yet">no OK</span>') : '';
+      line = ok + (ro ? '' : `${i > 0 ? `<button class="btn ghost small" data-h="up" data-arg="${esc(p.pid)}" aria-label="Move ${esc(p.name)} up one seat">&uarr;</button>` : ''}<button class="btn ghost small" data-h="kick" data-arg="${esc(p.pid)}" aria-label="Remove ${esc(p.name)}">&times;</button>`);
+    } else if (st.phase === 'rolloff') line = !st.contenders.includes(p.pid) ? `out${roll ? ' with ' + (roll[0] + roll[1]) : ''}` : roll ? `<span class="dice" aria-hidden="true">${DIE[roll[0]]}${DIE[roll[1]]}</span> <b>${roll[0] + roll[1]}</b>` : ro ? 'rolling&hellip;' : `<button class="btn ghost small" data-h="rollfor" data-arg="${esc(p.pid)}">Roll for them</button>`;
+    else {
+      const n = shownCount(p), k = shownCards(p);
+      line = `${st.pend && st.pend[p.pid] ? `<em class="sdrop">drop ${st.pend[p.pid]}</em>` : ''}<span class="vp"><b>${vpOf(st, p.pid)}</b>/${WIN_VP}</span><span class="backs" title="Cards in hand">${n} card${n === 1 ? '' : 's'}</span>` +
+        (k ? `<span class="cbacks" title="Skills and talents held">&#9670;${k}</span>` : '') + ((p.luck | 0) > 0 ? `<span title="Lucky Streak: ${p.luck} three-dice rolls left">&#9752;${p.luck}</span>` : '') + (p.paid ? '<span title="The police are paid off">$</span>' : '');
+    }
+    return `<li class="seat seat-${spot[0]} at-${spot}${p.pid === act ? ' active' : ''}${p.online ? '' : ' off'}" data-seat="${esc(p.pid)}" style="--pc:var(--p-${p.color})">` +
+      `<p class="nm">${p.online ? '' : '<i class="dot" title="Phone asleep or offline"></i>'}<span class="nmt">${esc(p.name)}</span>${p.pid === st.starter ? '<span class="star" title="Takes the first turn">&#9733;</span>' : ''}</p><p class="sub">${line}</p></li>`;
+  }).join('');
 }
 function renderHost() {
   const ro = WATCH, st = G.state;
