@@ -145,6 +145,21 @@ SFX = {
         text="Power coming back on across a city at night: a big electric power-up sweep that rises slowly in pitch like generators spinning up, a warm mid-range electric whine swelling louder, soft clicks and buzzing as rows of lights flicker on one after another, then it settles into a calm steady hum. Cinematic sci-fi power-up. No music, no voices, no explosions, no static noise."),
     # the city at night, under everything on the table screen
     "amb_city":   dict(kind="amb", d=20, p=0.4, loop=True, text="Night city ambience heard from a rooftop: a steady distant traffic hum, the occasional far-off car horn, a faint distant siren, light rain drizzle, a soft electric neon buzz. No music, no voices."),
+    # ---- pace (release 2, 2026-09-26): the turn clock and the standings ----
+    # the room hears the last ten seconds go (the table screen, one tick a second), and the phone whose time it
+    # is beeps the last three; then the buzzer. A hurry-up's ten seconds start with a stopwatch.
+    # the take ticks four times in its half second: only the first, once a second, is a clock
+    "clock_tick": dict(kind="fx", d=0.5, p=0.75, post="atrim=0:0.09", fade_out=0.03,
+        text="A single crisp tick of a mechanical stopwatch: one short dry click, clean, close-up." + DRY),
+    "clock_beep": dict(kind="fx", d=0.5, p=0.75, post="atrim=0:0.26", fade_out=0.05,
+        text="One short clean electronic countdown beep in a mid-high pitch, like a digital timer's last seconds: a single pure tone, interface sound." + DRY),
+    "time_up":    dict(kind="fx", d=1.2, p=0.7, fade_out=0.1,
+        text="A game show time's-up buzzer: one short loud harsh electronic buzz, about a second long, then silence. No music, no voices."),
+    "hurry_start": dict(kind="fx", d=1.6, p=0.6, fade_out=0.2,
+        text="A digital alarm going off: four fast urgent beeps climbing in pitch, mid-range electronic tones like a countdown warning on a game show, clean interface sound. No music, no voices."),
+    # the standings card sliding onto the table's board
+    "score_sting": dict(kind="fx", d=1.4, p=0.6, fade_out=0.25,
+        text="A short scoreboard update sting for a sports broadcast: a quick electric flicker, then two bright rising synth-brass notes in the middle register, punchy and clean, like a neon scoreboard lighting up. No voices."),
 }
 
 # ---------------------------------------------------------------- voices
@@ -158,6 +173,8 @@ for n, t in SUMS.items():
 for c in COLOURS:
     LINES["v_up_" + c] = dict(text="%s, you're up." % c.capitalize())
     LINES["v_win_" + c] = dict(text="%s runs this city." % c.capitalize(), style=0.55)
+    # the name on its own, read as the start of a sentence (release 2: "Green" + "is one away")
+    LINES["v_n_" + c] = dict(text=c.capitalize(), next="is one move away from running this city.", style=0.4)
 LINES.update({
     "v_start":   dict(text="Everybody roll. High roller goes first."),
     "v_tie":     dict(text="It's a tie. Roll again."),
@@ -202,6 +219,33 @@ LINES.update({
     "v_crash_1":   dict(text="Somebody call a tow truck.", style=0.55),
     "v_crash_2":   dict(text="That's gonna leave a mark.", style=0.55),
     "v_crash_3":   dict(text="Nobody saw nothing.", style=0.55),
+    # ---- pace (release 2, 2026-09-26) ----
+    # the standings: a colour and what they did, said as two clips one after the other ("Green" + "is one away"),
+    # so six names and a handful of phrases cover every player. Each part is read in the context of the other.
+    "v_s_lead":    dict(text="takes the lead.", prev="Green", style=0.45),
+    "v_s_leads":   dict(text="is out in front.", prev="Green", style=0.4),
+    "v_s_one":     dict(text="is one away.", prev="Green", style=0.5),
+    "v_s_two":     dict(text="is two away.", prev="Green", style=0.45),
+    "v_s_half":    dict(text="is halfway there.", prev="Green", style=0.4),
+    "v_s_tied":    dict(text="It's neck and neck at the top.", style=0.45),
+    "v_s_round_1": dict(text="That's the round.", style=0.4),
+    "v_s_round_2": dict(text="End of the round.", style=0.4),
+    "v_s_round_3": dict(text="Round's done. Here's how it stands.", style=0.4),
+    # the clock: a hurry-up's ten seconds, and the time running out
+    "v_hurry":     dict(text="Everybody's waiting. Ten seconds.", style=0.55),
+    "v_timeup_1":  dict(text="Time's up.", style=0.5),
+    "v_timeup_2":  dict(text="That's time. Next.", style=0.5),
+    # a slow turn gets a yawn or a dig; a quick one with a plan in it, a nod (v3 for the yawn: it reads the tag)
+    "v_slow_1":    dict(text="[yawns] Any day now.", model="eleven_v3"),
+    "v_slow_2":    dict(text="Take your time. The city can wait.", style=0.6, stab=0.35),
+    "v_slow_3":    dict(text="Tick tock.", style=0.6, stab=0.35),
+    "v_slow_4":    dict(text="I've seen glaciers move faster.", style=0.6, stab=0.35),
+    "v_slow_5":    dict(text="While we're young.", style=0.6, stab=0.35),
+    "v_fast_1":    dict(text="In and out. Clean.", style=0.5),
+    "v_fast_2":    dict(text="Now that's a plan.", style=0.5),
+    "v_fast_3":    dict(text="Fast money.", style=0.5),
+    "v_fast_4":    dict(text="Somebody came prepared.", style=0.5),
+    "v_fast_5":    dict(text="Smooth. Very smooth.", style=0.55),
     # the dispatcher, heard over the police radio when the police are sent in
     "v_cop_1":   dict(text="All units, that block is taped off. Nobody in, nobody out.", voice=DISPATCH, radio=True),
     "v_cop_2":   dict(text="Dispatch to all cars. Shut that block down.", voice=DISPATCH, radio=True),
@@ -247,6 +291,9 @@ LOUD = {
     "card_whoosh": -26, "card_land": -26, "horn_1": -26, "horn_2": -26,
     # buttons
     "ui_tap": -29, "ui_pick": -29, "ui_confirm": -28, "ui_deny": -30,
+    # the turn clock (release 2): the buzzer is a moment; the countdown's beeps must cut through on a phone, the
+    # table's ticks sit well under everything; the standings sting is a move's worth
+    "time_up": -21, "hurry_start": -22, "clock_beep": -23, "score_sting": -23, "clock_tick": -27,
 }
 # a softer start for the sounds whose first instant is not the point (seconds of fade-in)
 SOFT = {"start": 0.25, "legend": 0.06, "siren": 0.05, "hype": 0.04, "win": 0.03, "tension": 0.03,
@@ -279,10 +326,15 @@ def gen_sfx(name, out=None):
 
 def gen_voice(name):
     l = LINES[name]
+    if l.get("model") == "eleven_v3":
+        # v3 reads audio tags ("[yawns]"); it takes stability as 0, 0.5 or 1 and no context either side
+        body = {"text": l["text"], "model_id": "eleven_v3", "seed": 7, "voice_settings": {"stability": 0.5, "similarity_boost": 0.8}}
+        return post("/text-to-speech/%s" % l.get("voice", ANNOUNCER), body, os.path.join(RAW, name + ".mp3"), "?output_format=mp3_44100_128")
     body = {"text": l["text"], "model_id": TTS_MODEL, "seed": 7,
             "voice_settings": {"stability": l.get("stab", 0.45), "similarity_boost": 0.8, "style": l.get("style", 0.35), "use_speaker_boost": True}}
     if l.get("prev"): body["previous_text"] = l["prev"]
-    if l.get("next") is not None and l.get("prev"): body["next_text"] = l["next"] or "."
+    if l.get("next"): body["next_text"] = l["next"]                    # what follows it (a name read as the start of a sentence)
+    elif l.get("next") is not None and l.get("prev"): body["next_text"] = "."
     return post("/text-to-speech/%s" % l.get("voice", ANNOUNCER), body, os.path.join(RAW, name + ".mp3"), "?output_format=mp3_44100_128")
 
 

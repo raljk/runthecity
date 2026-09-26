@@ -16,7 +16,7 @@ def one(n):
                         "-F", "file=@" + os.path.join(WEB, n + ".mp3")], capture_output=True, text=True)
     try: got = json.loads(r.stdout)["text"]
     except Exception: return n, None, r.stdout[:200]
-    ok = words(got) == words(LINES[n]["text"])
+    ok = words(got) == words(re.sub(r"\[[^\]]*\]", "", LINES[n]["text"]))   # an audio tag ("[yawns]") is heard, not said
     return n, ok, got
 names = sys.argv[1:] or sorted(LINES)
 bad = 0
