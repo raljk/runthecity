@@ -1113,7 +1113,7 @@ html{overflow-anchor:none}            /* the phone keeps its own place when the 
 /* ---------- "your turn" and whose turn it is now ---------- */
 .yturn{position:fixed;inset:0;z-index:42;pointer-events:none;display:grid;place-items:center;overflow:hidden}
 .yturn .yflash{position:absolute;inset:0;background:radial-gradient(60% 40% at 50% 46%,color-mix(in srgb,var(--pc) 40%,transparent),transparent);animation:yflash 1.6s ease-out both}
-.yturn .yband{position:relative;width:140vw;padding:18px 0 16px;text-align:center;transform:rotate(-7deg);
+.yturn .yband{position:relative;width:140vw;margin-inline:-20vw;padding:18px 0 16px;text-align:center;transform:rotate(-7deg);
   background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--pc) 88%,#000) 14%,color-mix(in srgb,var(--pc) 88%,#000) 86%,transparent);
   box-shadow:0 0 40px color-mix(in srgb,var(--pc) 60%,transparent);animation:yband 1.6s cubic-bezier(.2,.9,.3,1) both}
 .yturn .yt{display:block;font:900 clamp(2.6rem,13vw,4.2rem)/.95 var(--display);letter-spacing:.02em;color:#fff;text-transform:uppercase;
@@ -1290,6 +1290,7 @@ body.modalopen .toast{z-index:45}
 .bwrap{position:relative}
 .bigcount{position:absolute;inset:0;z-index:2;display:none;place-items:center;pointer-events:none}
 .bigcount.on{display:grid}
+.bigcount>*{translate:var(--dx,0px) var(--dy,0px)}
 .bigcount .bcr{--r:clamp(170px,32vh,290px);position:relative;width:var(--r);height:var(--r);display:grid;place-items:center;border-radius:50%;
   background:radial-gradient(closest-side,rgba(5,7,12,.62) 70%,rgba(5,7,12,.25) 88%,transparent 100%)}
 .bigcount .bcr svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
@@ -1668,6 +1669,7 @@ body:has(>#app>.hframe) .slotm .sum{font-family:'Barlow Condensed','Arial Narrow
 body:has(>#app>.hframe) .slotm.seven{border-color:#ff2e93;box-shadow:0 0 0 4px #040b11,0 0 46px 8px rgba(255,46,147,.5),0 24px 60px rgba(0,0,0,.7)}
 body:has(>#app>.hframe) .slotm.lucky{border-color:#7be495;box-shadow:0 0 0 4px #040b11,0 0 40px 5px rgba(123,228,149,.4),0 24px 60px rgba(0,0,0,.7)}
 @media (prefers-reduced-motion:reduce){.hframe .btn{transition:none}}
+
 /* ---------- the phone, dressed like the front door (2026-09-26) ----------
    The player's view in the same night as the landing page and the table screen: teal-black ground,
    paper-white type, square hairline panels, condensed capitals and small monospaced labels, the wordmark
@@ -1913,6 +1915,26 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 /* cards to drop is a warning: its label in hot pink */
 .pview .phone .card:has([data-p=drop])>h2{color:#ff7dbb}
 .pview .phone .card:has([data-p=drop])>h2::before{background:var(--tb-warn)}
+/* a whisper: a note across the top of the screen, over the page, the sender's colour down its side */
+.pview #p-wsp{display:block;position:fixed;z-index:28;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));
+  top:calc(8px + env(safe-area-inset-top,0px));max-width:540px;margin-inline:auto;pointer-events:none}
+.pview #p-wsp:empty{display:none}
+.pview.bfull #p-wsp{top:calc(84px + env(safe-area-inset-top,0px))}
+.pview #p-wsp .wspchip{pointer-events:auto;display:flex;align-items:stretch;gap:0;width:100%;max-width:none;padding:0;overflow:visible;white-space:normal;cursor:default;
+  border:1px solid var(--tb-line2);border-radius:0;background:rgba(8,22,32,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:inset 3px 0 0 var(--pc),0 18px 44px rgba(0,0,0,.65);animation:wspdrop .45s cubic-bezier(.2,.9,.3,1.15) both}
+.pview #p-wsp .wspchip.out{animation:wspout .7s ease-in both}
+.pview .wspbody{appearance:none;flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:12px 10px 12px 16px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.pview .wspbody .wspi{width:42px;height:42px}
+.pview .wspt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pview .wspt small{font:500 10px/1.3 var(--tb-mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--tb-muted)}
+.pview .wspt small b{font-weight:500;color:var(--tb-paper)}
+.pview .wspt q{font:700 1.7rem/1.02 var(--tb-cond);letter-spacing:.01em;color:var(--tb-paper);overflow-wrap:anywhere;quotes:'\201C' '\201D'}
+.pview .wspt em{font-style:normal;font-size:.78rem;color:var(--tb-muted)}
+.pview .wspx{appearance:none;flex:none;width:50px;border:0;border-left:1px solid var(--tb-line);background:none;color:var(--tb-muted);display:grid;place-items:center;cursor:pointer}
+.pview .wspx svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes wspdrop{from{opacity:0;transform:translateY(-16px)}}
+@media (prefers-reduced-motion:reduce){.pview #p-wsp .wspchip{animation:none}}
 </style>
 </head>
 <body>
@@ -13556,8 +13578,7 @@ function hudHTML(st, me) {
     (shownCards(me) ? `<button class="pk" data-p="sheet" data-arg="card" aria-label="Your skills and talents">${scard('back', { size: 'xs' })}${shownCards(me)}</button>` : '') + '</div>' : '';
   const act = activePid(st), score = st.phase === 'turn' || st.phase === 'over' || st.phase === 'place' ? `<div class="hudscore" aria-label="Points">${st.players.map(p =>
     `<span class="${p.pid === act ? 'now' : ''}"><i class="chip" style="background:var(--p-${p.color})"></i>${vpOf(st, p.pid)}</span>`).join('')}</div>` : '';
-  const chip = me ? talkChipHTML(st) : '';
-  return `<div class="hudtop"><div class="hudwho${g.yours ? ' you' : ''}">${chip || `<b>${!g.yours && g.ap ? `<span class="turnchip" style="background:var(--p-${g.ap.color})"></span>` : ''}${esc(g.title)}</b><span>${esc(now)}</span>`}</div>` +
+  return `<div class="hudtop"><div class="hudwho${g.yours ? ' you' : ''}"><b>${!g.yours && g.ap ? `<span class="turnchip" style="background:var(--p-${g.ap.color})"></span>` : ''}${esc(g.title)}</b><span>${esc(now)}</span></div>` +
     `${clockBadgeHTML(st, 'hud')}${dice}${me ? `<button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk">${TALKICO}</button>` : ''}<button class="hudx" data-p="full" aria-label="Leave full screen">${ICO_SHRINK}</button></div><div class="hudrow">${hand}${score}</div>`;
 }
 
@@ -13701,8 +13722,8 @@ function renderPlayer() {
   if (st) useGeo(st.board);
   stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st);
   if (!$('#p-main')) {
-    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span id="p-wsp"></span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: stickers, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
-      <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
+    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: stickers, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
+      <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-wsp" role="status"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
     document.body.classList.add('pview');
   }
   // Was this state the table's answer to a move of your own? Only that may move you on from what you were doing.
@@ -14143,13 +14164,16 @@ function talkSplatSync() {
   el.style.animationDelay = -(now - s.at) + 'ms';
   box.appendChild(el);
 }
-/* the whisper, where your eye is: in the phone's top bar (in place of the name, never over a button), or at the
-   top of the full-screen board. A tap on it opens the sheet to whisper back. */
+/* the whisper, where your eye is: a note across the top of the screen, over the page (the top bar had no room for
+   it: a long name or phrase was cut off). The whole note is readable; a tap on it opens the sheet to whisper back,
+   and the X puts it away. */
 function talkChipHTML(st) {
   const w = TTP.wsp, age = w ? Date.now() - w.at : 1e9, p = w && age < TT.wspMs + TT.wspOut && playerOf(st, w.p);
   if (!p) { TTP.wsp = null; return ''; }
-  return `<button class="wspchip${age >= TT.wspMs ? ' out' : ''}" data-p="talk" data-arg="reply" style="--pc:var(--p-${p.color})" aria-label="${esc(p.name)} whispers: ${esc(ttWord(w.e))}. Whisper back">` +
-    `<i class="wspi"></i><b>${esc(p.name)}</b><q>${esc(ttWord(w.e))}</q></button>`;
+  return `<div class="wspchip${age >= TT.wspMs ? ' out' : ''}" style="--pc:var(--p-${p.color})">` +
+    `<button class="wspbody" data-p="talk" data-arg="reply" aria-label="${esc(p.name)} whispers: ${esc(ttWord(w.e))}. Whisper back">` +
+    `<i class="wspi"></i><span class="wspt"><small><b>${esc(p.name)}</b> whispers to you</small><q>${esc(ttWord(w.e))}</q><em>Tap to whisper back</em></span></button>` +
+    `<button class="wspx" data-p="wspx" aria-label="Put the whisper away">${XICO}</button></div>`;
 }
 function talkGone() {
   TTP.wsp = null; TTP.splat = null;
@@ -14160,7 +14184,7 @@ function talkBar(st, me) {
   const bar = document.querySelector('.pbar'); if (!bar) return;
   const b = bar.querySelector('[data-p=talk].talkbtn'); if (b) b.hidden = !me;
   const chip = me && st ? talkChipHTML(st) : '';
-  setHTML('#p-wsp', chip); bar.classList.toggle('wsping', !!chip);
+  setHTML('#p-wsp', chip);
 }
 /* what just happened, from this phone's side, and the stickers that fit it: the last thing worth a reaction wins */
 function talkObserve(st, me) {
@@ -14436,6 +14460,13 @@ function boardCentre() {
   return c && inView(c.x, c.y) ? c : null;
 }
 const offTop = () => ({ x: window.innerWidth / 2, y: -40 });
+/* the middle of the city on this screen: the average of its blocks' centres, on the ground */
+function cityPoint(svg) {
+  if (!svg || !svg.getScreenCTM || !GEO || !GEO.hexes.length) return null;
+  let x = 0, z = 0; GEO.hexes.forEach(h => { x += h.cx; z += h.cy; });
+  const p = project(x / GEO.hexes.length, 0, z / GEO.hexes.length, basis()), m = svg.getScreenCTM();
+  return p && m ? new DOMPoint(p.x, p.y).matrixTransform(m) : null;
+}
 function fxPoint(end, r) {
   if (end.hex !== undefined) return hexPoint(end.hex) || boardCentre() || offTop();
   if (end.bank) return boardCentre() || offTop();
@@ -14812,8 +14843,8 @@ function fxRaid(ev) {
   el.style.transform = `translate(${p.x.toFixed(0)}px,${p.y.toFixed(0)}px)`;
   // real tape says it over and over, so it still reads where the two lengths cross
   const say = (w, n) => Array(n).fill(w).join(' \u00b7 ');
-  // the rings stay on the block; the tape slides in from the edge of the screen if the block is near it
-  const half = (phone ? 220 : 310) / 2 + 10, dx = Math.min(window.innerWidth - half, Math.max(half, p.x)) - p.x;
+  // the rings and the tape both sit on the block; near the screen's edge the tape runs off it, as tape does
+  const dx = 0;
   el.innerHTML = '<i class="rr r"></i><i class="rr b"></i>' +
     `<span class="rtw" style="transform:translateX(${dx.toFixed(0)}px)"><b class="rt">${say('Police line \u00b7 do not cross', 3)}</b>` +
     `<b class="rt x">${say('Under investigation', 4)}</b></span>`;
@@ -15425,6 +15456,9 @@ function bigCount(n, color, hot) {
   if (n === null) { if (bc.dataset.n && bc.dataset.n !== 'up') clear(); return; }
   if (bc.dataset.n === String(n)) return;
   const was = bc.dataset.n; bc.dataset.n = String(n); bc.style.setProperty('--pc', `var(--p-${color})`);
+  { const c = cityPoint(document.querySelector('#h-board svg.board')), r = bc.getBoundingClientRect();   // centred on the city
+    bc.style.setProperty('--dx', c && r.width ? Math.round(c.x - (r.left + r.width / 2)) + 'px' : '0px');
+    bc.style.setProperty('--dy', c && r.height ? Math.round(c.y - (r.top + r.height / 2)) + 'px' : '0px'); }
   if (n === 'up') {
     bc.className = 'bigcount on stamp'; bc.innerHTML = '<b>Time’s up</b>';
     clearTimeout(bc.__t); bc.__t = setTimeout(() => { if (bc.dataset.n === 'up') clear(); }, 2200); return;
@@ -15776,6 +15810,7 @@ document.addEventListener('click', ev => {
     case 'hurry': if (act({ t: 'hurry' })) buzz(12); break;
     // trash talk: the sheet, and what is sent from it (the sheet closes behind a whisper or a splat, and a sticker pops out)
     case 'talk': if (st && playerOf(st, PID)) { if (pb.dataset.arg === 'reply' && TTP.reply) TTP.to = TTP.reply; if (pb.dataset.arg === 'reply') TTP.wsp = null; openSheet('talk', pb); } break;
+    case 'wspx': TTP.wsp = null; renderPlayer(); break;
     case 'tto': TTP.to = pb.dataset.arg; renderPlayer(); break;
     case 'temo': if (talkSend({ k: 'emo', e: pb.dataset.arg })) { buzz(8); closeSheet('sent'); talkPop(pb.dataset.arg); } else renderPlayer(); break;
     case 'twsp': { const to = st && playerOf(st, TTP.to);
