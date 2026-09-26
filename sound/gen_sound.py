@@ -121,6 +121,11 @@ SFX = {
     "backoff":    dict(post=PUNCHY % 0, kind="fx", d=1.0, p=0.65, text="Someone backs off and runs away: quick footsteps hurrying off on wet pavement, fading into the distance."),
     "ko":         dict(fade_out=0.5, kind="fx", d=2.2, p=0.55, text="A knockout: a heavy body hits the floor, the boxing bell clangs rapidly, and the crowd erupts in a huge roar."),
     "fight_end":  dict(kind="fx", d=1.8, p=0.6, text="A fight ends: the boxing bell rings twice and the crowd cheers and applauds."),
+    # ---- turf war (release 5, 2026-09-26): turf won and lost (the owner's phone and the table), a building knocked down
+    # the first prompt gave only hiss above 5 kHz (small 0.1): nothing a phone can play, so the power-up is asked for warm and low
+    "turf_on":    dict(fade_out=0.3, kind="fx", d=1.6, p=0.65, text="A warm power-up swell: a deep electric hum rising smoothly in pitch into a bright glowing chord, like a whole city block of neon lighting up at once, ending on a soft clean chime. No voices."),
+    "turf_off":   dict(fade_out=0.35, kind="fx", d=1.4, p=0.6, text="Neon lights shorting out: a crackle, a fizzing spark, and the electric hum dying away to silence. No music, no voices."),
+    "crumble":    dict(fade_out=0.5, kind="fx", d=2.0, p=0.55, text="A small building being knocked down: timber cracking, bricks tumbling, a window shattering, then dust settling. No music, no voices."),
     # ---- crashes in the traffic (added 2026-09-24): scenery, heard only from the table ----
     # a driver who has just seen it, too late; then the hit, and the fuel going up a moment later
     "crash_skid": dict(kind="fx", d=1.1, p=0.7, post="highpass=f=180", fade_out=0.15,
@@ -346,6 +351,18 @@ LINES.update({
     "v_buy_1":     dict(text="Something from the back room.", style=0.55),
     "v_buy_2":     dict(text="Under the counter.", style=0.55),
 })
+# ---- turf war (release 5, 2026-09-26): the two cards that go after a building, what they do, and turf won and lost,
+# said as a colour and a phrase ("Green" + "carves out their turf.") like the standings
+LINES.update({
+    "v_c_bustup":      dict(text="It's a bust up!", style=0.6, stab=0.35),
+    "v_c_wrecking":    dict(text="Here comes the wrecking crew.", style=0.55),
+    "v_down_bustup":   dict(text="That operation's closed for good.", style=0.5),
+    "v_down_wrecking": dict(text="That's a few floors lighter.", style=0.55),
+    "v_t_on_1":        dict(text="claims their turf.", prev="Green", style=0.5),
+    "v_t_on_2":        dict(text="has walled off a slice of the city.", prev="Green", style=0.45),
+    "v_t_off_1":       dict(text="just lost their turf.", prev="Green", style=0.5),
+    "v_t_off_2":       dict(text="has had their line cut.", prev="Green", style=0.5),
+})
 
 # ---------------------------------------------------------------- levels and encoding
 # How loud each kind is, and how it is encoded. Peaks never go above -1 dB.
@@ -394,6 +411,8 @@ LOUD = {
     "e_cheer": -24, "e_boo": -24, "e_lol": -24, "e_clap": -24, "e_crickets": -25, "e_rain": -24, "e_fire": -24,
     "e_sweat": -24, "e_cry": -24, "e_micdrop": -23, "whisper": -25,
     "s_tag": -22, "s_smoke": -22, "s_glitter": -22, "s_pigeon": -22,
+    # turf war (release 5): turf won is a moment, lost a little under it; a building coming down is a blow
+    "turf_on": -21, "turf_off": -23, "crumble": -21,
 }
 # a softer start for the sounds whose first instant is not the point (seconds of fade-in)
 SOFT = {"start": 0.25, "legend": 0.06, "siren": 0.05, "hype": 0.04, "win": 0.03, "tension": 0.03,
