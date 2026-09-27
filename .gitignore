@@ -20,3 +20,10 @@
 !/art/landing/run-the-city.svg
 # the Director's story panels (release 4): loaded by the table screen when a move needs one
 !/art/panels/
+
+# Compressed landing media and cacheable game artwork
+!/art/landing/*.webp
+!/art/game/
+
+!/art/landing/social-preview.jpg
+!/art/landing/SOCIAL.md

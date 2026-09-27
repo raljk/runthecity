@@ -38,3 +38,17 @@ Input: the final city plate as a style and world reference. Generated with the b
 ```text
 Use case: stylized-concept. The supplied city artwork is a STYLE AND WORLD REFERENCE, not an edit target. Generate a new original 1536x1024 wide background plate that continues this same Run the City cyberpunk world at street level. We are now deep inside a narrow dense neon entertainment district: layered storefronts, recessed club entrances, immense buildings, overhead cables, stacked balconies, glowing empty billboard frames at different depths, a wet road running diagonally into the distant mist. Camera slightly low looking along and up the street, strong cinematic perspective, AAA rendered depth mixed with painterly graphic-novel cel shading and distressed print texture. Palette: ink navy and cyan haze, hot magenta storefront illumination, acid yellow highlights. Rich details at the left and right, clear relatively dark central midground for live text and holograms to be overlaid in HTML. Several blank cyan and pink translucent holographic panel shapes float near shop fronts in the distance. No people in foreground, no legible words or logos, no watermarks, no UI. Avoid making a copy of the original central tower composition: this is the street inside the city, a new chapter of the same movie poster. One continuous environment illustration.
 ```
+
+## Hero entrance — 2026-09-27
+
+Built-in ImageGen mode. Reference: existing `crews-poster.png`. Final asset: `art/landing/crews-running.webp` (transparent, 1400 × 630). Existing city and group images also have compressed WebP siblings, used by the website. The running sprite is split into independent left/right CSS layers, followed by one brief blur/flash and the original group pose. No video or animation loop.
+
+Final prompt:
+
+```text
+Use case: stylized-concept. Create a transparent PNG sprite asset for this website's cinematic hero entrance, using the supplied six-person image as character/costume reference. Landscape wide canvas. Left half: the green jacket man, orange jacket woman and red coat man sprint dynamically to the RIGHT, towards center. Right half: white outfit woman, blue jacket man and purple coat woman sprint to the LEFT towards center. Entire bodies including shoes visible, bent legs in energetic running strides and arms pumping, slightly low street camera, matching realistic glossy neon cyberpunk rendered style and magenta/cyan rim light. Keep a clear transparent vertical gap at the exact center dividing the two trios so the website can independently move each half with CSS. Genuine transparent alpha background everywhere behind people, no floor, no scene, no smoke, no text, no logo. All six distinct identities and costume colours preserved. They run towards each other, not towards camera; view is three-quarter side profiles. Sharp silhouettes, no baked-in motion blur. This is the running phase only; the existing image remains final group pose.
+```
+
+Game artwork previously embedded as base64 in `index.html` now lives in `art/game/` using content-hashed filenames. Preserve these external references when regenerating art.
+
+Hero timing revision: 0.95-second anime-style entrance; brief anticipation, fast dash with reused-sprite afterimages and radial speed lines, one brief flash, then a short group-pose shake. No additional raster assets.
