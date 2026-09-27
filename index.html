@@ -1626,6 +1626,61 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 @keyframes stFall{from{transform:translate(0,0) rotate(0)}to{transform:translate(var(--dx),108vh) rotate(var(--r))}}
 @media (prefers-reduced-motion:reduce){#fx .sttitle,#fx .sttitle.out,.stself .stpic.up{animation:none}#fx .stconf{display:none}}
 /* ---------- end of Showtime CSS ---------- */
+/* ---------- The coach (onboarding, 2026-09-27): the bubble, its chip, the ring and the finger ---------- */
+#coach{position:fixed;z-index:40;left:10px;right:auto;max-width:calc(100vw - 20px);pointer-events:auto;color:var(--tb-paper,#f3f3e9);font-family:var(--body)}
+#coach[hidden],#coachring[hidden]{display:none}
+#coach .cbub{display:flex;gap:12px;align-items:flex-start;padding:12px 12px 10px 12px;border:1px solid rgba(178,232,255,.3);
+  background:rgba(6,18,27,.96);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:inset 3px 0 0 #e8fc37,0 18px 44px rgba(0,0,0,.65);animation:coachin .38s cubic-bezier(.2,.9,.3,1.15) both}
+#coach .cav{position:relative;flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#e8fc37;color:#0f1a0c}
+#coach .cav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#coach .cav i{position:absolute;inset:-4px;border-radius:50%;border:2px solid #e8fc37;opacity:0}
+#coach.talk .cav i{animation:coachwave 1.5s ease-out infinite}
+#coach.talk .cav i:nth-of-type(2){animation-delay:.5s}#coach.talk .cav i:nth-of-type(3){animation-delay:1s}
+#coach .ctx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+#coach .ctx small{font:500 10px/1.3 var(--tb-mono,ui-monospace,monospace);letter-spacing:1.6px;text-transform:uppercase;color:#e8fc37}
+#coach .ctx p{margin:0;font:600 15px/1.35 var(--body);color:var(--tb-paper,#f3f3e9)}
+#coach .crow{display:flex;align-items:center;gap:14px;margin-top:6px}
+#coach .crow.wrap{flex-wrap:wrap;gap:8px 10px}
+#coach .cok{appearance:none;border:0;min-height:36px;padding:0 16px;background:#e8fc37;color:#0f1a0c;font:700 15px/1 var(--tb-cond,'Barlow Condensed',sans-serif);letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+#coach .cok.ghost{background:none;color:var(--tb-paper,#f3f3e9);box-shadow:inset 0 0 0 1px rgba(178,232,255,.42)}
+#coach .coff{appearance:none;border:0;background:none;padding:6px 0;color:var(--tb-muted,#8fa5b1);font:500 12px/1 var(--body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+#coach.start::before{content:"";position:fixed;inset:0;z-index:-1;background:rgba(2,8,12,.74)}
+#coach.fin .cbub{box-shadow:inset 3px 0 0 #e8fc37,0 0 0 1px rgba(232,252,55,.35),0 18px 60px rgba(0,0,0,.75)}
+#coach.chip{left:auto !important;right:max(10px,env(safe-area-inset-right,0px));width:auto !important}
+#coach .cchip{appearance:none;display:flex;align-items:center;gap:6px;height:36px;padding:0 12px 0 9px;border:1px solid rgba(232,252,55,.55);border-radius:18px;
+  background:rgba(6,18,27,.92);color:#e8fc37;font:700 13px/1 var(--tb-cond,'Barlow Condensed',sans-serif);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,.5);animation:coachin .3s ease-out both}
+#coach .cchip svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#coachring{position:fixed;inset:0;z-index:39;pointer-events:none}
+#coachring .cring{position:fixed;border:2px solid #e8fc37;border-radius:10px;box-shadow:0 0 0 3px rgba(232,252,55,.18),0 0 28px 4px rgba(232,252,55,.35);animation:coachring 1.6s ease-in-out infinite}
+#coachring.big .cring{border-width:2px;box-shadow:0 0 0 2px rgba(232,252,55,.14),inset 0 0 26px rgba(232,252,55,.18);animation:none;opacity:.8}
+#coachring .cfinger{position:fixed;left:0;top:0;width:0;height:0}
+#coachring .cfinger svg{position:absolute;left:-9px;top:4px;width:34px;height:41px;fill:#f3f3e9;stroke:#06121b;stroke-width:2;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6));
+  transform-origin:9px 0;animation:coachtap 1.6s ease-in-out infinite}
+#coachring .cfinger b{position:absolute;left:-16px;top:-16px;width:32px;height:32px;border-radius:50%;border:2px solid #e8fc37;opacity:0;animation:coachripple 1.6s ease-out infinite}
+@keyframes coachin{from{opacity:0;transform:translateY(10px)}}
+@keyframes coachwave{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.7);opacity:0}}
+@keyframes coachring{50%{box-shadow:0 0 0 7px rgba(232,252,55,.08),0 0 38px 8px rgba(232,252,55,.45)}}
+@keyframes coachtap{0%,100%{transform:translate(14px,18px)}40%{transform:translate(0,4px)}50%{transform:translate(0,2px) scale(.92)}62%{transform:translate(0,4px)}}
+@keyframes coachripple{0%,45%{opacity:0;transform:scale(.4)}52%{opacity:.9}100%{opacity:0;transform:scale(1.5)}}
+@media (prefers-reduced-motion:reduce){#coach .cbub,#coach .cchip,#coachring .cring,#coachring .cfinger svg,#coachring .cfinger b,#coach.talk .cav i{animation:none}#coachring .cfinger b{opacity:.8}}
+/* the switch on the seat screen and in the lobby */
+.coachtog{appearance:none;display:flex;align-items:center;gap:12px;width:100%;padding:12px;margin:4px 0;border:1px solid rgba(178,232,255,.24);background:rgba(232,252,55,.04);color:inherit;text-align:left;cursor:pointer;font:inherit}
+.coachtog[aria-pressed=true]{border-color:rgba(232,252,55,.6);background:rgba(232,252,55,.08)}
+.coachtog .ctk{flex:none;position:relative;width:40px;height:22px;border-radius:11px;background:#2a3a45;transition:background .2s}
+.coachtog .ctk::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#f3f3e9;transition:transform .2s}
+.coachtog[aria-pressed=true] .ctk{background:#e8fc37}
+.coachtog[aria-pressed=true] .ctk::after{transform:translateX(18px);background:#0f1a0c}
+.coachtog .ctt{display:flex;flex-direction:column;gap:3px}
+.coachtog .ctt b{font:700 17px/1.1 var(--tb-cond,'Barlow Condensed',sans-serif);letter-spacing:.02em}
+.coachtog .ctt small{font-size:12px;line-height:1.35;color:var(--tb-muted,#8fa5b1)}
+/* the practice game has no table code, no trash talk and nobody to whisper to */
+body.learn .talkbtn,body.learn #p-status{display:none !important}
+/* the way in, on the front page */
+.lp .poster-description .lp-learn{display:inline-block;margin-top:6px;color:#e8fc37;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.lp .poster-description .lp-learn:hover{color:#f3f3e9}
+/* ---------- end of the coach CSS ---------- */
 /* ---------- the table screen, dressed like the front door (2026-09-26) ----------
    The landing page's night on the table screen and the board view: teal-black ground, paper-white type,
    square hairline panels, condensed capitals and small monospaced labels, the wordmark in the corner.
@@ -2151,7 +2206,7 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 <svg id="art-defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><image id="img-warehouse" href="art/game/4b02da62cf440c84.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-warehouse-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse"/></pattern><pattern id="tex-warehouse-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-nightlife" href="art/game/22125c17692b7615.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-nightlife-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife"/></pattern><pattern id="tex-nightlife-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-residential" href="art/game/a646c36d55d79d8d.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-residential-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential"/></pattern><pattern id="tex-residential-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-works" href="art/game/818f3fdcf8197d20.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-works-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works"/></pattern><pattern id="tex-works-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-tower" href="art/game/2fc42ec3373b927e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-tower-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower"/></pattern><pattern id="tex-tower-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-deadzone" href="art/game/f239b75fb869878e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-deadzone-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone"/></pattern><pattern id="tex-deadzone-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-wall_strata" href="art/game/11657f2b44ce62d9.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-wall_edge" href="art/game/d4118f94580bf8b4.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-rooftop" href="art/game/a84fbcb4b007ba84.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade" href="art/game/b14848bfcef00503.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_glass" href="art/game/884a677ea6bf6864.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_neon" href="art/game/e5eb9e891be0d2bb.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_shed" href="art/game/9e4045f14f544c07.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_works" href="art/game/68e62ef6f2bf6a43.jpg" width="1" height="1" preserveAspectRatio="none"/></defs></svg>
 <!-- ART:END -->
 <!-- SND:BEGIN (generated by sound/embed.py, do not edit by hand) -->
-<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"a805b6feb8","size":2121903}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"giant_beast":["table",217980,21228,3.46,-6.6],"giant_mech":["table",239208,21855,3.564,-7.8],"giant_step":["table",261063,4301,0.65,-0.1],"horn_1":["table",265364,5711,0.88,-11.5],"horn_2":["table",271075,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",279764,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",285005,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",291500,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",321976,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",327844,14802,2.4,-8.2],"reel_stop":["table",342646,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",346006,8689,1.36,-8.6],"seven":["table",354695,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"st_boom":["table",376080,11667,1.874,-7.8],"st_music":["table",387747,294260,48.96,-9.5],"st_pop":["table",682007,12451,2.0,-9.5],"st_rocket":["table",694458,38939,6.411,-6.6],"st_shots":["table",733397,18407,3.0,-9.7],"start":["table",751804,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",788235,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",799746,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",806711,7556,1.415,-0.4],"v_bank_2":["table",814267,6716,1.24,0.5],"v_buy_1":["table",820983,8156,1.524,0.8],"v_buy_2":["table",829139,5996,1.083,2.2],"v_c_backup":["table",835135,5756,1.039,2.1],"v_c_bustup":["table",840891,6116,1.116,-0.6],"v_c_connections":["table",847007,6236,1.138,-2.6],"v_c_fight":["table",853243,5756,1.035,-2.3],"v_c_legend":["table",858999,6716,1.243,-1.5],"v_c_luck":["table",865715,5156,0.934,0.7],"v_c_paidoff":["table",870871,8516,1.59,1.1],"v_c_rewind":["table",879387,7076,1.298,0.1],"v_c_roadcrew":["table",886463,7076,1.311,0.2],"v_c_shakedown":["table",893539,8156,1.534,-1.1],"v_c_silver":["table",901695,6236,1.14,1.0],"v_c_tipoff":["table",907931,7436,1.374,0.1],"v_c_wrecking":["table",915367,8516,1.597,-0.9],"v_cop_1":["table",923883,15020,4.827,-3.2],"v_cop_2":["table",938903,9836,3.115,-2.8],"v_cop_3":["table",948739,10160,3.21,-3.1],"v_crash_1":["table",958899,8396,1.577,-2.5],"v_crash_2":["table",967295,7676,1.425,-1.3],"v_crash_3":["table",974971,6596,1.217,-0.9],"v_crowd_1":["table",981567,7196,1.329,1.4],"v_crowd_2":["table",988763,7556,1.415,-0.7],"v_crowd_3":["table",996319,7556,1.41,1.9],"v_d_deadzone":["table",1003875,8996,1.685,-2.5],"v_d_nightlife":["table",1012871,8756,1.649,1.2],"v_d_residential":["table",1021627,8276,1.558,1.0],"v_d_tower":["table",1029903,6356,1.169,1.0],"v_d_warehouse":["table",1036259,8396,1.562,-1.3],"v_d_works":["table",1044655,6476,1.191,2.0],"v_deal":["table",1051131,7076,1.319,-1.9],"v_deal_2":["table",1058207,6956,1.29,-0.5],"v_deal_3":["table",1065163,8396,1.562,2.0],"v_deal_4":["table",1073559,7196,1.337,2.5],"v_dir_look":["table",1080755,8156,1.52,-0.5],"v_dir_wake":["table",1088911,7556,1.399,-2.5],"v_discard":["table",1096467,18716,3.626,0.8],"v_down_bustup":["table",1115183,11516,2.187,-0.7],"v_down_wrecking":["table",1126699,8756,1.635,-2.4],"v_e_chase":["table",1135455,5876,1.07,0.4],"v_e_concert":["table",1141331,6716,1.242,-2.5],"v_e_fire":["table",1148047,5996,1.09,-1.2],"v_e_gangwar":["table",1154043,5876,1.06,-0.6],"v_e_giant":["table",1159919,6716,1.238,1.5],"v_e_race":["table",1166635,6956,1.288,-2.1],"v_e_robbery":["table",1173591,7916,1.473,-1.1],"v_fast_1":["table",1181507,7556,1.407,0.4],"v_fast_2":["table",1189063,7076,1.306,1.1],"v_fast_3":["table",1196139,5396,0.983,0.6],"v_fast_4":["table",1201535,7556,1.401,1.3],"v_fast_5":["table",1209091,10436,1.976,-0.6],"v_giant_radio":["table",1219527,13724,4.415,-3.2],"v_held":["table",1233251,6956,1.288,0.0],"v_hurry":["table",1240207,11756,2.239,1.5],"v_icpt_1":["table",1251963,12836,2.457,-2.4],"v_icpt_2":["table",1264799,5396,0.977,-1.3],"v_icpt_3":["table",1270195,6956,1.283,-2.6],"v_icpt_4":["table",1277151,7676,1.43,-2.5],"v_ko":["table",1284827,4676,0.818,-1.0],"v_legendary":["table",1289503,5156,0.914,-0.4],"v_n_blue":["table",1294659,2276,0.338,-1.8],"v_n_green":["table",1296935,2756,0.45,-2.5],"v_n_orange":["table",1299691,3116,0.507,-2.6],"v_n_purple":["table",1302807,2516,0.395,-0.5],"v_n_red":["table",1305323,1796,0.258,1.0],"v_n_white":["table",1307119,2276,0.352,2.3],"v_nine":["table",1309395,12716,2.434,-2.6],"v_offer":["table",1322111,8156,1.516,-2.3],"v_op_1":["table",1330267,10316,1.946,-2.5],"v_op_2":["table",1340583,10076,1.905,-0.5],"v_op_3":["table",1350659,6836,1.257,-1.5],"v_op_4":["table",1357495,10556,1.997,0.3],"v_open":["table",1368051,9476,1.778,-1.5],"v_p_far":["table",1377527,4676,0.832,0.3],"v_p_front":["table",1382203,5516,1.008,-0.5],"v_p_left":["table",1387719,5396,0.974,-2.6],"v_p_mid":["table",1393115,4916,0.874,-0.4],"v_p_right":["table",1398031,5156,0.922,0.4],"v_pick":["table",1403187,5876,1.076,-2.2],"v_place":["table",1409063,7556,1.415,-1.7],"v_port_1":["table",1416619,6956,1.279,-1.4],"v_port_2":["table",1423575,6836,1.261,0.9],"v_rare":["table",1430411,8036,1.49,0.5],"v_s_half":["table",1438447,5636,1.022,2.5],"v_s_lead":["table",1444083,5756,1.049,0.6],"v_s_leads":["table",1449839,5996,1.092,2.5],"v_s_one":["table",1455835,5396,0.975,-2.1],"v_s_round_1":["table",1461231,6236,1.145,-1.2],"v_s_round_2":["table",1467467,5756,1.035,-1.3],"v_s_round_3":["table",1473223,12956,2.474,0.9],"v_s_tied":["table",1486179,8996,1.695,2.5],"v_s_two":["table",1495175,5396,0.975,-2.5],"v_says":["table",1500571,2996,0.498,-0.4],"v_slow_1":["table",1503567,15476,2.997,-2.5],"v_slow_2":["table",1519043,12716,2.429,-1.6],"v_slow_3":["table",1531759,4676,0.831,-0.9],"v_slow_4":["table",1536435,11156,2.131,0.9],"v_slow_5":["table",1547591,6716,1.232,-1.4],"v_splat_1":["table",1554307,6596,1.215,-0.2],"v_splat_2":["table",1560903,5876,1.076,-0.9],"v_splat_3":["table",1566779,7556,1.405,1.3],"v_st_count":["table",1574335,10916,2.081,-1.7],"v_st_crew_1":["table",1585251,5156,0.925,0.3],"v_st_crew_2":["table",1590407,8396,1.584,-1.8],"v_st_end":["table",1598803,10076,1.908,-1.2],"v_st_face_1":["table",1608879,6836,1.257,2.5],"v_st_face_2":["table",1615715,8756,1.638,-0.1],"v_st_lift_1":["table",1624471,4916,0.867,-2.0],"v_st_lift_2":["table",1629387,6596,1.216,-0.9],"v_st_orbit":["table",1635983,8036,1.507,0.9],"v_st_parade":["table",1644019,12596,2.402,-1.8],"v_start":["table",1656615,13796,2.657,-1.3],"v_sum_10":["table",1670411,3356,0.576,-0.0],"v_sum_11":["table",1673767,3596,0.604,2.5],"v_sum_12":["table",1677363,10916,2.07,2.2],"v_sum_2":["table",1688279,9836,1.868,0.1],"v_sum_3":["table",1698115,3356,0.557,-1.3],"v_sum_4":["table",1701471,3596,0.604,-1.2],"v_sum_5":["table",1705067,4076,0.698,-2.0],"v_sum_6":["table",1709143,4076,0.698,0.9],"v_sum_7":["table",1713219,11036,2.09,-0.5],"v_sum_8":["table",1724255,2876,0.458,2.5],"v_sum_9":["table",1727131,3836,0.65,0.3],"v_t_off_1":["table",1730967,7676,1.431,-0.2],"v_t_off_2":["table",1738643,7796,1.444,2.5],"v_t_on_1":["table",1746439,6596,1.218,0.9],"v_t_on_2":["table",1753035,11036,2.1,0.3],"v_taken":["table",1764071,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1775227,9476,1.794,-0.4],"v_timeup_1":["table",1784703,4796,0.862,-0.4],"v_timeup_2":["table",1789499,8036,1.5,0.1],"v_tower":["table",1797535,10436,1.987,-2.6],"v_up_blue":["table",1807971,6956,1.286,-2.5],"v_up_green":["table",1814927,7676,1.421,-2.6],"v_up_orange":["table",1822603,7076,1.316,-2.7],"v_up_purple":["table",1829679,7796,1.464,-2.5],"v_up_red":["table",1837475,6956,1.276,-1.6],"v_up_white":["table",1844431,7076,1.301,-0.9],"v_w_alltalk":["table",1851507,4796,0.845,-0.3],"v_w_anyday":["table",1856303,5276,0.938,1.6],"v_w_bet":["table",1861579,2636,0.422,2.5],"v_w_bigmove":["table",1864215,4316,0.765,0.1],"v_w_clean":["table",1868531,5156,0.932,1.4],"v_w_clock":["table",1873687,5636,1.024,0.2],"v_w_comfy":["table",1879323,5996,1.086,1.8],"v_w_coming":["table",1885319,6116,1.119,-0.7],"v_w_cooked":["table",1891435,4316,0.75,-0.5],"v_w_dobetter":["table",1895751,3956,0.677,0.3],"v_w_dreaming":["table",1899707,4916,0.879,-1.7],"v_w_energy":["table",1904623,6236,1.131,-0.0],"v_w_fairplay":["table",1910859,5036,0.89,-0.5],"v_w_holdthat":["table",1915895,4196,0.738,-1.4],"v_w_imin":["table",1920091,3716,0.627,2.3],"v_w_iseeyou":["table",1923807,4556,0.797,0.1],"v_w_keepwalking":["table",1928363,4916,0.867,-1.1],"v_w_lesschat":["table",1933279,7916,1.488,0.9],"v_w_letstalk":["table",1941195,4436,0.785,0.5],"v_w_myblock":["table",1945631,4196,0.731,-0.3],"v_w_nah":["table",1949827,3116,0.511,0.5],"v_w_nicetry":["table",1952943,5156,0.932,1.2],"v_w_notdone":["table",1958099,5276,0.946,1.2],"v_w_nothappening":["table",1963375,4916,0.866,1.7],"v_w_offer":["table",1968291,5516,0.986,-2.6],"v_w_okseeyou":["table",1973807,7796,1.442,1.5],"v_w_oweyou":["table",1981603,5396,0.981,-1.4],"v_w_owncorner":["table",1986999,7196,1.336,0.5],"v_w_playing":["table",1994195,6596,1.217,-1.6],"v_w_pockets":["table",2000791,6596,1.218,0.2],"v_w_proveit":["table",2007387,3716,0.643,-2.0],"v_w_quiet":["table",2011103,6476,1.178,-0.3],"v_w_rentsdue":["table",2017579,4676,0.839,-0.8],"v_w_respect":["table",2022255,4316,0.766,2.5],"v_w_rough":["table",2026571,4196,0.737,0.3],"v_w_runit":["table",2030767,3116,0.511,1.4],"v_w_sayless":["table",2033883,4916,0.882,0.8],"v_w_tryagain":["table",2038799,4916,0.868,-0.3],"v_w_wegood":["table",2043715,3956,0.679,-2.5],"v_w_weregood":["table",2047671,3956,0.674,-1.9],"v_w_worth":["table",2051627,5516,0.989,-1.0],"v_w_wronghood":["table",2057143,5996,1.083,-0.9],"v_w_youin":["table",2063139,3236,0.54,-2.7],"v_w_yourmove":["table",2066375,4196,0.733,-2.5],"v_w_youwont":["table",2070571,3476,0.599,-1.9],"v_win_blue":["table",2074047,7796,1.458,-2.6],"v_win_green":["table",2081843,7916,1.479,-2.6],"v_win_orange":["table",2089759,8396,1.562,-2.1],"v_win_purple":["table",2098155,8756,1.641,-1.9],"v_win_red":["table",2106911,6956,1.292,-1.3],"v_win_white":["table",2113867,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5]}}</script>
+<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"a805b6feb8","size":2121903},"coach":{"url":"sound-coach.bin","v":"8df50078c9","size":1501156}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"giant_beast":["table",217980,21228,3.46,-6.6],"giant_mech":["table",239208,21855,3.564,-7.8],"giant_step":["table",261063,4301,0.65,-0.1],"horn_1":["table",265364,5711,0.88,-11.5],"horn_2":["table",271075,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",279764,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",285005,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",291500,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",321976,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",327844,14802,2.4,-8.2],"reel_stop":["table",342646,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",346006,8689,1.36,-8.6],"seven":["table",354695,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"st_boom":["table",376080,11667,1.874,-7.8],"st_music":["table",387747,294260,48.96,-9.5],"st_pop":["table",682007,12451,2.0,-9.5],"st_rocket":["table",694458,38939,6.411,-6.6],"st_shots":["table",733397,18407,3.0,-9.7],"start":["table",751804,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",788235,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",799746,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",806711,7556,1.415,-0.4],"v_bank_2":["table",814267,6716,1.24,0.5],"v_buy_1":["table",820983,8156,1.524,0.8],"v_buy_2":["table",829139,5996,1.083,2.2],"v_c_backup":["table",835135,5756,1.039,2.1],"v_c_bustup":["table",840891,6116,1.116,-0.6],"v_c_connections":["table",847007,6236,1.138,-2.6],"v_c_fight":["table",853243,5756,1.035,-2.3],"v_c_legend":["table",858999,6716,1.243,-1.5],"v_c_luck":["table",865715,5156,0.934,0.7],"v_c_paidoff":["table",870871,8516,1.59,1.1],"v_c_rewind":["table",879387,7076,1.298,0.1],"v_c_roadcrew":["table",886463,7076,1.311,0.2],"v_c_shakedown":["table",893539,8156,1.534,-1.1],"v_c_silver":["table",901695,6236,1.14,1.0],"v_c_tipoff":["table",907931,7436,1.374,0.1],"v_c_wrecking":["table",915367,8516,1.597,-0.9],"v_cop_1":["table",923883,15020,4.827,-3.2],"v_cop_2":["table",938903,9836,3.115,-2.8],"v_cop_3":["table",948739,10160,3.21,-3.1],"v_crash_1":["table",958899,8396,1.577,-2.5],"v_crash_2":["table",967295,7676,1.425,-1.3],"v_crash_3":["table",974971,6596,1.217,-0.9],"v_crowd_1":["table",981567,7196,1.329,1.4],"v_crowd_2":["table",988763,7556,1.415,-0.7],"v_crowd_3":["table",996319,7556,1.41,1.9],"v_d_deadzone":["table",1003875,8996,1.685,-2.5],"v_d_nightlife":["table",1012871,8756,1.649,1.2],"v_d_residential":["table",1021627,8276,1.558,1.0],"v_d_tower":["table",1029903,6356,1.169,1.0],"v_d_warehouse":["table",1036259,8396,1.562,-1.3],"v_d_works":["table",1044655,6476,1.191,2.0],"v_deal":["table",1051131,7076,1.319,-1.9],"v_deal_2":["table",1058207,6956,1.29,-0.5],"v_deal_3":["table",1065163,8396,1.562,2.0],"v_deal_4":["table",1073559,7196,1.337,2.5],"v_dir_look":["table",1080755,8156,1.52,-0.5],"v_dir_wake":["table",1088911,7556,1.399,-2.5],"v_discard":["table",1096467,18716,3.626,0.8],"v_down_bustup":["table",1115183,11516,2.187,-0.7],"v_down_wrecking":["table",1126699,8756,1.635,-2.4],"v_e_chase":["table",1135455,5876,1.07,0.4],"v_e_concert":["table",1141331,6716,1.242,-2.5],"v_e_fire":["table",1148047,5996,1.09,-1.2],"v_e_gangwar":["table",1154043,5876,1.06,-0.6],"v_e_giant":["table",1159919,6716,1.238,1.5],"v_e_race":["table",1166635,6956,1.288,-2.1],"v_e_robbery":["table",1173591,7916,1.473,-1.1],"v_fast_1":["table",1181507,7556,1.407,0.4],"v_fast_2":["table",1189063,7076,1.306,1.1],"v_fast_3":["table",1196139,5396,0.983,0.6],"v_fast_4":["table",1201535,7556,1.401,1.3],"v_fast_5":["table",1209091,10436,1.976,-0.6],"v_giant_radio":["table",1219527,13724,4.415,-3.2],"v_held":["table",1233251,6956,1.288,0.0],"v_hurry":["table",1240207,11756,2.239,1.5],"v_icpt_1":["table",1251963,12836,2.457,-2.4],"v_icpt_2":["table",1264799,5396,0.977,-1.3],"v_icpt_3":["table",1270195,6956,1.283,-2.6],"v_icpt_4":["table",1277151,7676,1.43,-2.5],"v_ko":["table",1284827,4676,0.818,-1.0],"v_legendary":["table",1289503,5156,0.914,-0.4],"v_n_blue":["table",1294659,2276,0.338,-1.8],"v_n_green":["table",1296935,2756,0.45,-2.5],"v_n_orange":["table",1299691,3116,0.507,-2.6],"v_n_purple":["table",1302807,2516,0.395,-0.5],"v_n_red":["table",1305323,1796,0.258,1.0],"v_n_white":["table",1307119,2276,0.352,2.3],"v_nine":["table",1309395,12716,2.434,-2.6],"v_offer":["table",1322111,8156,1.516,-2.3],"v_op_1":["table",1330267,10316,1.946,-2.5],"v_op_2":["table",1340583,10076,1.905,-0.5],"v_op_3":["table",1350659,6836,1.257,-1.5],"v_op_4":["table",1357495,10556,1.997,0.3],"v_open":["table",1368051,9476,1.778,-1.5],"v_p_far":["table",1377527,4676,0.832,0.3],"v_p_front":["table",1382203,5516,1.008,-0.5],"v_p_left":["table",1387719,5396,0.974,-2.6],"v_p_mid":["table",1393115,4916,0.874,-0.4],"v_p_right":["table",1398031,5156,0.922,0.4],"v_pick":["table",1403187,5876,1.076,-2.2],"v_place":["table",1409063,7556,1.415,-1.7],"v_port_1":["table",1416619,6956,1.279,-1.4],"v_port_2":["table",1423575,6836,1.261,0.9],"v_rare":["table",1430411,8036,1.49,0.5],"v_s_half":["table",1438447,5636,1.022,2.5],"v_s_lead":["table",1444083,5756,1.049,0.6],"v_s_leads":["table",1449839,5996,1.092,2.5],"v_s_one":["table",1455835,5396,0.975,-2.1],"v_s_round_1":["table",1461231,6236,1.145,-1.2],"v_s_round_2":["table",1467467,5756,1.035,-1.3],"v_s_round_3":["table",1473223,12956,2.474,0.9],"v_s_tied":["table",1486179,8996,1.695,2.5],"v_s_two":["table",1495175,5396,0.975,-2.5],"v_says":["table",1500571,2996,0.498,-0.4],"v_slow_1":["table",1503567,15476,2.997,-2.5],"v_slow_2":["table",1519043,12716,2.429,-1.6],"v_slow_3":["table",1531759,4676,0.831,-0.9],"v_slow_4":["table",1536435,11156,2.131,0.9],"v_slow_5":["table",1547591,6716,1.232,-1.4],"v_splat_1":["table",1554307,6596,1.215,-0.2],"v_splat_2":["table",1560903,5876,1.076,-0.9],"v_splat_3":["table",1566779,7556,1.405,1.3],"v_st_count":["table",1574335,10916,2.081,-1.7],"v_st_crew_1":["table",1585251,5156,0.925,0.3],"v_st_crew_2":["table",1590407,8396,1.584,-1.8],"v_st_end":["table",1598803,10076,1.908,-1.2],"v_st_face_1":["table",1608879,6836,1.257,2.5],"v_st_face_2":["table",1615715,8756,1.638,-0.1],"v_st_lift_1":["table",1624471,4916,0.867,-2.0],"v_st_lift_2":["table",1629387,6596,1.216,-0.9],"v_st_orbit":["table",1635983,8036,1.507,0.9],"v_st_parade":["table",1644019,12596,2.402,-1.8],"v_start":["table",1656615,13796,2.657,-1.3],"v_sum_10":["table",1670411,3356,0.576,-0.0],"v_sum_11":["table",1673767,3596,0.604,2.5],"v_sum_12":["table",1677363,10916,2.07,2.2],"v_sum_2":["table",1688279,9836,1.868,0.1],"v_sum_3":["table",1698115,3356,0.557,-1.3],"v_sum_4":["table",1701471,3596,0.604,-1.2],"v_sum_5":["table",1705067,4076,0.698,-2.0],"v_sum_6":["table",1709143,4076,0.698,0.9],"v_sum_7":["table",1713219,11036,2.09,-0.5],"v_sum_8":["table",1724255,2876,0.458,2.5],"v_sum_9":["table",1727131,3836,0.65,0.3],"v_t_off_1":["table",1730967,7676,1.431,-0.2],"v_t_off_2":["table",1738643,7796,1.444,2.5],"v_t_on_1":["table",1746439,6596,1.218,0.9],"v_t_on_2":["table",1753035,11036,2.1,0.3],"v_taken":["table",1764071,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1775227,9476,1.794,-0.4],"v_timeup_1":["table",1784703,4796,0.862,-0.4],"v_timeup_2":["table",1789499,8036,1.5,0.1],"v_tower":["table",1797535,10436,1.987,-2.6],"v_up_blue":["table",1807971,6956,1.286,-2.5],"v_up_green":["table",1814927,7676,1.421,-2.6],"v_up_orange":["table",1822603,7076,1.316,-2.7],"v_up_purple":["table",1829679,7796,1.464,-2.5],"v_up_red":["table",1837475,6956,1.276,-1.6],"v_up_white":["table",1844431,7076,1.301,-0.9],"v_w_alltalk":["table",1851507,4796,0.845,-0.3],"v_w_anyday":["table",1856303,5276,0.938,1.6],"v_w_bet":["table",1861579,2636,0.422,2.5],"v_w_bigmove":["table",1864215,4316,0.765,0.1],"v_w_clean":["table",1868531,5156,0.932,1.4],"v_w_clock":["table",1873687,5636,1.024,0.2],"v_w_comfy":["table",1879323,5996,1.086,1.8],"v_w_coming":["table",1885319,6116,1.119,-0.7],"v_w_cooked":["table",1891435,4316,0.75,-0.5],"v_w_dobetter":["table",1895751,3956,0.677,0.3],"v_w_dreaming":["table",1899707,4916,0.879,-1.7],"v_w_energy":["table",1904623,6236,1.131,-0.0],"v_w_fairplay":["table",1910859,5036,0.89,-0.5],"v_w_holdthat":["table",1915895,4196,0.738,-1.4],"v_w_imin":["table",1920091,3716,0.627,2.3],"v_w_iseeyou":["table",1923807,4556,0.797,0.1],"v_w_keepwalking":["table",1928363,4916,0.867,-1.1],"v_w_lesschat":["table",1933279,7916,1.488,0.9],"v_w_letstalk":["table",1941195,4436,0.785,0.5],"v_w_myblock":["table",1945631,4196,0.731,-0.3],"v_w_nah":["table",1949827,3116,0.511,0.5],"v_w_nicetry":["table",1952943,5156,0.932,1.2],"v_w_notdone":["table",1958099,5276,0.946,1.2],"v_w_nothappening":["table",1963375,4916,0.866,1.7],"v_w_offer":["table",1968291,5516,0.986,-2.6],"v_w_okseeyou":["table",1973807,7796,1.442,1.5],"v_w_oweyou":["table",1981603,5396,0.981,-1.4],"v_w_owncorner":["table",1986999,7196,1.336,0.5],"v_w_playing":["table",1994195,6596,1.217,-1.6],"v_w_pockets":["table",2000791,6596,1.218,0.2],"v_w_proveit":["table",2007387,3716,0.643,-2.0],"v_w_quiet":["table",2011103,6476,1.178,-0.3],"v_w_rentsdue":["table",2017579,4676,0.839,-0.8],"v_w_respect":["table",2022255,4316,0.766,2.5],"v_w_rough":["table",2026571,4196,0.737,0.3],"v_w_runit":["table",2030767,3116,0.511,1.4],"v_w_sayless":["table",2033883,4916,0.882,0.8],"v_w_tryagain":["table",2038799,4916,0.868,-0.3],"v_w_wegood":["table",2043715,3956,0.679,-2.5],"v_w_weregood":["table",2047671,3956,0.674,-1.9],"v_w_worth":["table",2051627,5516,0.989,-1.0],"v_w_wronghood":["table",2057143,5996,1.083,-0.9],"v_w_youin":["table",2063139,3236,0.54,-2.7],"v_w_yourmove":["table",2066375,4196,0.733,-2.5],"v_w_youwont":["table",2070571,3476,0.599,-1.9],"v_win_blue":["table",2074047,7796,1.458,-2.6],"v_win_green":["table",2081843,7916,1.479,-2.6],"v_win_orange":["table",2089759,8396,1.562,-2.1],"v_win_purple":["table",2098155,8756,1.641,-1.9],"v_win_red":["table",2106911,6956,1.292,-1.3],"v_win_white":["table",2113867,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5],"v_k_act":["coach",0,45596,9.003,-0.2],"v_k_answer":["coach",45596,39716,7.846,0.2],"v_k_build_holding":["coach",85312,39476,7.793,1.2],"v_k_build_op":["coach",124788,52676,10.431,-1.8],"v_k_build_street":["coach",177464,30716,6.04,1.4],"v_k_cardplay":["coach",208180,38996,7.683,0.0],"v_k_clock":["coach",247176,30356,5.961,-0.6],"v_k_discard":["coach",277532,37076,7.312,0.2],"v_k_done":["coach",314608,27956,5.488,-0.2],"v_k_end":["coach",342564,36836,7.266,0.6],"v_k_fight":["coach",379400,53876,10.658,-1.4],"v_k_goal":["coach",433276,43796,8.652,-1.4],"v_k_hello":["coach",477072,41756,8.234,-0.8],"v_k_key":["coach",518828,34916,6.883,1.0],"v_k_luck":["coach",553744,23156,4.53,-2.6],"v_k_lx_done":["coach",576900,44036,8.699,-0.7],"v_k_lx_gift":["coach",620936,21116,4.113,1.2],"v_k_lx_intro":["coach",642052,48116,9.513,-0.9],"v_k_lx_offer":["coach",690168,28796,5.651,2.4],"v_k_lx_seven":["coach",718964,14636,2.821,-0.1],"v_k_lx_short":["coach",733600,37436,7.375,0.4],"v_k_lx_trade":["coach",771036,32156,6.32,0.6],"v_k_market":["coach",803192,48476,9.58,-1.7],"v_k_nopay":["coach",851668,33116,6.514,-1.3],"v_k_offer":["coach",884784,38156,7.517,-1.6],"v_k_paid":["coach",922940,37436,7.384,1.4],"v_k_place_confirm":["coach",960376,15476,2.978,1.4],"v_k_place_op":["coach",975852,37316,7.367,-0.5],"v_k_place_pick":["coach",1013168,39596,7.814,1.0],"v_k_place_second":["coach",1052764,30356,5.961,0.0],"v_k_place_street":["coach",1083120,38636,7.624,-0.0],"v_k_players":["coach",1121756,30356,5.975,-1.4],"v_k_police":["coach",1152112,46676,9.233,-1.5],"v_k_robbed":["coach",1198788,27236,5.333,-2.6],"v_k_roll":["coach",1226024,43436,8.586,0.1],"v_k_rolloff":["coach",1269460,25796,5.044,2.1],"v_k_seven":["coach",1295256,42356,8.372,2.1],"v_k_steal":["coach",1337612,29036,5.709,0.0],"v_k_talk":["coach",1366648,44396,8.777,1.2],"v_k_trade_bank":["coach",1411044,52316,10.356,0.1],"v_k_wait":["coach",1463360,37796,7.453,-1.6]}}</script>
 <!-- SND:END -->
 <div id="app"><main class="phone"><p class="muted">Loading the table…</p></main></div>
 <noscript><p style="padding:16px">This page needs JavaScript turned on.</p></noscript>
@@ -11376,7 +11431,8 @@ function send(client, topic, body, retained) {
 /* ---------- shared runtime ---------- */
 const params = new URLSearchParams(location.search);
 const ROOM_ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-const joinRoom = (params.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+const LEARN_ON = params.has('learn') && !params.get('room') && !params.get('table');   // the practice game (the coach)
+const joinRoom = LEARN_ON ? 'LEARN2' : (params.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
 const WATCH = !!joinRoom && params.has('watch'); // read-only big-board view of someone else's table
 const tableRoom = (params.get('table') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8); // the table screen's own address
 const ROOM_LETTERS = 'ABCDEFGHJKMNPQRSTUVWXYZ';
@@ -13033,7 +13089,7 @@ function renderLanding() {
         <h1 class="poster-title" id="lp-title" aria-label="Run the City"><button type="button" class="hero-logo" data-poster="sign" aria-label="Light up the Run the City logo and hear the city"><img src="art/landing/run-the-city.svg" width="360" height="160" alt="Run the City"><span class="logo-sweep" aria-hidden="true"></span></button></h1>
         <div class="poster-crews"><img class="crew-group" src="art/landing/crews-poster.webp" width="1536" height="1024" alt="Six rival crews together on the streets of the neon city" fetchpriority="high" decoding="async"><div class="crew-runners" aria-hidden="true"><div class="crew-runner left"><img alt="" decoding="async" fetchpriority="low"></div><div class="crew-runner right"><img alt="" decoding="async" fetchpriority="low"></div></div></div><div class="hero-speedlines" aria-hidden="true"></div><div class="hero-impact" aria-hidden="true"></div>
         <div class="poster-mist" aria-hidden="true"></div><div class="poster-rain" aria-hidden="true">${Array.from({length:28},(_,i)=>`<i style="--x:${(i*37)%103}%;--length:${45+i%5*17}px;--speed:${1.1+i%7*.13}s;--delay:-${i*.31}s"></i>`).join('')}</div><div class="poster-vignette" aria-hidden="true"></div>
-        <div class="poster-foot"><p class="poster-tagline">The city is yours. For now.</p><p class="poster-description">A multiplayer strategy board game for 3–6 rivals.<br>One shared city. Play from your phone.</p><div class="lp-actions"><button type="button" class="lp-button" data-l="host">${hostLabel} ${arrow}</button><a class="lp-button secondary" href="#join">Join with a code <span aria-hidden="true">↓</span></a></div><p class="lp-fine">Free for now · 3–6 players · No downloads</p></div>
+        <div class="poster-foot"><p class="poster-tagline">The city is yours. For now.</p><p class="poster-description">A multiplayer strategy board game for 3–6 rivals.<br>One shared city. Play from your phone.<br><a class="lp-learn" href="?learn">New here? Learn to play with the coach <span aria-hidden="true">→</span></a></p><div class="lp-actions"><button type="button" class="lp-button" data-l="host">${hostLabel} ${arrow}</button><a class="lp-button secondary" href="#join">Join with a code <span aria-hidden="true">↓</span></a></div><p class="lp-fine">Free for now · 3–6 players · No downloads</p></div>
         <a class="poster-scroll" href="#how-to-play">Descend into the city <span aria-hidden="true">↓</span></a>
       </section>
       <div class="city-ticker" aria-label="Game at a glance"><span>3–6 <small>rivals</small></span><i>✦</i><span>One <small>shared city</small></span><i>✦</i><span>10 <small>points to win</small></span><i>✦</i><span>No <small>clean deals</small></span></div>
@@ -13057,7 +13113,7 @@ function renderLanding() {
         <div class="join-crew" aria-hidden="true"><img src="art/landing/crews-poster.png" width="1536" height="1024" alt="" loading="lazy" decoding="async"></div>
         <div class="street-sign join-street-sign holo-sign" aria-hidden="true"><canvas data-city-holo="quick-cash" width="400" height="400"></canvas></div>
         <div class="chapter-content lp-wrap join-layout"><div class="chapter-heading" data-reveal><p class="lp-eyebrow">03 / Your name is on the door</p><h2 id="lp-join-title">YOUR CREW.<br><em>YOUR CITY.</em></h2><p>The table is waiting. Enter its code and make yourself known.</p></div>
-        <form class="lp-codeform" data-form="code" data-reveal><div class="terminal-top"><span class="signal-dot"></span>TAKE YOUR SEAT<span>↗</span></div><label for="code-input">Your table code</label><input type="text" id="code-input" name="room" maxlength="8" value="${esc(load('rtcity.room') || '')}" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="KQTMX2" aria-describedby="lp-code-help" required><div class="lp-actions"><button class="lp-button" type="submit" data-mode="play">Join the game ${arrow}</button><button class="lp-button secondary" type="submit" data-mode="watch">Watch the board</button></div><p class="lp-help" id="lp-code-help">Find the code beside the QR code on your table screen.</p><p class="lp-host-option">No code? <button type="button" data-l="host">${hostLabel} <span aria-hidden="true">↗</span></button></p><div class="terminal-bars" aria-hidden="true"></div></form></div>
+        <form class="lp-codeform" data-form="code" data-reveal><div class="terminal-top"><span class="signal-dot"></span>TAKE YOUR SEAT<span>↗</span></div><label for="code-input">Your table code</label><input type="text" id="code-input" name="room" maxlength="8" value="${esc(load('rtcity.room') || '')}" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="KQTMX2" aria-describedby="lp-code-help" required><div class="lp-actions"><button class="lp-button" type="submit" data-mode="play">Join the game ${arrow}</button><button class="lp-button secondary" type="submit" data-mode="watch">Watch the board</button></div><p class="lp-help" id="lp-code-help">Find the code beside the QR code on your table screen.</p><p class="lp-host-option">First time? <a href="?learn">Learn to play with the coach</a> before the game.</p><p class="lp-host-option">No code? <button type="button" data-l="host">${hostLabel} <span aria-hidden="true">↗</span></button></p><div class="terminal-bars" aria-hidden="true"></div></form></div>
       </section>
       <section class="city-chapter city-faq" id="street-rules" data-city-scene aria-labelledby="lp-faq-title">
         ${scene('city-poster.webp','chapter-art-high')}
@@ -14393,10 +14449,11 @@ function renderPlayer() {
       $('#p-main').__h = null;
       $('#p-main').innerHTML = `<section class="card"><h1>Take a seat</h1><div><label for="p-name" class="small muted">Your name</label><input type="text" id="p-name" maxlength="14" autocomplete="nickname" enterkeyhint="done" placeholder="Name on the table" value="${esc(P.name)}"></div>
         <div><p class="small muted" id="p-swl">Your colour</p><div id="p-sw" class="swatches" role="group" aria-labelledby="p-swl"></div></div>
-        <button class="btn big" data-p="join">Join the table</button></section><div class="boardbox" id="p-board"></div>`;
+        ${coachTogHTML()}<button class="btn big" data-p="join">Join the table</button></section><div class="boardbox" id="p-board"></div>`;
     }
     setHTML('#p-sw', COLORS.map(c => `<button class="sw" data-p="pick" data-arg="${c}" aria-pressed="${c === P.color}" ${free.includes(c) ? '' : 'disabled'}><span class="chip" style="background:var(--p-${c})"></span>${free.includes(c) ? cap(c) : 'Taken'}</button>`).join(''));
     setHTML('#p-board', fullBtnHTML() + boardView(st));
+    quietly(s => coachObserve(s, null), st);                      // no seat yet: no coach (the switch is on this screen)
     setHTML('#p-hud', ui.full ? hudHTML(st, null) : '');
     talkGone();
     return;
@@ -14417,7 +14474,7 @@ function renderPlayer() {
         : '<p class="small muted">No turn clock. A minute into somebody&rsquo;s turn, the others can ask them to hurry up.</p>'}
       <div><p class="small muted">Change colour</p><div class="swatches">${COLORS.map(c => `<button class="sw" data-p="recolor" data-arg="${c}" aria-pressed="${c === me.color}" ${c === me.color || free.includes(c) ? '' : 'disabled'}><span class="chip" style="background:var(--p-${c})"></span>${c === me.color ? 'Yours' : free.includes(c) ? cap(c) : 'Taken'}</button>`).join('')}</div></div>
       <p class="small muted">${st.players.length} of ${MAX_PLAYERS} seated: ${esc(st.players.map(p => p.name).join(', '))}</p>
-      <button class="btn ghost" data-p="leave">Leave the table</button></section><div class="boardbox">${fullBtnHTML()}${boardView(st)}</div>`;
+      ${coachTogHTML()}<button class="btn ghost" data-p="leave">Leave the table</button></section><div class="boardbox">${fullBtnHTML()}${boardView(st)}</div>`;
   } else if (screen === 'rolloff') {
     const mine = st.rolls[PID], inIt = st.contenders.includes(PID), must = inIt && !mine;
     h = `<section class="card">${meHTML(me, !inIt ? 'You are out of this tie-break.' : must ? 'Highest roll places first.' : `You rolled ${mine[0] + mine[1]}. Waiting for the others.`)}
@@ -14459,6 +14516,7 @@ function renderPlayer() {
   P.whoKey = who;
   clockPaint();
   talkBar(st, me); talkSplatSync();
+  quietly(s => coachObserve(s, me), st);                        // the coach (onboarding)
 }
 
 async function bootPlayer() {
@@ -17070,6 +17128,604 @@ function stBeastLight(ctx, C, pass, e) {
   }
 }
 /* ---------- end of Showtime ---------- */
+/* ---------- The coach (onboarding, 2026-09-27) ----------
+   A new player's own phone teaches them the game, in the announcer's voice. The first time each
+   move comes up (rolling, placing, building, the police, a trade offer...) the coach says what it is
+   and what to tap, a caption shows the same words, a ring lights up whatever is to be touched and a
+   finger taps it. Each lesson is given once per phone (rtcity.coached); when the core ones are all
+   done the coach says goodbye and switches itself off. It is switched on per player, from the seat
+   screen and the lobby ("New here? Coach me"), and it is on by default for a phone that has never
+   sat at a table. The practice game from the front page (learn.js) runs the same lessons, all of
+   them, against two computer crews.
+
+   Nothing here is a move or in the game state: the coach reads the state and the phone's own ui,
+   the way the animations do (renderPlayer calls coachObserve last). Its lines are v_k_ clips in a
+   pack of their own (sound-coach.bin), fetched the first time a coached phone needs one; the table
+   never plays them. The bubble never sits on what it points at, nor on the dock; it folds itself
+   to a small chip once it has said its piece, and a tap on it never reaches the board under it. */
+const COACH_SAY = /*SAY*/{ "hello": "Welcome to the city. I'm your coach. The first time each move comes up, I'll show you what to tap, and talk you through it.", "goal": "The job is simple. First crew to ten points runs the city. Every operation you open is worth one point. A major holding is worth two.", "rolloff": "First, everybody rolls. Highest roll places first. Tap Roll the dice.", "place_op": "Set-up time. Tap a glowing corner to put down your first operation. Pick a corner that touches plenty of blocks.", "place_pick": "Red numbers, six and eight, come up the most. And try to touch different colours, so you collect all five kinds of card.", "place_confirm": "Good spot. Now tap the button to place it.", "place_street": "Now lay a street. Tap a glowing path next to your operation. Streets are how you reach new corners to build on.", "place_second": "Your second operation. This one pays straight away: one card for every block it touches.", "wait": "It's someone else's turn now. You can't build, but when their dice hit your blocks, you still get paid. So keep watching.", "roll": "Your turn. Every turn starts with the dice. Tap Roll the dice. Every block on that number pays whoever's built around it.", "paid": "Payday! Your building touches that block, so the cards went into your hand. Down here is everything you're holding.", "nopay": "Nothing for you on that roll. It happens. Build around more numbers, and you'll get paid more often.", "act": "Now it's building time. This list shows what you can make. A lit card is one you hold. An empty outline is one you're still missing.", "key": "Not sure which block pays what? Tap Key, up top. Each colour of block pays its own card.", "build_street": "A street costs one muscle and one product. Tap a glowing path, then tap Build.", "build_op": "An operation costs one muscle, one product, one talent and one cash. It goes on a free corner at the end of your street, and it's worth a point.", "build_holding": "Upgrade an operation to a major holding, for two cash and three influence. It's worth two points, and it pays double.", "trade_bank": "Short a card? Trade at a terminal. Four of one kind buys one of any other. Build on the coast by a terminal, and you get a better rate.", "offer": "Or deal with the other crews. Pick what you'll give, and what you want. They answer on their phones, and you choose who to deal with.", "answer": "Someone's offering you a trade. Take it if it gets you closer to building something. Or pass. It costs you nothing either way.", "end": "When you've done all you want, tap End my turn, then Yes. The dice pass to the next crew.", "seven": "A seven! Nobody gets paid on a seven. Anyone holding more than seven cards loses half. And the police are on their way.", "discard": "You're holding more than seven cards, so you drop half. Tap the cards you can best spare, then drop them.", "police": "You rolled the seven, so you move the police. Tap a block. It stops paying until the police move on. Pick one where your rivals earn.", "steal": "Now lean on somebody with a building on that block. You take one of their cards, unseen.", "robbed": "The police are sitting on one of your blocks. It won't pay you, until somebody moves them on.", "market": "Skills and talents are special cards. Open the market to buy one. Each one bends the rules, once. You can play one a turn.", "cardplay": "You're holding a skill or talent. Tap Play a skill or talent to read it, and play it when the moment's right.", "fight": "Street fight! Each round, you both pick a move at the same time. A swing is free. The big hits cost cards. Knock their strength to zero, and you win.", "luck": "Lucky Streak! You threw three dice. Keep the two that pay you best.", "clock": "See the clock? When it runs out, the table finishes your turn for you. So don't hang about.", "talk": "One more thing. Tap the speech bubble up top, to throw stickers and whisper to the other crews. Trash talk is half the game.", "players": "Want the score? Open Players, to see everyone's points, and how many cards they're holding.", "done": "That's the lot. You know the streets now, so I'll go quiet. Good luck out there.", "lx_intro": "This is a practice game. The other two crews are run by the computer, and I'm rigging the dice a little, so you get to see everything. Nothing here counts.", "lx_gift": "Here. The bank's spotting you a few cards, so you can try building.", "lx_short": "You're one talent short of an operation. Trade four cash for it at a terminal. Tap Trade at a terminal.", "lx_trade": "Now try trading. Tap Trade at a terminal, and swap four of one kind for a card you need.", "lx_seven": "Watch this. Somebody's about to roll a seven.", "lx_offer": "Try a deal. Tap Offer the table a trade, and ask the other crews for a card you need.", "lx_done": "That's the practice done. You can roll, build, trade, and handle the police. Keep playing if you like, or go and start a real game." }/*SAY*/;
+// the lessons that make a player: once these are all given the coach says goodbye
+const COACH_CORE = ['goal', 'rolloff', 'place_op', 'place_street', 'place_second', 'roll', 'act', 'build_street', 'end', 'wait',
+  'discard', 'police', 'steal', 'trade_bank', 'offer', 'answer', 'players'];
+const COACH = { on: false, learn: false, seen: {}, cur: null, last: '', gapTo: 0, t: 0, raf: 0, el: null, ring: null, finger: null,
+  actKey: '', actAt: 0, did: '', scrolled: '', forced: [], fin: null };
+(() => {
+  const s = load('rtcity.coached'); if (s && typeof s === 'object' && !Array.isArray(s)) COACH.seen = s;
+  const on = load('rtcity.coach');
+  // on unless this phone has said otherwise, or has sat at a table before, or has been coached through it all
+  COACH.on = typeof on === 'boolean' ? on : !load('rtcity.name') && !COACH.seen.done;
+  // decided once, on a phone: typing a name (saved as it is typed) must not switch it off at the next reload
+  if (typeof on !== 'boolean' && joinRoom && !WATCH && !params.has('learn')) store('rtcity.coach', COACH.on);
+})();
+document.addEventListener('visibilitychange', () => { if (!document.hidden && COACH.on) coachKick(300); });
+function coachSet(on) {
+  COACH.on = !!on;
+  if (!COACH.learn) store('rtcity.coach', COACH.on);
+  if (!on) coachClose(true);
+  else { COACH.gapTo = 0; coachKick(); }
+}
+function coachMark(k) {
+  COACH.seen[k] = 1;
+  // what the practice game taught counts in real games too: a phone is not taught the same thing twice
+  const s = load('rtcity.coached'); const all = s && typeof s === 'object' && !Array.isArray(s) ? s : {};
+  if (COACH_SAY[k] && !k.startsWith('lx_')) { all[k] = 1; store('rtcity.coached', all); }
+}
+
+/* ---------- where to point ---------- */
+const COACH_BOARD = '#ps-board .boardbox';
+// the best free corner for an operation, the way a coach would pick one: many ways to roll it, many kinds of card
+function coachBestV(st, list) {
+  let best = null, top = -1;
+  list.forEach(v => {
+    const hx = GEO.verts[v].hexes.filter(h => h !== st.board.police).map(h => st.board.hexes[h]);
+    const kinds = new Set(hx.map(h => RESOURCE_OF[h.t]).filter(Boolean));
+    const s = hx.reduce((n, h) => n + (PIPS[h.n] || 0), 0) + kinds.size * 1.5;
+    if (s > top) { top = s; best = v; }
+  });
+  return best;
+}
+// the block that hurts the rivals most and this player least
+function coachBestH(st, pid) {
+  let best = null, top = -1e9;
+  policeBlocks(st, pid).forEach(h => {
+    const n = PIPS[st.board.hexes[h].n] || 0;
+    let s = 0;
+    GEO.hexes[h].vs.forEach(v => { const b = st.buildings[v]; if (b) s += (b.pid === pid ? -3 : 1) * (b.k === 'c' ? 2 : 1) * n; });
+    if (s > top) { top = s; best = h; }
+  });
+  return best;
+}
+const coachEdge = list => (list && list.length ? list[0] : null);
+
+/* ---------- the lessons ----------
+   In order of how much they matter when two apply at once. Each answers null (not now) or where to point:
+   at, a selector for what to ring; tap, a finger taps it; spot, a place on the board for the finger. */
+const cWhen = (st, me) => {
+  const turn = st.phase === 'turn', yours = !!me && activePid(st) === me.pid, o = st.offer;
+  const sum = st.dice ? st.dice[0] + st.dice[1] : 0;
+  return { turn, yours, o, sum, act: turn && yours && st.step === 'act', owe: turn && st.pend ? (st.pend[me.pid] | 0) : 0,
+    free: !ui.mode && !ui.sheet, first: st.placeIdx < st.order.length };
+};
+const COACH_LESSONS = [
+  ['lx_intro', (st, me, c) => COACH.learn && ['rolloff', 'place'].includes(st.phase) && {}],
+  ['hello', (st, me, c) => !COACH.learn && st.phase !== 'over' && st.step !== 'fight' && {}],
+  ['goal', (st, me, c) => st.phase !== 'over' && st.step !== 'fight' && (COACH.seen.hello || COACH.seen.lx_intro) && {}],
+  ['rolloff', (st, me, c) => st.phase === 'rolloff' && st.contenders.includes(me.pid) && !st.rolls[me.pid] && { at: '[data-p="roll"]', tap: 1 }],
+  ['place_op', (st, me, c) => st.phase === 'place' && c.yours && st.step === 'operation' && c.first && !ui.sel && { at: COACH_BOARD, spot: ['v', coachBestV(st, legalOperations(st))] }],
+  ['place_confirm', (st, me, c) => st.phase === 'place' && c.yours && ui.sel && { at: '[data-p="confirm"]', tap: 1 }],
+  ['place_street', (st, me, c) => st.phase === 'place' && c.yours && st.step === 'street' && !ui.sel && { at: COACH_BOARD, spot: ['e', coachEdge(legalSetupStreets(st))] }],
+  ['place_second', (st, me, c) => st.phase === 'place' && c.yours && st.step === 'operation' && !c.first && !ui.sel && { at: COACH_BOARD, spot: ['v', coachBestV(st, legalOperations(st))] }],
+  ['seven', (st, me, c) => c.turn && c.sum === 7 && !c.yours && ['discard', 'police', 'steal'].includes(st.step) && {}],
+  ['discard', (st, me, c) => c.owe > 0 && st.step === 'discard' && { at: '#ps-panel .card' }],
+  ['fight', (st, me, c) => c.turn && st.step === 'fight' && st.fight && (st.fight.a === me.pid ? !st.fight.lock[0] : st.fight.d === me.pid && !st.fight.lock[1]) && { at: '#p-arena' }],
+  ['luck', (st, me, c) => c.yours && c.turn && st.step === 'luck' && { at: '#ps-panel' }],
+  ['police', (st, me, c) => c.yours && c.turn && st.step === 'police' && !ui.sel && { at: COACH_BOARD, spot: ['h', coachBestH(st, me.pid)] }],
+  ['steal', (st, me, c) => c.yours && c.turn && st.step === 'steal' && { at: '#ps-panel .moves' }],
+  ['answer', (st, me, c) => c.turn && c.o && c.o.from !== me.pid && c.o.replies[me.pid] === undefined && holds(me, c.o.want) && !ui.sheet && { at: '#ps-bar [data-p="reply"]', tap: 1 }],
+  ['robbed', (st, me, c) => c.turn && !c.yours && st.board.police !== policeHome(st.board) && ['act', 'roll'].includes(st.step) &&
+    GEO.hexes[st.board.police].vs.some(v => st.buildings[v] && st.buildings[v].pid === me.pid) && {}],
+  ['roll', (st, me, c) => c.yours && c.turn && st.step === 'roll' && { at: '[data-p="rollturn"]', tap: 1 }],
+  ['paid', (st, me, c) => c.turn && c.sum && c.sum !== 7 && st.got && st.got[me.pid] && Object.keys(st.got[me.pid]).length && ['act', 'roll'].includes(st.step) && { at: '#ps-hand' }],
+  ['nopay', (st, me, c) => c.act && c.sum && c.sum !== 7 && !(st.got && st.got[me.pid] && Object.keys(st.got[me.pid]).length) && c.free && {}],
+  ['lx_short', (st, me, c) => COACH.learn && LEARN.want === 'short' && c.act && c.free && { at: '[data-p="mode"][data-arg="trade"]', tap: 1 }],
+  ['lx_trade', (st, me, c) => COACH.learn && LEARN.want === 'trade' && c.act && c.free && { at: '[data-p="mode"][data-arg="trade"]', tap: 1 }],
+  ['lx_offer', (st, me, c) => COACH.learn && LEARN.want === 'offer' && c.act && c.free && !c.o && { at: '[data-p="mode"][data-arg="offer"]', tap: 1 }],
+  ['build_street', (st, me, c) => c.act && ui.mode === 'street' && !(st.free > 0) && !ui.sel && { at: COACH_BOARD, spot: ['e', coachEdge(legalFor(st, me.pid, 'street'))] }],
+  ['build_op', (st, me, c) => c.act && ui.mode === 'operation' && !ui.sel && { at: COACH_BOARD, spot: ['v', coachBestV(st, legalFor(st, me.pid, 'operation'))] }],
+  ['place_pick', (st, me, c) => c.act && ui.mode === 'operation' && !ui.sel && COACH.seen.build_op && { at: COACH_BOARD, spot: ['v', coachBestV(st, legalFor(st, me.pid, 'operation'))] }],   // which corner pays best: once the dice have been taught
+  ['build_holding', (st, me, c) => c.act && ui.mode === 'holding' && !ui.sel && { at: COACH_BOARD, spot: ['v', coachBestV(st, legalFor(st, me.pid, 'holding'))] }],
+  ['trade_bank', (st, me, c) => c.act && ui.mode === 'trade' && { at: '#ps-panel .card' }],
+  ['offer', (st, me, c) => c.act && ui.mode === 'offer' && { at: '#ps-panel' }],
+  ['act', (st, me, c) => c.act && c.free && !(c.o && c.o.from === me.pid) && { at: '#ps-panel .moves' }],
+  ['key', (st, me, c) => c.turn && !c.yours && !c.owe && !c.o && st.step !== 'fight' && COACH.seen.act && { at: '.keybtn', tap: 1 }],   // told while waiting: there is time
+  ['cardplay', (st, me, c) => c.yours && c.turn && ['act', 'roll'].includes(st.step) && c.free && CARD_ORDER.some(k => canPlay(st, me, k).ok) && { at: '[data-p="sheet"][data-arg="card"]', tap: 1 }],
+  ['market', (st, me, c) => c.act && c.free && st.turnNo >= 2 && st.stock && CARD_ORDER.some(k => CARDS[k].price && deckOf(st, k) > 0 && canBuy(st, me, k).ok) && { at: '[data-p="sheet"][data-arg="market"]', tap: 1 }],
+  ['clock', (st, me, c) => c.yours && c.turn && st.clock && st.clock.s && { at: '[data-clk]' }],
+  ['end', (st, me, c) => c.act && c.free && !(c.o && c.o.from === me.pid) && coachEndDue(st, me) && { at: '[data-p="endask"]', tap: 1 }],
+  ['wait', (st, me, c) => c.turn && !c.yours && !c.owe && !(c.o && c.o.from !== me.pid) && st.step !== 'fight' && { at: '.mvcard' }],
+  ['players', (st, me, c) => c.turn && !c.yours && st.turnNo >= 2 && !c.o && st.step !== 'fight' && { at: '[data-p="sec"][data-arg="table"]', tap: 1 }],
+  ['talk', (st, me, c) => !COACH.learn && c.turn && !c.yours && st.turnNo >= 3 && !c.o && st.step !== 'fight' && { at: '.talkbtn', tap: 1 }],
+  ['done', (st, me, c) => !COACH.learn && c.turn && st.turnNo >= 3 && COACH_CORE.every(k => COACH.seen[k]) && (COACH.seen.talk || st.turnNo >= 5) && !c.yours && {}],
+];
+/* End my turn is taught once there is nothing left to do, once something has been built or traded this turn,
+   or once the list has sat there a while: not the moment the list first shows up. */
+function coachEndDue(st, me) {
+  const key = st.turnNo + ':' + st.turnIdx;
+  if (COACH.actKey !== key) { COACH.actKey = key; COACH.actAt = performance.now(); COACH.did = JSON.stringify(me.hand); }
+  return !anyMove(st, me) || JSON.stringify(me.hand) !== COACH.did || performance.now() - COACH.actAt > 16000;
+}
+const coachLesson = k => COACH_LESSONS.find(x => x[0] === k);
+
+/* ---------- watching the game ---------- */
+function coachObserve(st, me) {
+  if (!COACH.on || !st || !me || WATCH) { if (COACH.cur || COACH.fin) coachClose(); return; }
+  if (COACH.fin) { coachPaint(); return; }
+  if (document.hidden) return;                                   // a lesson nobody sees is not a lesson given
+  if (SND.ctx && !COACH.pre) { COACH.pre = 1; sndPack('coach'); }  // the lines, fetched ahead of the first one wanted
+  const now = performance.now(), veil = FX.veil && st.phase === 'turn';
+  const c = cWhen(st, me), want = k => { const l = coachLesson(k); try { return l ? l[1](st, me, c) || null : null; } catch (e) { return null; } };
+  // what is showing keeps showing while it still applies; once its moment has gone, it goes (mid-sentence if need be)
+  if (COACH.cur && !COACH.cur.forced) {
+    const w = veil ? null : want(COACH.cur.k);
+    if (w) Object.assign(COACH.cur, w);
+    else coachClose(false);
+  } else if (COACH.cur && now > COACH.cur.until + 2500) coachClose(false);   // a line of the practice game's, said and read
+  if (ui.sheet || veil || FX.busy) { coachPaint(); coachKick(600); return; }   // not over a sheet, the dice, or cards in the air
+  // something the practice game asked to say, whatever the moment
+  if (COACH.forced.length && (!COACH.cur || coachQuiet(now))) {
+    const k = COACH.forced.shift();
+    coachShow(k, { forced: true }); return;
+  }
+  const talking = COACH.cur && !coachQuiet(now);
+  if (!talking && now >= COACH.gapTo) {
+    for (const [k] of COACH_LESSONS) {
+      if (COACH.seen[k] || (COACH.cur && COACH.cur.k === k)) continue;
+      const w = want(k);
+      if (w && !coachCanSee(w.at)) continue;                         // (full screen: the list and the hand are out of sight)
+      if (w) { coachShow(k, w); return; }
+    }
+  }
+  coachPaint();
+  if (COACH.cur) coachKick(Math.max(COACH.cur.min ? 1500 : 400, (COACH.cur.until || 0) - now + 50));
+  else if (now < COACH.gapTo) coachKick(COACH.gapTo - now + 30);                 // look again once the pause after the last line is over
+}
+// the voice has finished (or there is none) and a moment has passed: room for the next thing
+const coachQuiet = now => !COACH.cur || now >= COACH.cur.until;
+function coachKick(ms) {
+  clearTimeout(COACH.t);
+  COACH.t = setTimeout(() => { COACH.t = 0; const st = G.state; if (st && joinRoom && !WATCH) quietly(s => coachObserve(s, playerOf(s, PID)), st); }, ms || 30);
+}
+const coachCanSee = at => !at || !ui.full || /^#ps-board|^#ps-bar|^\.keybtn/.test(at);
+/* the practice game's own lines: said next, whatever the lesson on screen */
+function coachSay(k) { if (COACH.on && COACH_SAY[k]) { COACH.forced.push(k); coachKick(); } }
+
+function coachShow(k, w) {
+  coachHush();
+  const dur = coachVoice(k), words = (COACH_SAY[k] || '').split(/\s+/).length;
+  const now = performance.now();
+  // no voice (sound off, or not loaded yet): as long as the words take to read
+  const talk = dur ? dur * 1000 + 350 : Math.max(2600, words * 330);
+  COACH.cur = Object.assign({ k, t0: now, until: now + talk, min: false }, w);
+  COACH.last = k; COACH.scrolled = '';
+  coachMark(k);
+  if (k === 'done') setTimeout(() => { if (COACH.cur && COACH.cur.k === 'done') coachSet(false); }, talk + 3500);
+  coachPaint(true);
+  coachKick(talk + 60);
+}
+/* say it: the line goes through the announcer's queue, on this phone only */
+function coachVoice(k) {
+  const name = 'v_k_' + k, c = SND.data && SND.data.clips && SND.data.clips[name];
+  if (!c || !SND.ctx || !SND.prefs.voice || !SND.prefs.vol) return 0;
+  SND.q = SND.q.filter(x => !x.name.startsWith('v_k_'));
+  // a coach line that is no longer the lesson on screen is never said late (sndTalk asks, once the clip is ready)
+  SND.cut = it => it.name.startsWith('v_k_') && !(COACH.cur && 'v_k_' + COACH.cur.k === it.name);
+  vox(name, { mine: true, stale: 5000 });
+  return c[3] || 0;
+}
+/* stop whatever the coach is saying: a lesson whose moment has passed is not finished out loud */
+function coachHush() {
+  SND.q = (SND.q || []).filter(x => !x.name.startsWith('v_k_'));
+  const cur = SND.cur, c = SND.ctx;
+  if (!cur || !c || !cur.name.startsWith('v_k_')) return;
+  try { cur.g.gain.cancelScheduledValues(c.currentTime); cur.g.gain.setTargetAtTime(0, c.currentTime, 0.06); cur.s.stop(c.currentTime + 0.3); } catch (e) { /* already done */ }
+  SND.cur = null;
+}
+function coachClose(all) {
+  if (COACH.cur) { coachHush(); COACH.gapTo = performance.now() + 700; }
+  COACH.cur = null;
+  if (all) { COACH.forced = []; COACH.fin = null; }
+  coachPaint();
+}
+
+/* ---------- drawing it ----------
+   #coach (the bubble, or the chip it folds into) and #coachring (the ring and the finger) live on
+   <body>, outside everything the phone redraws, and follow their target frame by frame while shown. */
+const COACH_MIC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+const COACH_HAND = '<svg viewBox="0 0 40 48" aria-hidden="true"><path d="M15 4c2 0 3.4 1.5 3.4 3.6v13.6l1.2-.4c1.6-.5 3.3.3 3.9 1.8l.1.3 1.6-.4c1.7-.4 3.4.5 3.9 2.1l1.4-.3c1.8-.3 3.5.9 3.8 2.7l1.2 7.9c.6 4.2-1.1 8.2-4.6 10.6-1.2.8-2.6 1.4-4 1.6l-6.5.9c-3 .4-5.9-.9-7.6-3.3L4.6 32.4c-1-1.5-.6-3.6.9-4.6 1.4-.9 3.3-.7 4.4.6l1.7 2V7.6C11.6 5.5 13 4 15 4z"/></svg>';
+function coachEls() {
+  if (COACH.el) return;
+  const b = document.createElement('div'); b.id = 'coach'; b.setAttribute('role', 'status'); b.setAttribute('aria-live', 'polite'); b.hidden = true;
+  const r = document.createElement('div'); r.id = 'coachring'; r.setAttribute('aria-hidden', 'true'); r.hidden = true;
+  r.innerHTML = '<i class="cring"></i><i class="cfinger">' + COACH_HAND + '<b></b></i>';
+  document.body.appendChild(r); document.body.appendChild(b);
+  COACH.el = b; COACH.ring = r; COACH.finger = r.querySelector('.cfinger');
+}
+function coachPaint(fresh) {
+  coachEls();
+  const b = COACH.el, cur = COACH.cur, fin = COACH.fin;
+  if (fin) { b.hidden = false; b.className = 'coach fin' + (LEARN.wait ? ' start' : ''); if (fresh || b.dataset.k !== 'fin') { b.dataset.k = 'fin'; b.innerHTML = fin; } }
+  else if (!cur || ui.sheet) {
+    // folded away: a small chip to hear the last thing again, while the coach is on and a game is under way
+    const chip = COACH.on && COACH.last && !ui.sheet && G.state && G.state.phase !== 'over' && G.state.step !== 'fight';
+    b.hidden = !chip; b.className = 'coach chip';
+    if (chip && b.dataset.k !== 'chip') { b.dataset.k = 'chip'; b.innerHTML = `<button type="button" class="cchip" data-coach="replay" aria-label="Coach: hear that again">${COACH_MIC}<span>Coach</span></button>`; }
+  } else {
+    const min = cur.min || (performance.now() > cur.until + 3800 && !cur.forced);   // said and read: fold to a chip
+    cur.min = !!min;
+    b.hidden = false; b.className = 'coach' + (min ? ' chip' : '') + (performance.now() < cur.until ? ' talk' : '');
+    const key = (min ? 'min:' : 'full:') + cur.k;
+    if (b.dataset.k !== key) {
+      b.dataset.k = key;
+      b.innerHTML = min ? `<button type="button" class="cchip" data-coach="replay" aria-label="Coach: hear that again">${COACH_MIC}<span>Coach</span></button>`
+        : `<div class="cbub"><span class="cav">${COACH_MIC}<i></i><i></i><i></i></span><div class="ctx"><small>Coach</small><p>${esc(COACH_SAY[cur.k] || '')}</p>` +
+          `<span class="crow"><button type="button" class="cok" data-coach="ok">Got it</button><button type="button" class="coff" data-coach="off">Stop coaching</button></span></div></div>`;
+      b.__at = performance.now();
+    }
+  }
+  if (!COACH.raf && !b.hidden) COACH.raf = requestAnimationFrame(coachFrame);
+  if (b.hidden && COACH.ring) COACH.ring.hidden = true;
+}
+/* every frame while shown: find the target again (the phone redraws it), ring it, tap it, and put the bubble where
+   it covers neither the target nor the dock */
+function coachFrame() {
+  COACH.raf = 0;
+  const b = COACH.el, r = COACH.ring, cur = COACH.cur;
+  if (!b || b.hidden) { if (r) r.hidden = true; return; }
+  const vw = innerWidth, vh = innerHeight;
+  const hd = document.querySelector(ui.full ? '#p-hud' : 'header.pbar'), hr = hd ? hd.getBoundingClientRect() : null;
+  const top0 = Math.max(8, hr && hr.height ? hr.bottom + 8 : 8);
+  const dock = document.querySelector('#ps-bar .actionbar') || document.querySelector('#ps-bar'), dr = dock && dock.offsetParent ? dock.getBoundingClientRect() : null;
+  const bot0 = Math.min(vh - 8, dr && dr.height && dr.top > vh * 0.5 ? dr.top - 10 : vh - 8);
+  let T = null, el = null;
+  if (cur && !COACH.fin && cur.at && !ui.sheet) {
+    el = coachCanSee(cur.at) ? document.querySelector(cur.at) : null;
+    const q = el && el.getBoundingClientRect();
+    if (q && q.width && q.height && q.bottom > 0 && q.top < vh) T = q;
+  }
+  // bring the target into view once, if it is off the screen and nothing else is moving the page
+  if (cur && el && !T && COACH.scrolled !== cur.k && !ui.full && (cur.tap || cur.spot) && performance.now() - (P.tapAt || 0) > 1500) { COACH.scrolled = cur.k; try { el.scrollIntoView({ block: 'center', behavior: FX.on ? 'smooth' : 'auto' }); } catch (e) { /* old browsers */ } }
+  // the ring and the finger
+  if (T && !cur.min) {                                                           // the ring goes once the line is said and read
+    const pad = 6, x = Math.max(4, T.left - pad), y = Math.max(4, T.top - pad), w = Math.min(vw - 4, T.right + pad) - x, h = Math.min(vh - 4, T.bottom + pad) - y;
+    const ring = r.firstChild; ring.style.cssText = `left:${x}px;top:${y}px;width:${w}px;height:${h}px`;
+    let fx = null, fy = null;
+    if (cur.spot && cur.spot[1] !== null && cur.spot[1] !== undefined) {
+      const s = document.querySelector(`#ps-board [data-${cur.spot[0] === 'h' ? 'hex' : cur.spot[0]}="${cur.spot[1]}"]`), sq = s && s.getBoundingClientRect();
+      if (sq && sq.width) { fx = sq.left + sq.width / 2; fy = sq.top + sq.height / 2; }
+    } else if (cur.tap) { fx = T.left + T.width / 2; fy = T.top + T.height / 2; }
+    const showF = fx !== null && !cur.min && fy > top0 - 20 && fy < vh;
+    COACH.finger.style.display = showF ? '' : 'none';
+    if (showF) COACH.finger.style.transform = `translate(${Math.round(fx)}px,${Math.round(fy)}px)`;
+    r.hidden = false;
+    r.classList.toggle('big', T.width * T.height > vw * vh * 0.25);
+  } else r.hidden = true;
+  // the bubble
+  const bh = b.offsetHeight || 0, bw = Math.min(vw - 20, 520);
+  let top;
+  if (b.classList.contains('chip') && !b.classList.contains('fin')) {
+    b.style.cssText = `top:${Math.round(bot0 - bh - 4)}px`;
+  } else {
+    if (!T || T.top >= bot0 - 4) top = bot0 - bh - 6;                              // nothing to avoid, or it is the dock itself
+    else if (bot0 - T.bottom >= bh + 18) top = T.bottom + 12;                     // under it
+    else if (T.top - top0 >= bh + 18) top = T.top - bh - 12;                      // over it
+    else top = coachZone(top0, bot0 - bh - 6, bh, T);                            // it fills the screen: whichever edge covers less
+    top = Math.max(top0, Math.min(top, vh - bh - 8));
+    b.style.cssText = `top:${Math.round(top)}px;left:${Math.round((vw - bw) / 2)}px;width:${Math.round(bw)}px`;
+  }
+  // frame by frame only while the bubble is up and pointing (the page moves under it); a chip is placed once per paint
+  if (cur && !cur.min && !COACH.fin) COACH.raf = requestAnimationFrame(coachFrame);
+}
+/* The target fills the screen, so the bubble has to sit on some of it: along the top or along the bottom, whichever
+   covers fewer things that can be tapped (buttons, spots on the board). Worked out a few times a second, not every frame. */
+function coachZone(top, bottom, bh, T) {
+  const now = performance.now(), key = [Math.round(T.top / 40), Math.round(T.bottom / 40), Math.round(bh / 20), top | 0, bottom | 0].join();
+  if (COACH.zone && COACH.zone.key === key && now - COACH.zone.at < 300) return COACH.zone.y;
+  const live = Array.from(document.querySelectorAll('#app button:not([disabled]), #ps-board .spot')).map(e => e.getBoundingClientRect()).filter(r => r.width && r.height);
+  const hits = y => live.filter(r => r.bottom > y && r.top < y + bh).length;
+  const y = hits(top) < hits(bottom) ? top : bottom;
+  COACH.zone = { key, at: now, y };
+  return y;
+}
+/* the coach's own buttons: taken before the page's click handler, so a tap on the bubble never picks a spot under it */
+document.addEventListener('click', ev => {
+  const btn = ev.target.closest && ev.target.closest('[data-coach]');
+  const inBub = ev.target.closest && ev.target.closest('#coach');
+  if (!btn && !inBub) {
+    // a tap anywhere else, once the line has been said, folds the bubble out of the way (and still does what it was for)
+    if (COACH.cur && !COACH.cur.min && !COACH.cur.forced && performance.now() > COACH.cur.until) { COACH.cur.min = true; coachPaint(); }
+    return;
+  }
+  ev.stopPropagation(); ev.preventDefault();
+  if (!btn || (COACH.el && performance.now() - (COACH.el.__at || 0) < 350)) return;       // a tap meant for what was there a moment ago
+  switch (btn.dataset.coach) {
+    case 'ok': coachHush(); if (COACH.cur) { COACH.cur.min = true; COACH.cur.until = Math.min(COACH.cur.until, performance.now()); } coachPaint(); coachKick(500); break;
+    case 'off': coachSet(false); toast('Coaching off. Switch it back on from the lobby.'); break;
+    case 'replay': {
+      const k = COACH.cur ? COACH.cur.k : COACH.last; if (!k) break;
+      const dur = coachVoice(k), now = performance.now();
+      if (COACH.cur && COACH.cur.k === k) Object.assign(COACH.cur, { min: false, until: now + (dur ? dur * 1000 + 350 : 3000) });
+      else COACH.cur = { k, t0: now, until: now + (dur ? dur * 1000 + 350 : 3000), min: false, forced: true };
+      coachPaint(true); coachKick((dur ? dur * 1000 : 3000) + 4400); break;
+    }
+    case 'tog': coachSet(!COACH.on); btn.setAttribute('aria-pressed', String(COACH.on)); sfx('ui_tap'); break;
+    default: if (typeof learnButton === 'function') learnButton(btn.dataset.coach);
+  }
+}, true);
+/* on the seat screen and in the lobby */
+const coachTogHTML = () => `<button type="button" class="coachtog" data-coach="tog" aria-pressed="${COACH.on}"><span class="ctk" aria-hidden="true"></span>` +
+  '<span class="ctt"><b>New here? Coach me</b><small>The announcer shows you each move on this phone, the first time it comes up.</small></span></button>';
+/* ---------- end of the coach ---------- */
+/* ---------- The practice game (onboarding, 2026-09-27) ----------
+   "Learn to play" on the front page opens ?learn: one phone, no table screen, no relay. The phone runs
+   its own table in the page (moves go straight to hostAction, nothing is stored or published, no game
+   record is kept) against two computer crews, Vex and Rook, with the coach on and every lesson fresh.
+   The dice are rigged so each part of the game comes up in a few turns: your rolls pay you, a rival
+   rolls a seven while you hold too many cards, you roll one yourself, and the bank slips you the
+   cards to try a street, a trade, an operation, an upgrade, a deal and the market. After your fourth
+   turn the coach signs off and offers a real game; "Keep playing" lets the dice run free. */
+const LEARN = { on: false, bots: [], next: 0, t: 0, beat: 0, did: {}, want: '', rig: 0, rq: [], done: false, offer: null, turn: '' };
+const LEARN_BOTS = [{ pid: 'botvex01', name: 'Vex', color: 'blue' }, { pid: 'botrook1', name: 'Rook', color: 'green' }];
+const learnBot = pid => LEARN_BOTS.find(b => b.pid === pid) || null;
+
+function bootLearn() {
+  LEARN.on = true; document.body.classList.add('learn');
+  COACH.on = true; COACH.learn = true; COACH.seen = {};
+  // a tap first: the page came from a link, and a phone will not make a sound before one
+  LEARN.wait = true; COACH.fin = learnStartHTML();
+  stopLandingPoster();
+  // the table is this page: a move goes straight to it, a little later, the way the relay would carry it
+  act = body => { const b = Object.assign({ pid: PID }, body); setTimeout(() => { quietly(hostAction, b); }, 120); return true; };
+  commit = () => {
+    if (G.closing) return;
+    useGeo(G.state.board); turfWatch(G.state); armTimers(); G.state.v++;
+    try { renderPlayer(); } catch (e) { console.error(e); }
+    learnSoon();
+  };
+  // no game record, no saved table: none of this is a real game
+  rec = () => {}; recScore = () => {}; recTurn = () => {}; recTurnEnd = () => {}; recStart = () => {};
+  goHome = () => { if (confirm('Leave the practice game?')) location.href = pageBase(); };
+  const rnd0 = rnd, host0 = hostAction, settle0 = settleRoll;
+  rnd = n => (n === 6 && LEARN.rq.length ? LEARN.rq.shift() : rnd0(n));
+  hostAction = a => {
+    // the roll for first place: you, high; the computer, low
+    if (a && a.t === 'roll' && G.state && G.state.phase === 'rolloff') LEARN.rq = a.pid === PID ? [5, 4] : [0, 1];
+    return host0(a);
+  };
+  settleRoll = (st, p, d, kept) => settle0(st, p, kept ? d : learnDice(st, p, d), kept);
+  G.online = true; P.hostUp = true;
+  G.state = newTableState('starter'); G.state.room = joinRoom; useGeo(G.state.board);
+  const fxWas = FX.on; FX.on = false;
+  hostAction({ t: 'join', pid: PID, name: (load('rtcity.name') || 'Ace').slice(0, 14), color: 'red' });
+  LEARN_BOTS.forEach(b => hostAction({ t: 'join', pid: b.pid, name: b.name, color: b.color }));
+  hostControl('start');
+  FX.on = fxWas;
+  renderPlayer(); coachPaint(true);
+  LEARN.beat = setInterval(learnStep, 400);
+}
+const learnStartHTML = () => `<div class="cbub cfin"><span class="cav">${COACH_MIC}<i></i><i></i><i></i></span><div class="ctx"><small>Practice game</small>` +
+  '<p>Learn Run the City in about ten minutes, against two computer crews. The coach talks you through every move, so turn your sound up.</p>' +
+  '<span class="crow wrap"><button type="button" class="cok" data-coach="lstart">Start the practice</button><button type="button" class="coff" data-coach="lhome">Back to the front page</button></span></div></div>';
+function learnSoon() { if (!LEARN.t) LEARN.t = setTimeout(() => { LEARN.t = 0; learnStep(); }, 60); }
+
+/* ---------- the rigged dice ---------- */
+function learnPair(sum) {
+  const pairs = []; for (let a = 1; a <= 6; a++) { const b = sum - a; if (b >= 1 && b <= 6) pairs.push([a, b]); }
+  return pairs[Math.floor(Math.random() * pairs.length)];
+}
+// what a sum pays this player
+function learnPays(st, pid, sum) {
+  let n = 0;
+  st.board.hexes.forEach((h, i) => {
+    if (h.n !== sum || i === st.board.police || !RESOURCE_OF[h.t]) return;
+    GEO.hexes[i].vs.forEach(v => { const b = st.buildings[v]; if (b && b.pid === pid) n += b.k === 'c' ? 2 : 1; });
+  });
+  return n;
+}
+function learnDice(st, p, d) {
+  if (LEARN.rig === 7) { LEARN.rig = 0; return learnPair(7); }
+  if (LEARN.done) return d;
+  if (p.pid === PID && st.turnNo === 3 && !LEARN.did.seven2) { LEARN.did.seven2 = 1; return learnPair(7); }   // your turn to bring the police
+  if (p.pid === PID) {
+    // your roll pays you as well as any roll can
+    let best = [], top = 0;
+    [2, 3, 4, 5, 6, 8, 9, 10, 11, 12].forEach(s => { const n = learnPays(st, PID, s); if (n > top) { top = n; best = [s]; } else if (n === top && n) best.push(s); });
+    if (best.length) return learnPair(best[Math.floor(Math.random() * best.length)]);
+  } else if (Math.random() < 0.5) {
+    // a rival's roll pays you half the time, so you see a payday on somebody else's turn
+    const good = [2, 3, 4, 5, 6, 8, 9, 10, 11, 12].filter(s => learnPays(st, PID, s) > 0);
+    if (good.length) return learnPair(good[Math.floor(Math.random() * good.length)]);
+  }
+  // no sevens but the ones the lesson asks for
+  let s = d[0] + d[1], g = 0;
+  while (s === 7 && g++ < 20) { d = [rnd(6) + 1, rnd(6) + 1]; s = d[0] + d[1]; }
+  return s === 7 ? [3, 3] : d;
+}
+
+/* ---------- the bank's gifts ---------- */
+function learnGive(pid, b) {
+  const p = playerOf(G.state, pid); if (!p) return false;
+  let any = false;
+  Object.keys(b).forEach(r => { if (b[r] > 0) { p.hand[r] = (p.hand[r] || 0) + b[r]; any = true; } });
+  return any;
+}
+// what it takes to afford this from that hand
+const learnShort = (p, cost) => RES_ORDER.reduce((m, r) => { const k = (cost[r] || 0) - (p.hand[r] || 0); if (k > 0) m[r] = k; return m; }, {});
+
+/* ---------- the script ----------
+   Each step fires once, when the game reaches it, and answers true if it changed the state (it commits). */
+function learnStage(st) {
+  if (st.phase !== 'turn' || LEARN.done) return false;
+  const me = playerOf(st, PID), a = activePid(st), n = st.turnNo, mine = a === PID, once = k => (LEARN.did[k] ? false : (LEARN.did[k] = 1, true));
+  const rook = a === LEARN_BOTS[1].pid;
+  // turn 1: you can lay a street
+  if (mine && n === 1 && st.step === 'act' && !FX.veil && once('g1')) {
+    if (learnGive(PID, learnShort(me, COST.street))) { coachSay('lx_gift'); commit(); return true; }
+  }
+  // Rook's first turn: you are holding too much when the seven comes
+  if (rook && n === 1 && st.step === 'roll' && once('seven1')) {
+    const need = Math.max(0, 9 - handCount(me)), give = {};
+    for (let i = 0; i < need; i++) { const r = RES_ORDER[i % RES_ORDER.length]; give[r] = (give[r] || 0) + 1; }
+    learnGive(PID, give); LEARN.rig = 7; coachSay('lx_seven'); commit(); return true;
+  }
+  // turn 2: a trade at a terminal, then an operation
+  if (mine && n === 2 && st.step === 'act' && !FX.veil && once('g2')) {
+    // an operation's cards, and a street's first if there is nowhere to put one yet; talent is left for a trade at a
+    // terminal, which four cash pay for (if talent is not short, the trade is just to try one)
+    const extra = legalFor(st, PID, 'operation').length ? {} : COST.street, want = {};
+    RES_ORDER.forEach(r => { want[r] = (COST.operation[r] || 0) + (extra[r] || 0); });
+    const miss = (me.hand.talent || 0) < want.talent ? 'talent' : null;
+    want.cash += 4;
+    const need = learnShort(me, want); if (miss) delete need.talent;
+    learnGive(PID, need);
+    LEARN.want = miss === 'talent' ? 'short' : 'trade';
+    commit(); return true;
+  }
+  if (LEARN.want === 'short' || LEARN.want === 'trade') {
+    // taught once the trade has been made (or the turn is over)
+    if (!(mine && n === 2) || COACH.seen.trade_bank) { LEARN.want = ''; }
+  }
+  // turn 3: you roll the seven (learnDice), then upgrade
+  if (mine && n === 3 && st.step === 'act' && !FX.veil && once('g3')) {
+    if (learnGive(PID, learnShort(me, COST.holding))) { commit(); return true; }
+  }
+  // turn 4: a deal with the others, and something from the market
+  if (mine && n === 4 && st.step === 'act' && !FX.veil && once('g4')) {
+    const k = CARD_ORDER.filter(x => CARDS[x].price && deckOf(st, x) > 0).sort((x, y) => bundleSize(CARDS[x].price) - bundleSize(CARDS[y].price))[0];
+    const give = k ? learnShort(me, CARDS[k].price) : {};
+    if (handCount(me) < 3) give.product = (give.product || 0) + 2;
+    learnGive(PID, give); LEARN.want = 'offer'; commit(); return true;
+  }
+  if (LEARN.want === 'offer' && (!(mine && n === 4) || COACH.seen.offer)) LEARN.want = '';
+  // after your fourth turn: the coach signs off
+  if (!mine && n >= 4 && !LEARN.did.fin && (n > 4 || st.turnIdx > 0)) { LEARN.did.fin = 1; learnFinish(); return false; }
+  return false;
+}
+function learnFinish() {
+  LEARN.done = true;
+  coachSay('lx_done');
+  setTimeout(() => { COACH.fin = learnFinHTML(); coachPaint(true); }, 400);
+}
+const learnFinHTML = () => `<div class="cbub cfin"><span class="cav">${COACH_MIC}<i></i><i></i><i></i></span><div class="ctx"><small>Practice done</small>` +
+  `<p>${esc(COACH_SAY.lx_done)}</p><span class="crow wrap"><button type="button" class="cok" data-coach="lhost">Host a real game</button>` +
+  '<button type="button" class="cok ghost" data-coach="ljoin">Join friends</button><button type="button" class="cok ghost" data-coach="lkeep">Keep playing</button>' +
+  '<button type="button" class="coff" data-coach="lagain">Practice again</button></span></div></div>';
+function learnButton(k) {
+  if (k === 'lstart') { LEARN.wait = false; COACH.fin = null; sndUnlock(); coachPaint(); coachKick(250); }
+  else if (k === 'lhome') location.href = pageBase();
+  else if (k === 'lhost') { try { sessionStorage.setItem('rtcity.autohost', '1'); } catch (e) { /* private mode */ } location.href = pageBase(); }
+  else if (k === 'ljoin') location.href = pageBase() + '#join';
+  else if (k === 'lagain') location.reload();
+  else if (k === 'lkeep') { COACH.fin = null; coachPaint(); learnSoon(); }
+}
+
+/* ---------- the computer crews ---------- */
+// who has something to do, and what: one move at a time, and never while the dice roll, cards fly or the coach talks
+function learnStep() {
+  const st = G.state; if (!LEARN.on || LEARN.wait || !st || G.closing || document.hidden) return;
+  if (learnStage(st)) return;
+  const now = performance.now();
+  if (FX.veil || FX.busy || FX.queue.length || (COACH.cur && now < COACH.cur.until) || (COACH.forced.length && !ui.sheet) || COACH.fin || now < LEARN.next) return;
+  const job = learnJob(st); if (!job) return;           // (after the wait: working out a move can hand out cards)
+  LEARN.next = now + 950 + Math.random() * 600;
+  quietly(hostAction, job);
+}
+function learnJob(st) {
+  const bot = id => !!learnBot(id), a = activePid(st);
+  if (st.phase === 'rolloff') { const b = LEARN_BOTS.find(x => st.contenders.includes(x.pid) && !st.rolls[x.pid]); return b ? { pid: b.pid, t: 'roll' } : null; }
+  if (st.phase === 'place') {
+    if (!bot(a)) return null;
+    if (st.step === 'operation') {
+      const l = legalOperations(st); let best = l[0], top = -1;
+      l.forEach(v => { const s = GEO.verts[v].hexes.reduce((n, h) => n + (PIPS[st.board.hexes[h].n] || 0), 0); if (s > top) { top = s; best = v; } });
+      return { pid: a, t: 'operate', v: best };
+    }
+    const l = legalSetupStreets(st); return l.length ? { pid: a, t: 'street', e: l[Math.floor(Math.random() * l.length)] } : null;
+  }
+  if (st.phase !== 'turn') return null;
+  // anyone's part of a seven, a fight, or an answer to your offer
+  if (st.step === 'discard') {
+    const id = Object.keys(st.pend).find(bot); if (!id) return null;
+    const p = playerOf(st, id), drop = {}; let k = st.pend[id];
+    RES_ORDER.slice().sort((x, y) => (p.hand[y] || 0) - (p.hand[x] || 0)).forEach(r => { const t = Math.min(k, p.hand[r] || 0); if (t) { drop[r] = t; k -= t; } });
+    return { pid: id, t: 'discard', cards: drop };
+  }
+  if (st.step === 'fight' && st.fight) {
+    const f = st.fight, s = bot(f.a) && !f.lock[0] ? 0 : bot(f.d) && !f.lock[1] ? 1 : -1;
+    return s < 0 ? null : { pid: s ? f.d : f.a, t: 'fight', n: f.rounds.length, m: 'swing' };
+  }
+  const o = st.offer;
+  if (o && o.from === PID) {
+    const b = LEARN_BOTS.find(x => o.replies[x.pid] === undefined); if (!b) return null;
+    const q = playerOf(st, b.pid);
+    // in practice somebody always has what you asked for
+    if (b === LEARN_BOTS[0] && !holds(q, o.want)) { learnGive(b.pid, learnShort(q, o.want)); }
+    return { pid: b.pid, t: 'reply', ok: holds(q, o.want) };
+  }
+  if (!bot(a)) return null;
+  const p = playerOf(st, a);
+  if (st.step === 'roll') return { pid: a, t: 'rollturn' };
+  if (st.step === 'luck') return { pid: a, t: 'keep', i: [0, 1] };
+  if (st.step === 'police') {
+    // the police go where it hurts you (a practice game is about you)
+    const l = policeBlocks(st, a), yours = l.filter(h => GEO.hexes[h].vs.some(v => st.buildings[v] && st.buildings[v].pid === PID));
+    return { pid: a, t: 'police', h: (yours.length ? yours : l)[0] };
+  }
+  if (st.step === 'steal') { const vs = victims(st, st.board.police, a); return { pid: a, t: 'steal', from: vs.includes(PID) ? PID : vs[0] }; }
+  if (st.step !== 'act') return null;
+  const key = st.turnNo + ':' + st.turnIdx;
+  if (LEARN.turn !== key) { LEARN.turn = key; LEARN.builds = 0; LEARN.offer = null; }
+  // Vex's first turn: an offer to you, answered on your phone
+  if (o && o.from === a) {
+    const said = o.replies[PID];
+    if (said === 1) return { pid: a, t: 'swap', with: PID };
+    if (said === 0 || performance.now() - (LEARN.offer || 0) > 30000) return { pid: a, t: 'unoffer' };
+    return null;
+  }
+  if (a === LEARN_BOTS[0].pid && st.turnNo === 1 && !LEARN.did.vexoffer) {
+    const me = playerOf(st, PID);
+    if (!handCount(me)) learnGive(PID, { cash: 1 });            // you spent everything: the bank slips you a card to be asked for
+    const want = RES_ORDER.filter(r => (me.hand[r] || 0) > 0).sort((x, y) => (me.hand[y] || 0) - (me.hand[x] || 0))[0];
+    if (want) {
+      LEARN.did.vexoffer = 1; LEARN.offer = performance.now();
+      const give = RES_ORDER.find(r => r !== want && (p.hand[r] || 0) > 0) || RES_ORDER.find(r => r !== want);
+      if (!(p.hand[give] > 0)) learnGive(a, { [give]: 1 });
+      return { pid: a, t: 'offer', give: { [give]: 1 }, want: { [want]: 1 } };
+    }
+  }
+  // build what it can (the best spot), twice at most, then hand the dice on
+  if ((LEARN.builds | 0) < 2) for (const kind of ['holding', 'operation', 'street']) {
+    const l = legalFor(st, a, kind);
+    if (!l.length || !canPay(p, kind) || left(st, a, kind) <= 0) continue;
+    LEARN.builds = (LEARN.builds | 0) + 1;
+    return kind === 'street' ? { pid: a, t: 'build', kind, e: l[Math.floor(Math.random() * l.length)] } : { pid: a, t: 'build', kind, v: coachBestV(st, l) };
+  }
+  const tr = learnBank(st, p);
+  if (tr && (LEARN.trades | 0) < 3) { LEARN.trades = (LEARN.trades | 0) + 1; return tr; }
+  LEARN.trades = 0;
+  return { pid: a, t: 'endturn' };
+}
+/* one bank trade that gets a crew nearer something it has room to build: what it is missing, for what it has spare */
+function learnBank(st, p) {
+  for (const kind of ['holding', 'operation', 'street']) {
+    if (!legalFor(st, p.pid, kind).length || left(st, p.pid, kind) <= 0) continue;
+    const need = learnShort(p, COST[kind]), get = Object.keys(need)[0];
+    if (!get) continue;
+    const give = RES_ORDER.find(r => !need[r] && (p.hand[r] || 0) - (COST[kind][r] || 0) >= tradeRate(st, p.pid, r));
+    if (give) return { pid: p.pid, t: 'trade', give, get };
+  }
+  return null;
+}
+/* ---------- end of the practice game ---------- */
 /* =====================================================================
    Showmanship: the dice machine, and cards that fly.
 
@@ -17783,7 +18439,7 @@ const SND = { ctx: null, master: null, bus: {}, data: null, buf: {}, dec: {}, la
 })();
 const sndMe = () => (joinRoom && !WATCH ? PID : null);               // the seat this phone plays, if it is a phone
 const sndTable = () => !joinRoom || WATCH;
-const sndHearsTable = () => sndTable() || SND.prefs.all;
+const sndHearsTable = () => sndTable() || SND.prefs.all || LEARN.on;       // the practice game's phone is its own table
 const sndAny = () => SND.prefs.vol > 0 && (SND.prefs.fx || (SND.prefs.voice && sndHearsTable()) || (SND.prefs.amb && sndTable()));
 
 function sndUnlock(forPoster = false) {
@@ -17855,7 +18511,7 @@ function sndBuf(name) {
 function sndWarm() {
   const clips = (SND.data && SND.data.clips) || {}, table = sndHearsTable();
   sndPack('fx'); if (table) sndPack('table');                          // both at once, not one after the other
-  const names = Object.keys(clips).filter(n => table || clips[n][0] === 'fx');
+  const names = Object.keys(clips).filter(n => clips[n][0] !== 'coach' && (table || clips[n][0] === 'fx'));   // the coach's pack waits until a coached phone wants it
   const first = ['ui_tap', 'ui_fold', 'ui_pick', 'ui_confirm', 'ui_deny', 'card_land', 'card_whoosh', 'your_turn', 'reel_spin', 'reel_stop'];
   const order = first.filter(n => names.includes(n)).concat(names.filter(n => !first.includes(n)));
   const next = () => { const n = order.shift(); if (n) sndBuf(n).then(() => setTimeout(next, 16)); };
@@ -17942,8 +18598,9 @@ function sndTalk() {
   sndLevels();
   sndBuf(it.name).then(b => {
     const c = SND.ctx, done = () => { if (SND.talking !== id) return; SND.talking = 0; const nx = SND.q[0]; setTimeout(sndTalk, nx && nx.gap != null ? nx.gap : 160); };
-    if (!b || !c || document.hidden || performance.now() > it.until) { done(); return; }   // a line that arrived late is not said late
+    if (!b || !c || document.hidden || performance.now() > it.until || (SND.cut && SND.cut(it))) { done(); return; }   // a line that arrived late is not said late (nor a coach line whose moment went)
     const s = c.createBufferSource(), g = c.createGain(); s.buffer = b; g.gain.value = sndTrim(it.name); s.connect(g); g.connect(SND.bus.voice); s.start();
+    SND.cur = { s, g, name: it.name };                               // what is being said (the coach can stop his own line)
     s.onended = done; setTimeout(done, b.duration * 1000 + 300);     // a hidden tab may never say it ended
   });
 }
@@ -18822,7 +19479,8 @@ let onTable = false; try { onTable = sessionStorage.getItem('rtcity.ontable') ==
 // of the tab that is running the table goes straight back to it
 // a table's own address (?table=CODE) resumes it in the browser that runs it, and anywhere else shows its board view
 const myTable = (() => { const s = load('rtcity.host'); return s && s.state && s.state.room === tableRoom; })();
-if (joinRoom) bootPlayer();
+if (LEARN_ON) bootLearn();
+else if (joinRoom) bootPlayer();
 else if (autohost || (onTable && load('rtcity.host')) || (tableRoom && myTable)) bootHost();
 else if (tableRoom.length >= 5) location.replace(pageBase() + '?room=' + tableRoom + '&watch=1');
 else renderLanding();

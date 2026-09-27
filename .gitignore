@@ -34,3 +34,5 @@
 /art/talk/*.png
 # the winner's poster painting (release 6): loaded by their phone when it makes the poster
 !/art/show/
+# the coach's lines (onboarding): fetched only by a phone being coached
+!/sound-coach.bin

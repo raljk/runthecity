@@ -446,6 +446,55 @@ LINES.update({
     "v_giant_radio": dict(text="All units, be advised. We have a very large situation.", voice=DISPATCH, radio=True),
 })
 
+# ---------------------------------------------------------------- the coach (onboarding, 2026-09-27)
+# The coach teaches a new player the game on their own phone: each move the first time it comes up, and the practice
+# game from the front page. Said by the announcer, a notch calmer than his game calls. The page shows the same words
+# as captions (COACH_SAY); embed.py puts the v_k_ clips in a pack of their own, fetched only by a phone being coached.
+LINES.update({
+    "v_k_hello":       dict(text="Welcome to the city. I'm your coach. The first time each move comes up, I'll show you what to tap, and talk you through it.", style=0.3, stab=0.55),
+    "v_k_goal":        dict(text='The job is simple. First crew to ten points runs the city. Every operation you open is worth one point. A major holding is worth two.', style=0.3, stab=0.55),
+    "v_k_rolloff":     dict(text='First, everybody rolls. Highest roll places first. Tap Roll the dice.', style=0.3, stab=0.55),
+    "v_k_place_op":    dict(text='Set-up time. Tap a glowing corner to put down your first operation. Pick a corner that touches plenty of blocks.', style=0.3, stab=0.55),
+    "v_k_place_pick":  dict(text='Red numbers, six and eight, come up the most. And try to touch different colours, so you collect all five kinds of card.', style=0.3, stab=0.55),
+    "v_k_place_confirm": dict(text='Good spot. Now tap the button to place it.', style=0.3, stab=0.55),
+    "v_k_place_street": dict(text='Now lay a street. Tap a glowing path next to your operation. Streets are how you reach new corners to build on.', style=0.3, stab=0.55),
+    "v_k_place_second": dict(text='Your second operation. This one pays straight away: one card for every block it touches.', style=0.3, stab=0.55),
+    "v_k_wait":        dict(text="It's someone else's turn now. You can't build, but when their dice hit your blocks, you still get paid. So keep watching.", style=0.3, stab=0.55),
+    "v_k_roll":        dict(text="Your turn. Every turn starts with the dice. Tap Roll the dice. Every block on that number pays whoever's built around it.", style=0.3, stab=0.55),
+    "v_k_paid":        dict(text="Payday! Your building touches that block, so the cards went into your hand. Down here is everything you're holding.", style=0.3, stab=0.55),
+    "v_k_nopay":       dict(text="Nothing for you on that roll. It happens. Build around more numbers, and you'll get paid more often.", style=0.3, stab=0.55),
+    "v_k_act":         dict(text="Now it's building time. This list shows what you can make. A lit card is one you hold. An empty outline is one you're still missing.", style=0.3, stab=0.55),
+    "v_k_key":         dict(text='Not sure which block pays what? Tap Key, up top. Each colour of block pays its own card.', style=0.3, stab=0.55),
+    "v_k_build_street": dict(text='A street costs one muscle and one product. Tap a glowing path, then tap Build.', style=0.3, stab=0.55),
+    "v_k_build_op":    dict(text="An operation costs one muscle, one product, one talent and one cash. It goes on a free corner at the end of your street, and it's worth a point.", style=0.3, stab=0.55),
+    "v_k_build_holding": dict(text="Upgrade an operation to a major holding, for two cash and three influence. It's worth two points, and it pays double.", style=0.3, stab=0.55),
+    "v_k_trade_bank":  dict(text='Short a card? Trade at a terminal. Four of one kind buys one of any other. Build on the coast by a terminal, and you get a better rate.', style=0.3, stab=0.55),
+    "v_k_offer":       dict(text="Or deal with the other crews. Pick what you'll give, and what you want. They answer on their phones, and you choose who to deal with.", style=0.3, stab=0.55),
+    "v_k_answer":      dict(text="Someone's offering you a trade. Take it if it gets you closer to building something. Or pass. It costs you nothing either way.", style=0.3, stab=0.55),
+    "v_k_end":         dict(text="When you've done all you want, tap End my turn, then Yes. The dice pass to the next crew.", style=0.3, stab=0.55),
+    "v_k_seven":       dict(text='A seven! Nobody gets paid on a seven. Anyone holding more than seven cards loses half. And the police are on their way.', style=0.3, stab=0.55),
+    "v_k_discard":     dict(text="You're holding more than seven cards, so you drop half. Tap the cards you can best spare, then drop them.", style=0.3, stab=0.55),
+    "v_k_police":      dict(text='You rolled the seven, so you move the police. Tap a block. It stops paying until the police move on. Pick one where your rivals earn.', style=0.3, stab=0.55),
+    "v_k_steal":       dict(text='Now lean on somebody with a building on that block. You take one of their cards, unseen.', style=0.3, stab=0.55),
+    "v_k_robbed":      dict(text="The police are sitting on one of your blocks. It won't pay you, until somebody moves them on.", style=0.3, stab=0.55),
+    "v_k_market":      dict(text='Skills and talents are special cards. Open the market to buy one. Each one bends the rules, once. You can play one a turn.', style=0.3, stab=0.55),
+    "v_k_cardplay":    dict(text="You're holding a skill or talent. Tap Play a skill or talent to read it, and play it when the moment's right.", style=0.3, stab=0.55),
+    "v_k_fight":       dict(text='Street fight! Each round, you both pick a move at the same time. A swing is free. The big hits cost cards. Knock their strength to zero, and you win.', style=0.3, stab=0.55),
+    "v_k_luck":        dict(text='Lucky Streak! You threw three dice. Keep the two that pay you best.', style=0.3, stab=0.55),
+    "v_k_clock":       dict(text="See the clock? When it runs out, the table finishes your turn for you. So don't hang about.", style=0.3, stab=0.55),
+    "v_k_talk":        dict(text='One more thing. Tap the speech bubble up top, to throw stickers and whisper to the other crews. Trash talk is half the game.', style=0.3, stab=0.55),
+    "v_k_players":     dict(text="Want the score? Open Players, to see everyone's points, and how many cards they're holding.", style=0.3, stab=0.55),
+    "v_k_done":        dict(text="That's the lot. You know the streets now, so I'll go quiet. Good luck out there.", style=0.3, stab=0.55),
+    "v_k_lx_intro":    dict(text="This is a practice game. The other two crews are run by the computer, and I'm rigging the dice a little, so you get to see everything. Nothing here counts.", style=0.3, stab=0.55),
+    "v_k_lx_gift":     dict(text="Here. The bank's spotting you a few cards, so you can try building.", style=0.3, stab=0.55),
+    "v_k_lx_short":    dict(text="You're one talent short of an operation. Trade four cash for it at a terminal. Tap Trade at a terminal.", style=0.3, stab=0.55),
+    "v_k_lx_trade":    dict(text='Now try trading. Tap Trade at a terminal, and swap four of one kind for a card you need.', style=0.3, stab=0.55),
+    "v_k_lx_seven":    dict(text="Watch this. Somebody's about to roll a seven.", style=0.3, stab=0.55),
+    "v_k_lx_offer":    dict(text='Try a deal. Tap Offer the table a trade, and ask the other crews for a card you need.', style=0.3, stab=0.55),
+    "v_k_lx_done":     dict(text="That's the practice done. You can roll, build, trade, and handle the police. Keep playing if you like, or go and start a real game.", style=0.3, stab=0.55),
+})
+# ---- end of the coach
+
 # ---------------------------------------------------------------- levels and encoding
 # How loud each kind is, and how it is encoded. Peaks never go above -1 dB.
 # lu is the loudest 400 ms of the clip, K-weighted (LUFS, near enough to EBU R128's momentary

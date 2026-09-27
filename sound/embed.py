@@ -29,12 +29,13 @@ TABLE = {"amb_city", "start", "turn", "join", "leave", "tension", "reel_spin", "
          "st_music", "st_rocket", "st_boom", "st_shots", "st_pop",                    # the victory show (release 6)
          "giant_step", "giant_mech", "giant_beast"}                                 # and the giant
 def pack_of(n):
+    if n.startswith("v_k_"): return "coach"            # the coach's lines (onboarding): fetched only by a phone being coached
     if n.startswith("v_") and not n.startswith("v_taunt_"): return "table"
     return "table" if n in TABLE else "fx"
 
 page = sys.argv[1]; out_dir = os.path.dirname(os.path.abspath(page))
 names = [n for n in sorted(meta) if n not in PARTS and os.path.exists(os.path.join(web, n + ".mp3"))]
-blobs, clips, packs = {"fx": bytearray(), "table": bytearray()}, {}, {}
+blobs, clips, packs = {"fx": bytearray(), "table": bytearray(), "coach": bytearray()}, {}, {}
 for n in names:
     p = pack_of(n); data = open(os.path.join(web, n + ".mp3"), "rb").read()
     clips[n] = [p, len(blobs[p]), len(data), meta[n]] + ([trims[n]] if n in trims else [])
