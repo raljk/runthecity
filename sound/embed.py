@@ -27,7 +27,8 @@ TABLE = {"amb_city", "start", "turn", "join", "leave", "tension", "reel_spin", "
          "e_cheer", "e_boo", "e_lol", "e_clap", "e_crickets", "e_rain", "e_fire",       # the stickers' bites (release 3)
          "e_sweat", "e_cry", "e_micdrop",
          "st_music", "st_rocket", "st_boom", "st_shots", "st_pop",                    # the victory show (release 6)
-         "giant_step", "giant_mech", "giant_beast"}                                 # and the giant
+         "giant_step", "giant_mech", "giant_beast",                                   # and the giant
+         "gavel"}                                                                     # the auction (release 9)
 def pack_of(n):
     if n.startswith("v_k_"): return "coach"            # the coach's lines (onboarding): fetched only by a phone being coached
     if n.startswith("v_") and not n.startswith("v_taunt_"): return "table"

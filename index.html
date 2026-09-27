@@ -1626,6 +1626,59 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 @keyframes stFall{from{transform:translate(0,0) rotate(0)}to{transform:translate(var(--dx),108vh) rotate(var(--r))}}
 @media (prefers-reduced-motion:reduce){#fx .sttitle,#fx .sttitle.out,.stself .stpic.up{animation:none}#fx .stconf{display:none}}
 /* ---------- end of Showtime CSS ---------- */
+/* ---------- Game modes (release 9): the lobby's picker, the mode's chips, the auction, the landing's modes ---------- */
+.modepick .mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mbtn{appearance:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:62px;padding:8px 4px;border-radius:10px;
+  border:1px solid var(--line);background:transparent;color:inherit;font:700 .8rem/1.1 var(--display);cursor:pointer;position:relative}
+.mbtn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mbtn[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.mbtn.soon{opacity:.5;cursor:default}
+.mbtn em{position:absolute;top:4px;right:5px;font:800 .56rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase;font-style:normal;color:var(--muted)}
+.modepick .seg{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+.clkask .mico svg,.mstrip svg,.mchip svg,.handoff svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.clkask .mico{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:10px;border:1px solid var(--line)}
+.clkask .mico svg{width:22px;height:22px}
+/* the mode, this turn: on the table's banner and under the move card on a phone */
+.mchip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;font:800 .82rem var(--display);white-space:nowrap;
+  color:#9ff3ff;border:1px solid rgba(110,240,255,.4);background:rgba(2,16,22,.8)}
+.mchip b{font-variant-numeric:tabular-nums;color:#fff}
+.mchip.hot{color:#fff;border-color:#ff4b5c;background:rgba(60,6,16,.88);box-shadow:0 0 14px rgba(255,75,92,.35)}
+.mchip.rush{color:#ffd24d;border-color:rgba(255,210,77,.5);background:rgba(20,14,2,.8)}
+.mstrip{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mstrip .mchip{font-size:.78rem;padding:5px 10px;white-space:normal}
+.mchip.hus{gap:8px}
+.mchip.hus>i{display:block;width:70px;height:6px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden}
+.mchip.hus>i>i{display:block;height:100%;background:linear-gradient(90deg,#46e3ff,#e8fc37)}
+.clk.long b{font-size:.74em;letter-spacing:-.03em}
+.mbank{font:700 .78rem var(--display);font-variant-numeric:tabular-nums;color:#9ff3ff}
+.mbank::before{content:"\25F7\00a0";opacity:.7}
+.mbank.out{color:#ff6b7a}
+/* the auction: the table's bar over the board, a phone's card */
+.aucbar{border-color:color-mix(in srgb,var(--pc,#ffd24d) 55%,var(--line));box-shadow:0 0 22px color-mix(in srgb,var(--pc,#ffd24d) 25%,transparent)}
+.aucbar .who{color:#ffd24d;text-transform:uppercase;letter-spacing:.08em}
+.aucw{display:flex;flex-direction:column;gap:2px;min-width:0}
+.aucw em{font-style:normal;color:var(--muted);font-size:.85rem}
+.aucbid{display:inline-flex;align-items:center;gap:6px;font:700 .95rem var(--display)}
+.aucbid b{font-size:1.25rem}
+.auct{margin-left:auto;font:800 1.25rem var(--display);font-variant-numeric:tabular-nums;color:#ffd24d}
+.aucard .auchead{display:flex;flex-direction:column;align-items:center;gap:8px}
+.aucard .kick{display:flex;gap:10px;align-items:baseline;margin:0;font:800 .9rem var(--display);letter-spacing:.1em;text-transform:uppercase;color:#ffd24d}
+.aucard .auct{margin:0;font-size:1rem}
+.aucnow{display:flex;align-items:center;gap:8px;justify-content:center;font:700 1rem var(--display)}
+.oexp{font:800 .8rem var(--display);font-variant-numeric:tabular-nums;color:#ffd24d;padding:3px 8px;border-radius:99px;border:1px solid rgba(255,210,77,.45)}
+/* the landing: the ways to play, under the three steps */
+.lp-modewrap{margin-top:110px}
+.lp-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.lp-mode{padding:22px 20px;border:1px solid #a2eaff40;background:linear-gradient(135deg,#06151acc,#06151a33);clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+.lp-mode h3{margin:10px 0 6px;font-size:22px}
+.lp-mode h3 em{font:600 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.5px;color:var(--acid,#e8fc37);vertical-align:middle;font-style:normal;text-transform:uppercase}
+.lp-mode p{margin:0;font-size:13px;line-height:1.7;color:#c1d0d9}
+.lp-mico{display:grid;place-items:center;width:40px;height:40px;border:1px solid #70fcff66;color:var(--cyan,#6ff)}
+.lp-mico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.lp-mode.soon{opacity:.6}
+@media(max-width:900px){.lp-modes{grid-template-columns:1fr 1fr}.lp-modewrap{margin-top:50px}}
+@media(max-width:480px){.lp-modes{grid-template-columns:1fr;gap:10px}.lp-mode{display:grid;grid-template-columns:40px 1fr;column-gap:14px;align-items:start;padding:14px 14px 16px}.lp-mico{grid-row:span 2}.lp-mode h3{margin:2px 0 4px;font-size:19px}}
+/* ---------- end of game modes CSS ---------- */
 /* ---------- The coach (onboarding, 2026-09-27): the bubble, its chip, the ring and the finger ---------- */
 #coach{position:fixed;z-index:40;left:10px;right:auto;max-width:calc(100vw - 20px);pointer-events:auto;color:var(--tb-paper,#f3f3e9);font-family:var(--body)}
 #coach[hidden],#coachring[hidden]{display:none}
@@ -2206,7 +2259,7 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 <svg id="art-defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><image id="img-warehouse" href="art/game/4b02da62cf440c84.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-warehouse-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse"/></pattern><pattern id="tex-warehouse-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-nightlife" href="art/game/22125c17692b7615.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-nightlife-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife"/></pattern><pattern id="tex-nightlife-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-residential" href="art/game/a646c36d55d79d8d.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-residential-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential"/></pattern><pattern id="tex-residential-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-works" href="art/game/818f3fdcf8197d20.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-works-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works"/></pattern><pattern id="tex-works-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-tower" href="art/game/2fc42ec3373b927e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-tower-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower"/></pattern><pattern id="tex-tower-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-deadzone" href="art/game/f239b75fb869878e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-deadzone-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone"/></pattern><pattern id="tex-deadzone-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-wall_strata" href="art/game/11657f2b44ce62d9.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-wall_edge" href="art/game/d4118f94580bf8b4.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-rooftop" href="art/game/a84fbcb4b007ba84.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade" href="art/game/b14848bfcef00503.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_glass" href="art/game/884a677ea6bf6864.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_neon" href="art/game/e5eb9e891be0d2bb.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_shed" href="art/game/9e4045f14f544c07.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_works" href="art/game/68e62ef6f2bf6a43.jpg" width="1" height="1" preserveAspectRatio="none"/></defs></svg>
 <!-- ART:END -->
 <!-- SND:BEGIN (generated by sound/embed.py, do not edit by hand) -->
-<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"a805b6feb8","size":2121903},"coach":{"url":"sound-coach.bin","v":"8df50078c9","size":1501156}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"giant_beast":["table",217980,21228,3.46,-6.6],"giant_mech":["table",239208,21855,3.564,-7.8],"giant_step":["table",261063,4301,0.65,-0.1],"horn_1":["table",265364,5711,0.88,-11.5],"horn_2":["table",271075,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",279764,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",285005,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",291500,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",321976,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",327844,14802,2.4,-8.2],"reel_stop":["table",342646,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",346006,8689,1.36,-8.6],"seven":["table",354695,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"st_boom":["table",376080,11667,1.874,-7.8],"st_music":["table",387747,294260,48.96,-9.5],"st_pop":["table",682007,12451,2.0,-9.5],"st_rocket":["table",694458,38939,6.411,-6.6],"st_shots":["table",733397,18407,3.0,-9.7],"start":["table",751804,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",788235,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",799746,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",806711,7556,1.415,-0.4],"v_bank_2":["table",814267,6716,1.24,0.5],"v_buy_1":["table",820983,8156,1.524,0.8],"v_buy_2":["table",829139,5996,1.083,2.2],"v_c_backup":["table",835135,5756,1.039,2.1],"v_c_bustup":["table",840891,6116,1.116,-0.6],"v_c_connections":["table",847007,6236,1.138,-2.6],"v_c_fight":["table",853243,5756,1.035,-2.3],"v_c_legend":["table",858999,6716,1.243,-1.5],"v_c_luck":["table",865715,5156,0.934,0.7],"v_c_paidoff":["table",870871,8516,1.59,1.1],"v_c_rewind":["table",879387,7076,1.298,0.1],"v_c_roadcrew":["table",886463,7076,1.311,0.2],"v_c_shakedown":["table",893539,8156,1.534,-1.1],"v_c_silver":["table",901695,6236,1.14,1.0],"v_c_tipoff":["table",907931,7436,1.374,0.1],"v_c_wrecking":["table",915367,8516,1.597,-0.9],"v_cop_1":["table",923883,15020,4.827,-3.2],"v_cop_2":["table",938903,9836,3.115,-2.8],"v_cop_3":["table",948739,10160,3.21,-3.1],"v_crash_1":["table",958899,8396,1.577,-2.5],"v_crash_2":["table",967295,7676,1.425,-1.3],"v_crash_3":["table",974971,6596,1.217,-0.9],"v_crowd_1":["table",981567,7196,1.329,1.4],"v_crowd_2":["table",988763,7556,1.415,-0.7],"v_crowd_3":["table",996319,7556,1.41,1.9],"v_d_deadzone":["table",1003875,8996,1.685,-2.5],"v_d_nightlife":["table",1012871,8756,1.649,1.2],"v_d_residential":["table",1021627,8276,1.558,1.0],"v_d_tower":["table",1029903,6356,1.169,1.0],"v_d_warehouse":["table",1036259,8396,1.562,-1.3],"v_d_works":["table",1044655,6476,1.191,2.0],"v_deal":["table",1051131,7076,1.319,-1.9],"v_deal_2":["table",1058207,6956,1.29,-0.5],"v_deal_3":["table",1065163,8396,1.562,2.0],"v_deal_4":["table",1073559,7196,1.337,2.5],"v_dir_look":["table",1080755,8156,1.52,-0.5],"v_dir_wake":["table",1088911,7556,1.399,-2.5],"v_discard":["table",1096467,18716,3.626,0.8],"v_down_bustup":["table",1115183,11516,2.187,-0.7],"v_down_wrecking":["table",1126699,8756,1.635,-2.4],"v_e_chase":["table",1135455,5876,1.07,0.4],"v_e_concert":["table",1141331,6716,1.242,-2.5],"v_e_fire":["table",1148047,5996,1.09,-1.2],"v_e_gangwar":["table",1154043,5876,1.06,-0.6],"v_e_giant":["table",1159919,6716,1.238,1.5],"v_e_race":["table",1166635,6956,1.288,-2.1],"v_e_robbery":["table",1173591,7916,1.473,-1.1],"v_fast_1":["table",1181507,7556,1.407,0.4],"v_fast_2":["table",1189063,7076,1.306,1.1],"v_fast_3":["table",1196139,5396,0.983,0.6],"v_fast_4":["table",1201535,7556,1.401,1.3],"v_fast_5":["table",1209091,10436,1.976,-0.6],"v_giant_radio":["table",1219527,13724,4.415,-3.2],"v_held":["table",1233251,6956,1.288,0.0],"v_hurry":["table",1240207,11756,2.239,1.5],"v_icpt_1":["table",1251963,12836,2.457,-2.4],"v_icpt_2":["table",1264799,5396,0.977,-1.3],"v_icpt_3":["table",1270195,6956,1.283,-2.6],"v_icpt_4":["table",1277151,7676,1.43,-2.5],"v_ko":["table",1284827,4676,0.818,-1.0],"v_legendary":["table",1289503,5156,0.914,-0.4],"v_n_blue":["table",1294659,2276,0.338,-1.8],"v_n_green":["table",1296935,2756,0.45,-2.5],"v_n_orange":["table",1299691,3116,0.507,-2.6],"v_n_purple":["table",1302807,2516,0.395,-0.5],"v_n_red":["table",1305323,1796,0.258,1.0],"v_n_white":["table",1307119,2276,0.352,2.3],"v_nine":["table",1309395,12716,2.434,-2.6],"v_offer":["table",1322111,8156,1.516,-2.3],"v_op_1":["table",1330267,10316,1.946,-2.5],"v_op_2":["table",1340583,10076,1.905,-0.5],"v_op_3":["table",1350659,6836,1.257,-1.5],"v_op_4":["table",1357495,10556,1.997,0.3],"v_open":["table",1368051,9476,1.778,-1.5],"v_p_far":["table",1377527,4676,0.832,0.3],"v_p_front":["table",1382203,5516,1.008,-0.5],"v_p_left":["table",1387719,5396,0.974,-2.6],"v_p_mid":["table",1393115,4916,0.874,-0.4],"v_p_right":["table",1398031,5156,0.922,0.4],"v_pick":["table",1403187,5876,1.076,-2.2],"v_place":["table",1409063,7556,1.415,-1.7],"v_port_1":["table",1416619,6956,1.279,-1.4],"v_port_2":["table",1423575,6836,1.261,0.9],"v_rare":["table",1430411,8036,1.49,0.5],"v_s_half":["table",1438447,5636,1.022,2.5],"v_s_lead":["table",1444083,5756,1.049,0.6],"v_s_leads":["table",1449839,5996,1.092,2.5],"v_s_one":["table",1455835,5396,0.975,-2.1],"v_s_round_1":["table",1461231,6236,1.145,-1.2],"v_s_round_2":["table",1467467,5756,1.035,-1.3],"v_s_round_3":["table",1473223,12956,2.474,0.9],"v_s_tied":["table",1486179,8996,1.695,2.5],"v_s_two":["table",1495175,5396,0.975,-2.5],"v_says":["table",1500571,2996,0.498,-0.4],"v_slow_1":["table",1503567,15476,2.997,-2.5],"v_slow_2":["table",1519043,12716,2.429,-1.6],"v_slow_3":["table",1531759,4676,0.831,-0.9],"v_slow_4":["table",1536435,11156,2.131,0.9],"v_slow_5":["table",1547591,6716,1.232,-1.4],"v_splat_1":["table",1554307,6596,1.215,-0.2],"v_splat_2":["table",1560903,5876,1.076,-0.9],"v_splat_3":["table",1566779,7556,1.405,1.3],"v_st_count":["table",1574335,10916,2.081,-1.7],"v_st_crew_1":["table",1585251,5156,0.925,0.3],"v_st_crew_2":["table",1590407,8396,1.584,-1.8],"v_st_end":["table",1598803,10076,1.908,-1.2],"v_st_face_1":["table",1608879,6836,1.257,2.5],"v_st_face_2":["table",1615715,8756,1.638,-0.1],"v_st_lift_1":["table",1624471,4916,0.867,-2.0],"v_st_lift_2":["table",1629387,6596,1.216,-0.9],"v_st_orbit":["table",1635983,8036,1.507,0.9],"v_st_parade":["table",1644019,12596,2.402,-1.8],"v_start":["table",1656615,13796,2.657,-1.3],"v_sum_10":["table",1670411,3356,0.576,-0.0],"v_sum_11":["table",1673767,3596,0.604,2.5],"v_sum_12":["table",1677363,10916,2.07,2.2],"v_sum_2":["table",1688279,9836,1.868,0.1],"v_sum_3":["table",1698115,3356,0.557,-1.3],"v_sum_4":["table",1701471,3596,0.604,-1.2],"v_sum_5":["table",1705067,4076,0.698,-2.0],"v_sum_6":["table",1709143,4076,0.698,0.9],"v_sum_7":["table",1713219,11036,2.09,-0.5],"v_sum_8":["table",1724255,2876,0.458,2.5],"v_sum_9":["table",1727131,3836,0.65,0.3],"v_t_off_1":["table",1730967,7676,1.431,-0.2],"v_t_off_2":["table",1738643,7796,1.444,2.5],"v_t_on_1":["table",1746439,6596,1.218,0.9],"v_t_on_2":["table",1753035,11036,2.1,0.3],"v_taken":["table",1764071,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1775227,9476,1.794,-0.4],"v_timeup_1":["table",1784703,4796,0.862,-0.4],"v_timeup_2":["table",1789499,8036,1.5,0.1],"v_tower":["table",1797535,10436,1.987,-2.6],"v_up_blue":["table",1807971,6956,1.286,-2.5],"v_up_green":["table",1814927,7676,1.421,-2.6],"v_up_orange":["table",1822603,7076,1.316,-2.7],"v_up_purple":["table",1829679,7796,1.464,-2.5],"v_up_red":["table",1837475,6956,1.276,-1.6],"v_up_white":["table",1844431,7076,1.301,-0.9],"v_w_alltalk":["table",1851507,4796,0.845,-0.3],"v_w_anyday":["table",1856303,5276,0.938,1.6],"v_w_bet":["table",1861579,2636,0.422,2.5],"v_w_bigmove":["table",1864215,4316,0.765,0.1],"v_w_clean":["table",1868531,5156,0.932,1.4],"v_w_clock":["table",1873687,5636,1.024,0.2],"v_w_comfy":["table",1879323,5996,1.086,1.8],"v_w_coming":["table",1885319,6116,1.119,-0.7],"v_w_cooked":["table",1891435,4316,0.75,-0.5],"v_w_dobetter":["table",1895751,3956,0.677,0.3],"v_w_dreaming":["table",1899707,4916,0.879,-1.7],"v_w_energy":["table",1904623,6236,1.131,-0.0],"v_w_fairplay":["table",1910859,5036,0.89,-0.5],"v_w_holdthat":["table",1915895,4196,0.738,-1.4],"v_w_imin":["table",1920091,3716,0.627,2.3],"v_w_iseeyou":["table",1923807,4556,0.797,0.1],"v_w_keepwalking":["table",1928363,4916,0.867,-1.1],"v_w_lesschat":["table",1933279,7916,1.488,0.9],"v_w_letstalk":["table",1941195,4436,0.785,0.5],"v_w_myblock":["table",1945631,4196,0.731,-0.3],"v_w_nah":["table",1949827,3116,0.511,0.5],"v_w_nicetry":["table",1952943,5156,0.932,1.2],"v_w_notdone":["table",1958099,5276,0.946,1.2],"v_w_nothappening":["table",1963375,4916,0.866,1.7],"v_w_offer":["table",1968291,5516,0.986,-2.6],"v_w_okseeyou":["table",1973807,7796,1.442,1.5],"v_w_oweyou":["table",1981603,5396,0.981,-1.4],"v_w_owncorner":["table",1986999,7196,1.336,0.5],"v_w_playing":["table",1994195,6596,1.217,-1.6],"v_w_pockets":["table",2000791,6596,1.218,0.2],"v_w_proveit":["table",2007387,3716,0.643,-2.0],"v_w_quiet":["table",2011103,6476,1.178,-0.3],"v_w_rentsdue":["table",2017579,4676,0.839,-0.8],"v_w_respect":["table",2022255,4316,0.766,2.5],"v_w_rough":["table",2026571,4196,0.737,0.3],"v_w_runit":["table",2030767,3116,0.511,1.4],"v_w_sayless":["table",2033883,4916,0.882,0.8],"v_w_tryagain":["table",2038799,4916,0.868,-0.3],"v_w_wegood":["table",2043715,3956,0.679,-2.5],"v_w_weregood":["table",2047671,3956,0.674,-1.9],"v_w_worth":["table",2051627,5516,0.989,-1.0],"v_w_wronghood":["table",2057143,5996,1.083,-0.9],"v_w_youin":["table",2063139,3236,0.54,-2.7],"v_w_yourmove":["table",2066375,4196,0.733,-2.5],"v_w_youwont":["table",2070571,3476,0.599,-1.9],"v_win_blue":["table",2074047,7796,1.458,-2.6],"v_win_green":["table",2081843,7916,1.479,-2.6],"v_win_orange":["table",2089759,8396,1.562,-2.1],"v_win_purple":["table",2098155,8756,1.641,-1.9],"v_win_red":["table",2106911,6956,1.292,-1.3],"v_win_white":["table",2113867,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5],"v_k_act":["coach",0,45596,9.003,-0.2],"v_k_answer":["coach",45596,39716,7.846,0.2],"v_k_build_holding":["coach",85312,39476,7.793,1.2],"v_k_build_op":["coach",124788,52676,10.431,-1.8],"v_k_build_street":["coach",177464,30716,6.04,1.4],"v_k_cardplay":["coach",208180,38996,7.683,0.0],"v_k_clock":["coach",247176,30356,5.961,-0.6],"v_k_discard":["coach",277532,37076,7.312,0.2],"v_k_done":["coach",314608,27956,5.488,-0.2],"v_k_end":["coach",342564,36836,7.266,0.6],"v_k_fight":["coach",379400,53876,10.658,-1.4],"v_k_goal":["coach",433276,43796,8.652,-1.4],"v_k_hello":["coach",477072,41756,8.234,-0.8],"v_k_key":["coach",518828,34916,6.883,1.0],"v_k_luck":["coach",553744,23156,4.53,-2.6],"v_k_lx_done":["coach",576900,44036,8.699,-0.7],"v_k_lx_gift":["coach",620936,21116,4.113,1.2],"v_k_lx_intro":["coach",642052,48116,9.513,-0.9],"v_k_lx_offer":["coach",690168,28796,5.651,2.4],"v_k_lx_seven":["coach",718964,14636,2.821,-0.1],"v_k_lx_short":["coach",733600,37436,7.375,0.4],"v_k_lx_trade":["coach",771036,32156,6.32,0.6],"v_k_market":["coach",803192,48476,9.58,-1.7],"v_k_nopay":["coach",851668,33116,6.514,-1.3],"v_k_offer":["coach",884784,38156,7.517,-1.6],"v_k_paid":["coach",922940,37436,7.384,1.4],"v_k_place_confirm":["coach",960376,15476,2.978,1.4],"v_k_place_op":["coach",975852,37316,7.367,-0.5],"v_k_place_pick":["coach",1013168,39596,7.814,1.0],"v_k_place_second":["coach",1052764,30356,5.961,0.0],"v_k_place_street":["coach",1083120,38636,7.624,-0.0],"v_k_players":["coach",1121756,30356,5.975,-1.4],"v_k_police":["coach",1152112,46676,9.233,-1.5],"v_k_robbed":["coach",1198788,27236,5.333,-2.6],"v_k_roll":["coach",1226024,43436,8.586,0.1],"v_k_rolloff":["coach",1269460,25796,5.044,2.1],"v_k_seven":["coach",1295256,42356,8.372,2.1],"v_k_steal":["coach",1337612,29036,5.709,0.0],"v_k_talk":["coach",1366648,44396,8.777,1.2],"v_k_trade_bank":["coach",1411044,52316,10.356,0.1],"v_k_wait":["coach",1463360,37796,7.453,-1.6]}}</script>
+<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"75d3a8ad70","size":2331453},"coach":{"url":"sound-coach.bin","v":"8df50078c9","size":1501156}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"gavel":["table",217980,1166,0.119,0.5],"giant_beast":["table",219146,21228,3.46,-6.6],"giant_mech":["table",240374,21855,3.564,-7.8],"giant_step":["table",262229,4301,0.65,-0.1],"horn_1":["table",266530,5711,0.88,-11.5],"horn_2":["table",272241,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",280930,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",286171,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",292666,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",323142,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",329010,14802,2.4,-8.2],"reel_stop":["table",343812,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",347172,8689,1.36,-8.6],"seven":["table",355861,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"st_boom":["table",377246,11667,1.874,-7.8],"st_music":["table",388913,294260,48.96,-9.5],"st_pop":["table",683173,12451,2.0,-9.5],"st_rocket":["table",695624,38939,6.411,-6.6],"st_shots":["table",734563,18407,3.0,-9.7],"start":["table",752970,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",789401,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",800912,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",807877,7556,1.415,-0.4],"v_bank_2":["table",815433,6716,1.24,0.5],"v_buy_1":["table",822149,8156,1.524,0.8],"v_buy_2":["table",830305,5996,1.083,2.2],"v_c_backup":["table",836301,5756,1.039,2.1],"v_c_bustup":["table",842057,6116,1.116,-0.6],"v_c_connections":["table",848173,6236,1.138,-2.6],"v_c_fight":["table",854409,5756,1.035,-2.3],"v_c_legend":["table",860165,6716,1.243,-1.5],"v_c_luck":["table",866881,5156,0.934,0.7],"v_c_overtime":["table",872037,11396,2.163,-2.6],"v_c_paidoff":["table",883433,8516,1.59,1.1],"v_c_rewind":["table",891949,7076,1.298,0.1],"v_c_roadcrew":["table",899025,7076,1.311,0.2],"v_c_rush":["table",906101,12236,2.345,-1.6],"v_c_shakedown":["table",918337,8156,1.534,-1.1],"v_c_silver":["table",926493,6236,1.14,1.0],"v_c_stall":["table",932729,13796,2.648,-0.6],"v_c_tipoff":["table",946525,7436,1.374,0.1],"v_c_wrecking":["table",953961,8516,1.597,-0.9],"v_cop_1":["table",962477,15020,4.827,-3.2],"v_cop_2":["table",977497,9836,3.115,-2.8],"v_cop_3":["table",987333,10160,3.21,-3.1],"v_crash_1":["table",997493,8396,1.577,-2.5],"v_crash_2":["table",1005889,7676,1.425,-1.3],"v_crash_3":["table",1013565,6596,1.217,-0.9],"v_crowd_1":["table",1020161,7196,1.329,1.4],"v_crowd_2":["table",1027357,7556,1.415,-0.7],"v_crowd_3":["table",1034913,7556,1.41,1.9],"v_d_deadzone":["table",1042469,8996,1.685,-2.5],"v_d_nightlife":["table",1051465,8756,1.649,1.2],"v_d_residential":["table",1060221,8276,1.558,1.0],"v_d_tower":["table",1068497,6356,1.169,1.0],"v_d_warehouse":["table",1074853,8396,1.562,-1.3],"v_d_works":["table",1083249,6476,1.191,2.0],"v_deal":["table",1089725,7076,1.319,-1.9],"v_deal_2":["table",1096801,6956,1.29,-0.5],"v_deal_3":["table",1103757,8396,1.562,2.0],"v_deal_4":["table",1112153,7196,1.337,2.5],"v_dir_look":["table",1119349,8156,1.52,-0.5],"v_dir_wake":["table",1127505,7556,1.399,-2.5],"v_discard":["table",1135061,18716,3.626,0.8],"v_down_bustup":["table",1153777,11516,2.187,-0.7],"v_down_wrecking":["table",1165293,8756,1.635,-2.4],"v_e_chase":["table",1174049,5876,1.07,0.4],"v_e_concert":["table",1179925,6716,1.242,-2.5],"v_e_fire":["table",1186641,5996,1.09,-1.2],"v_e_gangwar":["table",1192637,5876,1.06,-0.6],"v_e_giant":["table",1198513,6716,1.238,1.5],"v_e_race":["table",1205229,6956,1.288,-2.1],"v_e_robbery":["table",1212185,7916,1.473,-1.1],"v_fast_1":["table",1220101,7556,1.407,0.4],"v_fast_2":["table",1227657,7076,1.306,1.1],"v_fast_3":["table",1234733,5396,0.983,0.6],"v_fast_4":["table",1240129,7556,1.401,1.3],"v_fast_5":["table",1247685,10436,1.976,-0.6],"v_giant_radio":["table",1258121,13724,4.415,-3.2],"v_held":["table",1271845,6956,1.288,0.0],"v_hurry":["table",1278801,11756,2.239,1.5],"v_icpt_1":["table",1290557,12836,2.457,-2.4],"v_icpt_2":["table",1303393,5396,0.977,-1.3],"v_icpt_3":["table",1308789,6956,1.283,-2.6],"v_icpt_4":["table",1315745,7676,1.43,-2.5],"v_k_act":["coach",0,45596,9.003,-0.2],"v_k_answer":["coach",45596,39716,7.846,0.2],"v_k_build_holding":["coach",85312,39476,7.793,1.2],"v_k_build_op":["coach",124788,52676,10.431,-1.8],"v_k_build_street":["coach",177464,30716,6.04,1.4],"v_k_cardplay":["coach",208180,38996,7.683,0.0],"v_k_clock":["coach",247176,30356,5.961,-0.6],"v_k_discard":["coach",277532,37076,7.312,0.2],"v_k_done":["coach",314608,27956,5.488,-0.2],"v_k_end":["coach",342564,36836,7.266,0.6],"v_k_fight":["coach",379400,53876,10.658,-1.4],"v_k_goal":["coach",433276,43796,8.652,-1.4],"v_k_hello":["coach",477072,41756,8.234,-0.8],"v_k_key":["coach",518828,34916,6.883,1.0],"v_k_luck":["coach",553744,23156,4.53,-2.6],"v_k_lx_done":["coach",576900,44036,8.699,-0.7],"v_k_lx_gift":["coach",620936,21116,4.113,1.2],"v_k_lx_intro":["coach",642052,48116,9.513,-0.9],"v_k_lx_offer":["coach",690168,28796,5.651,2.4],"v_k_lx_seven":["coach",718964,14636,2.821,-0.1],"v_k_lx_short":["coach",733600,37436,7.375,0.4],"v_k_lx_trade":["coach",771036,32156,6.32,0.6],"v_k_market":["coach",803192,48476,9.58,-1.7],"v_k_nopay":["coach",851668,33116,6.514,-1.3],"v_k_offer":["coach",884784,38156,7.517,-1.6],"v_k_paid":["coach",922940,37436,7.384,1.4],"v_k_place_confirm":["coach",960376,15476,2.978,1.4],"v_k_place_op":["coach",975852,37316,7.367,-0.5],"v_k_place_pick":["coach",1013168,39596,7.814,1.0],"v_k_place_second":["coach",1052764,30356,5.961,0.0],"v_k_place_street":["coach",1083120,38636,7.624,-0.0],"v_k_players":["coach",1121756,30356,5.975,-1.4],"v_k_police":["coach",1152112,46676,9.233,-1.5],"v_k_robbed":["coach",1198788,27236,5.333,-2.6],"v_k_roll":["coach",1226024,43436,8.586,0.1],"v_k_rolloff":["coach",1269460,25796,5.044,2.1],"v_k_seven":["coach",1295256,42356,8.372,2.1],"v_k_steal":["coach",1337612,29036,5.709,0.0],"v_k_talk":["coach",1366648,44396,8.777,1.2],"v_k_trade_bank":["coach",1411044,52316,10.356,0.1],"v_k_wait":["coach",1463360,37796,7.453,-1.6],"v_ko":["table",1323421,4676,0.818,-1.0],"v_legendary":["table",1328097,5156,0.914,-0.4],"v_m_auction":["table",1333253,16796,3.261,-0.6],"v_m_bankout":["table",1350049,10436,1.986,1.0],"v_m_go_blitz":["table",1360485,16916,3.268,-1.5],"v_m_go_chess":["table",1377401,22316,4.363,1.8],"v_m_go_match":["table",1399717,23036,4.504,-1.3],"v_m_go_rush":["table",1422753,21476,4.198,-0.7],"v_m_hustle":["table",1444229,12116,2.315,-1.4],"v_m_last":["table",1456345,13676,2.618,0.7],"v_m_rushhour":["table",1470021,13436,2.587,0.4],"v_m_sold":["table",1483457,7916,1.486,0.5],"v_m_time":["table",1491373,12836,2.459,1.0],"v_n_blue":["table",1504209,2276,0.338,-1.8],"v_n_green":["table",1506485,2756,0.45,-2.5],"v_n_orange":["table",1509241,3116,0.507,-2.6],"v_n_purple":["table",1512357,2516,0.395,-0.5],"v_n_red":["table",1514873,1796,0.258,1.0],"v_n_white":["table",1516669,2276,0.352,2.3],"v_nine":["table",1518945,12716,2.434,-2.6],"v_offer":["table",1531661,8156,1.516,-2.3],"v_op_1":["table",1539817,10316,1.946,-2.5],"v_op_2":["table",1550133,10076,1.905,-0.5],"v_op_3":["table",1560209,6836,1.257,-1.5],"v_op_4":["table",1567045,10556,1.997,0.3],"v_open":["table",1577601,9476,1.778,-1.5],"v_p_far":["table",1587077,4676,0.832,0.3],"v_p_front":["table",1591753,5516,1.008,-0.5],"v_p_left":["table",1597269,5396,0.974,-2.6],"v_p_mid":["table",1602665,4916,0.874,-0.4],"v_p_right":["table",1607581,5156,0.922,0.4],"v_pick":["table",1612737,5876,1.076,-2.2],"v_place":["table",1618613,7556,1.415,-1.7],"v_port_1":["table",1626169,6956,1.279,-1.4],"v_port_2":["table",1633125,6836,1.261,0.9],"v_rare":["table",1639961,8036,1.49,0.5],"v_s_half":["table",1647997,5636,1.022,2.5],"v_s_lead":["table",1653633,5756,1.049,0.6],"v_s_leads":["table",1659389,5996,1.092,2.5],"v_s_one":["table",1665385,5396,0.975,-2.1],"v_s_round_1":["table",1670781,6236,1.145,-1.2],"v_s_round_2":["table",1677017,5756,1.035,-1.3],"v_s_round_3":["table",1682773,12956,2.474,0.9],"v_s_tied":["table",1695729,8996,1.695,2.5],"v_s_two":["table",1704725,5396,0.975,-2.5],"v_says":["table",1710121,2996,0.498,-0.4],"v_slow_1":["table",1713117,15476,2.997,-2.5],"v_slow_2":["table",1728593,12716,2.429,-1.6],"v_slow_3":["table",1741309,4676,0.831,-0.9],"v_slow_4":["table",1745985,11156,2.131,0.9],"v_slow_5":["table",1757141,6716,1.232,-1.4],"v_splat_1":["table",1763857,6596,1.215,-0.2],"v_splat_2":["table",1770453,5876,1.076,-0.9],"v_splat_3":["table",1776329,7556,1.405,1.3],"v_st_count":["table",1783885,10916,2.081,-1.7],"v_st_crew_1":["table",1794801,5156,0.925,0.3],"v_st_crew_2":["table",1799957,8396,1.584,-1.8],"v_st_end":["table",1808353,10076,1.908,-1.2],"v_st_face_1":["table",1818429,6836,1.257,2.5],"v_st_face_2":["table",1825265,8756,1.638,-0.1],"v_st_lift_1":["table",1834021,4916,0.867,-2.0],"v_st_lift_2":["table",1838937,6596,1.216,-0.9],"v_st_orbit":["table",1845533,8036,1.507,0.9],"v_st_parade":["table",1853569,12596,2.402,-1.8],"v_start":["table",1866165,13796,2.657,-1.3],"v_sum_10":["table",1879961,3356,0.576,-0.0],"v_sum_11":["table",1883317,3596,0.604,2.5],"v_sum_12":["table",1886913,10916,2.07,2.2],"v_sum_2":["table",1897829,9836,1.868,0.1],"v_sum_3":["table",1907665,3356,0.557,-1.3],"v_sum_4":["table",1911021,3596,0.604,-1.2],"v_sum_5":["table",1914617,4076,0.698,-2.0],"v_sum_6":["table",1918693,4076,0.698,0.9],"v_sum_7":["table",1922769,11036,2.09,-0.5],"v_sum_8":["table",1933805,2876,0.458,2.5],"v_sum_9":["table",1936681,3836,0.65,0.3],"v_t_off_1":["table",1940517,7676,1.431,-0.2],"v_t_off_2":["table",1948193,7796,1.444,2.5],"v_t_on_1":["table",1955989,6596,1.218,0.9],"v_t_on_2":["table",1962585,11036,2.1,0.3],"v_taken":["table",1973621,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1984777,9476,1.794,-0.4],"v_timeup_1":["table",1994253,4796,0.862,-0.4],"v_timeup_2":["table",1999049,8036,1.5,0.1],"v_tower":["table",2007085,10436,1.987,-2.6],"v_up_blue":["table",2017521,6956,1.286,-2.5],"v_up_green":["table",2024477,7676,1.421,-2.6],"v_up_orange":["table",2032153,7076,1.316,-2.7],"v_up_purple":["table",2039229,7796,1.464,-2.5],"v_up_red":["table",2047025,6956,1.276,-1.6],"v_up_white":["table",2053981,7076,1.301,-0.9],"v_w_alltalk":["table",2061057,4796,0.845,-0.3],"v_w_anyday":["table",2065853,5276,0.938,1.6],"v_w_bet":["table",2071129,2636,0.422,2.5],"v_w_bigmove":["table",2073765,4316,0.765,0.1],"v_w_clean":["table",2078081,5156,0.932,1.4],"v_w_clock":["table",2083237,5636,1.024,0.2],"v_w_comfy":["table",2088873,5996,1.086,1.8],"v_w_coming":["table",2094869,6116,1.119,-0.7],"v_w_cooked":["table",2100985,4316,0.75,-0.5],"v_w_dobetter":["table",2105301,3956,0.677,0.3],"v_w_dreaming":["table",2109257,4916,0.879,-1.7],"v_w_energy":["table",2114173,6236,1.131,-0.0],"v_w_fairplay":["table",2120409,5036,0.89,-0.5],"v_w_holdthat":["table",2125445,4196,0.738,-1.4],"v_w_imin":["table",2129641,3716,0.627,2.3],"v_w_iseeyou":["table",2133357,4556,0.797,0.1],"v_w_keepwalking":["table",2137913,4916,0.867,-1.1],"v_w_lesschat":["table",2142829,7916,1.488,0.9],"v_w_letstalk":["table",2150745,4436,0.785,0.5],"v_w_myblock":["table",2155181,4196,0.731,-0.3],"v_w_nah":["table",2159377,3116,0.511,0.5],"v_w_nicetry":["table",2162493,5156,0.932,1.2],"v_w_notdone":["table",2167649,5276,0.946,1.2],"v_w_nothappening":["table",2172925,4916,0.866,1.7],"v_w_offer":["table",2177841,5516,0.986,-2.6],"v_w_okseeyou":["table",2183357,7796,1.442,1.5],"v_w_oweyou":["table",2191153,5396,0.981,-1.4],"v_w_owncorner":["table",2196549,7196,1.336,0.5],"v_w_playing":["table",2203745,6596,1.217,-1.6],"v_w_pockets":["table",2210341,6596,1.218,0.2],"v_w_proveit":["table",2216937,3716,0.643,-2.0],"v_w_quiet":["table",2220653,6476,1.178,-0.3],"v_w_rentsdue":["table",2227129,4676,0.839,-0.8],"v_w_respect":["table",2231805,4316,0.766,2.5],"v_w_rough":["table",2236121,4196,0.737,0.3],"v_w_runit":["table",2240317,3116,0.511,1.4],"v_w_sayless":["table",2243433,4916,0.882,0.8],"v_w_tryagain":["table",2248349,4916,0.868,-0.3],"v_w_wegood":["table",2253265,3956,0.679,-2.5],"v_w_weregood":["table",2257221,3956,0.674,-1.9],"v_w_worth":["table",2261177,5516,0.989,-1.0],"v_w_wronghood":["table",2266693,5996,1.083,-0.9],"v_w_youin":["table",2272689,3236,0.54,-2.7],"v_w_yourmove":["table",2275925,4196,0.733,-2.5],"v_w_youwont":["table",2280121,3476,0.599,-1.9],"v_win_blue":["table",2283597,7796,1.458,-2.6],"v_win_green":["table",2291393,7916,1.479,-2.6],"v_win_orange":["table",2299309,8396,1.562,-2.1],"v_win_purple":["table",2307705,8756,1.641,-1.9],"v_win_red":["table",2316461,6956,1.292,-1.3],"v_win_white":["table",2323417,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5]}}</script>
 <!-- SND:END -->
 <div id="app"><main class="phone"><p class="muted">Loading the table…</p></main></div>
 <noscript><p style="padding:16px">This page needs JavaScript turned on.</p></noscript>
@@ -2251,7 +2304,7 @@ const STOCK = { street: 15, operation: 5, holding: 4 };
 const PIECE = { street: 'street', operation: 'operation', holding: 'major holding' };
 const WIN_VP = 10;
 const HAND_SAFE = 7;   // hold more than this when a seven lands and you lose half
-const PROTO = 3;       // bumped when the state grows something an older phone would refuse (3: Bust Up, Wrecking Crew, Backup on call)
+const PROTO = 4;       // bumped when the state grows something an older phone would refuse (3: Bust Up, Wrecking Crew, Backup on call; 4: game modes)
 /* The turn clock (play-test 2, release 2). The lobby picks off, 60, 90 or 120 seconds a turn, and every
    connected phone says OK to it before the game can start. It runs only while the turn is its player's to
    play: it stops for a street fight, while anybody else drops cards on a seven, and while the table pauses
@@ -2311,6 +2364,16 @@ const CARDS = {
   rewind:      { name: 'Rewind', kind: 'skill', tier: 'legendary', price: { influence: 2, muscle: 2 }, n: 2, when: 'act',
     verb: 'Take back a piece',
     text: 'Take back any street, operation or upgrade put on the board since the start of your last turn, by anybody, or a street taken or a building knocked down in a fight. Whoever paid for it gets the price back.' },
+  // the clock tricks (release 9): in the market only in a Rush Hour game (mode)
+  overtime:    { name: 'Overtime', kind: 'talent', tier: 'common', price: { talent: 1, cash: 1 }, n: 4, when: 'any', mode: 'rush',
+    verb: 'Thirty more seconds',
+    text: 'Put thirty more seconds on your turn clock, even in a hurry-up’s last ten.' },
+  stall:       { name: 'Stall', kind: 'talent', tier: 'common', price: { product: 1, influence: 1 }, n: 3, when: 'any', mode: 'rush',
+    verb: 'Nobody hurries you',
+    text: 'Call off a hurry-up, its ten seconds included, and nobody can ask for another this turn.' },
+  rush:        { name: 'Rush', kind: 'skill', tier: 'uncommon', price: { muscle: 1, influence: 1, cash: 1 }, n: 3, when: 'act', mode: 'rush',
+    verb: 'Halve a rival’s next turn',
+    text: 'Pick a rival: their next turn gets half its time on the clock.' },
 };
 const CARD_ORDER = Object.keys(CARDS);
 const isCard = k => typeof k === 'string' && CARD_ORDER.includes(k);
@@ -2617,7 +2680,7 @@ const deckOf = (st, k) => (st.stock && st.stock[k]) || 0;
 const playedBy = (st, pid) => (st.played && own(st.played, pid) ? st.played[pid] : null);
 function freshStock(seats) {
   const up = seats >= BIG_FROM ? 1.5 : 1;
-  return Object.fromEntries(CARD_ORDER.map(k => [k, Math.ceil(CARDS[k].n * up)]));
+  return Object.fromEntries(CARD_ORDER.map(k => [k, CARDS[k].mode ? 0 : Math.ceil(CARDS[k].n * up)]));   // a mode's own cards: modeStart
 }
 function giveCard(p, k) {
   p.cards = p.cards || {}; p.fresh = p.fresh || {};
@@ -2771,6 +2834,314 @@ const atJunction = k => k === 'op' || k === 'up' || k === 'raze' || k === 'drop'
 /* Backup stays on call from the fight it is played in until its player loses a fight, and Shakedown skips them */
 const onCall = p => !!(p && p.oncall);
 /* ---------- end of turf rules ---------- */
+/* ---------- Game modes (release 9) ----------
+   The lobby picks how the game is timed, and every connected phone says OK to it before the game can start.
+     Classic      the turn clock of release 2: off, 60, 90 or 120 seconds a turn.
+     Blitz        45-second turns, and the others can ask for a hurry-up BLITZ.hurry into a turn.
+     Chess clock  one bank of time per player for the whole game (MODE_OPT.chess minutes). A turn runs off its
+                  player's bank and ends when the bank is empty; every turn after that is CHESS.sudden long.
+     Timed match  90-second turns and a match clock (MODE_OPT.match minutes) that runs from the first roll, and
+                  stops only for the table's pause. When it runs out, the round is played to its end and the top
+                  score wins (matchRank breaks a tie). Reaching WIN_VP first still wins on the spot.
+     Rush Hour    90-second turns and every clock trick: Overtime, Rush and Stall in the market; the Rush Hour
+                  event (every turn of a round at half time, from round RUSH_HOUR.from, at most RUSH_HOUR.max a
+                  game); Hustle (a turn ended by its player with something done in it and a third of its clock
+                  left banks what was left, up to HUSTLE.cap, and HUSTLE.card of it draws a free card); trade offers
+                  that run out after OFFER_TTL; and an auction as rounds AUCTION.from, +AUCTION.every... begin: one
+                  card from the market to the highest bid in cash, AUCTION.ms long, a late bid giving AUCTION.late.
+   A slow game played over days waits for accounts and reminders (release 8): the lobby shows it, greyed.
+   All of it lives in st.clock (clockFresh) and st.auction, so the undo, a reload and a phone's check of the
+   state see it the way they see the turn clock. */
+const MODES = ['classic', 'blitz', 'chess', 'match', 'rush'];
+const MODE_NAME = { classic: 'Classic', blitz: 'Blitz', chess: 'Chess clock', match: 'Timed match', rush: 'Rush Hour' };
+const MODE_S = { blitz: 45, chess: 0, match: 90, rush: 90 };           // the seconds a turn gets (Classic: the lobby's pick)
+const MODE_OPT = { chess: [10, 15, 20], match: [30, 45, 60] };         // minutes: each player's bank; the match
+const MODE_DEF = { chess: 15, match: 45 };
+const CLOCK_S_ALL = CLOCK_S.concat([MODE_S.blitz]);
+const CHESS = { sudden: 15000 };
+const BLITZ = { hurry: 20000 };
+const OVERTIME = 30000;
+const HUSTLE = { card: 120000, part: 1 / 3, cap: 60000 };
+const OFFER_TTL = 20000;
+const AUCTION = { from: 3, every: 3, ms: 20000, late: 5000 };
+const RUSH_HOUR = { from: 3, max: 2, chance: 35 };
+const modeOf = st => (st && st.clock && MODES.includes(st.clock.m) ? st.clock.m : 'classic');
+const isRush = st => modeOf(st) === 'rush';
+const hurryAfter = st => (modeOf(st) === 'blitz' ? BLITZ.hurry : HURRY.after);
+/* a card only one mode deals (the clock tricks) is out of this game's market, and off its screens */
+const inPlay = (st, k) => !(CARDS[k] && CARDS[k].mode) || CARDS[k].mode === modeOf(st);
+/* the phones say OK to anything but Classic with no clock; what they say OK to is exactly this */
+const modeAsks = st => !!(st && st.clock && (st.clock.s || modeOf(st) !== 'classic'));
+const modeSig = c => `${MODES.includes(c.m) ? c.m : 'classic'}:${c.s | 0}:${c.x | 0}`;
+/* the mode in a sentence or two, for the lobby on the table and on the phones */
+function modeBlurb(c) {
+  const m = MODES.includes(c.m) ? c.m : 'classic';
+  if (m === 'classic') return c.s ? `${c.s}-second turns. When a turn’s time runs out, the table rolls for that player if they have not, and ends the turn.`
+    : 'No clock. A minute into a turn, the others can still ask for a hurry-up: ten seconds.';
+  if (m === 'blitz') return `${MODE_S.blitz}-second turns, and the others can ask for a hurry-up ${BLITZ.hurry / 1000} seconds in. Think fast.`;
+  if (m === 'chess') return `Each player has ${c.x} minutes for the whole game. Your turns run off your own bank; once it is empty, every turn you get is ${CHESS.sudden / 1000} seconds.`;
+  if (m === 'match') return `The game ends after ${c.x} minutes: the round under way is played out, and the top score wins. ${MODE_S.match}-second turns.`;
+  return `${MODE_S.rush}-second turns and every clock trick: Overtime, Rush and Stall in the market, Rush Hour rounds at half time, quick turns that earn a free card, ` +
+    `trade offers that run out after ${OFFER_TTL / 1000} seconds, and an auction every ${AUCTION.every} rounds.`;
+}
+
+/* ---------- the table's side ---------- */
+/* The lobby's choice: a mode (its minutes back to the usual), or the minutes of the one picked. Either asks every
+   phone for its OK again. Classic keeps the seconds it had when the table comes back to it. */
+function modeControl(st, act, arg) {
+  const c = st.clock; if (st.phase !== 'lobby' || !c) return;
+  if (act === 'mode') {
+    if (!MODES.includes(arg) || arg === modeOf(st)) return;
+    if (modeOf(st) === 'classic') G.classicS = c.s;
+    c.m = arg; c.s = arg === 'classic' ? (CLOCK_S.includes(G.classicS) ? G.classicS : 0) : MODE_S[arg]; c.x = MODE_DEF[arg] || 0;
+  } else {
+    const m = modeOf(st), x = +arg;
+    if (!MODE_OPT[m] || !MODE_OPT[m].includes(x) || x === c.x) return;
+    c.x = x;
+  }
+  c.ok = {};
+  const m = modeOf(st);
+  say(`Game mode: ${MODE_NAME[m]}${MODE_OPT[m] ? `, ${c.x} minutes` : ''}.${modeAsks(st) ? ' Each phone taps OK.' : ''}`);
+  commit();
+}
+/* How long this match has run, and has left (the match clock stops only for the table's pause and a lost link). */
+function matchRan(st) { const c = st && st.clock; return c ? (c.mt | 0) + (c.m0 ? Math.max(0, clockNow() - c.m0) : 0) : 0; }
+function matchLeft(st) { const c = st && st.clock; return c && c.mlim ? Math.max(0, c.mlim - matchRan(st)) : null; }
+/* A game starts (the lobby's Start): each bank full, the match clock at nothing, the mode's own cards in the market. */
+function modeStart(st) {
+  const c = st.clock; if (!c) return;
+  const m = modeOf(st);
+  Object.assign(c, { bank: {}, hus: {}, rushed: {}, mt: 0, m0: 0, mlim: m === 'match' ? c.x * 60000 : 0, last: 0, rh: 0, rhN: 0, stall: 0, hl: 0, sd: 0, rs: 0, fin: 0 });
+  if (m === 'chess') st.players.forEach(p => { c.bank[p.pid] = c.x * 60000; });
+  const up = st.players.length >= BIG_FROM ? 1.5 : 1;
+  if (st.stock) CARD_ORDER.forEach(k => { if (CARDS[k].mode) st.stock[k] = CARDS[k].mode === m ? Math.ceil(CARDS[k].n * up) : 0; });
+  st.auction = null;
+}
+/* The time a turn gets (clockTurn asks, once the turn is its player's): Classic, Blitz, a Timed match and Rush Hour
+   the mode's seconds; Chess clock what is left in the bank, or sudden death; Rush Hour halves it in a rush-hour
+   round, and again for a player somebody played Rush on (once: it is used up here). */
+function modeLim(st) {
+  const c = st.clock, m = modeOf(st), pid = st.phase === 'turn' ? activePid(st) : null;
+  let ms = (c.s | 0) * 1000;
+  c.sd = 0; c.rs = 0; c.stall = 0; c.hl = 0;
+  if (!pid) return ms;
+  if (m === 'chess') {                                 // a bank under a sudden-death turn is spent: sudden death it is
+    const b = (c.bank && c.bank[pid]) | 0;
+    if (b >= CHESS.sudden) ms = b; else { if (b > 0) c.bank[pid] = 0; ms = CHESS.sudden; c.sd = 1; }
+  }
+  if (m === 'rush') {
+    if (c.rh && c.rh === st.turnNo) ms = Math.round(ms / 2);
+    if (c.rushed && c.rushed[pid]) { ms = Math.round(ms / 2); delete c.rushed[pid]; c.rs = 1; }
+  }
+  return ms;
+}
+/* A turn ends (nextTurn, before anything moves on): the chess bank pays for it, and a quick turn with something
+   done in it, ended by its own player, is a hustle. */
+function modeTurnEnd(st) {
+  const c = st.clock, m = modeOf(st), pid = activePid(st), p = playerOf(st, pid);
+  if (!c || !p || st.phase !== 'turn') return;
+  const ran = Math.round(clockRan(st));
+  if (m === 'chess' && !c.sd && c.bank) {
+    const was = c.bank[pid] | 0, now = Math.max(0, was - ran);
+    c.bank[pid] = now;
+    if (was > 0 && now === 0) { say(`${p.name}’s time bank is empty: sudden death, ${CHESS.sudden / 1000} seconds a turn from now on.`); rec('bankout', { p: pid }); }
+  }
+  // a hustle is a quick turn that built something, on its own clock (not a trade back and forth, not Overtime's seconds)
+  const built = (st.placed || []).some(r => r.pid === pid && r.t === (st.tick | 0) && (r.k === 'street' || r.k === 'op' || r.k === 'up'));
+  if (m === 'rush' && REC.by === '' && built && playedBy(st, pid) !== 'overtime' && !c.up && c.lim) {
+    const spare = c.lim - ran;
+    if (spare >= c.lim * HUSTLE.part) {
+      c.hus = c.hus || {};
+      c.hus[pid] = Math.min(HUSTLE.card, (c.hus[pid] | 0) + Math.min(spare, HUSTLE.cap));
+      if (c.hus[pid] >= HUSTLE.card) {
+        const k = st.stock ? drawDrop(st) : null;      // nothing left to draw: the meter stays full until something is
+        if (k) { c.hus[pid] = 0; st.stock[k]--; giveCard(p, k); G.hist = []; say(`${p.name} hustled: quick turns earned them ${CARDS[k].name}.`); rec('hustle', { p: pid, k }); }
+      }
+    }
+  }
+}
+/* A round begins (nextTurn, once the turn has passed to the first player): in Rush Hour, now and then a rush-hour
+   round, and every few rounds an auction before the first roll. */
+function modeRound(st) {
+  const c = st.clock;
+  if (!c || st.phase !== 'turn' || st.turnIdx !== 0 || !isRush(st)) return;
+  const n = st.turnNo;
+  if (n >= RUSH_HOUR.from && (c.rhN | 0) < RUSH_HOUR.max && c.rh !== n - 1 && rnd(100) < RUSH_HOUR.chance) {
+    c.rh = n; c.rhN = (c.rhN | 0) + 1; G.hist = [];     // the undo never goes back past a roll of the city's dice
+    say('Rush hour: every turn this round gets half the time.'); rec('rushhour', { n });
+  }
+  if (n >= AUCTION.from && (n - AUCTION.from) % AUCTION.every === 0 && st.stock) {
+    const k = drawDrop(st);
+    if (k && !st.players.some(q => (q.hand.cash || 0) > 0)) { say(`No auction this round: nobody holds any cash.`); }
+    else if (k) { st.auction = { k, end: clockNow() + AUCTION.ms, top: null, bid: 0 }; G.hist = []; say(`Auction: ${CARDS[k].name} goes to the highest bid in cash. ${AUCTION.ms / 1000} seconds.`); rec('auction', { k, open: 1 }); }
+  }
+}
+/* Nobody reached the top before the match clock ran out: the last round is over (nextTurn, as the turn comes back
+   round to the first player). Local Legends not yet counted count now; the top score wins. */
+function modeEnd(st) {
+  const c = st.clock;
+  if (!c || modeOf(st) !== 'match' || !c.last || st.turnIdx !== 0 || st.turnNo <= c.last) return false;
+  st.players.forEach(q => { const lg = heldCard(q, 'legend'); if (lg) { q.legend = (q.legend | 0) + lg; delete q.cards.legend; if (q.fresh) delete q.fresh.legend; } });
+  const p = matchRank(st)[0];
+  st.phase = 'over'; st.win = p.pid; st.step = 'roll'; st.free = 0; st.offer = null; st.auction = null; c.fin = 1;
+  if (typeof STKEY !== 'undefined' && STKEY.pub) st.pk = STKEY.pub;   // the key the winner's selfie is sealed for (release 6)
+  say(`Time is called. ${p.name} runs the city with ${vpOf(st, p.pid)} points.`);
+  recWin(st, p);
+  return true;
+}
+/* the standings when time is called: points, then major holdings, then operations, then resources in hand, then
+   whoever sat later in the turn order (they had the fewest turns, or as many) */
+function matchRank(st) {
+  const n = (pid, k) => buildingsOf(st, pid).filter(v => st.buildings[v].k === k).length;
+  const key = p => [vpOf(st, p.pid), n(p.pid, 'c'), n(p.pid, 's'), handCount(p), st.order.indexOf(p.pid)];
+  return st.players.slice().sort((a, b) => { const x = key(a), y = key(b); for (let i = 0; i < x.length; i++) if (x[i] !== y[i]) return y[i] - x[i]; return 0; });
+}
+/* The match clock, beside the turn clock's in clockSync: folded into mt, and running again while the match is on. */
+function modeSync(st, now) {
+  const c = st.clock;
+  if (c.m0) { c.mt = (c.mt | 0) + Math.max(0, now - c.m0); c.m0 = 0; }
+  if (modeOf(st) === 'match' && st.phase === 'turn' && !c.last && !c.hold && clockWhy(st) !== 'link' && c.mt < c.mlim) c.m0 = now;
+}
+/* The table's undo hands back the move, not the time: the match clock keeps what it has counted. */
+function modeUndo(prev, st) {
+  const a = prev.clock, b = st.clock; if (!a || !b) return;
+  a.mt = matchRan(st); a.m0 = 0; a.last = b.last | 0;
+}
+/* Everything the modes wait for, on one timer beside the clock's: the match clock running out, the auction's end,
+   a trade offer running out. */
+function modeDue(st) {
+  const c = st && st.clock; if (!c || st.phase !== 'turn') return null;
+  const now = clockNow(), due = [];
+  if (modeOf(st) === 'match' && !c.last && c.mlim && (c.m0 || c.mt >= c.mlim)) due.push(c.mlim - matchRan(st));   // run out between two looks: now
+  if (st.auction && !c.hold) due.push(st.auction.end - now);
+  if (st.offer && st.offer.exp && !c.hold) due.push(st.offer.exp - now);
+  return due.length ? Math.min(...due) : null;
+}
+function modeArm() {
+  clearTimeout(G.modeTimer); G.modeTimer = 0;
+  const st = G.state; if (!st || WATCH || G.closing) return;
+  const ms = modeDue(st); if (ms !== null) G.modeTimer = setTimeout(modeFire, Math.max(30, ms + 20));
+}
+function modeFire() {
+  G.modeTimer = 0;
+  const st = G.state, c = st && st.clock;
+  if (!c || WATCH || G.closing || st.phase !== 'turn') return;
+  if (clockWhy(st) === 'link') { G.modeTimer = setTimeout(modeFire, 1000); return; }   // nobody's bid can reach the table: wait for it
+  const now = clockNow(); let moved = false;
+  if (modeOf(st) === 'match' && !c.last && c.mlim && matchRan(st) >= c.mlim - 40) {
+    c.last = st.turnNo; moved = true;
+    say('Time! This is the last round: the game ends when it does, and the top score wins.'); rec('last', { n: st.turnNo });
+  }
+  if (st.auction && !c.hold && now >= st.auction.end - 40) { auctionClose(st); moved = true; }
+  if (st.offer && st.offer.exp && !c.hold && now >= st.offer.exp - 40) {
+    const p = playerOf(st, st.offer.from); st.offer = null; moved = true;
+    say(`${p ? p.name + '’s' : 'The'} trade offer ran out.`); rec('expire', { p: p ? p.pid : null });
+  }
+  if (moved) commit(); else modeArm();
+}
+
+/* The table's pause holds an auction and an offer's clock too: switched off, both get the paused time back. */
+function modeHold(st) {
+  const c = st.clock, now = clockNow();
+  if (c.hold) { G.holdAt = now; return; }
+  const d = G.holdAt ? Math.max(0, now - G.holdAt) : 0; G.holdAt = 0;
+  if (st.auction) st.auction.end += d;
+  if (st.offer && st.offer.exp) st.offer.exp += d;
+  modeResume(st);
+}
+/* After a reload (or the undo) the table picks up from now: an auction or an offer that ran on while nobody's
+   answer could reach it gets a moment more. */
+function modeResume(st) {
+  const now = clockNow();
+  if (st.auction && st.auction.end < now + AUCTION.late) st.auction.end = now + AUCTION.late;
+  if (st.offer && st.offer.exp && st.offer.exp < now + AUCTION.late) st.offer.exp = now + AUCTION.late;
+}
+
+/* Back in the lobby, or a seat gone: the game's own times go with it (a phone refuses a bank for nobody). */
+function modeClear(st) {
+  const c = st.clock; if (!c) return;
+  Object.assign(c, { bank: {}, hus: {}, rushed: {}, mt: 0, m0: 0, mlim: 0, last: 0, rh: 0, rhN: 0, stall: 0, hl: 0, sd: 0, rs: 0, fin: 0 });
+  st.auction = null;
+}
+function modeForget(st, pid) { const c = st.clock; if (!c) return; ['bank', 'hus', 'rushed'].forEach(k => { if (c[k]) delete c[k][pid]; }); }
+
+/* ---------- the auction ---------- */
+/* what a bid may be: one cash over the top bid, or more, up to all the cash in your hand */
+function canBid(st, p) {
+  const a = st && st.auction;
+  if (!a || !p || st.phase !== 'turn') return no('');
+  if (a.top === p.pid) return no('Yours is the top bid.');
+  const n = a.bid + 1, cash = (p.hand && p.hand.cash) || 0;
+  if (cash < n) return no(a.bid ? `The top bid is ${a.bid} cash: you hold ${cash}.` : 'You hold no cash to bid with.');
+  return yes(`${n} cash or more.`);
+}
+function auctionBid(st, p, n) {
+  const a = st.auction;
+  if (!canBid(st, p).ok || !Number.isInteger(n) || n <= a.bid || n > ((p.hand.cash || 0)) || n > 99) return false;
+  const now = clockNow(); if (now >= a.end) return false;
+  a.bid = n; a.top = p.pid;
+  if (a.end - now < AUCTION.late) a.end = now + AUCTION.late;       // a bid in the last seconds gives the others a chance
+  if (!st.players.some(q => q.pid !== p.pid && (q.hand.cash || 0) > n)) a.end = Math.min(a.end, now + 3000);   // nobody can top it: going, gone
+  say(`${p.name} bids ${n} cash for ${CARDS[a.k].name}.`); rec('bid', { p: p.pid, n });
+  return true;
+}
+function auctionClose(st) {
+  const a = st.auction; st.auction = null; if (!a) return;
+  G.hist = [];                                          // what was sold stays sold
+  const p = playerOf(st, a.top);
+  if (p && (p.hand.cash || 0) >= a.bid && deckOf(st, a.k) > 0) {
+    p.hand.cash -= a.bid; st.stock[a.k]--; giveCard(p, a.k);
+    say(`Sold: ${CARDS[a.k].name} to ${p.name} for ${a.bid} cash.`); rec('auction', { k: a.k, p: p.pid, n: a.bid });
+  } else { say(`No sale: ${CARDS[a.k].name} goes back on the shelf.`); rec('auction', { k: a.k, p: null }); }
+}
+
+/* ---------- the clock tricks: Overtime, Rush and Stall ---------- */
+const rushTargets = (st, pid) => st.players.filter(q => q.pid !== pid && !((st.clock && st.clock.rushed) || {})[q.pid]).map(q => q.pid);
+function modeCanPlay(st, p, k) {
+  const c = st.clock;
+  if (!c || !isRush(st)) return no('Only in a Rush Hour game.');
+  if (k === 'overtime') return c.lim && !c.up ? yes('Thirty more seconds on your clock.') : no('Your clock is not running.');
+  if (k === 'stall') return c.hot || Object.keys(c.hurry || {}).length ? yes(c.hot ? 'Call off the ten seconds.' : 'Nobody can hurry you this turn.') : no('Nobody is asking you to hurry.');
+  if (k === 'rush') return rushTargets(st, p.pid).length ? yes('Pick a rival: their next turn gets half the time.') : no('Every rival is rushed already.');
+  return yes('');
+}
+function modePlay(st, p, k, a, det) {
+  const c = st.clock;
+  if (k === 'overtime') { c.lim += OVERTIME; if (c.hot && c.hl) c.hl += OVERTIME; say(`${p.name} played Overtime: thirty more seconds on the clock.`); }
+  else if (k === 'stall') {
+    const hot = c.hot;
+    c.hurry = {}; c.stall = 1;
+    if (hot) { c.hot = 0; c.lim = Math.max(c.hl || 0, Math.round(clockRan(st)) + CLOCK_GRACE); }
+    det.hot = hot ? 1 : 0;
+    say(`${p.name} played Stall: ${hot ? 'the hurry-up is off, and ' : ''}nobody can hurry them this turn.`);
+  } else if (k === 'rush') {
+    const q = playerOf(st, a.to);
+    c.rushed = c.rushed || {}; c.rushed[q.pid] = 1; det.to = q.pid;
+    say(`${p.name} played Rush on ${q.name}: their next turn gets half the time.`);
+  }
+}
+
+/* ---------- what a phone accepts ---------- */
+function modeValid(c, known) {
+  const int = Number.isInteger, obj = x => !!x && typeof x === 'object' && !Array.isArray(x);
+  const ms = x => int(x) && x >= 0 && x <= 1e9, when = x => int(x) && x >= 0 && x < 1e13, flag = x => x === 0 || x === 1;
+  const opt = (x, f) => x === undefined || f(x), bag = (o, f) => obj(o) && Object.keys(o).every(k => known(k) && f(o[k]));
+  if (c.m !== undefined && !MODES.includes(c.m)) return false;
+  const m = MODES.includes(c.m) ? c.m : 'classic';
+  if (m === 'classic' ? !CLOCK_S.includes(c.s) : c.s !== MODE_S[m]) return false;
+  if (MODE_OPT[m] ? !MODE_OPT[m].includes(c.x) : !opt(c.x, x => x === 0)) return false;
+  if (!opt(c.bank, o => bag(o, ms)) || !opt(c.hus, o => bag(o, x => ms(x) && x <= HUSTLE.card)) || !opt(c.rushed, o => bag(o, x => x === 1))) return false;
+  if (![c.mt, c.mlim, c.hl].every(x => opt(x, ms)) || !opt(c.m0, when)) return false;
+  if (![c.last, c.rh, c.rhN].every(x => opt(x, y => int(y) && y >= 0 && y < 1000))) return false;
+  return [c.stall, c.sd, c.rs, c.fin].every(x => opt(x, flag));
+}
+function auctionValid(s, known) {
+  const a = s.auction, int = Number.isInteger;
+  if (a === undefined || a === null) return true;
+  return !!a && typeof a === 'object' && isCard(a.k) && int(a.end) && a.end > 0 && a.end < 1e13 && (a.top === null || known(a.top)) &&
+    int(a.bid) && a.bid >= 0 && a.bid < 100 && (a.top === null) === (a.bid === 0) && s.phase === 'turn' && s.step === 'roll';
+}
+/* ---------- end of game mode rules ---------- */
 /* Rewind: every piece put down since the start of the current player's last
    turn is on the record, newest last. A record still counts only while the
    board still shows exactly what it recorded. */
@@ -2802,6 +3173,8 @@ function canPlay(st, p, k) {
   if (readyCard(p, k) <= 0) return no('New this turn: ready once the turn passes.');
   if (playedBy(st, p.pid)) return no(`You have played ${CARDS[playedBy(st, p.pid)].name} this turn. One a turn.`);
   if (st.clock && st.clock.up && turnOf(st, p)) return no('Your time is up.');
+  if (st.auction && turnOf(st, p)) return no('The auction comes first.');
+  if (c.mode && !inPlay(st, k)) return no('Only in a Rush Hour game.');
   if (c.when === 'react') {
     const f = st.fight, v = f && fightView(f);
     if (st.phase !== 'turn' || st.step !== 'fight' || !v || f.d !== p.pid) return no('Only in a fight somebody picks with you.');
@@ -2823,6 +3196,7 @@ function canPlay(st, p, k) {
       const n = Math.min(2, left(st, p.pid, 'street'));
       return n > 0 && legalStreets(st, p.pid).length ? yes(n === 2 ? 'Two streets, free.' : 'Only one street piece left: one free street.') : no('You have nowhere, or no street pieces, to lay one.');
     }
+    case 'overtime': case 'stall': case 'rush': return modeCanPlay(st, p, k);
     case 'luck': return (p.luck | 0) > 0 ? no('Your streak is still running.') : yes(st.step === 'roll' ? 'This roll and your next.' : 'Your next two rolls.');
     case 'paidoff': return p.paid ? no('The police are already paid off.') : yes('Safe until your next turn.');
   }
@@ -2949,6 +3323,7 @@ function clockWhy(st) {
   if (!c || st.phase !== 'turn') return 'off';
   if (!joinRoom && !G.online) return 'link';                // the table cannot hear anybody's moves: nobody's time runs
   if (st.step === 'fight') return 'fight';
+  if (st.auction) return 'auction';                         // the market's auction before the first roll of a round (release 9)
   if (st.step === 'discard' && Object.keys(st.pend || {}).some(id => id !== activePid(st))) return 'drop';
   if (c.hold) return 'hold';
   return '';
@@ -2961,15 +3336,16 @@ function canHurry(st, p) {
   if (c.up) return no('Their time is up.');
   if (c.hot) return no('The countdown is on.');
   if (c.hurry[p.pid]) return no('You have asked.');
+  if (c.stall) return no('They played Stall: no hurry-up this turn.');
   const why = clockWhy(st);
   if (why) return no(why === 'fight' ? 'Not in the middle of a fight.' : why === 'hold' ? 'The table has paused the clock.' : why === 'drop' ? 'Cards are being dropped.' : 'The clock is stopped.');
   const ran = clockRan(st);
-  if (ran < HURRY.after) return no(`You can ask in ${Math.ceil((HURRY.after - ran) / 1000)} s.`);
+  if (ran < hurryAfter(st)) return no(`You can ask in ${Math.ceil((hurryAfter(st) - ran) / 1000)} s.`);
   if (c.lim && c.lim - ran <= HURRY.left) return no('Their clock is nearly out anyway.');
   return yes('');
 }
 /* the phones that still have to say OK to the clock before the game can start */
-const clockOwed = st => (st.clock && st.clock.s ? st.players.filter(p => p.online && !st.clock.ok[p.pid]) : []);
+const clockOwed = st => (modeAsks(st) ? st.players.filter(p => p.online && !st.clock.ok[p.pid]) : []);
 
 /* One description of what the table is waiting for. Both screens read this, so
    they can never disagree about whose move it is or what it is. */
@@ -2987,7 +3363,7 @@ function guide(st, pid) {
   if (st.phase === 'over') {
     const w = playerOf(st, st.win);
     return { yours: false, act: null, ap: null, title: w && w.pid === pid ? 'You run the city' : `${w ? w.name : 'Nobody'} runs the city`,
-      now: `${WIN_VP} points. The game is over.`, hint: 'Use Back to lobby on the table screen to play again.' };
+      now: st.clock && st.clock.fin ? 'Time was called: the top score wins.' : `${WIN_VP} points. The game is over.`, hint: 'Use Back to lobby on the table screen to play again.' };
   }
   if (st.phase === 'place' || st.phase === 'done') {
     if (st.phase === 'done') return theirs('Set-up is complete.');
@@ -3008,6 +3384,11 @@ function guide(st, pid) {
   // the clock ran out: the table plays the rest of the turn (a fight still runs to its end first)
   if (st.clock && st.clock.up && st.step !== 'fight') return yours ? { yours: false, act, ap, title: 'Time’s up', now: 'The table is finishing your turn for you.', hint: 'It rolls if you had not, and ends your turn.' }
     : theirs(`${who}’s time is up.`, 'The table is finishing their turn.');
+  if (st.auction && CARDS[st.auction.k]) {           // the auction comes before the first roll of the round (release 9)
+    const a = st.auction, top = playerOf(st, a.top);
+    return { yours: false, act, ap, title: 'Auction', now: `${CARDS[a.k].name} goes to the highest bid in cash.`,
+      hint: top ? `${top.pid === pid ? 'You hold' : top.name + ' holds'} the top bid: ${a.bid} cash.` : 'No bids yet.' };
+  }
   if (st.step === 'luck') return yours ? mine('Lucky Streak: keep two of your three dice.', 'Each pair shows what it would pay you. A seven is yours to choose too.')
     : theirs(`${who} threw three dice and is keeping two.`, 'Nothing for you to do until your turn. You still collect on the pair they keep.');
   if (st.step === 'fight' && st.fight) {
@@ -11489,10 +11870,11 @@ function newTableState(kind) {
    hurry, who has asked for a hurry-up; hot, the ten seconds are on; hold, the table has paused it; up, time
    ran out and the table is playing the turn out; did, this turn built, bought, played or traded something;
    prev, how the last turn went (the announcer's praise); at, the table's time when it sent the state. */
-function clockFresh(s) { return { s: CLOCK_S.includes(s) ? s : 0, ok: {}, used: 0, t0: 0, lim: 0, hurry: {}, hot: 0, hold: 0, up: 0, did: 0, prev: null, at: 0 }; }
+function clockFresh(s) { return { s: CLOCK_S.includes(s) ? s : 0, ok: {}, used: 0, t0: 0, lim: 0, hurry: {}, hot: 0, hold: 0, up: 0, did: 0, prev: null, at: 0,
+  m: 'classic', x: 0, bank: {}, hus: {}, rushed: {}, mt: 0, m0: 0, mlim: 0, last: 0, rh: 0, rhN: 0, stall: 0, hl: 0, sd: 0, rs: 0, fin: 0 }; }   // the game mode (release 9)
 /* Everything skills and talents add to a table and to a seat, in one place, so a new
    table, a new seat, Back to lobby and a table saved by an older build all agree. */
-function cardTable(seats) { return { stock: freshStock(seats), played: {}, free: 0, dice3: null, keep: null, fight: null, placed: [], tick: 0 }; }
+function cardTable(seats) { return { stock: freshStock(seats), played: {}, free: 0, dice3: null, keep: null, fight: null, placed: [], tick: 0, auction: null }; }
 const cardSeat = () => ({ cards: {}, fresh: {}, legend: 0, luck: 0, paid: false, drops: 0, oncall: false });
 function upgradeState(st) {
   st.proto = PROTO;
@@ -11510,7 +11892,7 @@ function upgradeState(st) {
    time had run out is the player's again. */
 function clockResume(st, hold, keepAsks) {
   const c = st.clock; if (!c) return;
-  c.t0 = 0; c.up = 0;
+  c.t0 = 0; c.m0 = 0; c.up = 0; modeResume(st);
   // after a reload the hurry-up asks are asked again: the phones come back one by one, and the first one back would
   // otherwise be "everybody connected" and start the ten seconds on its own (an undo keeps them, as it keeps the rest)
   if (!c.hot && !keepAsks) c.hurry = {};
@@ -11655,7 +12037,7 @@ function armTimers() {
 /* A new turn: the clock starts from nothing, and keeps how the last one went for the announcer. */
 function clockTurn(st, prev) {
   const c = st.clock; if (!c) return;
-  Object.assign(c, { used: 0, t0: 0, lim: c.s * 1000, hurry: {}, hot: 0, up: 0, did: 0, prev: prev || null });
+  Object.assign(c, { used: 0, t0: 0, lim: modeLim(st), hurry: {}, hot: 0, up: 0, did: 0, prev: prev || null });
 }
 /* Before every state goes out: the running time is folded into used, the clock starts or stops as the game has
    moved, and a hurry-up that everybody waiting has asked for starts its ten seconds. */
@@ -11663,10 +12045,11 @@ function clockSync(st) {
   const c = st && st.clock; if (!c || WATCH) return;
   const now = clockNow();
   if (c.t0) { c.used += Math.max(0, now - c.t0); c.t0 = 0; }
+  modeSync(st, now);                                // the match clock (release 9)
   if (st.phase !== 'turn') return;
   const ap = playerOf(st, activePid(st)), want = hurryWho(st);
   if (ap && !c.hot && !c.up && !clockWhy(st) && want.length && want.every(q => c.hurry[q.pid])) {
-    c.lim = Math.min(c.lim || Infinity, c.used + HURRY.left); c.hot = 1;
+    c.hl = c.lim; c.lim = Math.min(c.lim || Infinity, c.used + HURRY.left); c.hot = 1;   // hl: what Stall gives back (release 9)
     say(`Everybody is waiting on ${ap.name}: ten seconds.`);
     rec('hurryup', { p: ap.pid, n: want.length });
   }
@@ -11684,6 +12067,7 @@ function clockLink(on) {
 /* The one timer the clock needs: when the time runs out, and once it has, the next step the table plays for them. */
 function clockArm() {
   const st = G.state, c = st && st.clock;
+  modeArm();                                        // the game mode's timer beside it (release 9): after a reload and the link's return too
   clearTimeout(G.clockTimer); G.clockTimer = 0;
   if (!c || WATCH || G.closing || st.phase !== 'turn' || clockWhy(st)) return;
   if (c.up && REC.by !== 'clock') G.clockNext = Math.max(G.clockNext || 0, Date.now() + 1200);   // not the table's own step: give it a moment on screen
@@ -11797,10 +12181,10 @@ function hostAction(a) {
       p.color = a.color; commit(); return;
     case 'leave':
       if (!p || st.phase !== 'lobby') return;
-      st.players = st.players.filter(x => x !== p); if (st.clock) delete st.clock.ok[p.pid];
+      st.players = st.players.filter(x => x !== p); if (st.clock) { delete st.clock.ok[p.pid]; modeForget(st, p.pid); }
       say(`${p.name} left the table.`); fitCity(st); commit(); return;
-    case 'clockok':                                 // a phone says OK to the turn clock the lobby picked (and to that one only)
-      if (!p || st.phase !== 'lobby' || !st.clock || !st.clock.s || a.s !== st.clock.s || st.clock.ok[p.pid]) return;
+    case 'clockok':                                 // a phone says OK to the game mode the lobby picked (and to that one only)
+      if (!p || st.phase !== 'lobby' || !st.clock || !modeAsks(st) || (a.s !== modeSig(st.clock) && !(modeOf(st) === 'classic' && a.s === st.clock.s)) || st.clock.ok[p.pid]) return;
       st.clock.ok[p.pid] = 1; commit(); return;
     case 'hurry': {                                 // somebody waiting asks the player on the clock to hurry up
       if (!p || !canHurry(st, p).ok) return;
@@ -11808,6 +12192,9 @@ function hostAction(a) {
       rec('hurry', { p: p.pid, of: activePid(st) });
       commit(); return;
     }
+    case 'bid':                                     // a bid at the auction (release 9)
+      if (!p || !auctionBid(st, p, a.n)) return;
+      commit(); return;
     case 'roll': {
       if (!p || st.phase !== 'rolloff' || !st.contenders.includes(p.pid) || Array.isArray(st.rolls[p.pid])) return;
       const d = [rnd(6) + 1, rnd(6) + 1]; st.rolls[p.pid] = d; say(`${p.name} rolled ${d[0] + d[1]}.`); rec('roll1', { p: p.pid, d });
@@ -11843,7 +12230,7 @@ function hostAction(a) {
 
     /* ---------- the turn ---------- */
     case 'rollturn': {
-      if (!turnOf(st, p) || st.step !== 'roll') return;
+      if (!turnOf(st, p) || st.step !== 'roll' || st.auction) return;
       snapshot();
       st.dice3 = null; st.keep = null;
       if ((p.luck | 0) > 0) {                      // Lucky Streak: three dice, and the roller keeps two
@@ -11887,6 +12274,7 @@ function hostAction(a) {
         if (vs.length ? !vs.includes(a.from) : (a.from !== undefined && a.from !== null)) return;
       }
       if (k === 'shakedown' && !RES_ORDER.includes(a.r)) return;
+      if (k === 'rush' && !rushTargets(st, p.pid).includes(a.to)) return;
       if (k === 'connections') { tgt = cleanBundle(a.take, null); if (!tgt || bundleSize(tgt) !== 2) return; }
       if (k === 'rewind') { tgt = rewindTargets(st).find(r => r.i === a.i); if (!tgt || a.sig !== placeSig(tgt)) return; }
       snapshot();
@@ -11944,6 +12332,7 @@ function hostAction(a) {
           RES_ORDER.forEach(r => { if (tgt[r]) p.hand[r] = (p.hand[r] || 0) + tgt[r]; });
           det.take = Object.assign({}, tgt);
           say(`${p.name} played Connections and took ${handList(tgt)} from the bank.`); break;
+        case 'overtime': case 'stall': case 'rush': modePlay(st, p, k, a, det); break;   // the clock tricks (release 9)
         case 'rewind': det.back = { k: tgt.k, at: tgt.at, of: tgt.pid }; applyRewind(st, tgt, p); break;
       }
       rec('play', Object.assign({ p: p.pid, k }, det));
@@ -12058,6 +12447,7 @@ function hostAction(a) {
       if (RES_ORDER.some(r => give[r] && want[r])) return;   // a card for the same card is not a trade
       snapshot();
       st.offer = { from: p.pid, give, want, replies: {} };
+      if (isRush(st)) st.offer.exp = clockNow() + OFFER_TTL;   // Rush Hour: an offer runs out (release 9)
       say(`${p.name} offers ${handList(give)} for ${handList(want)}.`);
       rec('offer', { p: p.pid, give, want });
       commit(); return;
@@ -12098,8 +12488,8 @@ function hostAction(a) {
 const turnOf = (st, p) => !!p && st.phase === 'turn' && activePid(st) === p.pid;
 function nextTurn(st) {
   const c = st.clock, prev = c ? { p: activePid(st), ms: Math.round(clockRan(st)), did: c.did | 0, n: st.turnNo } : null;
+  modeTurnEnd(st);                                   // the chess bank pays for the turn; a hustle (release 9)
   recTurnEnd(st);
-  clockTurn(st, prev);
   st.turnIdx = (st.turnIdx + 1) % st.order.length;
   if (st.turnIdx === 0) st.turnNo++;
   st.step = 'roll'; st.dice = null; st.got = {}; st.pend = {}; st.offer = null;
@@ -12107,6 +12497,8 @@ function nextTurn(st) {
   st.tick = (st.tick | 0) + 1; st.played = {}; st.free = 0; st.fight = null; st.dice3 = null; st.keep = null;
   st.players.forEach(x => { x.fresh = {}; });
   st.placed = (st.placed || []).filter(r => r.t >= st.tick - st.order.length);
+  if (modeEnd(st)) return;                           // a timed match whose last round is over (release 9)
+  modeRound(st); clockTurn(st, prev);                // a rush-hour round or an auction; the clock for the turn it is now
   const p = playerOf(st, st.order[st.turnIdx]);
   say(`${p.name} is up.`);
   if (p.paid) p.paid = false;                        // Paid Off lasts until your next turn
@@ -12151,14 +12543,15 @@ function hostControl(act, arg) {
       if (st.phase !== 'lobby' || st.players.length < 2 || clockOwed(st).length) return;   // everybody connected has said OK to the clock
       st.phase = 'rolloff'; st.contenders = st.players.map(p => p.pid); st.rolls = {}; st.round = 1;
       Object.assign(st, cardTable(st.players.length)); st.players.forEach(p => Object.assign(p, cardSeat()));
-      clockTurn(st, null); st.clock.hold = 0;
-      recStart(st); say('Everyone rolls. Highest roll places first.'); commit(); return;
+      clockTurn(st, null); st.clock.hold = 0; modeStart(st);
+      recStart(st); say(`${MODE_NAME[modeOf(st)]}. Everyone rolls. Highest roll places first.`); commit(); return;
     case 'clock': {                                  // the lobby picks the turn clock; a new choice asks every phone again
       const s = +arg;
-      if (st.phase !== 'lobby' || !st.clock || !CLOCK_S.includes(s) || s === st.clock.s) return;
+      if (st.phase !== 'lobby' || !st.clock || modeOf(st) !== 'classic' || !CLOCK_S.includes(s) || s === st.clock.s) return;
       st.clock.s = s; st.clock.ok = {};
       say(s ? `Every turn gets ${s} seconds. Each phone taps OK.` : 'No clock on the turns.'); commit(); return;
     }
+    case 'mode': case 'modex': modeControl(st, act, arg); return;   // the game mode and its minutes (release 9)
     case 'dirmode':                                  // how much of a show the table puts on (release 4)
       if (st.phase !== 'lobby' || !DIR_MODES.includes(arg) || dirMode(st) === arg) return;
       st.dir = arg; say(`The show: ${DIR_MODE_NAME[arg]}.`); commit(); return;
@@ -12166,7 +12559,7 @@ function hostControl(act, arg) {
       if (st.phase !== 'turn' || !st.clock) return;
       st.clock.hold = st.clock.hold ? 0 : 1;
       say(st.clock.hold ? 'The table paused the clock.' : 'The clock is running again.');
-      rec('hold', { on: st.clock.hold }); commit(); return;
+      rec('hold', { on: st.clock.hold }); modeHold(st); commit(); return;
     case 'rollfor': hostAction({ t: 'roll', pid: arg, host: true }); return;
     case 'rollturn': hostAction({ t: 'rollturn', pid: activePid(st), host: true }); return;
     case 'endturn': hostAction({ t: 'endturn', pid: activePid(st), host: true }); return;
@@ -12184,6 +12577,7 @@ function hostControl(act, arg) {
       const prev = JSON.parse(G.hist.pop()), v = st.v, online = Object.fromEntries(st.players.map(p => [p.pid, p.online]));
       upgradeState(prev);                          // a snapshot saved by an older build comes back with skills and talents
       clockResume(prev, st.clock ? st.clock.hold : 0, true);   // the turn handed back is timed again from now, the table's pause as it is
+      modeUndo(prev, st);                          // and the match clock keeps what it has counted (release 9)
       prev.v = v; prev.players.forEach(p => { p.online = !!online[p.pid]; }); G.state = prev; recUndo(prev); say('Undid the last move.'); G.turfHush = true; ui.sel = null; commit(); return;
     }
     case 'lobby':
@@ -12192,7 +12586,7 @@ function hostControl(act, arg) {
       Object.assign(st, { phase: 'lobby', order: [], contenders: [], rolls: {}, round: 1, starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {},
         turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, offer: null, pk: undefined }, cardTable(st.players.length));
       st.players.forEach(p => Object.assign(p, cardSeat())); G.picks = null; G.fightClock = null;
-      if (st.clock) { clockTurn(st, null); st.clock.hold = 0; }          // the clock keeps its setting and its OKs
+      if (st.clock) { clockTurn(st, null); st.clock.hold = 0; modeClear(st); }   // the clock keeps its setting and its OKs; the mode's times go
       st.board.police = st.board.hexes.findIndex(h => h.t === 'deadzone');   // the police go home with the pieces
       st.players.forEach(p => { p.hand = {}; }); G.hist = []; ui.sel = null; say('Back in the lobby.'); commit(); return;
     case 'newtable':
@@ -12285,7 +12679,7 @@ function recStart(st) {
   REC.g = { v: REC_V, app: 'run-the-city', id: st.room + '-' + Date.now().toString(36), room: st.room, start: Date.now(), end: 0, how: 'open',
     big: st.board.hexes.length === 30, board: { kind: st.board.kind, hexes: st.board.hexes.map(h => [h.t, h.n]), terminals: st.board.terminals.slice(), police: st.board.police },
     players: st.players.map(p => ({ pid: p.pid, name: p.name, color: p.color })), order: [], starter: null, winner: null, final: null, ev: [], log: [],
-    clock: st.clock ? st.clock.s : 0 };
+    clock: st.clock ? st.clock.s : 0, mode: modeOf(st), mx: st.clock ? st.clock.x | 0 : 0 };
   REC.turn = null;
   recSave(true);
 }
@@ -12482,13 +12876,13 @@ function seatsHTML(st, ro) {
   return st.players.map((p, i) => {
     const roll = st.rolls[p.pid], spot = at[i] || RING[i % RING.length]; let line = '';
     if (st.phase === 'lobby') {
-      const ok = st.clock && st.clock.s ? (st.clock.ok[p.pid] ? '<span class="okd" title="Said OK to the turn clock">OK</span>' : '<span class="okd no" title="Has not said OK to the turn clock yet">no OK</span>') : '';
+      const ok = modeAsks(st) ? (st.clock.ok[p.pid] ? '<span class="okd" title="Said OK to the game mode">OK</span>' : '<span class="okd no" title="Has not said OK to the game mode yet">no OK</span>') : '';
       line = ok + (ro ? '' : `${i > 0 ? `<button class="btn ghost small" data-h="up" data-arg="${esc(p.pid)}" aria-label="Move ${esc(p.name)} up one seat">&uarr;</button>` : ''}<button class="btn ghost small" data-h="kick" data-arg="${esc(p.pid)}" aria-label="Remove ${esc(p.name)}">&times;</button>`);
     } else if (st.phase === 'rolloff') line = !st.contenders.includes(p.pid) ? `out${roll ? ' with ' + (roll[0] + roll[1]) : ''}` : roll ? `<span class="dice" aria-hidden="true">${DIE[roll[0]]}${DIE[roll[1]]}</span> <b>${roll[0] + roll[1]}</b>` : ro ? 'rolling&hellip;' : `<button class="btn ghost small" data-h="rollfor" data-arg="${esc(p.pid)}">Roll for them</button>`;
     else {
       const n = shownCount(p), k = shownCards(p);
       line = `${st.pend && st.pend[p.pid] ? `<em class="sdrop">drop ${st.pend[p.pid]}</em>` : ''}<span class="vp"><b>${vpOf(st, p.pid)}</b>/${WIN_VP}</span><span class="backs" title="Cards in hand">${n} card${n === 1 ? '' : 's'}</span>` +
-        (k ? `<span class="cbacks" title="Skills and talents held">&#9670;${k}</span>` : '') + ((p.luck | 0) > 0 ? `<span title="Lucky Streak: ${p.luck} three-dice rolls left">&#9752;${p.luck}</span>` : '') + (p.paid ? '<span title="The police are paid off">$</span>' : '') + seatMarksHTML(p);
+        (k ? `<span class="cbacks" title="Skills and talents held">&#9670;${k}</span>` : '') + ((p.luck | 0) > 0 ? `<span title="Lucky Streak: ${p.luck} three-dice rolls left">&#9752;${p.luck}</span>` : '') + (p.paid ? '<span title="The police are paid off">$</span>' : '') + seatMarksHTML(p) + modeSeatHTML(st, p);
     }
     return `<li class="seat seat-${spot[0]} at-${spot}${p.pid === act ? ' active' : ''}${p.online ? '' : ' off'}" data-seat="${esc(p.pid)}" style="--pc:var(--p-${p.color})">` +
       `<p class="nm">${p.online ? '' : '<i class="dot" title="Phone asleep or offline"></i>'}<span class="nmt">${esc(p.name)}</span>${p.pid === st.starter ? '<span class="star" title="Takes the first turn">&#9733;</span>' : ''}</p><p class="sub">${line}</p></li>`;
@@ -12497,7 +12891,7 @@ function seatsHTML(st, ro) {
 function renderHost() {
   const ro = WATCH, st = G.state;
   if (st) useGeo(st.board);
-  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(talkHostObserve, st); quietly(dirObserve, st); quietly(stObserve, st);
+  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); quietly(modeObserve, st); sndObserve(st); quietly(talkHostObserve, st); quietly(dirObserve, st); quietly(stObserve, st);
   if (!$('#h-banner')) renderHostShell();
   tableAddress(st);
   const pill = ro ? (G.online ? (P.hostUp === false ? 'Table screen offline' : 'Live') : 'Connecting') : (G.fatal ? 'Offline' : G.online ? 'Relay connected' : G.client ? 'Reconnecting' : 'Connecting');
@@ -12524,7 +12918,7 @@ function renderHost() {
         : st.dice ? `<span class="bdice${sum === 7 || sum === 6 || sum === 8 ? ' hot' : ''}"><span aria-hidden="true">${dieHTML(st.dice[0])}${dieHTML(st.dice[1])}</span><strong>${sum}</strong></span>` : '';
     what = `${g.yours ? `<span class="turnchip" style="background:var(--p-${ap.color})"></span>${esc(ap.name)}: ` : ''}${esc(g.now)}${dice}`;
     if (!ro) {
-      if (st.step === 'roll') extra = `<button class="btn" data-h="rollturn">Roll for ${esc(ap.name)}</button>`;
+      if (st.step === 'roll' && !st.auction) extra = `<button class="btn" data-h="rollturn">Roll for ${esc(ap.name)}</button>`;
       else if (st.step === 'act') extra = `<button class="btn ghost" data-h="endturn">End ${esc(ap.name)}&#39;s turn</button>`;
       else if (st.step === 'police' && ui.sel && ui.sel.kind === 'h') extra = `<button class="btn" data-h="confirm">Send the police to ${esc(blockName(st, ui.sel.id))}</button><button class="btn ghost" data-h-clear>Clear</button>`;
       // no button to hurry a fighter or a lucky roller: anyone at the table could press it to rob them of their pick.
@@ -12542,9 +12936,9 @@ function renderHost() {
     // while the table is still playing a fight back, the banner does not give its ending away
     if (FX.fightBusy && st.fight && st.step !== 'fight') { what = esc(`${playerOf(st, st.fight.a).name}'s crew and ${playerOf(st, st.fight.d).name}'s are fighting over ${fightOver(st, st.fight)}.`); extra = ''; }
     // the clock, who has asked for a hurry-up, and the table's pause (there whatever else the banner is keeping quiet)
-    const held = { fight: 'Paused for the fight', drop: 'Paused while cards are dropped', hold: 'Paused', link: 'Paused: this screen is offline' }[why] || '';
-    clk = (c && c.lim ? `<span class="tclk">${clockBadgeHTML(st, 'lg')}${held && !(c.up && why === 'drop') ? `<small>${held}</small>` : ''}</span>` : '') + hurryVotesHTML(st) +
-      (!ro && c && (c.s || c.hot) && !c.up ? `<button class="btn ghost small clkhold" data-h="hold" aria-pressed="${!!c.hold}">${c.hold ? 'Start the clock' : 'Pause the clock'}</button>` : '');
+    const held = { fight: 'Paused for the fight', auction: 'Paused for the auction', drop: 'Paused while cards are dropped', hold: 'Paused', link: 'Paused: this screen is offline' }[why] || '';
+    clk = (c && c.lim ? `<span class="tclk">${clockBadgeHTML(st, 'lg')}${held && !(c.up && why === 'drop') ? `<small>${held}</small>` : ''}</span>` : '') + modeChipHTML(st) + hurryVotesHTML(st) +
+      (!ro && c && (c.lim || c.s || c.hot) && !c.up ? `<button class="btn ghost small clkhold" data-h="hold" aria-pressed="${!!c.hold}">${c.hold ? 'Start the clock' : 'Pause the clock'}</button>` : '');
   } else if (st.phase === 'over') {
     const w = playerOf(st, st.win);
     what = `<span class="turnchip" style="background:var(--p-${w.color})"></span>${esc(w.name)} runs the city with ${vpOf(st, st.win)} points.`;
@@ -12555,7 +12949,8 @@ function renderHost() {
 
   // an offer on the table, in cards, with who has said what
   const off = st.phase === 'turn' && st.offer, offBy = off && playerOf(st, off.from);
-  setHTML('#h-offer', off && offBy ? `<div class="offerbar"><span class="who"><span class="turnchip" style="background:var(--p-${offBy.color})"></span>${esc(offBy.name)} offers</span>` +
+  setHTML('#h-offer', st.phase === 'turn' && st.auction && CARDS[st.auction.k] && !FX.veil ? auctionBarHTML(st) :   // the auction (release 9)
+    off && offBy ? `<div class="offerbar"><span class="who"><span class="turnchip" style="background:var(--p-${offBy.color})"></span>${esc(offBy.name)} offers</span>${offerExpHTML(off)}` +
     dealHTML({ lab: 'Gives', b: off.give }, { lab: 'Wants', b: off.want }) +
     `<span class="says">${st.players.filter(p => p.pid !== off.from).map(p => { const r = off.replies[p.pid];
       return `<span class="say${r === 1 ? ' yes' : ''}"><span class="chip" style="background:var(--p-${p.color})"></span>${esc(p.name)}: ${r === 1 ? 'yes' : r === 0 ? 'pass' : '&hellip;'}</span>`; }).join('')}</span></div>` : '');
@@ -12597,7 +12992,7 @@ function renderHost() {
     if (st.phase === 'lobby') {
       const owed = clockOwed(st);
       c += `<div class="seg" role="group" aria-label="City layout"><button data-h="map" data-arg="random" aria-pressed="${st.board.kind === 'random'}">Random city</button><button data-h="map" data-arg="beginner" aria-pressed="${st.board.kind === 'beginner'}" ${st.board.hexes.length === 30 ? 'disabled title="The big city is always dealt at random"' : ''}>Starter city</button></div>
-        ${clockPickHTML(st)}
+        ${modePickHTML(st)}
         ${dirPickHTML(st)}
         <div class="row"><button class="btn ghost" data-h="reshuffle" ${st.board.kind === 'random' ? '' : 'disabled'}>Deal again</button><button class="btn" style="flex:1" data-h="start" ${st.players.length < 2 || owed.length ? 'disabled' : ''}>${owed.length ? `Waiting for ${owed.length} to tap OK` : 'Start set-up'}</button></div>
         <p class="small muted">${st.players.length < 3 ? 'Run the City is for 3 to 6 players. You can start with 2 to try it out.' : st.players.length >= BIG_FROM ? 'Five or six seats play on the big city: thirty blocks and eleven terminals.' : 'Seat order is the turn order, clockwise from whoever rolls highest.'}</p>`;
@@ -13064,7 +13459,7 @@ function landingBoardState() {
   return st;
 }
 function landingCardFanHTML() {
-  const featured = ['rewind', 'fight', 'legend'], order = featured.concat(CARD_ORDER.filter(k => !featured.includes(k)));
+  const featured = ['rewind', 'fight', 'legend'], order = featured.concat(CARD_ORDER.filter(k => !featured.includes(k) && !CARD_NOART.has(k)));
   const cards = order.map((k, i) => {
     const c = CARDS[k], rarity = ['rare', 'legendary'].includes(c.tier) ? TIER_NAME[c.tier] + ' ' : '';
     return `<div class="lp-card" data-card="${k}" data-slot="${Math.max(-2, Math.min(2, i - 1))}" style="--card-art:var(--card-${k})" role="group" aria-roledescription="slide" aria-label="${esc(c.name)}, ${i + 1} of ${order.length}" aria-hidden="${i !== 1}"><span><small>${rarity}${c.kind}</small>${esc(c.name)}</span></div>`;
@@ -13100,6 +13495,7 @@ function renderLanding() {
         <div class="chapter-content lp-wrap"><div class="chapter-heading" data-reveal><p class="lp-eyebrow">01 / Enter the district</p><h2 id="lp-how-title">THE CITY IS<br><em>YOUR TABLE.</em></h2><p>One screen for the city. A phone for every player.<br>Your next game night starts on these streets.</p></div>
           <div class="table-layout"><div class="table-stage"><figure class="holo-table" data-reveal><div class="table-orbit" aria-hidden="true"></div><div class="table-render boardbox" role="img" aria-label="A detailed live Run the City board showing a rooftop concert, gang hold-up, bank robbery, structure fire, and a card being played"></div><div class="table-event" aria-live="polite"><strong data-board-title>Rooftop concert · live</strong><span data-board-note>Crowds, lasers and a full band above Neon Row</span></div><div class="table-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div><div class="table-scan" aria-hidden="true"></div><figcaption>LIVE EVENTS FROM THE FULL IN-GAME CITY.</figcaption></figure><div class="landing-phone roll-phone" role="img" aria-label="Actual player screen: rolling dice and collecting resources"><iframe title="Player rolling dice preview" tabindex="-1" aria-hidden="true" sandbox="allow-same-origin" data-player-preview="roll"></iframe></div><div class="landing-phone card-phone" role="img" aria-label="Actual player screen: opening and playing a Tip-off card"><iframe title="Player card play preview" tabindex="-1" aria-hidden="true" sandbox="allow-same-origin" data-player-preview="card"></iframe></div></div>
           <ol class="lp-steps"><li data-reveal><span>01</span><div><h3>Open the city.</h3><p>Host a table on a laptop or shared screen. Keep that tab open — it runs the game.</p></div></li><li data-reveal><span>02</span><div><h3>Bring your crew.</h3><p>Friends scan the QR code or open the phone link. Take a seat from the couch or across town.</p></div></li><li data-reveal><span>03</span><div><h3>Take the streets.</h3><p>Roll for resources. Trade with rivals. Build your operations. First to 10 points runs the city.</p></div></li></ol></div>
+          <div class="lp-modewrap" data-reveal><p class="lp-eyebrow">Pick your pace</p><h3>Six ways to run it.</h3>${landingModesHTML()}</div>
         </div>
       </section>
       <section class="city-chapter city-hand" id="the-hand" data-city-scene aria-labelledby="lp-play-title">
@@ -13120,7 +13516,7 @@ function renderLanding() {
         ${landingHologram('koi','faq-holo')}
         <div class="chapter-content lp-wrap faq-layout"><div class="chapter-heading" data-reveal><p class="lp-eyebrow">04 / A little local knowledge</p><h2 id="lp-faq-title">KNOW THE<br><em>STREETS.</em></h2></div><div class="lp-faq" data-reveal>
         <details><summary>Is the game free?</summary><p>Yes — Run the City is free for now. Open a table and invite your crew to play in their browsers.</p></details>
-        <details><summary>How long does a game take?</summary><p>Game length depends on how many people are playing and how quickly the crew takes its turns. There is no fixed play time. If your group wants a quicker pace, the host can enable a turn clock.</p></details>
+        <details><summary>How long does a game take?</summary><p>Game length depends on how many people are playing and how quickly the crew takes its turns. There is no fixed play time. The host picks the pace: Blitz’s 45-second turns, a Timed match that ends after 30, 45 or 60 minutes, a Chess clock, Rush Hour, or Classic with or without a turn clock.</p></details>
         <details><summary>What do we need to play?</summary><p>One screen to host the shared city, a phone or browser for each player, and an internet connection. Open a table, then have everyone scan its QR code or use the phone link. There’s nothing to install.</p></details>
         <details><summary>Do we have to be in the same room?</summary><p>No. Share the phone link with friends wherever they are. The host can share a board link so everyone sees the same city live on another screen. Keep the host’s table tab open throughout the game.</p></details>
         <details><summary>Can we try it with two players?</summary><p>The game is made for 3–6 players, but you can start with two to try it out. Five or six players get a bigger city with more blocks to compete for.</p></details>
@@ -13240,6 +13636,7 @@ function validState(s) {
   if (s.offer !== undefined && s.offer !== null) {
     const o = s.offer;
     if (!obj(o) || !known(o.from) || !bundle(o.give) || !bundle(o.want) || !obj(o.replies)) return false;
+    if (o.exp !== undefined && !(int(o.exp) && o.exp > 0 && o.exp < 1e13)) return false;   // Rush Hour's offers run out (release 9)
     if (!Object.keys(o.replies).every(k => known(k) && k !== o.from && (o.replies[k] === 0 || o.replies[k] === 1))) return false;
     if (RES_ORDER.some(r => o.give[r] && o.want[r])) return false;
     if (s.phase !== 'turn' || s.step !== 'act' || s.order[s.turnIdx] !== o.from) return false;
@@ -13283,10 +13680,12 @@ function validState(s) {
   if (s.clock !== undefined && s.clock !== null) {
     const c = s.clock, ms = x => int(x) && x >= 0 && x <= 1e9, flag = x => x === 0 || x === 1, seats = o => obj(o) && Object.keys(o).every(k => known(k) && o[k] === 1);
     const when = x => int(x) && x >= 0 && x < 1e13;                   // ms since 1970, or 0
-    if (!obj(c) || !CLOCK_S.includes(c.s) || !seats(c.ok) || !seats(c.hurry) || !ms(c.used) || !ms(c.lim) || !when(c.t0) ||
+    if (!obj(c) || !CLOCK_S_ALL.includes(c.s) || !seats(c.ok) || !seats(c.hurry) || !ms(c.used) || !ms(c.lim) || !when(c.t0) ||
       !when(c.at) || ![c.hot, c.hold, c.up, c.did].every(flag)) return false;
     if (c.prev !== null && c.prev !== undefined && !(obj(c.prev) && known(c.prev.p) && ms(c.prev.ms) && flag(c.prev.did) && int(c.prev.n))) return false;
   }
+  if (s.clock !== undefined && s.clock !== null && !modeValid(s.clock, known)) return false;   // the game mode (release 9)
+  if (!auctionValid(s, known)) return false;
   if (s.phase === 'turn' || s.phase === 'over') {
     if (!int(s.turnIdx) || s.turnIdx < 0 || !int(s.turnNo) || s.turnNo < 1) return false;
     if (!obj(s.got) || !obj(s.pend) || s.order.length !== s.players.length || s.turnIdx >= s.order.length) return false;
@@ -13511,7 +13910,7 @@ function offerComposeHTML(st, me) {
 }
 // Your offer, once it is out: who has answered, and the button that closes the deal.
 function offerStatusHTML(st, me, o) {
-  return `<section class="card"><h2>Your offer</h2>
+  return `<section class="card"><h2>Your offer ${offerExpHTML(o)}</h2>
     ${dealHTML({ lab: 'You give', b: o.give }, { lab: 'You get', b: o.want })}
     <p class="small muted">${esc(handList(o.give))} for ${esc(handList(o.want))}</p>
     <ul class="moves">${st.players.filter(p => p.pid !== me.pid).map(p => {
@@ -13526,7 +13925,7 @@ function offerStatusHTML(st, me, o) {
 function offerAnswerHTML(st, me, o) {
   const from = playerOf(st, o.from), mine = o.replies[me.pid];
   return `<section class="card"><h2>${mine === undefined ? 'On the table' : 'You answered'}</h2>
-    <p class="mnow"><span class="turnchip" style="background:var(--p-${from.color})"></span>${esc(from.name)} offers you a trade</p>
+    <p class="mnow"><span class="turnchip" style="background:var(--p-${from.color})"></span>${esc(from.name)} offers you a trade${offerExpHTML(o)}</p>
     ${dealHTML({ lab: 'You get', b: o.give }, { lab: 'You give', b: o.want, have: me.hand })}
     <p class="small muted">${mine === undefined ? (holds(me, o.want) ? 'Your call. Passing costs you nothing.' : 'You cannot cover your side of it: the empty cards are the ones you are missing.')
       : mine === 1 ? 'You said yes. ' + esc(from.name) + ' decides whether it happens.' : 'You passed. Nothing more to do here.'}</p></section>`;
@@ -13541,7 +13940,7 @@ const handSec = me => sec('hand', 'Your cards', handHTML(me) + skillRowHTML(me),
    and red, talents in gold, so the badge is learnt by colour before it is read.
    Resources stay the little coloured cards they always were: anything with
    words on it is a skill or a talent. */
-const CARD_GLYPH = { bustup: '✸', wrecking: '⚒', tipoff: '☎', luck: '☘', silver: '✦', paidoff: '✉', backup: '✚', shakedown: '✊', fight: '✖', roadcrew: '⛏', connections: '☏', legend: '★', rewind: '↺' };
+const CARD_GLYPH = { bustup: '✸', wrecking: '⚒', tipoff: '☎', luck: '☘', silver: '✦', paidoff: '✉', backup: '✚', shakedown: '✊', fight: '✖', roadcrew: '⛏', connections: '☏', legend: '★', rewind: '↺', overtime: '⏱', stall: '✋', rush: '»' };
 const WHEN_TEXT = { any: 'On your turn, before or after you roll.', act: 'On your turn, after you roll.', react: 'When a rival picks a fight with you.', never: 'Never played: it scores at the start of your next turn.' };
 function scard(k, o) {
   o = o || {};
@@ -13549,7 +13948,7 @@ function scard(k, o) {
   if (k === 'back') return `<span class="sc back ${size}" aria-hidden="true">${o.n !== undefined ? `<span class="n">${o.n}</span>` : ''}</span>`;
   const c = CARDS[k];
   return `<span class="sc ${c.kind} t-${c.tier} ${size}${o.dim ? ' dim' : ''}${o.fresh ? ' fresh' : ''}" style="--art:var(--card-${k})">` +
-    `<span class="art">${ART ? '' : `<b>${CARD_GLYPH[k]}</b>`}</span>` +
+    `<span class="art">${ART && !CARD_NOART.has(k) ? '' : `<b>${CARD_GLYPH[k]}</b>`}</span>` +
     (size === 'xs' ? '' : `<span class="nm">${esc(c.name)}</span>`) +
     (size === 'l' || size === 'xl' ? `<span class="bd ${c.kind}">${c.kind}</span><span class="vb">${esc(c.verb)}</span>` : '') +
     (o.n > 1 ? `<span class="n">${o.n}</span>` : '') + (o.fresh ? '<span class="new" title="New: ready once the turn passes"></span>' : '') + '</span>';
@@ -13583,7 +13982,7 @@ function hostMarketHTML(st) {
   const left2 = k => deckOf(st, k) + (FX.cardHold && FX.cardHold.k === k ? 1 : 0);
   const rule = 'Buy on your turn after you roll; your first two upgrades each draw one. One a turn, and nothing is ready on the turn you got it.';
   return `<h2 class="stl" title="${rule}">Skills &amp; talents</h2>` +
-    `<div class="hmk" style="--n:${CARD_ORDER.length}">${CARD_ORDER.map(k => { const c = CARDS[k], n = left2(k);
+    `<div class="hmk" style="--n:${CARD_ORDER.filter(k => inPlay(st, k)).length}">${CARD_ORDER.filter(k => inPlay(st, k)).map(k => { const c = CARDS[k], n = left2(k);
       return `<span class="hm${n ? '' : ' out'}" data-k="${k}" title="${esc(c.name)}: ${esc(c.verb)}">${scard(k, { size: 'xs', dim: !n })}` +
         `<span><strong>${esc(c.name)}</strong><em>${!n ? (c.price ? 'Sold out' : 'None left') : c.price ? n + ' left' : n + ' in crates'}</em></span></span>`; }).join('')}</div>`;
 }
@@ -13592,7 +13991,7 @@ function skillOptsHTML(st, me, live) {
   const held = CARD_ORDER.filter(k => heldCard(me, k)), ready = held.filter(k => canPlay(st, me, k).ok), pb = playedBy(st, me.pid);
   const why1 = !held.length ? 'You have none yet.' : ready.length ? `${andList(ready.map(k => CARDS[k].name))} ${ready.length === 1 ? 'is' : 'are'} ready.`
     : pb ? `You have played ${CARDS[pb].name} this turn.` : held.every(k => readyCard(me, k) <= 0 || CARDS[k].when === 'never') ? 'Yours are new: ready once the turn passes.' : 'None of yours can be played right now.';
-  const sale = CARD_ORDER.filter(k => CARDS[k].price && deckOf(st, k) > 0), afford = sale.filter(k => canBuy(st, me, k).ok);
+  const sale = CARD_ORDER.filter(k => CARDS[k].price && deckOf(st, k) > 0 && inPlay(st, k)), afford = sale.filter(k => canBuy(st, me, k).ok);
   const why2 = turnOf(st, me) && st.step === 'act' ? (afford.length ? `You can afford ${afford.length} of the ${sale.length} on sale.` : `${sale.length} on sale. You cannot afford any yet.`)
     : `${sale.length} on sale. You buy on your turn, after you roll.`;
   return `<li><button class="opt stack${ready.length ? ' can' : ''}" data-p="sheet" data-arg="card" aria-haspopup="dialog" ${held.length ? '' : 'disabled'}>` +
@@ -13814,6 +14213,7 @@ function turnParts(st, me) {
     }
   }
   if (st.phase === 'over') stPhoneParts(st, me, out);           // the winner's selfie (release 6)
+  modePhoneParts(st, me, out);                    // the mode's line and the auction (release 9)
   out.board = boardSec(st, bo, need, out.hint);
   out.need = need;
   // your turn on the clock: the time left sits at the head of the dock, whatever the dock is asking of you
@@ -13948,6 +14348,9 @@ function cardSheet(st, me) {
     const r = RES_ORDER.includes(ui.res) ? ui.res : null; ok = !!r;
     pick = `<p class="small muted" style="text-align:center">Name the resource you want</p><div class="picks">${RES_ORDER.map(x => `<button class="pick cardy" data-p="res" data-arg="${x}" aria-pressed="${r === x}">${rcard(x, { size: 'm' })}<span>${x}</span><span class="n">have ${me.hand[x] || 0}</span></button>`).join('')}</div>`;
     label = r ? `Shake them down for ${r}` : 'Name a resource first';
+  } else if (k === 'rush' && cp.ok) {                   // Rush: the rival it goes at (release 9)
+    const r = rushPickHTML(st, me); ok = !!r.to; pick = r.html;
+    label = r.to ? `Rush ${esc(playerOf(st, r.to).name)}` : 'Pick a rival first';
   } else if (k === 'connections' && cp.ok) {
     const t = ui.take || {}, n = bundleSize(t); ok = n === 2;
     pick = `<div class="picks">${RES_ORDER.map(x => `<button class="pick cardy" data-p="take" data-arg="${x}" ${n >= 2 ? 'disabled' : ''}>${rcard(x, { size: 'm', n: t[x] || undefined })}<span>${x}</span><span class="n">have ${me.hand[x] || 0}</span></button>`).join('')}</div>` +
@@ -13973,7 +14376,7 @@ function marketSheet(st, me) {
   const k = isCard(ui.buy) ? ui.buy : null;
   if (!k) return { kind: 'market', label: 'The market', view: 'list', top: shTop('The market'), hero: '', body:
     '<p class="small muted mkintro">Skills are moves your crew can make; talents are gifts. What you buy is ready once the turn passes.</p>' +
-    `<ul class="moves mklist">${CARD_ORDER.map(x => {
+    `<ul class="moves mklist">${CARD_ORDER.filter(x => inPlay(st, x)).map(x => {
       const c = CARDS[x], cb = canBuy(st, me, x), n = deckOf(st, x);
       return `<li><button class="opt mk${cb.ok ? ' can' : ''}" data-p="mkpick" data-arg="${x}">${scard(x, { size: 'm', dim: !n })}` +
         `<span class="grow"><span class="nm">${esc(c.name)}</span><span class="tags">${kindTag(x)} ${TIER_NAME[c.tier]}</span><span class="why">${esc(c.verb)}</span>` +
@@ -14396,7 +14799,7 @@ function foldSec(pb) {
 function renderPlayer() {
   const st = G.state, screen = playerScreen(), me = st && playerOf(st, PID);
   if (st) useGeo(st.board);
-  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st); quietly(stObserve, st);
+  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); quietly(modeObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st); quietly(stObserve, st);
   if (!$('#p-main')) {
     $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: stickers, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
       <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-wsp" role="status"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
@@ -14467,11 +14870,8 @@ function renderPlayer() {
   else if (screen === 'spectate') h = '<section class="card"><h1>This game has already started</h1><p class="muted">You are watching. If you were seated before, open the join link on the same phone and browser you used.</p></section><div class="boardbox">' + fullBtnHTML() + boardView(st) + '</div>';
   else if (screen === 'lobby') {
     const free = COLORS.filter(c => !st.players.some(p => p.color === c));
-    const ck = st.clock, okd = ck && ck.s && ck.ok[PID];
     h = `<section class="card">${meHTML(me, "You're in. Waiting for the table to start.")}
-      ${ck && ck.s ? `<div class="clkask${okd ? ' done' : ''}"><div><p class="ca1">${ck.s}-second turns</p><p class="small muted">When your time runs out, the table rolls for you if you have not, and ends your turn. The clock stops for a fight.</p></div>` +
-        (okd ? '<span class="okd">OK</span>' : `<button class="btn" data-p="clockok" data-arg="${ck.s}">OK</button>`) + '</div>'
-        : '<p class="small muted">No turn clock. A minute into somebody&rsquo;s turn, the others can ask them to hurry up.</p>'}
+      ${modeAskHTML(st)}
       <div><p class="small muted">Change colour</p><div class="swatches">${COLORS.map(c => `<button class="sw" data-p="recolor" data-arg="${c}" aria-pressed="${c === me.color}" ${c === me.color || free.includes(c) ? '' : 'disabled'}><span class="chip" style="background:var(--p-${c})"></span>${c === me.color ? 'Yours' : free.includes(c) ? cap(c) : 'Taken'}</button>`).join('')}</div></div>
       <p class="small muted">${st.players.length} of ${MAX_PLAYERS} seated: ${esc(st.players.map(p => p.name).join(', '))}</p>
       ${coachTogHTML()}<button class="btn ghost" data-p="leave">Leave the table</button></section><div class="boardbox">${fullBtnHTML()}${boardView(st)}</div>`;
@@ -15356,7 +15756,8 @@ const DIR_SAY = {
 };
 const DIR_VOX = { bank: ['v_bank_1', 'v_bank_2'], terminal: ['v_port_1', 'v_port_2'], buy: ['v_buy_1', 'v_buy_2'] };
 /* what the record writes that is not a move of anybody's: an undo takes back the last move that is */
-const DIR_NOT_MOVE = new Set(['score', 'pres', 'talk', 'hurry', 'hurryup', 'hold', 'reload', 'swing', 'round', 'timeup', 'undo', 'turf', 'selfie']);
+const DIR_NOT_MOVE = new Set(['score', 'pres', 'talk', 'hurry', 'hurryup', 'hold', 'reload', 'swing', 'round', 'timeup', 'undo', 'turf', 'selfie',
+  'bid', 'auction', 'expire', 'last', 'rushhour', 'bankout', 'hustle']);   // the game modes' (release 9): none of them the undo takes back
 const DIR_LIVE_W = { talk: 1, deal: 2, offer: 1, reply: 0.5, fought: 3, steal: 1, play: 1, buy: 1, hurry: 1, bank: 0.5 };
 const dirName = pid => (G.state && playerOf(G.state, pid)) || null;
 /* called by rec() on the table, for every line of the record as it is written */
@@ -17128,6 +17529,190 @@ function stBeastLight(ctx, C, pass, e) {
   }
 }
 /* ---------- end of Showtime ---------- */
+/* ---------- Game modes (release 9): the screens ----------
+   The lobby's mode picker on the table and the OK on each phone; during the game a small line of what the mode
+   is doing (the match clock, a bank, a rush-hour round, a Rush, the hustle meter), the auction on the table and on
+   every phone, the seconds an offer has left, and the moments said out loud. Nothing here is sent: it is all drawn
+   from the state and the time, like the turn clock, and modePaint fills in the numbers four times a second. */
+const MODE_ICO = {
+  classic: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M10 3h4"/></svg>',
+  blitz: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 5 14h6l-1 8 8-12h-6z"/></svg>',
+  chess: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="11" rx="2"/><path d="M8 8V5h3M16 8V5h-3M8 13.5l2-1.5M16 13.5l-2-1.5"/></svg>',
+  match: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12M6 21h12M7 3c0 6 10 6 10 9s-10 3-10 9M17 3c0 6-10 6-10 9"/></svg>',
+  rush: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="20" rx="3"/><circle cx="12" cy="7" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="17" r="1.6"/></svg>',
+  slow: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+};
+/* cards with no painting yet: their glyph is drawn instead (empty once art/gen_art.py has made them) */
+const CARD_NOART = new Set(['overtime', 'stall', 'rush']);
+/* the mode in a word or two, with its minutes */
+const modeTitle = c => { const m = MODES.includes(c.m) ? c.m : 'classic'; return m === 'classic' ? (c.s ? `${c.s}-second turns` : 'No turn clock') : MODE_NAME[m] + (MODE_OPT[m] ? ` · ${c.x} min` : ''); };
+/* The table's lobby: the five modes and the slow game to come, the choice the mode offers, and who has said OK. */
+function modePickHTML(st) {
+  const c = st.clock; if (!c) return '';
+  const m = modeOf(st), owed = clockOwed(st);
+  const opts = m === 'classic' ? CLOCK_S.map(s => [s, s ? s + ' s' : 'Off', 'clock', c.s]) : MODE_OPT[m] ? MODE_OPT[m].map(x => [x, x + ' min', 'modex', c.x]) : [];
+  const what = m === 'classic' ? 'Turn clock' : m === 'chess' ? 'Time bank each' : 'Match length';
+  return `<div class="clkpick modepick"><p class="small"><strong>Game mode</strong></p>` +
+    `<div class="mgrid" role="group" aria-label="Game mode">${MODES.map(k => `<button class="mbtn" data-h="mode" data-arg="${k}" aria-pressed="${m === k}">${MODE_ICO[k]}<span>${MODE_NAME[k]}</span></button>`).join('')}` +
+    `<button class="mbtn soon" disabled title="Coming soon: one game played over days, with a reminder when it is your turn">${MODE_ICO.slow}<span>Slow game</span><em>soon</em></button></div>` +
+    (opts.length ? `<div class="seg" role="group" aria-label="${what}">${opts.map(([v, l, h, cur]) => `<button data-h="${h}" data-arg="${v}" aria-pressed="${cur === v}">${l}</button>`).join('')}</div>` : '') +
+    `<p class="small muted">${esc(modeBlurb(c))}${modeAsks(st) ? ' ' + (!st.players.length ? 'Every phone taps OK.' : owed.length
+      ? `Waiting for ${esc(andList(owed.map(p => p.name)))} to tap OK on their phone (no OK button there: reload the page).` : 'Every phone has said OK.') : ''}</p></div>`;
+}
+/* A phone in the lobby: the mode, what it means, and the OK the table waits for. */
+function modeAskHTML(st) {
+  const c = st.clock; if (!c) return '';
+  const m = modeOf(st);
+  if (!modeAsks(st)) return `<p class="small muted">${esc(modeBlurb(c))}</p>`;
+  const okd = !!c.ok[PID];
+  return `<div class="clkask mask${okd ? ' done' : ''}"><span class="mico">${MODE_ICO[m]}</span><div><p class="ca1">${esc(modeTitle(c))}</p><p class="small muted">${esc(modeBlurb(c))}</p></div>` +
+    (okd ? '<span class="okd">OK</span>' : `<button class="btn" data-p="clockok" data-arg="${esc(modeSig(c))}">OK</button>`) + '</div>';
+}
+/* The table's banner, beside the turn clock: what the mode is doing this turn. */
+function modeChipHTML(st) {
+  const c = st.clock; if (!c || st.phase !== 'turn') return '';
+  const m = modeOf(st), out = [];
+  if (m === 'match') out.push(c.last ? '<span class="mchip hot">Last round</span>' : `<span class="mchip">${MODE_ICO.match}Match <b data-mclk></b></span>`);
+  if (m === 'chess' && c.sd) out.push('<span class="mchip hot">Sudden death</span>');
+  if (m === 'rush') {
+    if (c.rh && c.rh === st.turnNo) out.push(`<span class="mchip rush">${MODE_ICO.rush}Rush hour: half time</span>`);
+    if (c.rs) out.push('<span class="mchip hot">Rushed: half time</span>');
+    if (c.stall) out.push('<span class="mchip">Stalled</span>');
+  }
+  return out.join('');
+}
+/* a seat on the table in a chess game: what is left in their bank */
+function modeSeatHTML(st, p) {
+  const c = st.clock;
+  if (!c || modeOf(st) !== 'chess' || st.phase !== 'turn' || !c.bank) return '';
+  return `<span class="mbank${c.bank[p.pid] > 0 ? '' : ' out'}" title="Time bank" data-bank="${esc(p.pid)}"></span>`;
+}
+/* what a bank shows: the time left in it, the player on the clock's running down */
+function bankLeft(st, pid) {
+  const c = st.clock, b = (c.bank && c.bank[pid]) | 0;
+  if (activePid(st) !== pid || c.sd) return b;
+  return Math.max(0, b - clockRan(st));
+}
+/* ---------- the auction ---------- */
+function auctionBarHTML(st) {
+  const a = st.auction, c = CARDS[a.k], top = playerOf(st, a.top);
+  return `<div class="offerbar aucbar"${top ? ` style="--pc:var(--p-${top.color})"` : ''}><span class="who">Auction</span>${scard(a.k, { size: 's' })}` +
+    `<span class="aucw"><strong>${esc(c.name)}</strong><em>${esc(c.verb)}</em></span>` +
+    `<span class="aucbid">${top ? `<span class="turnchip" style="background:var(--p-${top.color})"></span>${esc(top.name)} <b>${a.bid}</b> cash` : 'No bids yet: bid cash on your phone'}</span>` +
+    `<span class="auct" data-auc></span></div>`;
+}
+function auctionPhoneHTML(st, me) {
+  const a = st.auction, c = CARDS[a.k], top = playerOf(st, a.top), cash = (me.hand && me.hand.cash) || 0;
+  return `<section class="card aucard"><div class="auchead"><p class="kick">Auction <span class="auct" data-auc></span></p>${scard(a.k, { size: 'l' })}</div>` +
+    `<p class="mkdesc">${esc(c.text)}</p>` +
+    `<p class="aucnow">${top ? `<span class="turnchip" style="background:var(--p-${top.color})"></span>${top.pid === me.pid ? 'You hold' : esc(top.name) + ' holds'} the top bid: <b>${a.bid} cash</b>` : 'No bids yet.'}</p>` +
+    `<p class="small muted">The highest bid in cash takes it when the time runs out; a bid in the last ${AUCTION.late / 1000} seconds gives the others ${AUCTION.late / 1000} more. You hold ${cash} cash.</p></section>`;
+}
+function auctionDock(st, me) {
+  const a = st.auction, b = canBid(st, me);
+  if (!b.ok) return statusDock(st, me);
+  const cash = (me.hand && me.hand.cash) || 0, n = a.bid + 1, jump = a.bid + 2;
+  return `<button class="btn big" data-p="bid" data-arg="${n}" ${ui.pending ? 'disabled' : ''}>Bid ${n} cash</button>` +
+    (cash >= jump ? `<button class="btn ghost" data-p="bid" data-arg="${jump}" ${ui.pending ? 'disabled' : ''}>${jump}</button>` : '');
+}
+/* the seconds an offer has left, in Rush Hour */
+const offerExpHTML = o => (o && o.exp ? '<span class="oexp" data-exp></span>' : '');
+/* ---------- the phone ---------- */
+/* A line under your move card: the match clock, your bank, a rush-hour round, the hustle meter. */
+function modeStripHTML(st, me) {
+  const c = st.clock; if (!c || st.phase !== 'turn') return '';
+  const m = modeOf(st), bits = [];
+  if (m === 'match') bits.push(c.last ? '<span class="mchip hot">Last round: the top score wins when it ends</span>' : `<span class="mchip">${MODE_ICO.match}Match <b data-mclk></b></span>`);
+  if (m === 'chess') bits.push(c.bank && c.bank[me.pid] > 0 ? `<span class="mchip">${MODE_ICO.chess}Your bank <b data-bank="${esc(me.pid)}"></b></span>` : `<span class="mchip hot">Sudden death: ${CHESS.sudden / 1000} seconds a turn</span>`);
+  if (m === 'rush') {
+    if (c.rh && c.rh === st.turnNo) bits.push(`<span class="mchip rush">${MODE_ICO.rush}Rush hour: half time this round</span>`);
+    if (c.rs && activePid(st) === me.pid) bits.push('<span class="mchip hot">Rushed: half time</span>');
+    if (c.rushed && c.rushed[me.pid]) bits.push('<span class="mchip hot">Rushed: your next turn is half time</span>');
+    const h = (c.hus && c.hus[me.pid]) | 0;
+    bits.push(`<span class="mchip hus" title="Quick turns with something done in them bank their spare seconds: ${HUSTLE.card / 1000} of them earn a free card"><span>Hustle</span><i><i style="width:${Math.round(100 * h / HUSTLE.card)}%"></i></i><b>${Math.floor(h / 1000)}/${HUSTLE.card / 1000} s</b></span>`);
+  }
+  return bits.length ? `<div class="mstrip">${bits.join('')}</div>` : '';
+}
+function modePhoneParts(st, me, out) {
+  if (st.phase !== 'turn') return;
+  out.move = (out.move || '') + modeStripHTML(st, me);
+  if (st.auction && CARDS[st.auction.k] && !FX.veil) {
+    out.panel = auctionPhoneHTML(st, me) + (out.panel || '');
+    out.bar = auctionDock(st, me); out.focus = 'panel';
+  }
+}
+/* Rush, in the card sheet: the rival it goes at */
+function rushPickHTML(st, me) {
+  const ts = rushTargets(st, me.pid), to = ts.includes(ui.to) ? ui.to : null;
+  return { to, html: `<p class="small muted" style="text-align:center">Whose next turn gets half the time?</p><ul class="moves">${ts.map(id => { const q = playerOf(st, id);
+    return `<li><button class="opt" data-p="rushto" data-arg="${esc(id)}" aria-pressed="${to === id}"><span class="chip" style="background:var(--p-${q.color})"></span><span class="grow">${esc(q.name)}` +
+      `<span class="why">${vpOf(st, id)} points${id === st.order[(st.turnIdx + 1) % st.order.length] ? ', up next' : ''}</span></span></button></li>`; }).join('')}</ul>` };
+}
+/* ---------- the numbers, four times a second ---------- */
+function modePaint(st) {
+  if (!st || !st.clock || st.phase !== 'turn' || typeof document === 'undefined' || !document.querySelectorAll) return;
+  const set = (sel, f) => document.querySelectorAll(sel).forEach(el => { const t = f(el); if (el.textContent !== t) el.textContent = t; });
+  const ml = matchLeft(st);
+  if (ml !== null) set('[data-mclk]', () => clockText(ml));
+  if (st.clock.bank) set('[data-bank]', el => clockText(bankLeft(st, el.dataset.bank)));
+  if (st.auction) set('[data-auc]', () => clockText(st.auction.end - clockNow()) + ' s');
+  if (st.offer && st.offer.exp) set('[data-exp]', () => clockText(st.offer.exp - clockNow()) + ' s');
+  // a chess bank's minutes and seconds are wider than the ring was drawn for: a size down
+  document.querySelectorAll('[data-clk] b').forEach(b => { const long = b.textContent.length >= 5; if (b.parentElement.classList.contains('long') !== long) b.parentElement.classList.toggle('long', long); });
+}
+/* ---------- the moments, said and shown ---------- */
+const MODO = { hus: null, room: '', v: -1, rh: 0, last: 0, bank: null, auc: '', top: '', fin: 0, go: '' };
+function modeObserve(st) {
+  if (!st || !st.clock || (st.room === MODO.room && st.v === MODO.v)) return;
+  const c = st.clock, first = st.room !== MODO.room, table = sndTable(), me = joinRoom && !WATCH ? PID : null;
+  const was = Object.assign({}, MODO);
+  const auc = st.auction ? `${st.turnNo}:${st.auction.k}` : '';
+  const bank = c.bank ? Object.assign({}, c.bank) : null;
+  const hus = c.hus ? Object.assign({}, c.hus) : null;
+  Object.assign(MODO, { hus, room: st.room, v: st.v, rh: st.phase === 'turn' ? c.rh | 0 : 0, last: c.last | 0, bank, auc, top: st.auction ? st.auction.top || '' : '', fin: c.fin | 0,
+    go: st.phase === 'turn' ? st.room : '' });
+  if (first || document.hidden) return;
+  const ap = playerOf(st, activePid(st));
+  // the first roll of a game in a mode: the announcer says which
+  if (table && st.phase === 'turn' && !was.go && st.turnNo === 1 && modeOf(st) !== 'classic') setTimeout(() => vox('v_m_go_' + modeOf(st), { stale: 6000 }), 2600);
+  if (st.phase === 'turn' && c.rh && c.rh === st.turnNo && was.rh !== c.rh) {
+    if (table) { sfx('horn_1'); setTimeout(() => sfx('horn_2', { gap: 0 }), 380); setTimeout(() => vox('v_m_rushhour', { stale: 5000 }), 900); }
+    else fxPill(`${MODE_ICO.rush}Rush hour: half time this round`, ap ? ap.color : 'white', 2800);
+  }
+  if (c.last && !was.last && st.phase === 'turn') {
+    if (table) { sfx('score_sting'); setTimeout(() => vox('v_m_last', { stale: 5000 }), 500); }
+    else fxPill('Time! Last round', ap ? ap.color : 'white', 2800);
+  }
+  if (bank && was.bank) st.players.forEach(p => {
+    if ((was.bank[p.pid] | 0) > 0 && !(bank[p.pid] > 0)) { if (table) voxSay(p.color, 'v_m_bankout'); else if (me === p.pid) fxPill('Your bank is empty: sudden death', p.color, 2800); }
+  });
+  if (auc && auc !== was.auc) {
+    if (table) { sfx('card_whoosh'); setTimeout(() => vox('v_m_auction', { stale: 5000 }), 400); }
+    else { sfx('trade_offer'); buzz([20, 60, 20]); }
+  } else if (auc && MODO.top && MODO.top !== was.top) { if (table || me) sfx('ui_pick', { gap: 0 }); }
+  if (!auc && was.auc) {
+    const sold = String(st.log && st.log.find(l => /^Sold: |^No sale: /.test(l)) || '');
+    const w = /^Sold: /.test(sold) ? st.players.find(p => sold.includes(` to ${p.name} for `)) : null;
+    if (table) { sfx('gavel'); if (w) setTimeout(() => voxSay(w.color, 'v_m_sold'), 500); }
+    else if (w && me === w.pid) sfx('card_land');
+  }
+  if (st.phase === 'over' && c.fin && !was.fin && table) vox('v_m_time', { stale: 5000 });
+  if (table && hus && was.hus && Object.keys(was.hus).some(id => (hus[id] | 0) < (was.hus[id] | 0)) && Array.isArray(st.log) && st.log.slice(0, 3).some(l => /hustled:/.test(l))) setTimeout(() => vox('v_m_hustle', { stale: 4000 }), 1200);
+}
+/* ---------- the landing page: the ways to play ---------- */
+const MODE_PITCH = {
+  classic: ['Classic', 'Play at your own pace, or put 60, 90 or 120 seconds on every turn.'],
+  blitz: ['Blitz', '45-second turns. No time to think, only to hustle.'],
+  chess: ['Chess clock', 'One bank of time each for the whole game. Run it dry and it is sudden death.'],
+  match: ['Timed match', '30, 45 or 60 minutes. When time is called, the top score runs the city.'],
+  rush: ['Rush Hour', 'Clock-bending cards, half-time rush hours, quick turns that pay, trade offers that run out, and live auctions.'],
+  slow: ['Slow game', 'One game over days, with a nudge when it is your move. Coming soon.'],
+};
+function landingModesHTML() {
+  return `<div class="lp-modes">${['classic', 'blitz', 'chess', 'match', 'rush', 'slow'].map(k =>
+    `<article class="lp-mode${k === 'slow' ? ' soon' : ''}"><span class="lp-mico">${MODE_ICO[k]}</span><h3>${MODE_PITCH[k][0]}${k === 'slow' ? ' <em>Soon</em>' : ''}</h3><p>${MODE_PITCH[k][1]}</p></article>`).join('')}</div>`;
+}
+/* ---------- end of game modes ---------- */
 /* ---------- The coach (onboarding, 2026-09-27) ----------
    A new player's own phone teaches them the game, in the announcer's voice. The first time each
    move comes up (rolling, placing, building, the police, a trade offer...) the coach says what it is
@@ -18693,7 +19278,7 @@ function sndMelt(at) {
    owner's, or lands on its owner; the table hears them all. */
 const sndFor = (...pids) => sndHearsTable() || (!!sndMe() && pids.includes(sndMe()));
 // each card's own flourish after the slap (Rewind borrows the tape rewind; Street Fight has the bell in the arena)
-const SND_CARD = { tipoff: 'tipoff', luck: 'lucky', silver: 'silver', paidoff: 'paidoff', shakedown: 'shakedown', roadcrew: 'roadcrew',
+const SND_CARD = { tipoff: 'tipoff', luck: 'lucky', silver: 'silver', paidoff: 'paidoff', shakedown: 'shakedown', roadcrew: 'roadcrew', overtime: 'clock_beep', stall: 'undo', rush: 'hurry_start',
   connections: 'connections', legend: 'legend', rewind: 'undo', backup: 'backup' };
 function sndPlay(ev) {
   const f = G.state && G.state.fight;
@@ -18916,6 +19501,7 @@ function clockBadgeHTML(st, kind) {
    just drawn goes straight to where it is rather than sweeping there. */
 function clockPaint() {
   const st = G.state, c = st && st.clock;
+  quietly(modePaint, st);                          // the game mode's numbers (release 9)
   if (!c || st.phase !== 'turn' || !c.lim) return;
   const why = clockWhy(st), l = c.up ? 0 : clockLeft(st), t = clockText(l), off = ringOff(l, c.lim), fin = !why && !c.up && l <= HURRY.left;
   document.querySelectorAll('[data-clk]').forEach(el => {
@@ -18999,7 +19585,7 @@ function clockTick() {
   const why = live ? clockWhy(st) : 'off', ran = live ? clockRan(st) : 0, left = live && c.lim && !c.up ? clockLeft(st) : null;
   if (live) clockPaint();
   // what the page shows that the time decides: the Hurry up button a minute in, the last ten seconds
-  const key = live ? [st.room, st.turnNo, st.turnIdx, ran >= HURRY.after ? 1 : 0, left !== null && left <= HURRY.left ? 1 : 0].join(':') : '';
+  const key = live ? [st.room, st.turnNo, st.turnIdx, ran >= hurryAfter(st) ? 1 : 0, left !== null && left <= HURRY.left ? 1 : 0].join(':') : '';
   if (key !== TICK.key) { const was = TICK.key; TICK.key = key; if (was && key) safeRender(); }
   // the last ten seconds
   const fin = left !== null && !why && left <= HURRY.left && left > 0, n = fin ? Math.ceil(left / 1000) : null;
@@ -19306,7 +19892,7 @@ document.addEventListener('click', ev => {
     case 'join': { const n = ($('#p-name').value || '').trim(); if (!n) { toast('Add your name first.'); $('#p-name').focus(); break; } P.name = n; store('rtcity.name', n); if (act({ t: 'join', name: n, color: P.color })) toast('Taking your seat…'); break; }
     case 'recolor': act({ t: 'color', color: pb.dataset.arg }); break;
     case 'leave': act({ t: 'leave' }); break;
-    case 'clockok': act({ t: 'clockok', s: +pb.dataset.arg }); break;
+    case 'clockok': act({ t: 'clockok', s: pb.dataset.arg }); break;
     case 'hurry': if (act({ t: 'hurry' })) buzz(12); break;
     // trash talk: the sheet, and what is sent from it (the sheet closes behind a whisper or a splat, and a sticker pops out)
     case 'talk': if (st && playerOf(st, PID)) { if (pb.dataset.arg === 'reply' && TTP.reply) TTP.to = TTP.reply; if (pb.dataset.arg === 'reply') TTP.wsp = null; TTP.sit = talkSit(st, pb.dataset.arg === 'reply'); openSheet('talk', pb); if (pb.dataset.arg === 'reply') talkToWhisper(); } break;
@@ -19367,6 +19953,7 @@ document.addEventListener('click', ev => {
       }
       if (k === 'shakedown') { if (!RES_ORDER.includes(ui.res)) break; ui.sheetPlay = k; pact({ t: 'play', k, r: ui.res }); break; }
       if (k === 'connections') { if (bundleSize(ui.take || {}) !== 2) break; ui.sheetPlay = k; pact({ t: 'play', k, take: ui.take }); break; }
+      if (k === 'rush') { if (!st || !rushTargets(st, PID).includes(ui.to)) break; ui.sheetPlay = k; pact({ t: 'play', k, to: ui.to }); break; }
       ui.sheetPlay = k; pact({ t: 'play', k }); break;
     }
     case 'mkpick': if (isCard(pb.dataset.arg)) { ui.buy = pb.dataset.arg; renderPlayer(); } break;
@@ -19385,6 +19972,8 @@ document.addEventListener('click', ev => {
     case 'rwpick': ui.pickI = +pb.dataset.arg; ui.sel = null; renderPlayer(); break;
     case 'from': ui.from = pb.dataset.arg; renderPlayer(); break;
     case 'res': ui.res = pb.dataset.arg; renderPlayer(); break;
+    case 'rushto': ui.to = pb.dataset.arg; renderPlayer(); break;                  // Rush: the rival (release 9)
+    case 'bid': { const n = +pb.dataset.arg; if (Number.isInteger(n) && n > 0) pact({ t: 'bid', n }); break; }   // the auction (release 9)
     case 'take': {
       const r = pb.dataset.arg; if (!RES_ORDER.includes(r)) break;
       ui.take = ui.take || {}; ui.take[r] = (ui.take[r] || 0) + 1;

@@ -553,6 +553,31 @@ LOUD.update({"st_music": -24, "st_rocket": -21, "st_boom": -22, "st_shots": -24,
              "giant_step": -22, "giant_mech": -22, "giant_beast": -21})
 SOFT.update({"st_music": 0.4, "st_rocket": 0.15, "giant_beast": 0.1, "giant_mech": 0.05})
 
+# ---------------------------------------------------------------- game modes (release 9, 2026-09-27)
+# The lobby's modes said out loud: each mode's first roll, a rush-hour round, the last round of a timed match, a
+# chess bank running dry ("Green" + "is out of time..."), the auction (opened, and "Green" + "takes it. Sold!"), a
+# hustle, time called; and the three clock-trick cards. The gavel is the table's (embed.py TABLE).
+SFX.update({
+    "gavel":      dict(kind="fx", d=1.2, p=0.65, fade_out=0.2, text="An auctioneer's wooden gavel striking the sound block twice, sharp and clear, in a small wood-panelled room. No voices, no music."),
+})
+LOUD.update({"gavel": -21})
+LINES.update({
+    "v_m_go_blitz":  dict(text="Blitz rules. Forty-five seconds a turn. Move!", style=0.6),
+    "v_m_go_chess":  dict(text="Chess clock. Every second you spend comes out of your own pocket.", style=0.5),
+    "v_m_go_match":  dict(text="The match clock is running. Top score when time's up takes the city.", style=0.5),
+    "v_m_go_rush":   dict(text="Welcome to rush hour. The clocks are tight, and the market's open late.", style=0.55),
+    "v_m_rushhour":  dict(text="Rush hour! Every clock is cut in half.", style=0.6, stab=0.35),
+    "v_m_last":      dict(text="That's time! Last round. Make it count.", style=0.6),
+    "v_m_bankout":   dict(text="is out of time. Sudden death.", prev="Green", style=0.5),
+    "v_m_auction":   dict(text="The auction's open! Twenty seconds. Show me the cash.", style=0.6),
+    "v_m_sold":      dict(text="takes it. Sold!", prev="Green", style=0.55),
+    "v_m_hustle":    dict(text="Hustle pays. That's a free card.", style=0.55),
+    "v_m_time":      dict(text="That's the match! The clock has spoken.", style=0.55),
+    "v_c_overtime":  dict(text="Overtime! Thirty more seconds.", style=0.55),
+    "v_c_stall":     dict(text="Stalling. Nobody's rushing this one.", style=0.5),
+    "v_c_rush":      dict(text="Rush job! Somebody's in a hurry.", style=0.55),
+})
+
 
 def post(path, body, out, query=""):
     key = os.environ.get("ELEVENLABS_API_KEY") or sys.exit("ELEVENLABS_API_KEY is not set")
