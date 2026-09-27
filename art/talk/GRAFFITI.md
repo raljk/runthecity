@@ -1,25 +1,27 @@
 # Run the City — graffiti reaction pack
 
-Generated with the built-in ImageGen tool on 2026-09-27. This replaces the live artwork for all ten reaction stickers and four splats. Original generated alpha is preserved in transparent PNGs.
+Generated with the built-in ImageGen tool on 2026-09-27. This replaces the live artwork for all ten reaction stickers and four splats. The game loads WebP copies of the three atlases; the generated PNGs are the masters and stay on the machine that made them (git ignores `art/talk/*.png`).
 
 ## Published assets
 
-- `graffiti-reactions-a.png`: 971 × 1619, Big W / Cap / I'm dead / Aura + / Touch grass, three poses each.
-- `graffiti-reactions-b.png`: 971 × 1619, Money talks / Let ’em cook / Cooked / Skill issue / Too easy, three poses each.
-- `graffiti-splats.png`: 1086 × 1448, spray paint / smoke / glitter / pigeon, three poses each.
+- `graffiti-reactions-a.webp` (379 KB): 971 × 1619, Big W / Cap / I'm dead / Aura + / Touch grass, three poses each.
+- `graffiti-reactions-b.webp` (422 KB): 971 × 1619, Money talks / Let ’em cook / Cooked / Skill issue / Too easy, three poses each.
+- `graffiti-splats.webp` (356 KB): 1086 × 1448, spray paint / smoke / glitter / pigeon, three poses each.
 - `permanent-marker.ttf`: locally served Permanent Marker font. Source: https://fonts.gstatic.com/s/permanentmarker/v16/Fh4uPib9Iyv2ucM6pGQMWimMp004Hao.ttf . Apache 2.0 license included as `Permanent-Marker-LICENSE.txt`; upstream: https://github.com/google/fonts/tree/main/apache/permanentmarker .
 
-The PNGs are the runtime layers. Explicit crop rectangles keep adjacent atlas artwork out of each pose. Live marker captions remain readable at different screen sizes. The earlier reaction sheets remain as previous versions; the game no longer requests them.
+The WebPs are the runtime layers. Explicit crop rectangles keep adjacent atlas artwork out of each pose. Live marker captions remain readable at different screen sizes. The earlier reaction sheets (`reactions-a.png`, `reactions-b.png`, `splats.png`) were removed on 2026-09-27; they are in the history at 3c72ff7.
+
+**WebP (2026-09-27).** The generated PNGs had no fully solid pixel: the art sat at alpha 248–253 and a faint haze of alpha 1–15 covered the empty cells, noise nobody can see that made the alpha cost as much as the picture. The alpha alone was given a straight levels adjustment (3…244 → 0…255: the art solid, the noise floor clear, glows and the smoke's thin parts keeping their gradients), then each atlas was saved as WebP: colour at quality 80, alpha at quality 70, method 6. The three went from 7.6 MB of PNG to 1157 KB.
 
 ## Animation and responsiveness
 
-Each table sticker responds immediately and lands at 480 ms, holding the first PNG pose throughout travel. Only after landing does the reaction play: a wind-up, the second pose at 800 ms, and the final pose at 1220 ms. A local impact burst and expressive squash/rotation accompany the pose changes. The caption appears after landing and stays with the final pose. Both hold until 2 seconds, then fade together over 200 ms; removal is at 2.2 seconds. There are no looping effects or videos.
+Each table sticker responds immediately and lands at 480 ms, holding the first pose throughout travel. Only after landing does the reaction play: a wind-up, the second pose at 800 ms, and the final pose at 1220 ms. A local impact burst and expressive squash/rotation accompany the pose changes. The caption appears after landing and stays with the final pose. Both hold until 2 seconds, then fade together over 200 ms; removal is at 2.2 seconds. There are no looping effects or videos.
 
 A phone shows local feedback before closing the picker, independently of relay round-trip time; feedback lands at 320 ms, then plays the same reaction sequence and lasts 2.04 seconds, with the final pose and caption fading together. Reduced motion shows the final pose with a fade. Sticker sizes and positions are clamped to the viewport. Table splats land at 600 ms before their burst and aftermath poses, and last 3.2 seconds. Phone splats land at 672 ms before those poses and retain their 4.2-second, board-only, tap-through behavior. They resume at the correct frame after redraws.
 
 Reaction audio is scheduled on the audio clock for the landing: 480 ms for table reactions, 600 ms for table splats, and 672 ms for splats received on a phone. Phones with whole-table audio use the same 480 ms reaction delay. Effects-off mode plays immediately because there is no travel.
 
-Game screens preload all three PNGs and explicitly decode and retain them. Reaction sheets get high fetch priority; the splat sheet gets low priority. The marker font is warmed alongside them. Stable markup is cached. No new image fetch is needed when a warmed sticker is used.
+Game screens preload all three WebPs and explicitly decode and retain them. Reaction sheets get high fetch priority; the splat sheet gets low priority. The marker font is warmed alongside them. Stable markup is cached. No new image fetch is needed when a warmed sticker is used.
 
 Verification included all 42 frame transitions, landing-before-reaction checks for all 14 effects, 320px and 390px phone pickers, touch category controls, the existing 119 trash-talk checks, and a real touch-send path. At 390 × 844 with 4× browser CPU throttling, local feedback reached the next animation frame in 56.4 ms with zero post-tap image requests. This is a local test, not a guarantee for all devices or networks.
 

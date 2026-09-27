@@ -1,5 +1,7 @@
 # Run the City — stickers and splats
 
+> **Retired.** This first set was replaced the same day by the graffiti set (`GRAFFITI.md`), and its PNGs were removed from the repo on 2026-09-27 (they are in the history at 3c72ff7). The prompts are kept as a record.
+
 Generated with built-in ImageGen on 2026-09-27. Three transparent PNG atlases contain 42 poses: ten reaction stickers and four splats, with anticipation, impact, and held finish in columns 1–3. The original generated alpha is preserved. The reaction sheets are 971 × 1620 and 971 × 1619; the splat sheet is 1086 × 1448. Explicit crop bounds accommodate the generated gutters and keep neighboring poses out of each layer. CSS exposes each cell as a separate transparent layer; no GIF or video is used.
 
 Reaction atlases have five rows. `reactions-a.png`: cheer, boo, laugh, slow clap, crickets. `reactions-b.png`: make it rain, on fire, sweating, tiny violin, mic drop. `splats.png` has four rows: spray paint, smoke bomb, glitter bomb, pigeon.

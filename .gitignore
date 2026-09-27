@@ -30,5 +30,7 @@
 
 # Transparent three-frame stickers and splats
 !/art/talk/
+# the game loads the WebP copies; the PNG masters stay on the machine that made them (dev/webp/convert.py)
+/art/talk/*.png
 # the winner's poster painting (release 6): loaded by their phone when it makes the poster
 !/art/show/

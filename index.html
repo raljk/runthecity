@@ -1440,7 +1440,7 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 #talk{position:fixed;inset:0;pointer-events:none;z-index:38;overflow:hidden;contain:layout style}
 .ttstk{position:fixed;left:0;top:0;background:center/contain no-repeat;filter:drop-shadow(0 6px 12px rgba(0,0,0,.55));will-change:transform,opacity;pointer-events:none}
 #talk .ttstk{position:absolute}
-/* Three illustrated poses, cut directly from transparent PNG atlases. The held pose is the static fallback. */
+/* Three illustrated poses, cut directly from transparent WebP atlases. The held pose is the static fallback. */
 .tt-art{position:relative;display:block;width:100%;height:100%;aspect-ratio:1;isolation:isolate;pointer-events:none}
 .tt-frame,.tt-echo{position:absolute;left:50%;top:50%;width:var(--tt-width);height:var(--tt-height);transform:translate(-50%,-50%);display:block;background-image:var(--tt-atlas);background-size:var(--tt-size);background-position:var(--tt-position);background-repeat:no-repeat;opacity:0}
 .tt-frame:nth-child(3){opacity:1}
@@ -14560,7 +14560,7 @@ function ttWarm() {
   if (document.fonts) document.fonts.load('18px "RTC Marker"').catch(() => {});
   ttWarmPromise = Promise.all(Object.keys(TT_ATLASES).map(name => {
     const img = new Image(); img.decoding = 'async'; img.fetchPriority = name.includes('reactions') ? 'high' : 'low';
-    TT_IMAGES.push(img); img.src = `art/talk/${name}.png`;
+    TT_IMAGES.push(img); img.src = `art/talk/${name}.webp`;
     return typeof img.decode === 'function' ? img.decode().then(() => true, () => false) : Promise.resolve(true);
   }));
   return ttWarmPromise;
@@ -14576,7 +14576,7 @@ function ttArtHTML(k, play = false, words = false) {
       const w = Math.round((col + 1) * atlas.w / 3) - x, h = atlas.cuts[col][row + 1] - y, side = Math.max(w, h);
       return `--tt-width:${96 * w / side}%;--tt-height:${96 * h / side}%;--tt-size:${100 * atlas.w / w}% ${100 * atlas.h / h}%;--tt-position:${100 * x / (atlas.w - w)}% ${100 * y / (atlas.h - h)}%`;
     });
-  return TT_ART_HTML[cacheKey] = `<span class="tt-art${play ? ' tt-playing' : ''}${banter ? ' tt-banter' : ''}${TT_TONE[k] ? ' tt-' + TT_TONE[k] : ''}" aria-hidden="true" style="--tt-atlas:url(art/talk/${file}.png)">` +
+  return TT_ART_HTML[cacheKey] = `<span class="tt-art${play ? ' tt-playing' : ''}${banter ? ' tt-banter' : ''}${TT_TONE[k] ? ' tt-' + TT_TONE[k] : ''}" aria-hidden="true" style="--tt-atlas:url(art/talk/${file}.webp)">` +
     cells.map(style => `<span class="tt-frame" style="${style}"></span>`).join('') +
     (play && banter ? `<span class="tt-echo" style="${cells[0]}"></span>` : '') +
     (banter ? `<span class="tt-tag">${esc(TT_EMO[k])}</span>` : '') + '</span>';
@@ -14719,7 +14719,7 @@ function talkShow(m) {
   const at = (d, p, sz) => { d.style.left = (p.x - sz / 2) + 'px'; d.style.top = (p.y - sz / 2) + 'px'; };
   if (m.k === 'emo') {
     const d = ttSticker(m.e, s); at(d, a, s);
-    // Land at 480ms, then let the PNG poses and banter play at the destination.
+    // Land at 480ms, then let the three poses and banter play at the destination.
     let dx = c.x - a.x, dy = c.y - a.y; const len = Math.hypot(dx, dy) || 1, go = Math.min(len * 0.45, s * 2.6); dx = dx / len * go; dy = dy / len * go;
     const r = (Math.random() - 0.5) * 12;
     if (!anim) { ttGo(d, [{ opacity: 1 }, { opacity: 1, offset: 2000 / 2200 }, { opacity: 0 }], { duration: 2200 }); return; }
