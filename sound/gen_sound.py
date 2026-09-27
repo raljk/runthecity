@@ -295,20 +295,61 @@ LINES.update({
     "v_icpt_3":    dict(text="I'm reading your mail.", style=0.6, stab=0.35),
     "v_icpt_4":    dict(text="Passing notes, are we?", style=0.6, stab=0.35),
     "v_says":      dict(text="says:", prev="Red", next="Watch out.", style=0.45),
-    "v_w_yes":     dict(text="Yes.", prev="And Red says:", style=0.5),
-    "v_w_no":      dict(text="No.", prev="And Red says:", style=0.5),
-    "v_w_trade":   dict(text="Trade?", prev="And Red says:", style=0.5),
-    "v_w_deal":    dict(text="Deal?", prev="And Red says:", style=0.5),
-    "v_w_watch":   dict(text="Watch out.", prev="And Red says:", style=0.5),
-    "v_w_hurry":   dict(text="Hurry up.", prev="And Red says:", style=0.5),
-    "v_w_nice":    dict(text="Nice one.", prev="And Red says:", style=0.5),
-    "v_w_never":   dict(text="Not a chance.", prev="And Red says:", style=0.5),
-    "v_w_pineapple": dict(text="Pineapple.", prev="And Red says:", style=0.55),
-    "v_w_spaghetti": dict(text="Spaghetti.", prev="And Red says:", style=0.55),
-    "v_w_moustache": dict(text="Moustache.", prev="And Red says:", style=0.55),
-    "v_w_kaboom":  dict(text="Kaboom.", prev="And Red says:", style=0.55),
-    "v_w_flamingo": dict(text="Flamingo.", prev="And Red says:", style=0.55),
-    "v_w_wobble":  dict(text="Wobble.", prev="And Red says:", style=0.55),
+    # the whispers (redone 2026-09-27): quick street banter, nine situations of five lines, each quoted with relish
+    # making a deal
+    "v_w_youin":       dict(text="You in?", prev="And Red says:", style=0.55),
+    "v_w_letstalk":    dict(text="Let's talk.", prev="And Red says:", style=0.55),
+    "v_w_offer":       dict(text="What's your offer?", prev="And Red says:", style=0.55),
+    "v_w_worth":       dict(text="Make it worth it.", prev="And Red says:", style=0.55),
+    "v_w_wegood":      dict(text="We good?", prev="And Red says:", style=0.55),
+    # agreeing
+    "v_w_bet":         dict(text="Bet.", prev="And Red says:", style=0.55),
+    "v_w_sayless":     dict(text="Say less.", prev="And Red says:", style=0.55),
+    "v_w_imin":        dict(text="I'm in.", prev="And Red says:", style=0.55),
+    "v_w_runit":       dict(text="Run it.", prev="And Red says:", style=0.55),
+    "v_w_weregood":    dict(text="We're good.", prev="And Red says:", style=0.55),
+    # turning it down
+    "v_w_nah":         dict(text="Nah.", prev="And Red says:", style=0.55),
+    "v_w_dreaming":    dict(text="You're dreaming.", prev="And Red says:", style=0.55),
+    "v_w_tryagain":    dict(text="Try again.", prev="And Red says:", style=0.55),
+    "v_w_nothappening": dict(text="Not happening.", prev="And Red says:", style=0.55),
+    "v_w_dobetter":    dict(text="Do better.", prev="And Red says:", style=0.55),
+    # claiming turf
+    "v_w_myblock":     dict(text="My block.", prev="And Red says:", style=0.55),
+    "v_w_keepwalking": dict(text="Keep walking.", prev="And Red says:", style=0.55),
+    "v_w_wronghood":   dict(text="Wrong neighbourhood.", prev="And Red says:", style=0.55),
+    "v_w_owncorner":   dict(text="Find your own corner.", prev="And Red says:", style=0.55),
+    "v_w_rentsdue":    dict(text="Rent's due.", prev="And Red says:", style=0.55),
+    # calling a bluff
+    "v_w_youwont":     dict(text="You won't.", prev="And Red says:", style=0.55),
+    "v_w_proveit":     dict(text="Prove it.", prev="And Red says:", style=0.55),
+    "v_w_alltalk":     dict(text="All talk.", prev="And Red says:", style=0.55),
+    "v_w_nicetry":     dict(text="Nice try.", prev="And Red says:", style=0.55),
+    "v_w_iseeyou":     dict(text="I see you.", prev="And Red says:", style=0.55),
+    # giving props
+    "v_w_fairplay":    dict(text="Fair play.", prev="And Red says:", style=0.55),
+    "v_w_clean":       dict(text="That was clean.", prev="And Red says:", style=0.55),
+    "v_w_respect":     dict(text="Respect.", prev="And Red says:", style=0.55),
+    "v_w_okseeyou":    dict(text="Okay, I see you.", prev="And Red says:", style=0.55),
+    "v_w_bigmove":     dict(text="Big move.", prev="And Red says:", style=0.55),
+    # talking trash
+    "v_w_cooked":      dict(text="You're cooked.", prev="And Red says:", style=0.55),
+    "v_w_holdthat":    dict(text="Hold that.", prev="And Red says:", style=0.55),
+    "v_w_rough":       dict(text="That's rough.", prev="And Red says:", style=0.55),
+    "v_w_quiet":       dict(text="Got real quiet.", prev="And Red says:", style=0.55),
+    "v_w_comfy":       dict(text="Don't get comfy.", prev="And Red says:", style=0.55),
+    # getting revenge
+    "v_w_energy":      dict(text="Keep that energy.", prev="And Red says:", style=0.55),
+    "v_w_coming":      dict(text="Your turn's coming.", prev="And Red says:", style=0.55),
+    "v_w_oweyou":      dict(text="I owe you one.", prev="And Red says:", style=0.55),
+    "v_w_pockets":     dict(text="Watch your pockets.", prev="And Red says:", style=0.55),
+    "v_w_notdone":     dict(text="We're not done.", prev="And Red says:", style=0.55),
+    # hurrying them up
+    "v_w_yourmove":    dict(text="Your move.", prev="And Red says:", style=0.55),
+    "v_w_anyday":      dict(text="Any day now.", prev="And Red says:", style=0.55),
+    "v_w_clock":       dict(text="Clock's ticking.", prev="And Red says:", style=0.55),
+    "v_w_lesschat":    dict(text="Less chat. Move.", prev="And Red says:", style=0.55),
+    "v_w_playing":     dict(text="We playing or what?", prev="And Red says:", style=0.55),
     # a table going wild with stickers
     "v_crowd_1":   dict(text="Tough crowd tonight.", style=0.55),
     "v_crowd_2":   dict(text="The crowd is restless.", style=0.55),
@@ -327,7 +368,8 @@ LINES.update({
 # Said as three clips run close together: what is happening, which side of the table it is on, and the district
 # ("Shots fired." + "Far side," + "up by the nightlife strip."). Each part is read in the context of the others.
 DIR_WHAT = {"chase": "Car chase!", "robbery": "Robbery in progress.", "gangwar": "Shots fired.",
-            "race": "Street racers.", "concert": "Party on the roof.", "fire": "Something's burning."}
+            "race": "Street racers.", "concert": "Party on the roof.", "fire": "Something's burning.",
+            "giant": "What is that?"}                                   # the giant (release 6)
 DIR_SIDE = {"far": "Far side,", "front": "Right down front,", "left": "Over on the left,", "right": "Over on the right,",
             "mid": "Right in the middle,"}
 DIR_DIST = {"nightlife": "up by the nightlife strip.", "warehouse": "down by the freight yards.",
@@ -362,6 +404,46 @@ LINES.update({
     "v_t_on_2":        dict(text="has walled off a slice of the city.", prev="Green", style=0.45),
     "v_t_off_1":       dict(text="just lost their turf.", prev="Green", style=0.5),
     "v_t_off_2":       dict(text="has had their line cut.", prev="Green", style=0.5),
+})
+
+# ---------------------------------------------------------------- showtime (release 6)
+# The victory show: music under it, the towers going up as rockets, fireworks, the winner's crews firing into the
+# air, the confetti truck in the parade; and the giant's footsteps and calls. All of it the table's (embed.py TABLE).
+SFX.update({
+    "st_music":   dict(kind="fx", music=True, d=52, text="Triumphant instrumental victory anthem for the winner's celebration in a "
+        "neon-noir crime board game: a hard-hitting hip-hop beat with a booming 808 bass, big brass stabs, claps and a soaring synth "
+        "lead, confident and celebratory like the finale of a gangster movie at night. It builds for the first few seconds, runs at "
+        "full energy through the middle and ends on one big final hit that rings out. Instrumental only, no vocals, no words."),
+    "st_rocket":  dict(post=PUNCHY % -2, kind="fx", d=7, p=0.5, fade_out=1.5, text="A rocket launch heard from the street: a deep ignition rumble and "
+        "whoosh that builds into a roaring, crackling engine thrust, then fades away upward as the rocket climbs into the sky. "
+        "Cinematic and powerful. No music, no voices."),
+    "st_boom":    dict(kind="fx", d=3, p=0.55, fade_out=0.6, text="One firework going up and bursting: a short rising whistle, a big "
+        "deep boom, then a shower of crackling sparkles fading away. Outdoors at night. No music, no voices."),
+    "st_shots":   dict(kind="fx", d=3, p=0.5, fade_out=0.4, text="A gang celebrating a win by firing handguns into the air: a few "
+        "quick bursts of pistol shots echoing between city buildings at night, with whoops and a cheer. No music."),
+    "st_pop":     dict(kind="fx", d=2, p=0.55, fade_out=0.4, text="A confetti cannon firing: a sharp air cannon pop and a whoosh of "
+        "paper confetti fluttering down, with a small crowd cheering. No music."),
+    "giant_step": dict(post=PUNCHY % 8, kind="fx", d=1.6, p=0.6, fade_out=0.4, text="One enormous footstep of a giant walking machine landing on a "
+        "city street: a deep, heavy, booming thud with a metallic clank, the ground shaking and small debris rattling. No music, "
+        "no voices."),
+    "giant_mech": dict(post=PUNCHY % -4, kind="fx", d=4, p=0.5, fade_out=0.6, text="A giant construction robot walking through a city: heavy "
+        "hydraulic servos whining, pistons hissing and clanking, then a deep industrial foghorn blast. No music, no voices."),
+    "giant_beast": dict(post=PUNCHY % 5, kind="fx", d=4.5, p=0.5, fade_out=0.8, text="A colossal unknown sea creature calling out across a city at "
+        "night: a long, deep, eerie, echoing whale-like moan with a wet gurgle at the end. Not a lion, not a dinosaur roar. No music, "
+        "no voices."),
+})
+LINES.update({
+    "v_st_crew_1": dict(text="Light it up!", style=0.6),
+    "v_st_crew_2": dict(text="Let the whole city hear it!", style=0.6),
+    "v_st_count":  dict(text="Three. Two. One.", stab=0.6, style=0.4),
+    "v_st_lift_1": dict(text="Liftoff!", style=0.6),
+    "v_st_lift_2": dict(text="We have liftoff!", style=0.6),
+    "v_st_orbit":  dict(text="Next stop, orbit.", style=0.5),
+    "v_st_parade": dict(text="Clear the streets. Here comes the parade.", style=0.55),
+    "v_st_face_1": dict(text="Look at that face.", style=0.55),
+    "v_st_face_2": dict(text="Now that's a winner's smile.", style=0.55),
+    "v_st_end":    dict(text="The city is yours. For now.", style=0.5),
+    "v_giant_radio": dict(text="All units, be advised. We have a very large situation.", voice=DISPATCH, radio=True),
 })
 
 # ---------------------------------------------------------------- levels and encoding
@@ -417,6 +499,10 @@ LOUD = {
 # a softer start for the sounds whose first instant is not the point (seconds of fade-in)
 SOFT = {"start": 0.25, "legend": 0.06, "siren": 0.05, "hype": 0.04, "win": 0.03, "tension": 0.03,
         "build_holding": 0.02, "reveal_big": 0.02, "join": 0.01, "fight_end": 0.01}
+# showtime (release 6)
+LOUD.update({"st_music": -24, "st_rocket": -21, "st_boom": -22, "st_shots": -24, "st_pop": -24,
+             "giant_step": -22, "giant_mech": -22, "giant_beast": -21})
+SOFT.update({"st_music": 0.4, "st_rocket": 0.15, "giant_beast": 0.1, "giant_mech": 0.05})
 
 
 def post(path, body, out, query=""):
@@ -438,6 +524,9 @@ def post(path, body, out, query=""):
 
 def gen_sfx(name, out=None):
     s = SFX[name]
+    if s.get("music"):                                                 # a piece of music (release 6): Eleven Music, instrumental
+        body = {"prompt": s["text"], "music_length_ms": int(s["d"] * 1000), "model_id": "music_v1", "force_instrumental": True}
+        return post("/music", body, out or os.path.join(RAW, name + ".mp3"), "?output_format=mp3_44100_128")
     body = {"text": s["text"], "duration_seconds": s["d"], "prompt_influence": s["p"], "model_id": SFX_MODEL}
     if s.get("loop"): body["loop"] = True
     return post("/sound-generation", body, out or os.path.join(RAW, name + ".mp3"), "?output_format=mp3_44100_128")

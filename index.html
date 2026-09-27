@@ -253,7 +253,7 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 /* Real game vector art on separate light planes. */
 .street-sign{position:absolute;z-index:2;pointer-events:none;filter:drop-shadow(0 0 9px #f934ae70);animation:sign-current 5.5s ease-in-out infinite;transform:perspective(800px) rotateY(-19deg) rotate(-6deg)}.street-sign svg{width:100%;height:auto;overflow:visible}.hero-street-sign{width:230px;right:5%;top:36%;transform:perspective(800px) rotateY(-28deg) rotate(8deg)}
 .city-copter{position:absolute;z-index:4;left:-20%;top:20%;width:245px;pointer-events:none;animation:city-patrol 25s linear -6s infinite}.city-copter svg{width:100%;height:auto;overflow:visible;filter:drop-shadow(0 0 2px #9aecff40)}.copter-rotor,.copter-tail{transform-box:fill-box;transform-origin:center;animation:copter-spin .14s linear infinite}.copter-tail{animation-duration:.1s}.copter-beam{transform-origin:47px 17px;animation:copter-sweep 4s ease-in-out infinite alternate;mix-blend-mode:screen}.copter-beacon{animation:copter-beacon 1.5s steps(2,end) infinite}
-.city-hologram{position:absolute;z-index:2;width:220px;height:240px;pointer-events:none;mix-blend-mode:screen;filter:drop-shadow(0 0 13px #51d9f655);transform:perspective(900px) rotateY(-16deg) translateY(calc(var(--travel,0px) * -.55))}.city-hologram canvas{width:100%;height:100%;display:block}.holo-sign{mix-blend-mode:screen;filter:drop-shadow(0 0 13px #51d9f655)}.holo-sign canvas{width:100%;height:auto;aspect-ratio:1;display:block}.hand-street-sign.holo-sign{position:relative;inset:auto;display:block;width:150px;margin:22px 0 -30px 70px}.join-street-sign.holo-sign{top:6%;right:auto;left:41%;width:160px}@media(max-width:900px){.hand-street-sign.holo-sign{width:110px;margin:6px 8px -20px auto;opacity:.9}.join-street-sign.holo-sign{top:25px;left:auto;right:4%;width:110px}}.holo-projector{position:absolute;bottom:-4px;left:15%;right:15%;height:14px;border:1px solid #51dfff70;border-radius:50%;box-shadow:0 0 25px #36d4ff40,0 -15px 50px #36d4ff25}.hero-holo{left:4%;top:31%;width:180px;height:195px}.hero-dancer{z-index:1;left:auto;right:5%;top:15%;width:140px;height:200px;opacity:.76;filter:blur(.15px) drop-shadow(0 0 18px #ff329799);transform:perspective(1200px) rotateY(11deg) scale(.82);mask-image:linear-gradient(#000 0 76%,transparent 97%);-webkit-mask-image:linear-gradient(#000 0 76%,transparent 97%)}.hero-dancer .holo-projector{opacity:.32}.table-holo{width:150px;height:170px;left:4%;top:16%}.hand-holo{top:3%;right:8%;width:210px;height:160px}.faq-holo{left:13%;bottom:50px;width:170px;height:185px}
+.city-hologram{position:absolute;z-index:2;width:220px;height:240px;pointer-events:none;mix-blend-mode:screen;filter:drop-shadow(0 0 13px #51d9f655);transform:perspective(900px) rotateY(-16deg) translateY(calc(var(--travel,0px) * -.55))}.city-hologram canvas{width:100%;height:100%;display:block}.holo-sign{mix-blend-mode:screen;filter:drop-shadow(0 0 13px #51d9f655)}.holo-sign canvas{width:100%;height:auto;aspect-ratio:1;display:block}.hand-street-sign.holo-sign{position:absolute;inset:auto;left:max(-28px,calc(50% - 330px));bottom:12px;display:block;width:150px;margin:0}.join-street-sign.holo-sign{top:6%;right:auto;left:41%;width:160px}@media(max-width:900px){.hand-street-sign.holo-sign{left:max(4px,calc(50% - 300px));bottom:12px;width:130px;opacity:.9}.join-street-sign.holo-sign{top:25px;left:auto;right:4%;width:110px}}.holo-projector{position:absolute;bottom:-4px;left:15%;right:15%;height:14px;border:1px solid #51dfff70;border-radius:50%;box-shadow:0 0 25px #36d4ff40,0 -15px 50px #36d4ff25}.hero-holo{left:4%;top:31%;width:180px;height:195px}.hero-dancer{z-index:1;left:auto;right:5%;top:15%;width:140px;height:200px;opacity:.76;filter:blur(.15px) drop-shadow(0 0 18px #ff329799);transform:perspective(1200px) rotateY(11deg) scale(.82);mask-image:linear-gradient(#000 0 76%,transparent 97%);-webkit-mask-image:linear-gradient(#000 0 76%,transparent 97%)}.hero-dancer .holo-projector{opacity:.32}.table-holo{width:150px;height:170px;left:4%;top:16%}.hand-holo{top:3%;right:8%;width:210px;height:160px}.faq-holo{left:13%;bottom:50px;width:170px;height:185px}
 /* Move through districts, with readable content above animated scenery. */
 .city-ticker{position:relative;z-index:8;display:flex;align-items:center;justify-content:space-around;gap:25px;background:#e8fc37;color:#0a2630;padding:19px 30px;transform:rotate(-1.5deg) scale(1.02);margin-block:-5px;box-shadow:0 7px 0 #ff3297;font:800 29px/1 'Barlow Condensed',Impact,sans-serif;text-transform:uppercase}.city-ticker small{font:600 12px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1px}.city-ticker i{font-style:normal;font-size:17px}
 .city-chapter{--travel:0px;--progress:0;position:relative;isolation:isolate;min-height:780px;padding-block:120px;scroll-margin-top:0;overflow:hidden}.chapter-art{position:absolute;inset:-100px 0;z-index:-3;transform:translate3d(0,calc(var(--travel) * -.55),0) scale(1.06);pointer-events:none}.chapter-art img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.85);opacity:.62}.city-chapter::before{content:'';position:absolute;z-index:-1;inset:0;background:linear-gradient(#06121b 0%,#06121b35 24%,#06121b80 80%,#06121b 100%),linear-gradient(90deg,#04131bc9,transparent 58%,#04131b77);pointer-events:none}.chapter-haze{position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 20% 85%,#22cce52b,transparent 60%),radial-gradient(ellipse at 100% 25%,#fb2b9740,transparent 50%);animation:city-mist 16s ease-in-out infinite alternate;pointer-events:none}.chapter-content{position:relative;z-index:3}.chapter-heading{max-width:650px}.lp h2{font:800 clamp(48px,5.8vw,86px)/.91 'Barlow Condensed',Impact,'Arial Narrow',sans-serif;letter-spacing:-1.7px;color:var(--lp-paper);text-transform:uppercase;text-wrap:initial;margin:17px 0 26px;transform:skew(-3deg)}.lp h2 em{font-style:normal;color:var(--acid);text-shadow:3px 4px 0 #294329,0 0 22px #e5fb3715}.chapter-heading>p:not(.lp-eyebrow){font-size:15px;line-height:1.85;color:#c2d2da;max-width:450px;margin-top:14px;text-shadow:0 2px 8px #000}.lp h3{font:700 28px/1.1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.2px;margin:0 0 9px}
@@ -262,8 +262,24 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 @keyframes table-tip-flash{0%{background:rgba(255,20,55,.04);box-shadow:inset 0 0 35px 10px rgba(255,30,60,.12)}10%{background:rgba(255,20,55,.42);box-shadow:inset 0 0 115px 42px rgba(255,30,60,.75)}22%{background:transparent;box-shadow:none}34%{background:rgba(255,20,55,.28);box-shadow:inset 0 0 90px 28px rgba(255,30,60,.5)}48%,100%{background:transparent;box-shadow:none}}
 .table-card-play .sirens{box-shadow:none;animation:table-tip-flash 1.65s ease-out both}
 .holo-table>.table-render{position:absolute;inset:7% -1% 10%}
-.city-hand{min-height:950px;display:flex;align-items:center}.chapter-art-towers img{object-position:80% 65%;opacity:.48}.city-hand::before{background:linear-gradient(#06121b,transparent 28%,#06121b 100%),linear-gradient(90deg,#06121bed,transparent)}.hand-layout{display:grid;grid-template-columns:1fr 1.1fr;align-items:center;gap:60px}.city-hand .chapter-heading{max-width:590px}.city-hand h2{font-size:clamp(55px,5.1vw,78px)}.hand-street-sign{left:2%;bottom:8%;width:200px}.lp-textlink{display:inline-flex;align-items:center;gap:24px;color:var(--acid)!important;border-bottom:1px solid #e8fc3760;padding-block:14px;margin-top:19px;font-size:13px;font-weight:700}.card-stage{position:relative;min-height:530px;perspective:1400px}.lp-cards{height:470px;position:relative;transform-style:preserve-3d;transform:rotateY(calc(-18deg + var(--progress) * 28deg)) rotateX(8deg) translateY(calc(var(--travel) * -.35))}.lp-card{position:absolute;top:65px;left:calc(50% - 111px);width:222px;height:323px;border:1px solid #c9f0ff80;border-radius:9px;background:#111826;overflow:hidden;transform-origin:50% 100%;box-shadow:0 28px 42px #000b,0 0 15px #68e4ee16;transition:filter .3s}.lp-card::before{content:'';position:absolute;inset:0;background:var(--card-art) center/cover}.lp-card::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 45%,#07101aea)}.lp-card:nth-child(1){--card-art:var(--card-rewind);transform:translate3d(calc(-102px - var(--progress) * 23px),18px,-45px) rotate(-20deg)}.lp-card:nth-child(2){--card-art:var(--card-fight);transform:translateZ(60px) rotate(1deg);z-index:2}.lp-card:nth-child(3){--card-art:var(--card-legend);transform:translate3d(calc(107px + var(--progress) * 23px),20px,-20px) rotate(21deg)}.lp-card span{position:absolute;z-index:2;bottom:20px;left:18px;font:700 23px/1.1 'Barlow Condensed',sans-serif}.lp-card small{display:block;color:var(--acid);font:9px/2.5 ui-monospace,SFMono-Regular,Consolas,monospace;text-transform:uppercase;letter-spacing:2px}.card-caption{position:absolute;bottom:15px;left:0;right:0;text-align:center;font:9px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px;color:#a9c9d8}.holo-orbit{position:absolute;left:0;right:0;bottom:6%;height:120px;border:1px solid #7edfff40;border-radius:50%;box-shadow:0 0 60px #35daf52b;transform:rotate(-10deg)}
-.city-join{min-height:910px;display:flex;align-items:center}.chapter-art-door img{object-position:45% 70%;opacity:.43}.city-join::before{background:linear-gradient(#06121b,transparent 30%,#06121b 100%),linear-gradient(90deg,transparent,#05172270 40%,#05101ced)}.join-crew{position:absolute;z-index:0;width:1030px;left:-285px;bottom:0;opacity:.7;transform:translateY(calc(var(--travel) * -.6))}.join-crew img{width:100%;height:auto;mask-image:linear-gradient(90deg,#000 10%,#000 60%,transparent),linear-gradient(transparent,#000 22%,#000 50%,transparent 96%);mask-composite:intersect;-webkit-mask-composite:source-in}.join-layout{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center}.city-join .chapter-heading{align-self:start;padding-top:22px}.city-join .chapter-heading>p:not(.lp-eyebrow){max-width:320px}.join-street-sign{top:9%;right:6%;width:180px}.lp-codeform{position:relative;background:#081b29e8;backdrop-filter:blur(16px);padding:35px;display:flex;flex-direction:column;gap:20px;border:1px solid #64e8f3b0;box-shadow:0 0 25px #30ceff19,12px 13px 0 #10374177,12px 14px 0 #53e5f244;transform:perspective(1000px) rotateY(-5deg);isolation:isolate}.terminal-top{display:flex;align-items:center;gap:9px;font:10px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px;color:var(--cyan);border-bottom:1px solid #76dfee40;padding-bottom:20px;margin-bottom:7px}.terminal-top>span:last-child{margin-left:auto;font-size:17px}.signal-dot{width:5px;height:5px;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:city-glow 2s infinite alternate}.lp-codeform label{font-size:12px;color:#bdced7}.lp-codeform input{width:100%;min-width:0;border:1px solid #64e8f36b;background:#06121bd9;padding:20px 17px;font:600 27px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--cyan);letter-spacing:7px;text-transform:uppercase;border-radius:0}.lp-codeform input::placeholder{color:#82959f;opacity:1}.lp-codeform .lp-actions{flex-wrap:nowrap;gap:10px}.lp-codeform .lp-button{flex:1;padding-inline:12px;font-size:12px;gap:14px}.lp-help{color:#a1bac7;font-size:11px;line-height:1.7}.terminal-bars{height:18px;width:120px;background:repeating-linear-gradient(90deg,#64e8f366 0 2px,transparent 2px 5px,#64e8f344 5px 6px,transparent 6px 9px);margin-top:8px}
+.city-hand{min-height:950px;display:flex;align-items:center}.chapter-art-towers img{object-position:80% 65%;opacity:.48}.city-hand::before{background:linear-gradient(#06121b,transparent 28%,#06121b 100%),linear-gradient(90deg,#06121bed,transparent)}.hand-layout{display:grid;grid-template-columns:1fr 1.1fr;align-items:center;gap:60px}.city-hand .chapter-heading{max-width:590px}.city-hand h2{font-size:clamp(55px,5.1vw,78px)}.hand-street-sign{left:2%;bottom:8%;width:200px}.lp-textlink{display:inline-flex;align-items:center;gap:24px;color:var(--acid)!important;border-bottom:1px solid #e8fc3760;padding-block:14px;margin-top:19px;font-size:13px;font-weight:700}.card-stage{position:relative;min-height:530px;perspective:1400px}.lp-cards{height:470px;position:relative;transform-style:preserve-3d;transform:rotateY(calc(-18deg + var(--progress) * 28deg)) rotateX(8deg) translateY(calc(var(--travel) * -.35))}.lp-card{position:absolute;top:65px;left:calc(50% - 111px);width:222px;height:323px;border:1px solid #c9f0ff80;border-radius:9px;background:#111826;overflow:hidden;transform-origin:50% 100%;box-shadow:0 28px 42px #000b,0 0 15px #68e4ee16;transition:filter .3s}.lp-card::before{content:'';position:absolute;inset:0;background:var(--card-art) center/cover}.lp-card::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 45%,#07101aea)}.lp-card[data-slot='-1']{transform:translate3d(calc(-102px - var(--progress) * 23px),18px,-45px) rotate(-20deg)}.lp-card[data-slot='0']{transform:translateZ(60px) rotate(1deg);z-index:2}.lp-card[data-slot='1']{transform:translate3d(calc(107px + var(--progress) * 23px),20px,-20px) rotate(21deg)}.lp-card span{position:absolute;z-index:2;bottom:20px;left:18px;font:700 23px/1.1 'Barlow Condensed',sans-serif}.lp-card small{display:block;color:var(--acid);font:9px/2.5 ui-monospace,SFMono-Regular,Consolas,monospace;text-transform:uppercase;letter-spacing:2px}.card-caption{position:absolute;bottom:15px;left:0;right:0;text-align:center;font:9px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px;color:#a9c9d8}.holo-orbit{position:absolute;left:0;right:0;bottom:6%;height:120px;border:1px solid #7edfff40;border-radius:50%;box-shadow:0 0 60px #35daf52b;transform:rotate(-10deg)}
+
+/* The card fan keeps three visible cards while the full deck moves through it. */
+.card-stage{touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none}
+.lp-cards{touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none;cursor:grab}
+.lp-cards.is-dragging{cursor:grabbing}
+.lp .lp-cards:focus-visible{outline:none}.lp-cards:focus-visible .lp-card[data-slot="0"]{outline:2px solid var(--acid);outline-offset:5px}
+.lp .lp-card{opacity:0;visibility:hidden;pointer-events:auto;transition:filter .3s;will-change:transform,opacity}
+.lp-card[data-slot='-2']{transform:translate3d(-235px,44px,-100px) rotate(-32deg)}
+.lp-card[data-slot='2']{transform:translate3d(235px,44px,-100px) rotate(32deg)}
+.lp-card[data-slot='-1'],.lp-card[data-slot='0'],.lp-card[data-slot='1']{opacity:1;visibility:visible}
+.lp .card-caption{bottom:15px;margin:0;pointer-events:none}
+.card-controls{position:absolute;bottom:43px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px}
+.lp .card-arrow{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #64e8f35c;border-radius:50%;background:#06121bdd;color:var(--cyan);font:24px/1 system-ui;transition:background .2s,border-color .2s}
+.lp .card-arrow:hover{background:#163543;border-color:var(--acid);color:var(--acid)}
+.lp-card-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.lp.motion-paused .lp-card,.lp.motion-paused .lp-cards{transition:none}
+.city-join{min-height:910px;display:flex;align-items:center;overflow:visible}.city-join>.chapter-art{inset:0;overflow:hidden;transform:none}.city-join>.chapter-art,.city-join>.chapter-haze{mask-image:linear-gradient(transparent,#000 110px,#000 calc(100% - 80px),transparent);-webkit-mask-image:linear-gradient(transparent,#000 110px,#000 calc(100% - 80px),transparent)}.chapter-art-door img{object-position:45% 70%;opacity:.43}.city-join::before{background:linear-gradient(#06121b,transparent 30%,#06121b 100%),linear-gradient(90deg,transparent,#05172270 40%,#05101ced)}.join-crew{position:absolute;z-index:0;width:1030px;left:-285px;top:-110px;bottom:auto;opacity:.7;pointer-events:none;transform:translateY(calc(var(--travel) * -.25))}.join-crew img{display:block;width:100%;height:auto;mask-image:linear-gradient(90deg,#000 10%,#000 60%,transparent),linear-gradient(#000 50%,transparent 96%);mask-composite:intersect;-webkit-mask-composite:source-in}.join-layout{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center}.city-join .chapter-heading{align-self:start;padding-top:22px}.city-join .chapter-heading>p:not(.lp-eyebrow){max-width:320px}.join-street-sign{top:9%;right:6%;width:180px}.lp-codeform{position:relative;background:#081b29e8;backdrop-filter:blur(16px);padding:35px;display:flex;flex-direction:column;gap:20px;border:1px solid #64e8f3b0;box-shadow:0 0 25px #30ceff19,12px 13px 0 #10374177,12px 14px 0 #53e5f244;transform:perspective(1000px) rotateY(-5deg);isolation:isolate}.terminal-top{display:flex;align-items:center;gap:9px;font:10px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px;color:var(--cyan);border-bottom:1px solid #76dfee40;padding-bottom:20px;margin-bottom:7px}.terminal-top>span:last-child{margin-left:auto;font-size:17px}.signal-dot{width:5px;height:5px;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:city-glow 2s infinite alternate}.lp-codeform label{font-size:12px;color:#bdced7}.lp-codeform input{width:100%;min-width:0;border:1px solid #64e8f36b;background:#06121bd9;padding:20px 17px;font:600 27px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--cyan);letter-spacing:7px;text-transform:uppercase;border-radius:0}.lp-codeform input::placeholder{color:#82959f;opacity:1}.lp-codeform .lp-actions{flex-wrap:nowrap;gap:10px}.lp-codeform .lp-button{flex:1;padding-inline:12px;font-size:12px;gap:14px}.lp-help{color:#a1bac7;font-size:11px;line-height:1.7}.terminal-bars{height:18px;width:120px;background:repeating-linear-gradient(90deg,#64e8f366 0 2px,transparent 2px 5px,#64e8f344 5px 6px,transparent 6px 9px);margin-top:8px}
 .city-faq{min-height:660px;padding-block:115px 145px}.chapter-art-high img{object-position:50% 0%;opacity:.25}.faq-layout{display:grid;grid-template-columns:1fr 1fr;gap:90px}.lp-faq details{border-top:1px solid #7dccdb45;background:#06121b9e;backdrop-filter:blur(6px)}.lp-faq details:last-child{border-bottom:1px solid #7dccdb45}.lp-faq summary{cursor:pointer;padding:24px 40px 24px 14px;list-style:none;position:relative;font:600 16px/1.4 var(--body)}.lp-faq summary::-webkit-details-marker{display:none}.lp-faq summary::after{content:'+';position:absolute;right:14px;color:var(--acid);font:300 24px/1 var(--body)}.lp-faq details[open] summary::after{content:'−'}.lp-faq details p{padding:0 30px 25px 14px;font-size:13px;line-height:1.9;color:#bfd0d9}.lp-footer{position:relative;z-index:2;padding:40px 50px 90px;display:flex;align-items:center;justify-content:space-between;gap:30px;background:linear-gradient(#06121bcc,#04131bed),url(art/landing/city-street.webp) center 88%/cover;border-top:1px solid #4f9bae44}.lp-footer .rtc-wordmark{width:195px;height:87px}.lp-footer p{color:#9db8c5;font:9px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.5px}.lp-footer>a:last-child{font-size:12px}
 
 /* Anime timing: anticipation, dash/smear, one impact frame, then a held group pose. */
@@ -313,8 +329,8 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 @keyframes city-patrol{0%{transform:translate(-5vw,-25px) rotate(-6deg);opacity:0}8%{opacity:.9}45%{transform:translate(61vw,60px) rotate(5deg);opacity:.9}85%{opacity:.8}100%{transform:translate(145vw,-65px) rotate(-7deg);opacity:0}}@keyframes copter-spin{to{transform:rotate(360deg)}}@keyframes copter-sweep{from{transform:rotate(-18deg)}to{transform:rotate(20deg)}}@keyframes copter-beacon{50%{opacity:.15}}@keyframes holo-scan{from{background-position:0 -130%}to{background-position:0 130%}}
 @media(min-width:1600px){.poster-title{top:160px!important}.poster-crews{width:1190px;bottom:30px}.lp-hero .hero-logo{width:680px;max-width:100%;margin:auto}}
 @media(max-width:1050px){.lp-wrap{width:calc(100% - 80px)}.lp-navlinks{gap:18px}.lp .poster-title{width:540px;max-width:67vw}.poster-crews{width:960px;max-width:110vw;bottom:75px}.hero-street-sign{width:180px;right:3%}.hero-holo{left:2%;width:130px;height:160px}.city-chapter{padding-block:100px}.table-layout,.hand-layout,.join-layout,.faq-layout{gap:40px}.city-table .chapter-heading{margin-left:10%}.table-holo{left:2%;width:100px;height:120px;top:14%}.table-street-sign{width:130px}.lp-card{width:188px;height:280px;left:calc(50% - 94px)}.lp-cards{transform:scale(.72) rotateY(calc(-18deg + var(--progress) * 28deg))}.lp-codeform{padding:25px}.lp-codeform .lp-actions{flex-wrap:wrap}.lp-codeform .lp-button{flex-basis:100%}.city-join h2{font-size:68px}}
-@media(max-width:900px){.lp-wrap{width:calc(100% - 42px)}.lp-nav{min-height:82px;gap:12px}.rtc-wordmark{width:135px;height:60px}.lp-navlinks>a{display:none}.lp-nav .lp-button{font-size:11px;padding-inline:12px;gap:12px}.lp-hero{height:920px;min-height:920px;max-height:none}.poster-kicker{top:101px;font-size:8px;letter-spacing:2.5px}.lp .poster-title{top:126px;width:455px;max-width:83vw}.poster-crews{width:840px;max-width:148vw;bottom:160px}.hero-holo{left:0;top:32%;width:100px;height:125px;opacity:.7}.hero-street-sign{right:0;top:35%;width:140px}.city-copter{width:180px;top:26%}.poster-foot{bottom:105px}.poster-scroll{right:22px;bottom:57px;font-size:8px;letter-spacing:1px}.city-ticker{gap:12px;padding:18px 15px;font-size:24px;flex-wrap:wrap}.city-ticker span{white-space:nowrap}.city-ticker small{font-size:9px}.city-ticker i{display:none}.city-chapter{padding:90px 0;min-height:0}.city-table{padding-top:110px}.lp h2{font-size:62px}.city-table .chapter-heading{margin-left:0}.table-holo{display:none}.table-street-sign{right:-30px;top:65px;opacity:.4;width:120px}.table-layout{grid-template-columns:1fr;gap:80px;margin-top:35px}.holo-table{width:85%;max-width:550px;margin-inline:auto;aspect-ratio:1.4}.lp-steps{max-width:520px;margin-inline:auto;width:100%}.lp-steps li{padding:23px 15px}.lp-steps p{max-width:400px}.hand-layout,.join-layout,.faq-layout{grid-template-columns:1fr;gap:35px}.city-hand{padding-bottom:75px}.city-hand h2{font-size:62px}.hand-holo{right:0;top:12px;width:120px;height:130px;opacity:.45}.card-stage{min-height:450px}.lp-cards{transform:scale(1) rotateY(calc(-18deg + var(--progress) * 28deg));height:400px}.lp-card{width:205px;height:300px;left:calc(50% - 102px);top:40px}.card-caption{bottom:0}.hand-street-sign{bottom:12px;left:8px;opacity:.4;width:150px}.city-join{padding-block:100px 110px}.join-crew{left:-270px;bottom:50px;opacity:.32;width:930px}.city-join .chapter-heading{padding-top:0}.city-join h2{font-size:64px}.lp-codeform{max-width:500px;width:100%;justify-self:end;padding:29px;transform:none}.lp-codeform .lp-actions{flex-wrap:nowrap}.lp-codeform .lp-button{flex-basis:auto}.join-street-sign{top:25px;width:125px}.city-faq{padding-bottom:100px}.faq-holo{display:none}.lp-faq summary{font-size:14px}.lp-footer{padding:35px 22px 115px;flex-wrap:wrap;gap:20px}.lp-footer p{order:3;width:100%;font-size:8px}.lp-footer .rtc-wordmark{width:155px;height:70px}.city-chapters{display:none}.poster-controls{bottom:12px;left:12px;gap:7px}.poster-control{padding:11px 10px;font-size:9px;min-height:40px}}
-@media(max-width:480px){.lp-hero{height:875px;min-height:875px}.lp .poster-title{top:130px;width:360px;max-width:94vw}.poster-crews{width:720px;max-width:177vw;bottom:177px}.poster-tagline{font-size:15px;letter-spacing:2px}.poster-foot{bottom:103px;left:14px;right:14px}.poster-foot .lp-actions{gap:9px;margin-top:18px}.poster-foot .lp-button{min-width:0;padding:14px 18px;gap:19px;font-size:12px}.lp-fine{font-size:8px;letter-spacing:.3px}.hero-holo{top:35%;width:80px;opacity:.5}.hero-street-sign{top:35%;width:103px;opacity:.6}.poster-scroll{bottom:65px;font-size:8px;right:20px}.city-ticker{justify-content:center;gap:14px 22px;font-size:21px}.city-ticker small{font-size:8px}.lp h2,.city-hand h2,.city-join h2{font-size:55px}.chapter-heading>p:not(.lp-eyebrow){font-size:14px}.lp-eyebrow{font-size:9px;letter-spacing:1.7px}.city-table{padding-top:90px}.holo-table{width:94%;aspect-ratio:1.28}.lp-steps li{gap:16px}.lp h3{font-size:27px}.card-stage{min-height:410px;margin-inline:-20px}.lp-cards{transform:translateX(-10px) scale(.62) rotateY(calc(-18deg + var(--progress) * 28deg))}.card-caption{bottom:15px;font-size:8px;letter-spacing:1px}.lp-codeform{padding:24px 20px;gap:17px}.lp-codeform input{font-size:24px;letter-spacing:5px}.lp-codeform .lp-button{font-size:11px;padding:14px 8px;gap:8px}.lp-help{font-size:10px}.lp-nav .lp-arrow{display:none}.city-copter{width:160px}}
+@media(max-width:900px){.lp-wrap{width:calc(100% - 42px)}.lp-nav{min-height:82px;gap:12px}.rtc-wordmark{width:135px;height:60px}.lp-navlinks>a{display:none}.lp-nav .lp-button{font-size:11px;padding-inline:12px;gap:12px}.lp-hero{height:920px;min-height:920px;max-height:none}.poster-kicker{top:101px;font-size:8px;letter-spacing:2.5px}.lp .poster-title{top:126px;width:455px;max-width:83vw}.poster-crews{width:840px;max-width:148vw;bottom:160px}.hero-holo{left:0;top:32%;width:100px;height:125px;opacity:.7}.hero-street-sign{right:0;top:35%;width:140px}.city-copter{width:180px;top:26%}.poster-foot{bottom:105px}.poster-scroll{right:22px;bottom:57px;font-size:8px;letter-spacing:1px}.city-ticker{gap:12px;padding:18px 15px;font-size:24px;flex-wrap:wrap}.city-ticker span{white-space:nowrap}.city-ticker small{font-size:9px}.city-ticker i{display:none}.city-chapter{padding:90px 0;min-height:0}.city-table{padding-top:110px}.lp h2{font-size:62px}.city-table .chapter-heading{margin-left:0}.table-holo{display:none}.table-street-sign{right:-30px;top:65px;opacity:.4;width:120px}.table-layout{grid-template-columns:1fr;gap:80px;margin-top:35px}.holo-table{width:85%;max-width:550px;margin-inline:auto;aspect-ratio:1.4}.lp-steps{max-width:520px;margin-inline:auto;width:100%}.lp-steps li{padding:23px 15px}.lp-steps p{max-width:400px}.hand-layout,.join-layout,.faq-layout{grid-template-columns:1fr;gap:35px}.city-hand{padding-bottom:75px}.city-hand h2{font-size:62px}.hand-holo{right:0;top:12px;width:120px;height:130px;opacity:.45}.card-stage{min-height:450px}.lp-cards{transform:scale(1) rotateY(calc(-18deg + var(--progress) * 28deg));height:400px}.lp-card{width:205px;height:300px;left:calc(50% - 102px);top:40px}.card-caption{bottom:0}.hand-street-sign{bottom:12px;left:8px;opacity:.4;width:150px}.city-join{padding-block:100px 110px}.join-crew{left:-270px;top:-72px;bottom:auto;opacity:.32;width:930px}.city-join .chapter-heading{padding-top:0}.city-join h2{font-size:64px}.lp-codeform{max-width:500px;width:100%;justify-self:end;padding:29px;transform:none}.lp-codeform .lp-actions{flex-wrap:nowrap}.lp-codeform .lp-button{flex-basis:auto}.join-street-sign{top:25px;width:125px}.city-faq{padding-bottom:100px}.faq-holo{display:none}.lp-faq summary{font-size:14px}.lp-footer{padding:35px 22px 115px;flex-wrap:wrap;gap:20px}.lp-footer p{order:3;width:100%;font-size:8px}.lp-footer .rtc-wordmark{width:155px;height:70px}.city-chapters{display:none}.poster-controls{bottom:12px;left:12px;gap:7px}.poster-control{padding:11px 10px;font-size:9px;min-height:40px}}
+@media(max-width:480px){.hand-street-sign.holo-sign{left:8px;bottom:22px;width:90px}.lp-hero{height:875px;min-height:875px}.lp .poster-title{top:130px;width:360px;max-width:94vw}.poster-crews{width:720px;max-width:177vw;bottom:177px}.poster-tagline{font-size:15px;letter-spacing:2px}.poster-foot{bottom:103px;left:14px;right:14px}.poster-foot .lp-actions{gap:9px;margin-top:18px}.poster-foot .lp-button{min-width:0;padding:14px 18px;gap:19px;font-size:12px}.lp-fine{font-size:8px;letter-spacing:.3px}.hero-holo{top:35%;width:80px;opacity:.5}.hero-street-sign{top:35%;width:103px;opacity:.6}.poster-scroll{bottom:65px;font-size:8px;right:20px}.city-ticker{justify-content:center;gap:14px 22px;font-size:21px}.city-ticker small{font-size:8px}.lp h2,.city-hand h2,.city-join h2{font-size:55px}.chapter-heading>p:not(.lp-eyebrow){font-size:14px}.lp-eyebrow{font-size:9px;letter-spacing:1.7px}.city-table{padding-top:90px}.holo-table{width:94%;aspect-ratio:1.28}.lp-steps li{gap:16px}.lp h3{font-size:27px}.card-stage{min-height:410px;margin-inline:-20px}.lp-cards{transform:translateX(-10px) scale(.62) rotateY(calc(-18deg + var(--progress) * 28deg))}.card-caption{bottom:15px;font-size:8px;letter-spacing:1px}.lp-codeform{padding:24px 20px;gap:17px}.lp-codeform input{font-size:24px;letter-spacing:5px}.lp-codeform .lp-button{font-size:11px;padding:14px 8px;gap:8px}.lp-help{font-size:10px}.lp-nav .lp-arrow{display:none}.city-copter{width:160px}}
 @media(max-width:350px){.lp-hero{height:810px;min-height:810px}.poster-crews{max-width:189vw;bottom:166px}.lp .poster-title{top:140px}.rtc-wordmark{width:120px}.poster-kicker{font-size:7px;letter-spacing:1.6px}.poster-foot .lp-button{padding:13px 14px;gap:12px}.lp h2,.city-hand h2,.city-join h2{font-size:47px}.lp-codeform .lp-actions{flex-wrap:wrap}.lp-codeform .lp-button{flex-basis:100%}.card-stage{margin-inline:-14px}.lp-cards{transform:translateX(-8px) scale(.53)}.poster-control{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.lp *{animation:none!important;transition:none!important;scroll-behavior:auto!important}.lp [data-reveal]{opacity:1!important;translate:none!important;filter:none!important}.poster-rain{display:none}.city-copter{transform:translate(33vw,0)}.logo-sweep{display:none}}
 .hex.art{stroke:#efe2b8;stroke-width:3.5}
@@ -1420,9 +1436,32 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
   .clk .cr1,.bigcount .bcr .cr1{transition:none}
 }
 /* ---------- trash talk (release 3): stickers from the seats, whispers, splats ---------- */
+@font-face{font-family:'RTC Marker';src:url(art/talk/permanent-marker.ttf) format('truetype');font-weight:400;font-style:normal;font-display:swap}
 #talk{position:fixed;inset:0;pointer-events:none;z-index:38;overflow:hidden;contain:layout style}
 .ttstk{position:fixed;left:0;top:0;background:center/contain no-repeat;filter:drop-shadow(0 6px 12px rgba(0,0,0,.55));will-change:transform,opacity;pointer-events:none}
 #talk .ttstk{position:absolute}
+/* Three illustrated poses, cut directly from transparent PNG atlases. The held pose is the static fallback. */
+.tt-art{position:relative;display:block;width:100%;height:100%;aspect-ratio:1;isolation:isolate;pointer-events:none}
+.tt-frame,.tt-echo{position:absolute;left:50%;top:50%;width:var(--tt-width);height:var(--tt-height);transform:translate(-50%,-50%);display:block;background-image:var(--tt-atlas);background-size:var(--tt-size);background-position:var(--tt-position);background-repeat:no-repeat;opacity:0}
+.tt-frame:nth-child(3){opacity:1}
+.tt-playing .tt-frame{opacity:0;animation-delay:var(--tt-age,0ms)}
+/* Hold the first pose during travel. The reaction clock starts only once the sticker has landed. */
+.tt-playing .tt-frame:first-child{animation:tt-frame-out calc(var(--tt-land,480ms) + 320ms) step-end var(--tt-age,0ms) both}
+.tt-playing .tt-frame:nth-child(2){animation:tt-frame-out 420ms step-end calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 320ms) forwards}
+.tt-playing .tt-frame:nth-child(3){animation:tt-frame-in 1ms step-end calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 740ms) forwards}
+.tt-playing.tt-banter{animation:tt-react 1100ms ease-in-out calc(var(--tt-age,0ms) + var(--tt-land,480ms)) both}
+.tt-echo{z-index:-1;animation:tt-dash-echo 320ms linear 60ms both}
+.tt-playing.tt-banter::before{content:"";position:absolute;z-index:-2;inset:-4%;background:repeating-conic-gradient(from 8deg,transparent 0deg 19deg,var(--tt-ink) 20deg 23deg,transparent 24deg 39deg);mask-image:radial-gradient(closest-side,transparent 50%,#000 58%,transparent 97%);animation:tt-hit 340ms linear calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 320ms) both}
+@keyframes tt-react{0%,100%{transform:scale(1) rotate(0deg)}15%{transform:scale(.92,1.04) rotate(-4deg)}29%{transform:scale(1.12,.94) rotate(3deg)}67%{transform:scale(.98,1.02) rotate(-2deg)}}
+@keyframes tt-dash-echo{0%{opacity:0;transform:translate(-75%,-46%) scale(1.05,.92)}30%{opacity:.3}100%{opacity:0;transform:translate(-48%,-50%) scale(1.1,1)}}
+@keyframes tt-hit{0%{opacity:0;transform:scale(.7)}15%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(1.16)}}
+.tt-hype{--tt-ink:#e5fb35}.tt-bluff{--tt-ink:#64e8f3}.tt-wind{--tt-ink:#ff77b6}
+.tt-tag{position:absolute;z-index:1;left:50%;bottom:-7%;transform:translateX(-50%) rotate(-7deg);max-width:150%;padding:2px 3px 5px;color:var(--tt-ink,#e5fb35);white-space:nowrap;font:400 var(--tt-letter,24px)/1.15 'RTC Marker','Barlow Condensed',Impact,sans-serif;letter-spacing:-.045em;text-transform:uppercase;-webkit-text-stroke:5px #06121b;paint-order:stroke fill;text-shadow:2px 4px 0 #06121b}
+.tt-playing .tt-tag{animation:tt-banter-in 220ms cubic-bezier(.2,.9,.3,1.2) calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 80ms) both}
+@keyframes tt-banter-in{from{opacity:0;transform:translateX(-50%) rotate(-12deg) scale(.55)}to{opacity:1;transform:translateX(-50%) rotate(-5deg) scale(1)}}
+@keyframes tt-frame-out{from{opacity:1}to{opacity:0}}
+@keyframes tt-frame-in{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.tt-playing.tt-banter{animation:none!important}.tt-art .tt-frame{animation:none!important;opacity:0!important}.tt-art .tt-frame:nth-child(3){opacity:1!important}.tt-tag{animation:none!important}.tt-echo,.tt-playing.tt-banter::before{display:none!important}}
 /* the words the announcer caught: quiet, the sender's colour down the side */
 .ttsay{position:absolute;display:grid;justify-items:center;gap:2px;padding:10px 20px 12px;background:rgba(6,18,27,.94);border:1px solid rgba(178,232,255,.24);
   border-left:3px solid var(--pc);color:#eaf6ff;text-align:center;box-shadow:0 12px 34px rgba(0,0,0,.55);white-space:nowrap}
@@ -1456,17 +1495,26 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 /* full screen: the chip stands in the bar's who-and-what, which keeps its size, so nothing beside it moves */
 #p-hud .hudwho .wspchip{align-self:flex-start;max-width:100%;padding:3px 10px 3px 5px;font-size:.84rem}
 /* the sheet */
-.m-talk .sh-body{display:grid;gap:10px;padding-bottom:18px}
+.m-talk .sh-body{display:grid;gap:12px;padding-bottom:22px}
 .ttlab{margin:0;font-size:.8rem;color:var(--muted);text-align:center}
+.ttintent{display:flex;gap:5px}
+.ttintent button{flex:1;min-width:0;padding:9px 3px;border:1px solid rgba(151,204,218,.22);background:transparent;color:#96aeb8;font:600 12px/1.2 'Barlow Condensed',system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.ttintent button[aria-pressed=true]{border-color:var(--tt-ink,#e5fb35);background:var(--tt-ink,#e5fb35);color:#07131c}
+.ttb[data-p=temo]>span:last-child{color:var(--tt-ink,#eaf6ff);font:400 clamp(12px,3.5vw,16px)/1.25 'RTC Marker','Barlow Condensed',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.035em;overflow-wrap:anywhere}
+.ttintent button,.ttb{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .ttsug,.ttgrid,.ttsplats{display:grid;gap:8px}
 .ttsug{grid-template-columns:repeat(3,1fr)}
-.ttgrid,.ttsplats{grid-template-columns:repeat(4,1fr);gap:6px}
+.ttgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ttsplats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .ttb{appearance:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-width:0;padding:8px 2px 7px;border:1px solid var(--line);border-radius:12px;
   background:rgba(255,255,255,.03);color:var(--ink);font:inherit;font-size:.72rem;line-height:1.15;text-align:center;cursor:pointer}
-.ttb i{display:block;width:40px;height:40px;background:center/contain no-repeat;transition:transform .15s}
-.ttb.big{padding:10px 4px 9px;font-size:.8rem;font-weight:600}
-.ttb.big i{width:62px;height:62px}
-.ttb:active:not(:disabled) i{transform:scale(1.15) rotate(-6deg)}
+.ttb{justify-content:center;gap:7px;padding:10px 5px 9px;border-color:rgba(151,204,218,.16);background:radial-gradient(ellipse at 50% 34%,rgba(61,130,160,.13),transparent 76%),rgba(6,18,27,.45);font-size:.78rem;transition:border-color .15s,background .15s}
+.ttb .tt-art{width:min(100%,104px);height:auto;filter:drop-shadow(0 4px 5px #0008);transition:transform .15s}
+.ttb.big{padding:12px 5px 10px;font-size:.8rem;font-weight:600;border-color:rgba(151,204,218,.3);background:radial-gradient(ellipse at 50% 34%,rgba(61,130,160,.22),transparent 80%),rgba(6,18,27,.6)}
+.ttb.big .tt-art{width:min(100%,120px)}
+.ttsplats .ttb .tt-art{width:min(100%,148px)}
+.ttb:active:not(:disabled) .tt-art{transform:scale(1.08) rotate(-5deg)}
+@media(hover:hover){.ttb:hover:not(:disabled){border-color:#64e8f3aa;background-color:#14313e}.ttb:hover:not(:disabled) .tt-art{transform:translateY(-3px) rotate(-3deg)}}
 .ttb:disabled{opacity:.4;cursor:default}
 .tth{margin:8px 0 0;font-size:.95rem}
 .ttno{margin:-4px 0 0}
@@ -1476,20 +1524,29 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 .ttto .sw[aria-pressed=true]{border-color:var(--ink);background:rgba(255,255,255,.1)}
 .ttwords{display:flex;flex-wrap:wrap;gap:6px}
 .ttw{appearance:none;padding:9px 13px;border:1px solid var(--line);border-radius:99px;background:rgba(255,255,255,.04);color:var(--ink);font:inherit;font-size:.86rem;font-weight:600;cursor:pointer}
-.ttwords.odd .ttw{font-weight:500;font-style:italic;color:var(--muted)}
 .ttw:disabled{opacity:.4;cursor:default}
+/* the whisper's nine situations (pick one, then one of its five lines) */
+.ttsits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.ttsits button{appearance:none;min-width:0;min-height:40px;padding:6px 4px;border:1px solid rgba(151,204,218,.22);border-radius:10px;background:transparent;color:#96aeb8;
+  font:600 12px/1.15 'Barlow Condensed',system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.ttsits button[aria-pressed=true]{border-color:#e5fb35;background:#e5fb35;color:#07131c}
+.ttsits+.ttwords{padding-top:2px}
+.pview .ttsits button{border-radius:0}
+.pview .ttw{padding:10px 14px;font:700 1.08rem/1.1 'Barlow Condensed',system-ui,sans-serif;letter-spacing:.01em;color:var(--tb-paper,#eaf6ff)}
 /* a splat on the phone it was thrown at: inside the board's picture, never over a button, never taking a tap; sized so
    its squash and drift stay on the picture */
 .phone .board3d:has(>.ttsplat){position:relative}
-.ttsplat{position:absolute;left:50%;top:50%;z-index:2;width:min(74%,440px);aspect-ratio:1;max-height:76%;pointer-events:none;background:center/contain no-repeat;
+.ttsplat{position:absolute;left:50%;top:50%;z-index:2;width:min(88%,560px);height:auto;aspect-ratio:1;max-height:86%;pointer-events:none;
   translate:calc(-50% + var(--dx,0%)) -50%;rotate:var(--r,0deg);filter:drop-shadow(0 10px 22px rgba(0,0,0,.5));animation:ttland 4.2s cubic-bezier(.2,.9,.3,1.1) both}
-.bfull .ttsplat{width:min(80%,520px);max-height:70%}
+.bfull .ttsplat{width:min(88%,640px);max-height:82%}
+.ttsplat .tt-art{--tt-land:672ms;max-width:100%;max-height:100%}
+.ttsplat.tt-still{animation-name:ttfade!important}
 .ttsplat.sp-smoke{animation-name:ttsmoke;animation-timing-function:ease-out}
 .ttsplat.sp-pigeon{animation-name:ttpigeon;animation-timing-function:linear}
-@keyframes ttland{0%{transform:scale(.15);opacity:0}7%{transform:scale(1.2,.86);opacity:1}13%{transform:scale(.95,1.05)}19%{transform:scale(1)}72%{transform:scale(1) translateY(0);opacity:1}100%{transform:scale(1.02) translateY(22px);opacity:0}}
-@keyframes ttsmoke{0%{transform:scale(.3);opacity:0}10%{transform:scale(.82);opacity:.95}60%{transform:scale(.98);opacity:.92}100%{transform:scale(1.1);opacity:0}}
-@keyframes ttpigeon{0%{transform:translateX(-90%) translateY(8%) scale(.5,.5);opacity:0}8%{opacity:1}14%{transform:translateX(-40%) translateY(4%) scale(.9,.7)}22%{transform:translateX(-14%) translateY(-2%) scale(1,1.05)}
-  30%,62%{transform:translateX(0) translateY(0) scale(1,1)}38%,54%{transform:translateX(2%) translateY(-3%) scale(1.02,.84)}46%{transform:translateX(-2%) translateY(1%) scale(1,1.06)}
+@keyframes ttland{0%{transform:scale(.35) rotate(-12deg);opacity:0}8%{transform:scale(.85);opacity:1}12%{transform:scale(1.08,.96)}16%,72%{transform:scale(1);opacity:1}100%{transform:scale(1.02) translateY(16px);opacity:0}}
+@keyframes ttsmoke{0%{transform:scale(.35);opacity:0}8%{transform:scale(.78);opacity:1}16%{transform:scale(1);opacity:1}65%{transform:scale(1);opacity:.92}100%{transform:scale(1.08) translateY(-12px);opacity:0}}
+@keyframes ttpigeon{0%{transform:translateX(-34%) translateY(6%) scale(.55);opacity:0}8%{opacity:1;transform:translateX(-8%) scale(.98,.9)}12%{transform:translateX(2%) translateY(-2%) scale(1.05)}
+  16%,70%{transform:translateX(0) translateY(0) scale(1);opacity:1}
   78%{transform:translateX(40%) translateY(-8%) scale(.92,.72);opacity:1}100%{transform:translateX(120%) translateY(-12%) scale(.6,.6);opacity:0}}
 @media (prefers-reduced-motion:reduce){.ttsplat,.ttsplat.sp-smoke,.ttsplat.sp-pigeon{animation-name:ttfade}.wspchip{animation:none}}
 @keyframes ttfade{0%{opacity:0}8%,80%{opacity:1}100%{opacity:0}}
@@ -2072,7 +2129,7 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 <svg id="art-defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><image id="img-warehouse" href="art/game/4b02da62cf440c84.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-warehouse-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse"/></pattern><pattern id="tex-warehouse-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-nightlife" href="art/game/22125c17692b7615.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-nightlife-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife"/></pattern><pattern id="tex-nightlife-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-residential" href="art/game/a646c36d55d79d8d.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-residential-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential"/></pattern><pattern id="tex-residential-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-works" href="art/game/818f3fdcf8197d20.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-works-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works"/></pattern><pattern id="tex-works-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-tower" href="art/game/2fc42ec3373b927e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-tower-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower"/></pattern><pattern id="tex-tower-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-deadzone" href="art/game/f239b75fb869878e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-deadzone-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone"/></pattern><pattern id="tex-deadzone-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-wall_strata" href="art/game/11657f2b44ce62d9.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-wall_edge" href="art/game/d4118f94580bf8b4.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-rooftop" href="art/game/a84fbcb4b007ba84.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade" href="art/game/b14848bfcef00503.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_glass" href="art/game/884a677ea6bf6864.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_neon" href="art/game/e5eb9e891be0d2bb.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_shed" href="art/game/9e4045f14f544c07.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_works" href="art/game/68e62ef6f2bf6a43.jpg" width="1" height="1" preserveAspectRatio="none"/></defs></svg>
 <!-- ART:END -->
 <!-- SND:BEGIN (generated by sound/embed.py, do not edit by hand) -->
-<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"ff1c69b8e3","size":1430719}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"horn_1":["table",217980,5711,0.88,-11.5],"horn_2":["table",223691,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",232380,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",237621,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",244116,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",274592,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",280460,14802,2.4,-8.2],"reel_stop":["table",295262,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",298622,8689,1.36,-8.6],"seven":["table",307311,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"start":["table",328696,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",365127,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",376638,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",383603,7556,1.415,-0.4],"v_bank_2":["table",391159,6716,1.24,0.5],"v_buy_1":["table",397875,8156,1.524,0.8],"v_buy_2":["table",406031,5996,1.083,2.2],"v_c_backup":["table",412027,5756,1.039,2.1],"v_c_bustup":["table",417783,6116,1.116,-0.6],"v_c_connections":["table",423899,6236,1.138,-2.6],"v_c_fight":["table",430135,5756,1.035,-2.3],"v_c_legend":["table",435891,6716,1.243,-1.5],"v_c_luck":["table",442607,5156,0.934,0.7],"v_c_paidoff":["table",447763,8516,1.59,1.1],"v_c_rewind":["table",456279,7076,1.298,0.1],"v_c_roadcrew":["table",463355,7076,1.311,0.2],"v_c_shakedown":["table",470431,8156,1.534,-1.1],"v_c_silver":["table",478587,6236,1.14,1.0],"v_c_tipoff":["table",484823,7436,1.374,0.1],"v_c_wrecking":["table",492259,8516,1.597,-0.9],"v_cop_1":["table",500775,15020,4.827,-3.2],"v_cop_2":["table",515795,9836,3.115,-2.8],"v_cop_3":["table",525631,10160,3.21,-3.1],"v_crash_1":["table",535791,8396,1.577,-2.5],"v_crash_2":["table",544187,7676,1.425,-1.3],"v_crash_3":["table",551863,6596,1.217,-0.9],"v_crowd_1":["table",558459,7196,1.329,1.4],"v_crowd_2":["table",565655,7556,1.415,-0.7],"v_crowd_3":["table",573211,7556,1.41,1.9],"v_d_deadzone":["table",580767,8996,1.685,-2.5],"v_d_nightlife":["table",589763,8756,1.649,1.2],"v_d_residential":["table",598519,8276,1.558,1.0],"v_d_tower":["table",606795,6356,1.169,1.0],"v_d_warehouse":["table",613151,8396,1.562,-1.3],"v_d_works":["table",621547,6476,1.191,2.0],"v_deal":["table",628023,7076,1.319,-1.9],"v_deal_2":["table",635099,6956,1.29,-0.5],"v_deal_3":["table",642055,8396,1.562,2.0],"v_deal_4":["table",650451,7196,1.337,2.5],"v_dir_look":["table",657647,8156,1.52,-0.5],"v_dir_wake":["table",665803,7556,1.399,-2.5],"v_discard":["table",673359,18716,3.626,0.8],"v_down_bustup":["table",692075,11516,2.187,-0.7],"v_down_wrecking":["table",703591,8756,1.635,-2.4],"v_e_chase":["table",712347,5876,1.07,0.4],"v_e_concert":["table",718223,6716,1.242,-2.5],"v_e_fire":["table",724939,5996,1.09,-1.2],"v_e_gangwar":["table",730935,5876,1.06,-0.6],"v_e_race":["table",736811,6956,1.288,-2.1],"v_e_robbery":["table",743767,7916,1.473,-1.1],"v_fast_1":["table",751683,7556,1.407,0.4],"v_fast_2":["table",759239,7076,1.306,1.1],"v_fast_3":["table",766315,5396,0.983,0.6],"v_fast_4":["table",771711,7556,1.401,1.3],"v_fast_5":["table",779267,10436,1.976,-0.6],"v_held":["table",789703,6956,1.288,0.0],"v_hurry":["table",796659,11756,2.239,1.5],"v_icpt_1":["table",808415,12836,2.457,-2.4],"v_icpt_2":["table",821251,5396,0.977,-1.3],"v_icpt_3":["table",826647,6956,1.283,-2.6],"v_icpt_4":["table",833603,7676,1.43,-2.5],"v_ko":["table",841279,4676,0.818,-1.0],"v_legendary":["table",845955,5156,0.914,-0.4],"v_n_blue":["table",851111,2276,0.338,-1.8],"v_n_green":["table",853387,2756,0.45,-2.5],"v_n_orange":["table",856143,3116,0.507,-2.6],"v_n_purple":["table",859259,2516,0.395,-0.5],"v_n_red":["table",861775,1796,0.258,1.0],"v_n_white":["table",863571,2276,0.352,2.3],"v_nine":["table",865847,12716,2.434,-2.6],"v_offer":["table",878563,8156,1.516,-2.3],"v_op_1":["table",886719,10316,1.946,-2.5],"v_op_2":["table",897035,10076,1.905,-0.5],"v_op_3":["table",907111,6836,1.257,-1.5],"v_op_4":["table",913947,10556,1.997,0.3],"v_open":["table",924503,9476,1.778,-1.5],"v_p_far":["table",933979,4676,0.832,0.3],"v_p_front":["table",938655,5516,1.008,-0.5],"v_p_left":["table",944171,5396,0.974,-2.6],"v_p_mid":["table",949567,4916,0.874,-0.4],"v_p_right":["table",954483,5156,0.922,0.4],"v_pick":["table",959639,5876,1.076,-2.2],"v_place":["table",965515,7556,1.415,-1.7],"v_port_1":["table",973071,6956,1.279,-1.4],"v_port_2":["table",980027,6836,1.261,0.9],"v_rare":["table",986863,8036,1.49,0.5],"v_s_half":["table",994899,5636,1.022,2.5],"v_s_lead":["table",1000535,5756,1.049,0.6],"v_s_leads":["table",1006291,5996,1.092,2.5],"v_s_one":["table",1012287,5396,0.975,-2.1],"v_s_round_1":["table",1017683,6236,1.145,-1.2],"v_s_round_2":["table",1023919,5756,1.035,-1.3],"v_s_round_3":["table",1029675,12956,2.474,0.9],"v_s_tied":["table",1042631,8996,1.695,2.5],"v_s_two":["table",1051627,5396,0.975,-2.5],"v_says":["table",1057023,2996,0.498,-0.4],"v_slow_1":["table",1060019,15476,2.997,-2.5],"v_slow_2":["table",1075495,12716,2.429,-1.6],"v_slow_3":["table",1088211,4676,0.831,-0.9],"v_slow_4":["table",1092887,11156,2.131,0.9],"v_slow_5":["table",1104043,6716,1.232,-1.4],"v_splat_1":["table",1110759,6596,1.215,-0.2],"v_splat_2":["table",1117355,5876,1.076,-0.9],"v_splat_3":["table",1123231,7556,1.405,1.3],"v_start":["table",1130787,13796,2.657,-1.3],"v_sum_10":["table",1144583,3356,0.576,-0.0],"v_sum_11":["table",1147939,3596,0.604,2.5],"v_sum_12":["table",1151535,10916,2.07,2.2],"v_sum_2":["table",1162451,9836,1.868,0.1],"v_sum_3":["table",1172287,3356,0.557,-1.3],"v_sum_4":["table",1175643,3596,0.604,-1.2],"v_sum_5":["table",1179239,4076,0.698,-2.0],"v_sum_6":["table",1183315,4076,0.698,0.9],"v_sum_7":["table",1187391,11036,2.09,-0.5],"v_sum_8":["table",1198427,2876,0.458,2.5],"v_sum_9":["table",1201303,3836,0.65,0.3],"v_t_off_1":["table",1205139,7676,1.431,-0.2],"v_t_off_2":["table",1212815,7796,1.444,2.5],"v_t_on_1":["table",1220611,6596,1.218,0.9],"v_t_on_2":["table",1227207,11036,2.1,0.3],"v_taken":["table",1238243,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1249399,9476,1.794,-0.4],"v_timeup_1":["table",1258875,4796,0.862,-0.4],"v_timeup_2":["table",1263671,8036,1.5,0.1],"v_tower":["table",1271707,10436,1.987,-2.6],"v_up_blue":["table",1282143,6956,1.286,-2.5],"v_up_green":["table",1289099,7676,1.421,-2.6],"v_up_orange":["table",1296775,7076,1.316,-2.7],"v_up_purple":["table",1303851,7796,1.464,-2.5],"v_up_red":["table",1311647,6956,1.276,-1.6],"v_up_white":["table",1318603,7076,1.301,-0.9],"v_w_deal":["table",1325679,3356,0.557,-2.3],"v_w_flamingo":["table",1329035,4316,0.758,-1.7],"v_w_hurry":["table",1333351,3956,0.693,-0.6],"v_w_kaboom":["table",1337307,3836,0.656,0.2],"v_w_moustache":["table",1341143,4676,0.818,0.3],"v_w_never":["table",1345819,5636,1.015,-0.4],"v_w_nice":["table",1351455,4316,0.761,1.1],"v_w_no":["table",1355771,3116,0.516,2.2],"v_w_pineapple":["table",1358887,4556,0.802,1.8],"v_w_spaghetti":["table",1363443,4676,0.83,1.6],"v_w_trade":["table",1368119,3356,0.565,0.2],"v_w_watch":["table",1371475,4196,0.74,-1.5],"v_w_wobble":["table",1375671,3596,0.609,-0.8],"v_w_yes":["table",1379267,3596,0.604,0.5],"v_win_blue":["table",1382863,7796,1.458,-2.6],"v_win_green":["table",1390659,7916,1.479,-2.6],"v_win_orange":["table",1398575,8396,1.562,-2.1],"v_win_purple":["table",1406971,8756,1.641,-1.9],"v_win_red":["table",1415727,6956,1.292,-1.3],"v_win_white":["table",1422683,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5]}}</script>
+<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"0e6807a90a","size":1596075}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"horn_1":["table",217980,5711,0.88,-11.5],"horn_2":["table",223691,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",232380,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",237621,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",244116,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",274592,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",280460,14802,2.4,-8.2],"reel_stop":["table",295262,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",298622,8689,1.36,-8.6],"seven":["table",307311,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"start":["table",328696,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",365127,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",376638,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",383603,7556,1.415,-0.4],"v_bank_2":["table",391159,6716,1.24,0.5],"v_buy_1":["table",397875,8156,1.524,0.8],"v_buy_2":["table",406031,5996,1.083,2.2],"v_c_backup":["table",412027,5756,1.039,2.1],"v_c_bustup":["table",417783,6116,1.116,-0.6],"v_c_connections":["table",423899,6236,1.138,-2.6],"v_c_fight":["table",430135,5756,1.035,-2.3],"v_c_legend":["table",435891,6716,1.243,-1.5],"v_c_luck":["table",442607,5156,0.934,0.7],"v_c_paidoff":["table",447763,8516,1.59,1.1],"v_c_rewind":["table",456279,7076,1.298,0.1],"v_c_roadcrew":["table",463355,7076,1.311,0.2],"v_c_shakedown":["table",470431,8156,1.534,-1.1],"v_c_silver":["table",478587,6236,1.14,1.0],"v_c_tipoff":["table",484823,7436,1.374,0.1],"v_c_wrecking":["table",492259,8516,1.597,-0.9],"v_cop_1":["table",500775,15020,4.827,-3.2],"v_cop_2":["table",515795,9836,3.115,-2.8],"v_cop_3":["table",525631,10160,3.21,-3.1],"v_crash_1":["table",535791,8396,1.577,-2.5],"v_crash_2":["table",544187,7676,1.425,-1.3],"v_crash_3":["table",551863,6596,1.217,-0.9],"v_crowd_1":["table",558459,7196,1.329,1.4],"v_crowd_2":["table",565655,7556,1.415,-0.7],"v_crowd_3":["table",573211,7556,1.41,1.9],"v_d_deadzone":["table",580767,8996,1.685,-2.5],"v_d_nightlife":["table",589763,8756,1.649,1.2],"v_d_residential":["table",598519,8276,1.558,1.0],"v_d_tower":["table",606795,6356,1.169,1.0],"v_d_warehouse":["table",613151,8396,1.562,-1.3],"v_d_works":["table",621547,6476,1.191,2.0],"v_deal":["table",628023,7076,1.319,-1.9],"v_deal_2":["table",635099,6956,1.29,-0.5],"v_deal_3":["table",642055,8396,1.562,2.0],"v_deal_4":["table",650451,7196,1.337,2.5],"v_dir_look":["table",657647,8156,1.52,-0.5],"v_dir_wake":["table",665803,7556,1.399,-2.5],"v_discard":["table",673359,18716,3.626,0.8],"v_down_bustup":["table",692075,11516,2.187,-0.7],"v_down_wrecking":["table",703591,8756,1.635,-2.4],"v_e_chase":["table",712347,5876,1.07,0.4],"v_e_concert":["table",718223,6716,1.242,-2.5],"v_e_fire":["table",724939,5996,1.09,-1.2],"v_e_gangwar":["table",730935,5876,1.06,-0.6],"v_e_race":["table",736811,6956,1.288,-2.1],"v_e_robbery":["table",743767,7916,1.473,-1.1],"v_fast_1":["table",751683,7556,1.407,0.4],"v_fast_2":["table",759239,7076,1.306,1.1],"v_fast_3":["table",766315,5396,0.983,0.6],"v_fast_4":["table",771711,7556,1.401,1.3],"v_fast_5":["table",779267,10436,1.976,-0.6],"v_held":["table",789703,6956,1.288,0.0],"v_hurry":["table",796659,11756,2.239,1.5],"v_icpt_1":["table",808415,12836,2.457,-2.4],"v_icpt_2":["table",821251,5396,0.977,-1.3],"v_icpt_3":["table",826647,6956,1.283,-2.6],"v_icpt_4":["table",833603,7676,1.43,-2.5],"v_ko":["table",841279,4676,0.818,-1.0],"v_legendary":["table",845955,5156,0.914,-0.4],"v_n_blue":["table",851111,2276,0.338,-1.8],"v_n_green":["table",853387,2756,0.45,-2.5],"v_n_orange":["table",856143,3116,0.507,-2.6],"v_n_purple":["table",859259,2516,0.395,-0.5],"v_n_red":["table",861775,1796,0.258,1.0],"v_n_white":["table",863571,2276,0.352,2.3],"v_nine":["table",865847,12716,2.434,-2.6],"v_offer":["table",878563,8156,1.516,-2.3],"v_op_1":["table",886719,10316,1.946,-2.5],"v_op_2":["table",897035,10076,1.905,-0.5],"v_op_3":["table",907111,6836,1.257,-1.5],"v_op_4":["table",913947,10556,1.997,0.3],"v_open":["table",924503,9476,1.778,-1.5],"v_p_far":["table",933979,4676,0.832,0.3],"v_p_front":["table",938655,5516,1.008,-0.5],"v_p_left":["table",944171,5396,0.974,-2.6],"v_p_mid":["table",949567,4916,0.874,-0.4],"v_p_right":["table",954483,5156,0.922,0.4],"v_pick":["table",959639,5876,1.076,-2.2],"v_place":["table",965515,7556,1.415,-1.7],"v_port_1":["table",973071,6956,1.279,-1.4],"v_port_2":["table",980027,6836,1.261,0.9],"v_rare":["table",986863,8036,1.49,0.5],"v_s_half":["table",994899,5636,1.022,2.5],"v_s_lead":["table",1000535,5756,1.049,0.6],"v_s_leads":["table",1006291,5996,1.092,2.5],"v_s_one":["table",1012287,5396,0.975,-2.1],"v_s_round_1":["table",1017683,6236,1.145,-1.2],"v_s_round_2":["table",1023919,5756,1.035,-1.3],"v_s_round_3":["table",1029675,12956,2.474,0.9],"v_s_tied":["table",1042631,8996,1.695,2.5],"v_s_two":["table",1051627,5396,0.975,-2.5],"v_says":["table",1057023,2996,0.498,-0.4],"v_slow_1":["table",1060019,15476,2.997,-2.5],"v_slow_2":["table",1075495,12716,2.429,-1.6],"v_slow_3":["table",1088211,4676,0.831,-0.9],"v_slow_4":["table",1092887,11156,2.131,0.9],"v_slow_5":["table",1104043,6716,1.232,-1.4],"v_splat_1":["table",1110759,6596,1.215,-0.2],"v_splat_2":["table",1117355,5876,1.076,-0.9],"v_splat_3":["table",1123231,7556,1.405,1.3],"v_start":["table",1130787,13796,2.657,-1.3],"v_sum_10":["table",1144583,3356,0.576,-0.0],"v_sum_11":["table",1147939,3596,0.604,2.5],"v_sum_12":["table",1151535,10916,2.07,2.2],"v_sum_2":["table",1162451,9836,1.868,0.1],"v_sum_3":["table",1172287,3356,0.557,-1.3],"v_sum_4":["table",1175643,3596,0.604,-1.2],"v_sum_5":["table",1179239,4076,0.698,-2.0],"v_sum_6":["table",1183315,4076,0.698,0.9],"v_sum_7":["table",1187391,11036,2.09,-0.5],"v_sum_8":["table",1198427,2876,0.458,2.5],"v_sum_9":["table",1201303,3836,0.65,0.3],"v_t_off_1":["table",1205139,7676,1.431,-0.2],"v_t_off_2":["table",1212815,7796,1.444,2.5],"v_t_on_1":["table",1220611,6596,1.218,0.9],"v_t_on_2":["table",1227207,11036,2.1,0.3],"v_taken":["table",1238243,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1249399,9476,1.794,-0.4],"v_timeup_1":["table",1258875,4796,0.862,-0.4],"v_timeup_2":["table",1263671,8036,1.5,0.1],"v_tower":["table",1271707,10436,1.987,-2.6],"v_up_blue":["table",1282143,6956,1.286,-2.5],"v_up_green":["table",1289099,7676,1.421,-2.6],"v_up_orange":["table",1296775,7076,1.316,-2.7],"v_up_purple":["table",1303851,7796,1.464,-2.5],"v_up_red":["table",1311647,6956,1.276,-1.6],"v_up_white":["table",1318603,7076,1.301,-0.9],"v_w_alltalk":["table",1325679,4796,0.845,-0.3],"v_w_anyday":["table",1330475,5276,0.938,1.6],"v_w_bet":["table",1335751,2636,0.422,2.5],"v_w_bigmove":["table",1338387,4316,0.765,0.1],"v_w_clean":["table",1342703,5156,0.932,1.4],"v_w_clock":["table",1347859,5636,1.024,0.2],"v_w_comfy":["table",1353495,5996,1.086,1.8],"v_w_coming":["table",1359491,6116,1.119,-0.7],"v_w_cooked":["table",1365607,4316,0.75,-0.5],"v_w_dobetter":["table",1369923,3956,0.677,0.3],"v_w_dreaming":["table",1373879,4916,0.879,-1.7],"v_w_energy":["table",1378795,6236,1.131,-0.0],"v_w_fairplay":["table",1385031,5036,0.89,-0.5],"v_w_holdthat":["table",1390067,4196,0.738,-1.4],"v_w_imin":["table",1394263,3716,0.627,2.3],"v_w_iseeyou":["table",1397979,4556,0.797,0.1],"v_w_keepwalking":["table",1402535,4916,0.867,-1.1],"v_w_lesschat":["table",1407451,7916,1.488,0.9],"v_w_letstalk":["table",1415367,4436,0.785,0.5],"v_w_myblock":["table",1419803,4196,0.731,-0.3],"v_w_nah":["table",1423999,3116,0.511,0.5],"v_w_nicetry":["table",1427115,5156,0.932,1.2],"v_w_notdone":["table",1432271,5276,0.946,1.2],"v_w_nothappening":["table",1437547,4916,0.866,1.7],"v_w_offer":["table",1442463,5516,0.986,-2.6],"v_w_okseeyou":["table",1447979,7796,1.442,1.5],"v_w_oweyou":["table",1455775,5396,0.981,-1.4],"v_w_owncorner":["table",1461171,7196,1.336,0.5],"v_w_playing":["table",1468367,6596,1.217,-1.6],"v_w_pockets":["table",1474963,6596,1.218,0.2],"v_w_proveit":["table",1481559,3716,0.643,-2.0],"v_w_quiet":["table",1485275,6476,1.178,-0.3],"v_w_rentsdue":["table",1491751,4676,0.839,-0.8],"v_w_respect":["table",1496427,4316,0.766,2.5],"v_w_rough":["table",1500743,4196,0.737,0.3],"v_w_runit":["table",1504939,3116,0.511,1.4],"v_w_sayless":["table",1508055,4916,0.882,0.8],"v_w_tryagain":["table",1512971,4916,0.868,-0.3],"v_w_wegood":["table",1517887,3956,0.679,-2.5],"v_w_weregood":["table",1521843,3956,0.674,-1.9],"v_w_worth":["table",1525799,5516,0.989,-1.0],"v_w_wronghood":["table",1531315,5996,1.083,-0.9],"v_w_youin":["table",1537311,3236,0.54,-2.7],"v_w_yourmove":["table",1540547,4196,0.733,-2.5],"v_w_youwont":["table",1544743,3476,0.599,-1.9],"v_win_blue":["table",1548219,7796,1.458,-2.6],"v_win_green":["table",1556015,7916,1.479,-2.6],"v_win_orange":["table",1563931,8396,1.562,-2.1],"v_win_purple":["table",1572327,8756,1.641,-1.9],"v_win_red":["table",1581083,6956,1.292,-1.3],"v_win_white":["table",1588039,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5]}}</script>
 <!-- SND:END -->
 <div id="app"><main class="phone"><p class="muted">Loading the table…</p></main></div>
 <noscript><p style="padding:16px">This page needs JavaScript turned on.</p></noscript>
@@ -12299,6 +12356,7 @@ function qrSVG(text) {
 }
 
 function renderHostShell() {
+  ttWarm();
   $('#app').innerHTML = `<div class="hframe">
   <header class="bar"><a class="brand tbbrand homelink" href="./" data-l="home" title="Front page"><img class="tblogo" src="art/landing/run-the-city.svg" width="90" height="40" alt="Run the City"></a><span class="tbwhere">${WATCH ? 'Board view &middot; table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}${sndVolHTML()}${fsBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
   <main class="host">
@@ -12538,12 +12596,120 @@ function stopLandingPoster() {
   POSTER.cleanup = null; POSTER.root = null; POSTER.sound = false;
   posterStopAudio();
 }
+/* Browse the showcase without taking over vertical page scrolling. */
+function mountLandingCards(root) {
+  const stage = root.querySelector('.card-stage'), deck = stage && stage.querySelector('.lp-cards');
+  if (!deck) return () => {};
+  const cards = [...deck.querySelectorAll('.lp-card')], status = stage.querySelector('[data-card-status]');
+  // Interpolate each card through the existing fan poses; the stage and deck stay put.
+  // x, scroll-parallax x, y, z, rotation
+  const poses = [[-235,0,44,-100,-32],[-102,-23,18,-45,-20],[0,0,0,60,1],[107,23,20,-20,21],[235,0,44,-100,32]];
+  const wrap = n => ((n % cards.length) + cards.length) % cards.length;
+  let at = 1, position = 1, target = 1, drag = null, frame = 0, wheelTimer = 0;
+  const announce = () => {
+    const key = cards[at].dataset.card;
+    status.textContent = `${CARDS[key].name}, card ${at + 1} of ${cards.length}`;
+  };
+  const paint = next => {
+    position = next; at = wrap(Math.round(position));
+    cards.forEach((card, i) => {
+      let offset = wrap(i - position);
+      if (offset > cards.length / 2) offset -= cards.length;
+      const slot = Math.max(-2, Math.min(2, offset)), part = slot + 2;
+      const lo = Math.min(3, Math.floor(part)), mix = part - lo;
+      const pose = poses[lo].map((v, j) => v + (poses[lo + 1][j] - v) * mix);
+      const opacity = Math.max(0, Math.min(1, 2 - Math.abs(offset)));
+      card.style.transform = `translate3d(calc(${pose[0].toFixed(2)}px + var(--progress) * ${pose[1].toFixed(2)}px),${pose[2].toFixed(2)}px,${pose[3].toFixed(2)}px) rotate(${pose[4].toFixed(2)}deg)`;
+      card.style.opacity = opacity.toFixed(3);
+      card.style.visibility = opacity > 0 ? 'visible' : 'hidden';
+      card.style.zIndex = String(100 - Math.round(Math.abs(slot) * 20));
+      card.dataset.slot = String(Math.round(slot));
+      card.setAttribute('aria-hidden', String(i !== at));
+    });
+    deck.dataset.activeCard = cards[at].dataset.card;
+  };
+  const stop = () => { cancelAnimationFrame(frame); frame = 0; clearTimeout(wheelTimer); wheelTimer = 0; };
+  const settle = next => {
+    stop(); target = next;
+    if (root.classList.contains('motion-paused') || Math.abs(next - position) < .001) { paint(next); announce(); return; }
+    const from = position, started = performance.now();
+    const tick = now => {
+      const t = Math.min(1, (now - started) / 320);
+      paint(from + (next - from) * (1 - Math.pow(1 - t, 3)));
+      if (t < 1) frame = requestAnimationFrame(tick);
+      else { frame = 0; announce(); }
+    };
+    frame = requestAnimationFrame(tick);
+  };
+  const step = amount => settle((frame ? target : Math.round(position)) + amount);
+  const click = e => {
+    const b = e.target.closest('[data-card-step]');
+    if (b) step(Number(b.dataset.cardStep));
+  };
+  const key = e => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); step(e.key === 'ArrowLeft' ? -1 : 1); }
+    else if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); settle(Math.round(position) - at + (e.key === 'Home' ? 0 : cards.length - 1)); }
+  };
+  // Match the drag distance to the rendered card size, including the phone's scaled fan.
+  const stride = () => cards[at].offsetWidth * (matchMedia('(max-width:480px)').matches ? .62 : 1);
+  const down = e => {
+    if (!e.isPrimary || !e.target.closest('.lp-cards') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    stop();
+    drag = { id:e.pointerId, x:e.clientX, y:e.clientY, start:position, stride:stride(), dx:0, lastX:e.clientX, lastAt:performance.now(), velocity:0, horizontal:false };
+  };
+  const move = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y, now = performance.now();
+    if (!drag.horizontal) {
+      if (Math.hypot(dx, dy) < 8) return;
+      if (Math.abs(dy) >= Math.abs(dx)) { drag = null; settle(Math.round(position)); return; }
+      drag.horizontal = true; deck.classList.add('is-dragging');
+      try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+    drag.velocity = (e.clientX - drag.lastX) / Math.max(1, now - drag.lastAt);
+    drag.lastX = e.clientX; drag.lastAt = now; drag.dx = dx;
+    paint(drag.start - dx / drag.stride);
+  };
+  const end = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    // Transferring a child's implicit touch capture to the stage is not cancellation.
+    if (e.type === 'lostpointercapture' && e.target !== stage) return;
+    const d = drag; drag = null; deck.classList.remove('is-dragging');
+    if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+    const velocity = e.type === 'pointerup' && performance.now() - d.lastAt < 100 ? d.velocity : 0;
+    const coast = d.horizontal ? Math.max(-.45, Math.min(.45, -velocity * 120 / d.stride)) : 0;
+    settle(Math.round(position + coast));
+  };
+  const wheel = e => {
+    if (e.ctrlKey || drag) return;
+    let delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+    if (!delta) return;
+    e.preventDefault(); stop();
+    delta *= e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? deck.clientWidth : 1;
+    paint(position + delta / stride());
+    wheelTimer = setTimeout(() => settle(Math.round(position)), 140);
+  };
+  const leave = () => { if (drag && !drag.horizontal) { drag = null; settle(Math.round(position)); } };
+  stage.addEventListener('click', click); stage.addEventListener('keydown', key);
+  stage.addEventListener('pointerdown', down); stage.addEventListener('pointermove', move);
+  stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end); stage.addEventListener('lostpointercapture', end); stage.addEventListener('pointerleave', leave);
+  stage.addEventListener('wheel', wheel, { passive:false });
+  paint(position); announce();
+  return () => {
+    stop();
+    stage.removeEventListener('click', click); stage.removeEventListener('keydown', key);
+    stage.removeEventListener('pointerdown', down); stage.removeEventListener('pointermove', move);
+    stage.removeEventListener('pointerup', end); stage.removeEventListener('pointercancel', end); stage.removeEventListener('lostpointercapture', end); stage.removeEventListener('pointerleave', leave);
+    stage.removeEventListener('wheel', wheel); drag = null;
+  };
+}
 function mountLandingPoster() {
   stopLandingPoster();
   const root = document.querySelector('.lp');
   if (!root || !root.isConnected) return;
   POSTER.root = root; POSTER.visible = true;
   const hero = root.querySelector('.lp-hero'), media = matchMedia('(prefers-reduced-motion: reduce)');
+  const stopCards = mountLandingCards(root);
   const scenes = [...root.querySelectorAll('[data-city-scene]')].map(el => ({ el, visible: true }));
   const links = [...root.querySelectorAll('.city-chapters a')];
   const holograms = [...root.querySelectorAll('[data-city-holo]')].map(canvas => ({
@@ -12728,6 +12894,7 @@ function mountLandingPoster() {
   });
   holograms.filter(h => h.scene.el === hero).forEach(drawHologram); syncMotion();
   POSTER.cleanup = () => {
+    stopCards();
     introCancelled = true; cancelAnimationFrame(introFrame); clearTimeout(introTimer); clearTimeout(introDeadline);
     if (boardObserver) boardObserver.disconnect();
     if (phoneMotion) phoneMotion.stop();
@@ -12813,6 +12980,14 @@ function landingBoardState() {
   st.board.police = Math.max(0, st.board.hexes.findIndex(h => h.t === 'deadzone'));
   return st;
 }
+function landingCardFanHTML() {
+  const featured = ['rewind', 'fight', 'legend'], order = featured.concat(CARD_ORDER.filter(k => !featured.includes(k)));
+  const cards = order.map((k, i) => {
+    const c = CARDS[k], rarity = ['rare', 'legendary'].includes(c.tier) ? TIER_NAME[c.tier] + ' ' : '';
+    return `<div class="lp-card" data-card="${k}" data-slot="${Math.max(-2, Math.min(2, i - 1))}" style="--card-art:var(--card-${k})" role="group" aria-roledescription="slide" aria-label="${esc(c.name)}, ${i + 1} of ${order.length}" aria-hidden="${i !== 1}"><span><small>${rarity}${c.kind}</small>${esc(c.name)}</span></div>`;
+  }).join('');
+  return `<div class="lp-cards" id="landing-card-deck" tabindex="0" role="group" aria-label="Browse game cards">${cards}</div>`;
+}
 function renderLanding() {
   const arrow = '<span class="lp-arrow" aria-hidden="true">↗</span>';
   const brand = '<img class="rtc-wordmark" src="art/landing/run-the-city.svg" width="360" height="160" alt="Run the City">';
@@ -12847,12 +13022,12 @@ function renderLanding() {
       <section class="city-chapter city-hand" id="the-hand" data-city-scene aria-labelledby="lp-play-title">
         ${scene('city-poster.webp','chapter-art-towers')}
         ${landingHologram('ticker','hand-holo')}
-        <div class="chapter-content lp-wrap hand-layout"><div class="chapter-heading" data-reveal><p class="lp-eyebrow">02 / Nothing personal</p><h2 id="lp-play-title">GOOD FRIENDS.<br><em>BAD INTENTIONS.</em></h2><p>Keep a straight face. Make the deal. Then play the card they never saw coming.</p><p>Skills, talents, and street fights can turn the whole table. Trust your hand.</p><button type="button" class="lp-textlink" data-l="host">${hostLabel} ${arrow}</button><div class="street-sign hand-street-sign holo-sign" aria-hidden="true"><canvas data-city-holo="fight-night" width="400" height="400"></canvas></div></div>
-        <div class="card-stage" data-reveal><div class="holo-orbit" aria-hidden="true"></div><div class="lp-cards" role="img" aria-label="Rewind, Street Fight, and Local Legend game cards"><div class="lp-card"><span><small>Legendary skill</small>Rewind</span></div><div class="lp-card"><span><small>Skill</small>Street Fight</span></div><div class="lp-card"><span><small>Rare talent</small>Local Legend</span></div></div><p class="card-caption">EVERY CARD CHANGES THE STORY.</p></div></div>
+        <div class="chapter-content lp-wrap hand-layout"><div class="chapter-heading" data-reveal><p class="lp-eyebrow">02 / Nothing personal</p><h2 id="lp-play-title">GOOD FRIENDS.<br><em>BAD INTENTIONS.</em></h2><p>Keep a straight face. Make the deal. Then play the card they never saw coming.</p><p>Skills, talents, and street fights can turn the whole table. Trust your hand.</p><button type="button" class="lp-textlink" data-l="host">${hostLabel} ${arrow}</button></div>
+        <div class="card-stage" data-reveal role="region" aria-roledescription="carousel" aria-label="Skills and talents"><div class="holo-orbit" aria-hidden="true"></div>${landingCardFanHTML()}<div class="street-sign hand-street-sign holo-sign" aria-hidden="true"><canvas data-city-holo="fight-night" width="400" height="400"></canvas></div><div class="card-controls"><button type="button" class="card-arrow" data-card-step="-1" aria-label="Previous card" aria-controls="landing-card-deck">←</button><button type="button" class="card-arrow" data-card-step="1" aria-label="Next card" aria-controls="landing-card-deck">→</button></div><p class="card-caption">EVERY CARD CHANGES THE STORY.</p><span class="lp-card-status" data-card-status role="status" aria-live="polite" aria-atomic="true"></span></div></div>
       </section>
       <section class="city-chapter city-join" id="join" data-city-scene aria-labelledby="lp-join-title">
         ${scene('city-street.webp','chapter-art-door')}
-        <div class="join-crew" aria-hidden="true"><img src="art/landing/crews-poster.webp" width="1536" height="1024" alt="" loading="lazy"></div>
+        <div class="join-crew" aria-hidden="true"><img src="art/landing/crews-poster.png" width="1536" height="1024" alt="" loading="lazy" decoding="async"></div>
         <div class="street-sign join-street-sign holo-sign" aria-hidden="true"><canvas data-city-holo="quick-cash" width="400" height="400"></canvas></div>
         <div class="chapter-content lp-wrap join-layout"><div class="chapter-heading" data-reveal><p class="lp-eyebrow">03 / Your name is on the door</p><h2 id="lp-join-title">YOUR CREW.<br><em>YOUR CITY.</em></h2><p>The table is waiting. Enter its code and make yourself known.</p></div>
         <form class="lp-codeform" data-form="code" data-reveal><div class="terminal-top"><span class="signal-dot"></span>TAKE YOUR SEAT<span>↗</span></div><label for="code-input">Your table code</label><input type="text" id="code-input" name="room" maxlength="8" value="${esc(load('rtcity.room') || '')}" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="KQTMX2" aria-describedby="lp-code-help" required><div class="lp-actions"><button class="lp-button" type="submit" data-mode="play">Join the game ${arrow}</button><button class="lp-button secondary" type="submit" data-mode="watch">Watch the board</button></div><p class="lp-help" id="lp-code-help">Find the code beside the QR code on your table screen.</p><p class="lp-host-option">No code? <button type="button" data-l="host">${hostLabel} <span aria-hidden="true">↗</span></button></p><div class="terminal-bars" aria-hidden="true"></div></form></div>
@@ -14302,10 +14477,11 @@ async function bootPlayer() {
    it on to every screen (/said), where each screen shows its own part:
    - a sticker: flies out of the sender's seat on the table screen and the
      board view, with its sound bite;
-   - a whisper: one phrase from a fixed menu, to one player. An envelope
-     crosses the table from seat to seat and only that player's phone shows
-     the words. Now and then the announcer intercepts one and reads it out:
-     he can only say what he has recorded, which is why the menu is fixed;
+   - a whisper: one line of street banter from a fixed menu (nine situations,
+     five lines each), to one player. An envelope crosses the table from seat
+     to seat and only that player's phone shows the words. Now and then the
+     announcer intercepts one and reads it out: he can only say what he has
+     recorded, which is why the menu is fixed;
    - a splat: a waiting player throws one at the player whose turn it is. It
      lands over the board on that phone for a few seconds, under the board's
      own buttons and never taking a tap: the board still works through it.
@@ -14313,12 +14489,70 @@ async function bootPlayer() {
    see it. What the announcer says about it the table decides once (m.v), so
    the table screen and a board view say the same thing.
    ===================================================================== */
-const TT_EMO = { cheer: 'Cheer', boo: 'Boo', lol: 'Ha ha', clap: 'Slow clap', crickets: 'Crickets', rain: 'Make it rain', fire: 'On fire', sweat: 'Sweating', cry: 'Tiny violin', micdrop: 'Mic drop' };
-const TT_SAY = { yes: 'Yes', no: 'No', trade: 'Trade?', deal: 'Deal?', watch: 'Watch out', hurry: 'Hurry up', nice: 'Nice one', never: 'Not a chance' };
-const TT_WORD = { pineapple: 'Pineapple', spaghetti: 'Spaghetti', moustache: 'Moustache', kaboom: 'Kaboom', flamingo: 'Flamingo', wobble: 'Wobble' };
+const TT_EMO = { cheer: 'Big W', boo: 'Cap', lol: "I'm dead", clap: 'Aura +', crickets: 'Touch grass', rain: 'Money talks', fire: "Let ’em cook", sweat: 'Cooked', cry: 'Skill issue', micdrop: 'Too easy' };
+// Sticker lines are quick public banter. Stable reaction IDs retain their existing relay and sound cues.
+const TT_TONES = { all:'All', hype:'Gas up', bluff:'Bluff', wind:'Wind up' };
+const TT_TONE = { cheer:'hype', fire:'hype', clap:'hype', boo:'bluff', rain:'bluff', micdrop:'bluff', lol:'wind', sweat:'wind', crickets:'wind', cry:'wind' };
+/* The whispers: quick street banter (deals, bluffing, winding each other up), five lines in each of nine situations.
+   A line's key is its name on the relay, in the game record and in the announcer's voice pack (v_w_<key>).
+   TT_ANSWER is where a whisper back most likely comes from: "You in?" gets "Bet.", "My block." gets "All talk." */
+const TT_SITS = {
+  deal:    ['Making a deal', { youin: 'You in?', letstalk: 'Let’s talk.', offer: 'What’s your offer?', worth: 'Make it worth it.', wegood: 'We good?' }],
+  agree:   ['Agreeing', { bet: 'Bet.', sayless: 'Say less.', imin: 'I’m in.', runit: 'Run it.', weregood: 'We’re good.' }],
+  decline: ['Turning it down', { nah: 'Nah.', dreaming: 'You’re dreaming.', tryagain: 'Try again.', nothappening: 'Not happening.', dobetter: 'Do better.' }],
+  turf:    ['Claiming turf', { myblock: 'My block.', keepwalking: 'Keep walking.', wronghood: 'Wrong neighbourhood.', owncorner: 'Find your own corner.', rentsdue: 'Rent’s due.' }],
+  bluff:   ['Calling a bluff', { youwont: 'You won’t.', proveit: 'Prove it.', alltalk: 'All talk.', nicetry: 'Nice try.', iseeyou: 'I see you.' }],
+  props:   ['Giving props', { fairplay: 'Fair play.', clean: 'That was clean.', respect: 'Respect.', okseeyou: 'Okay, I see you.', bigmove: 'Big move.' }],
+  trash:   ['Talking trash', { cooked: 'You’re cooked.', holdthat: 'Hold that.', rough: 'That’s rough.', quiet: 'Got real quiet.', comfy: 'Don’t get comfy.' }],
+  revenge: ['Getting revenge', { energy: 'Keep that energy.', coming: 'Your turn’s coming.', oweyou: 'I owe you one.', pockets: 'Watch your pockets.', notdone: 'We’re not done.' }],
+  hurry:   ['Hurrying them up', { yourmove: 'Your move.', anyday: 'Any day now.', clock: 'Clock’s ticking.', lesschat: 'Less chat. Move.', playing: 'We playing or what?' }],
+};
+const TT_SAY = {}, TT_SIT = {};           // every line's words, and the situation it is in
+Object.keys(TT_SITS).forEach(s => Object.keys(TT_SITS[s][1]).forEach(k => { TT_SAY[k] = TT_SITS[s][1][k]; TT_SIT[k] = s; }));
+const TT_ANSWER = { deal: 'agree', agree: 'agree', decline: 'deal', turf: 'bluff', bluff: 'trash', props: 'props', trash: 'revenge', revenge: 'bluff', hurry: 'agree' };
 const TT_SPLAT = { tag: 'Spray paint', smoke: 'Smoke bomb', glitter: 'Glitter bomb', pigeon: 'Pigeon' };
+const TT_ART = {
+  cheer:['graffiti-reactions-a',0], boo:['graffiti-reactions-a',1], lol:['graffiti-reactions-a',2], clap:['graffiti-reactions-a',3], crickets:['graffiti-reactions-a',4],
+  rain:['graffiti-reactions-b',0], fire:['graffiti-reactions-b',1], sweat:['graffiti-reactions-b',2], cry:['graffiti-reactions-b',3], micdrop:['graffiti-reactions-b',4],
+  tag:['graffiti-splats',0], smoke:['graffiti-splats',1], glitter:['graffiti-splats',2], pigeon:['graffiti-splats',3]
+};
+/* The generated sheets have slightly uneven gutters. Explicit per-column crop bounds keep adjacent poses out. */
+const TT_ATLASES = {
+  'graffiti-reactions-a': { w:971, h:1619, cuts:[[0,333,632,967,1216,1619],[0,333,638,933,1242,1619],[0,342,642,935,1245,1619]] },
+  'graffiti-reactions-b': { w:971, h:1619, cuts:[[0,329,639,941,1253,1619],[0,328,638,948,1238,1619],[0,326,645,941,1253,1619]] },
+  'graffiti-splats': { w:1086, h:1448, cuts:[[0,365,730,1067,1448],[0,383,720,1045,1448],[0,386,728,1056,1448]] }
+};
+// Retain decoded images so the first reaction has no fetch or image-decode work on the tap path.
+const TT_IMAGES = [], TT_ART_HTML = Object.create(null);
+let ttWarmPromise = null;
+function ttWarm() {
+  if (ttWarmPromise || typeof Image === 'undefined') return ttWarmPromise;
+  if (document.fonts) document.fonts.load('18px "RTC Marker"').catch(() => {});
+  ttWarmPromise = Promise.all(Object.keys(TT_ATLASES).map(name => {
+    const img = new Image(); img.decoding = 'async'; img.fetchPriority = name.includes('reactions') ? 'high' : 'low';
+    TT_IMAGES.push(img); img.src = `art/talk/${name}.png`;
+    return typeof img.decode === 'function' ? img.decode().then(() => true, () => false) : Promise.resolve(true);
+  }));
+  return ttWarmPromise;
+}
+function ttArtHTML(k, play = false, words = false) {
+  const art = Object.prototype.hasOwnProperty.call(TT_ART, k) && TT_ART[k];
+  if (!art) return `<span class="tt-art" style="background:var(--stk-whisper) center/contain no-repeat" aria-hidden="true"></span>`;
+  const cacheKey = `${k}:${play}:${words}`;
+  if (TT_ART_HTML[cacheKey]) return TT_ART_HTML[cacheKey];
+  const [file, row] = art, atlas = TT_ATLASES[file], banter = !!(words && TT_EMO[k]);
+  const cells = [0,1,2].map(col => {
+      const x = Math.round(col * atlas.w / 3), y = atlas.cuts[col][row];
+      const w = Math.round((col + 1) * atlas.w / 3) - x, h = atlas.cuts[col][row + 1] - y, side = Math.max(w, h);
+      return `--tt-width:${96 * w / side}%;--tt-height:${96 * h / side}%;--tt-size:${100 * atlas.w / w}% ${100 * atlas.h / h}%;--tt-position:${100 * x / (atlas.w - w)}% ${100 * y / (atlas.h - h)}%`;
+    });
+  return TT_ART_HTML[cacheKey] = `<span class="tt-art${play ? ' tt-playing' : ''}${banter ? ' tt-banter' : ''}${TT_TONE[k] ? ' tt-' + TT_TONE[k] : ''}" aria-hidden="true" style="--tt-atlas:url(art/talk/${file}.png)">` +
+    cells.map(style => `<span class="tt-frame" style="${style}"></span>`).join('') +
+    (play && banter ? `<span class="tt-echo" style="${cells[0]}"></span>` : '') +
+    (banter ? `<span class="tt-tag">${esc(TT_EMO[k])}</span>` : '') + '</span>';
+}
 const ttHas = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
-const ttWord = k => (ttHas(TT_SAY, k) ? TT_SAY[k] : ttHas(TT_WORD, k) ? TT_WORD[k] : '');
+const ttWord = k => (ttHas(TT_SAY, k) ? TT_SAY[k] : '');
 /* how often: a sticker every 1.2 s and five in 12 s each; a whisper every 2.5 s; one splat per player per turn,
    and none on a phone that had one in the last 6 s. The announcer reads out about one whisper in three, never
    two within 40 s; a flurry (four stickers from two players or more inside 6 s) gets a line, once a minute. */
@@ -14386,7 +14620,7 @@ function talkHost(body) {
 /* between games the splat limits start again (turn numbers do) */
 function talkHostObserve(st) { if (st && st.phase !== 'turn') { TTH.splatBy = {}; TTH.splatOn = {}; } }
 /* the announcer's clips a message may ask for: only these, at most four */
-const TT_VOX = new RegExp(`^v_(icpt_[1-4]|crowd_[1-3]|splat_[1-3]|says|n_(${COLORS.join('|')})|w_(${Object.keys(TT_SAY).concat(Object.keys(TT_WORD)).join('|')}))$`);
+const TT_VOX = new RegExp(`^v_(icpt_[1-4]|crowd_[1-3]|splat_[1-3]|says|n_(${COLORS.join('|')})|w_(${Object.keys(TT_SAY).join('|')}))$`);
 /* what arrives on /said is only believed if it names players at this table and things the menu has (anyone can
    publish to the relay) */
 function talkOk(m) {
@@ -14430,43 +14664,49 @@ function seatAt(pid) {
 }
 const ttMid = () => { const b = (document.getElementById('h-board') || document.body).getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; };
 function ttSticker(k, s) {
-  const d = document.createElement('div'); d.className = 'ttstk'; d.style.backgroundImage = `var(--stk-${k})`;
+  const d = document.createElement('div'); d.className = 'ttstk'; d.innerHTML = ttArtHTML(k, FX.on, true);
+  d.style.setProperty('--tt-letter', Math.round(s * .12) + 'px');
   d.style.width = d.style.height = s + 'px'; const l = ttLayer(); l.appendChild(d);
   const all = l.querySelectorAll('.ttstk'); if (all.length > 8) all[0].remove();     // a flurry: the oldest gives way
   return d;
 }
-const ttSize = () => Math.round(Math.max(52, Math.min(96, innerHeight * 0.075)));
-function ttGo(d, frames, o) { const a = d.animate(frames, o); a.onfinish = () => d.remove(); setTimeout(() => d.remove(), (o.duration || 1000) + (o.delay || 0) + 400); return a; }
+const ttSize = () => Math.round(Math.min(224, Math.max(96, Math.min(innerHeight * .22, innerWidth * .32))));
+const ttFit = (p, s) => { const x = Math.min(innerWidth / 2, s * .78 + 8), y = Math.min(innerHeight / 2, s * .7 + 8); return { x:Math.max(x, Math.min(innerWidth - x, p.x)), y:Math.max(y, Math.min(innerHeight - y, p.y)) }; };
+function ttGo(d, frames, o) { const a = typeof d.animate === 'function' ? d.animate(frames, o) : null; if (a) a.onfinish = () => d.remove(); setTimeout(() => d.remove(), (o.duration || 1000) + (o.delay || 0) + 400); return a; }
 function talkShow(m) {
   const st = G.state; if (!st) return;
   const from = playerOf(st, m.p), to = m.to ? playerOf(st, m.to) : null;
   talkSay(m);
-  if (m.k === 'emo') sfx('e_' + m.e, { gap: 0, detune: (Math.random() - 0.5) * 80 });
+  // Schedule against the audio clock while the art travels, so the cue starts on landing.
+  if (m.k === 'emo') sfx('e_' + m.e, { gap: 0, at: FX.on ? 480 : 0, detune: (Math.random() - 0.5) * 80 });
   else if (m.k === 'wsp') sfx('whisper', { vol: 0.7 });
-  else if (m.k === 'splat') sfx('s_' + m.e);
+  else if (m.k === 'splat') sfx('s_' + m.e, { at: FX.on ? 600 : 0 });
   if (document.hidden) return;
-  const s = ttSize(), a = seatAt(m.p), c = ttMid(), anim = FX.on;
+  const s = ttSize(), a = ttFit(seatAt(m.p), s), c = ttMid(), anim = FX.on;
   const at = (d, p, sz) => { d.style.left = (p.x - sz / 2) + 'px'; d.style.top = (p.y - sz / 2) + 'px'; };
   if (m.k === 'emo') {
     const d = ttSticker(m.e, s); at(d, a, s);
-    // out of the seat towards the city, a little way, with a wobble; then it drifts up and goes
+    // Land at 480ms, then let the PNG poses and banter play at the destination.
     let dx = c.x - a.x, dy = c.y - a.y; const len = Math.hypot(dx, dy) || 1, go = Math.min(len * 0.45, s * 2.6); dx = dx / len * go; dy = dy / len * go;
-    const r = (Math.random() - 0.5) * 24;
-    if (!anim) { ttGo(d, [{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }], { duration: 2000 }); return; }
+    const r = (Math.random() - 0.5) * 12;
+    if (!anim) { ttGo(d, [{ opacity: 1 }, { opacity: 1, offset: 2000 / 2200 }, { opacity: 0 }], { duration: 2200 }); return; }
+    // Keep travel separate from the post-landing reaction, then fade the final pose and caption together.
     ttGo(d, [
-      { transform: `translate(0,0) scale(.2) rotate(${r - 30}deg)`, opacity: 0 },
-      { transform: `translate(${dx * 0.7}px,${dy * 0.7 - 10}px) scale(1.18) rotate(${r + 10}deg)`, opacity: 1, offset: 0.16 },
-      { transform: `translate(${dx * 0.8}px,${dy * 0.8 - 14}px) scale(.94) rotate(${r - 6}deg)`, opacity: 1, offset: 0.26 },
-      { transform: `translate(${dx * 0.85}px,${dy * 0.85 - 18}px) scale(1) rotate(${r}deg)`, opacity: 1, offset: 0.36 },
-      { transform: `translate(${dx}px,${dy - s * 0.7}px) scale(1) rotate(${r + 4}deg)`, opacity: 1, offset: 0.8 },
-      { transform: `translate(${dx}px,${dy - s}px) scale(.85) rotate(${r + 8}deg)`, opacity: 0 },
-    ], { duration: 2400, easing: 'ease-out' });
+      { transform: `translate(0,0) scale(.55) rotate(${r - 12}deg)`, opacity: .35 },
+      { transform: `translate(${-dx * .025}px,${-dy * .025}px) scale(.62) rotate(${r - 9}deg)`, opacity: 1, offset: 80 / 2200 },
+      { transform: `translate(${dx}px,${dy - 14}px) scale(1.06,.98) rotate(${r + 2}deg)`, opacity: 1, offset: 360 / 2200 },
+      { transform: `translate(${dx}px,${dy - 14}px) scale(1) rotate(${r}deg)`, opacity: 1, offset: 480 / 2200 },
+      { transform: `translate(${dx}px,${dy - 14}px) scale(1) rotate(${r}deg)`, opacity: 1, offset: 2000 / 2200 },
+      { transform: `translate(${dx}px,${dy - 38}px) scale(.94) rotate(${r + 3}deg)`, opacity: 0 },
+    ], { duration: 2200, easing: 'linear' });
     return;
   }
-  const b = to ? seatAt(to.pid) : c, env = m.k === 'wsp';
-  const sz = env ? Math.round(s * 0.72) : s, d = ttSticker(env ? 'whisper' : m.e, sz); at(d, a, sz);
+  const target = to ? seatAt(to.pid) : c, env = m.k === 'wsp';
+  const sz = env ? Math.round(s * 0.4) : Math.round(s * 1.2), d = ttSticker(env ? 'whisper' : m.e, sz); at(d, a, sz);
+  const margin = sz * .66 + 8, b = env ? target : { x:Math.max(margin, Math.min(innerWidth - margin, target.x)), y:Math.max(margin, Math.min(innerHeight - margin, target.y)) };
+  if (!env) d.style.setProperty('--tt-land', '600ms');
   const dx = (m.x ? c.x : b.x) - a.x, dy = (m.x ? c.y : b.y) - a.y, lift = Math.min(160, Math.hypot(dx, dy) * 0.35);
-  if (!anim) { ttGo(d, [{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }], { duration: 1600 }); }
+  if (!anim) { ttGo(d, [{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }], { duration: env ? 1600 : 3200 }); }
   else if (env) {
     // an envelope across the table in an arc; one the announcer caught stops over the city
     const fly = [
@@ -14483,15 +14723,17 @@ function talkShow(m) {
       setTimeout(() => d.remove(), 1700);
     }
   } else {
-    // a splat thrown at the player on the clock: it grows on the way and lands with a squash by their seat
+    // The projectile lands intact at 600ms, then plays its burst and aftermath at the target seat.
     ttGo(d, [
       { transform: 'translate(0,0) scale(.3) rotate(-40deg)', opacity: 0 },
-      { transform: `translate(${dx * 0.5}px,${dy * 0.5 - lift}px) scale(1) rotate(160deg)`, opacity: 1, offset: 0.4 },
-      { transform: `translate(${dx}px,${dy}px) scale(1.7,1.2) rotate(360deg)`, opacity: 1, offset: 0.55 },
-      { transform: `translate(${dx}px,${dy}px) scale(1.4) rotate(360deg)`, opacity: 1, offset: 0.66 },
-      { transform: `translate(${dx}px,${dy + 10}px) scale(1.45) rotate(360deg)`, opacity: 1, offset: 0.86 },
-      { transform: `translate(${dx}px,${dy + 18}px) scale(1.5) rotate(360deg)`, opacity: 0 },
-    ], { duration: 2000, easing: 'ease-in-out' });
+      { transform: `translate(${dx * 0.5}px,${dy * 0.5 - lift}px) scale(.85) rotate(-14deg)`, opacity: 1, offset: 300 / 3200 },
+      { transform: `translate(${dx}px,${dy}px) scale(1) rotate(0deg)`, opacity: 1, offset: 600 / 3200 },
+      { transform: `translate(${dx}px,${dy}px) scale(1) rotate(0deg)`, opacity: 1, offset: 880 / 3200 },
+      { transform: `translate(${dx}px,${dy}px) scale(1.2,1.06) rotate(0deg)`, opacity: 1, offset: 960 / 3200 },
+      { transform: `translate(${dx}px,${dy}px) scale(1.1) rotate(0deg)`, opacity: 1, offset: 1340 / 3200 },
+      { transform: `translate(${dx}px,${dy}px) scale(1.1) rotate(0deg)`, opacity: 1, offset: 2800 / 3200 },
+      { transform: `translate(${dx}px,${dy + 18}px) scale(1.16) rotate(0deg)`, opacity: 0 },
+    ], { duration: 3200, easing: 'linear' });
   }
   if (m.x && from && to) {
     // the words the announcer caught, over the city, while he reads them
@@ -14508,7 +14750,7 @@ function talkShow(m) {
 /* ---------- a phone: the Trash talk sheet, a whisper, a splat ---------- */
 /* this phone's side: what it has sent (so its own buttons know the limits), whispers and splats that landed on it,
    the moment the stickers are suggested for, and the /said ids it has seen (the relay may say one twice) */
-const TTP = { ids: [], emo: [], wspAt: -1e9, used: '', lastOn: {}, wsp: null, splat: null, reply: null, to: null, moment: null, prev: null, timer: 0 };
+const TTP = { ids: [], emo: [], wspAt: -1e9, used: '', lastOn: {}, wsp: null, splat: null, reply: null, to: null, tone: 'all', moment: null, prev: null, sit: '', heard: null, timer: 0 };
 const TALKICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v10H11l-4.5 3.8V15.5H4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></svg>';
 /* sent from here: the phone keeps the table's limits so its buttons say no before the table would */
 function talkNo(k, now = Date.now()) {
@@ -14529,12 +14771,19 @@ function talkSend(body) {
 }
 /* one of yours, sent: it pops out of the button you opened the sheet with */
 function talkPop(k) {
-  if (!FX.on || document.hidden) return;
+  if (document.hidden) return;
   const b = document.querySelector(ui.full ? '#p-hud .talkbtn' : '.pbar .talkbtn'), r = b && b.getBoundingClientRect(); if (!r || !r.width) return;
-  const s = 58, d = document.createElement('div'); d.className = 'ttstk'; d.style.backgroundImage = `var(--stk-${k})`; d.style.width = d.style.height = s + 'px';
-  d.style.left = (r.left + r.width / 2 - s / 2) + 'px'; d.style.top = (r.bottom - s / 2) + 'px'; fxLayer().appendChild(d);
-  ttGo(d, [{ transform: 'translateY(0) scale(.3)', opacity: 0 }, { transform: 'translateY(34px) scale(1.1) rotate(-6deg)', opacity: 1, offset: 0.3 },
-    { transform: 'translateY(46px) scale(1) rotate(4deg)', opacity: 1, offset: 0.7 }, { transform: 'translateY(30px) scale(.6)', opacity: 0 }], { duration: 1100, easing: 'ease-out' });
+  const s = Math.round(Math.min(136, innerWidth * .34, innerHeight * .25)), d = document.createElement('div');
+  d.className = 'ttstk'; d.innerHTML = ttArtHTML(k, FX.on, true); d.style.width = d.style.height = s + 'px'; d.style.setProperty('--tt-letter', Math.round(s * .12) + 'px');
+  d.style.setProperty('--tt-land', '320ms');
+  const pos = ttFit({ x:r.left + r.width / 2, y:r.bottom + s / 2 + 8 }, s);
+  d.style.left = (pos.x - s / 2) + 'px'; d.style.top = (pos.y - s / 2) + 'px'; fxLayer().appendChild(d);
+  ttGo(d, FX.on ? [{ transform: 'translateY(-10px) scale(.65) rotate(-10deg)', opacity: .4 },
+    { transform: 'translateY(0) scale(1.06,.98) rotate(2deg)', opacity: 1, offset: 220 / 2040 },
+    { transform: 'translateY(0) scale(1)', opacity: 1, offset: 320 / 2040 },
+    { transform: 'translateY(0) scale(1)', opacity: 1, offset: 1840 / 2040 },
+    { transform: 'translateY(-12px) scale(.95)', opacity: 0 }]
+    : [{ opacity:1 }, { opacity:1, offset:1840 / 2040 }, { opacity:0 }], { duration: 2040, easing: 'linear' });
 }
 /* what landed on this phone */
 function talkSeen(m) {
@@ -14543,15 +14792,15 @@ function talkSeen(m) {
   if (m.k === 'splat') TTP.lastOn[m.to] = now;
   if (m.p === PID) { if (m.k === 'splat') TTP.used = ttTurn(G.state); return; }   // your own, coming back
   talkSay(m);                                               // heard only with "Hear the whole table" (vox checks)
-  if (m.k === 'emo' && sndHearsTable()) sfx('e_' + m.e, { gap: 0 });
+  if (m.k === 'emo' && sndHearsTable()) sfx('e_' + m.e, { gap: 0, at: FX.on ? 480 : 0 });
   if (again && m.to === PID) return;                        // one splat at a time on a phone
   if (m.to !== PID || m.k === 'emo') return;
   if (m.k === 'wsp') {
-    TTP.wsp = { p: m.p, e: m.e, at: now, id: m.id }; TTP.reply = m.p;
+    TTP.wsp = { p: m.p, e: m.e, at: now, id: m.id }; TTP.reply = m.p; TTP.heard = { p: m.p, e: m.e, at: now };
     sfx('whisper'); buzz([10, 60, 10]);
   } else if (m.k === 'splat') {
     TTP.splat = { e: m.e, at: now, id: m.id };
-    sfx('s_' + m.e); buzz([40, 50, 30]);
+    sfx('s_' + m.e, { at: FX.on ? 672 : 0 }); buzz([40, 50, 30]);
   }
   talkTimer(); safeRender();
 }
@@ -14569,14 +14818,19 @@ function talkSplatSync() {
   const s = TTP.splat, now = Date.now();
   document.querySelectorAll('.ttsplat').forEach(el => { if (!s || el.dataset.id !== s.id || !el.closest('#ps-board .board3d')) el.remove(); });
   if (!s) return;
-  if (now - s.at > TT.splatMs) { TTP.splat = null; return; }
+  if (now - s.at >= TT.splatMs) { TTP.splat = null; document.querySelectorAll('.ttsplat').forEach(el => el.remove()); return; }
   const box = document.querySelector('#ps-board .board3d');
-  if (!box || box.querySelector('.ttsplat')) return;
-  const el = document.createElement('div'); el.className = `ttsplat sp-${s.e}`; el.dataset.id = s.id; el.setAttribute('aria-hidden', 'true');
-  el.style.backgroundImage = `var(--stk-${s.e})`;
+  if (!box) return;
+  const bounds = box.getBoundingClientRect(), size = Math.min(bounds.width * .84, bounds.height * .78, ui.full ? 640 : 560);
+  const existing = box.querySelector('.ttsplat');
+  if (existing) { existing.style.width = existing.style.height = size + 'px'; return; }
+  const el = document.createElement('div'); el.className = `ttsplat sp-${s.e}${FX.on ? '' : ' tt-still'}`; el.dataset.id = s.id; el.setAttribute('aria-hidden', 'true');
+  el.innerHTML = ttArtHTML(s.e, FX.on);
   const h = [...s.id].reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) % 997, 7);
-  el.style.setProperty('--r', ((h % 40) - 20) + 'deg'); el.style.setProperty('--dx', ((h % 17) - 8) + '%');
+  el.style.width = el.style.height = size + 'px';
+  el.style.setProperty('--r', ((h % 15) - 7) + 'deg'); el.style.setProperty('--dx', ((h % 7) - 3) + '%');
   el.style.animationDelay = -(now - s.at) + 'ms';
+  el.style.setProperty('--tt-age', -(now - s.at) + 'ms');
   box.appendChild(el);
 }
 /* the whisper, where your eye is: a note across the top of the screen, over the page (the top bar had no room for
@@ -14596,6 +14850,7 @@ function talkGone() {
   modalSync(null); talkBar(G.state, null); talkSplatSync();
 }
 function talkBar(st, me) {
+  if (me) ttWarm();
   const bar = document.querySelector('.pbar'); if (!bar) return;
   const b = bar.querySelector('[data-p=talk].talkbtn'); if (b) b.hidden = !me;
   const chip = me && st ? talkChipHTML(st) : '';
@@ -14617,36 +14872,58 @@ function talkObserve(st, me) {
     say(`${ap.name} rolled a seven`, handCount(me) > 7 ? ['sweat', 'boo', 'cry'] : ['boo', 'sweat', 'crickets']);
   if (st.board.police !== prev.police && !mine && GEO.hexes[st.board.police] && GEO.hexes[st.board.police].vs.some(v => st.buildings[v] && st.buildings[v].pid === me.pid))
     say('The police are on your block', ['boo', 'cry', 'sweat']);
-  if (prev.fight && !st.fight) say(prev.fight.includes(me.pid) ? 'After that fight' : 'What a fight', prev.fight.includes(me.pid) ? ['micdrop', 'lol', 'cry'] : ['cheer', 'lol', 'clap']);
+  if (prev.fight && !st.fight) say(prev.fight.includes(me.pid) ? 'Got the last word?' : 'Give them their flowers', prev.fight.includes(me.pid) ? ['micdrop', 'lol', 'cry'] : ['cheer', 'fire', 'clap']);
   const nine = st.players.find(p => p.pid !== me.pid && vpOf(st, p.pid) === WIN_VP - 1 && (prev.vp[p.pid] | 0) < WIN_VP - 1);
-  if (top && top !== prev.top) { const t = playerOf(st, top); if (t) say(t.pid === me.pid ? 'You took the lead' : `${t.name} took the lead`, t.pid === me.pid ? ['micdrop', 'fire', 'rain'] : ['sweat', 'boo', 'clap']); }
+  if (top && top !== prev.top) { const t = playerOf(st, top); if (t) say(t.pid === me.pid ? 'Let them know' : `${t.name} took the lead`, t.pid === me.pid ? ['micdrop', 'rain', 'lol'] : ['cheer', 'fire', 'sweat']); }
   if (nine) say(`${nine.name} is one away`, ['sweat', 'boo', 'cry']);
   if (st.phase === 'over' && prev.phase !== 'over') say(top === me.pid ? 'You run this city' : 'Game over', top === me.pid ? ['micdrop', 'rain', 'fire'] : ['clap', 'cry', 'cheer']);
 }
 function talkSuggest(st, me) {
   const m = TTP.moment, ap = playerOf(st, activePid(st));
+  if (st.phase === 'turn' && st.offer) return st.offer.from === me.pid
+    ? { why:'Sell the bluff', list:['rain', 'micdrop', 'boo'] }
+    : { why:'Buying that?', list:['boo', 'sweat', 'cry'] };
   if (m && Date.now() - m.at < TT.moment) return m;
   if (st.phase === 'turn' && ap && ap.pid !== me.pid && clockRan(st) > 45000) return { why: `${ap.name} is taking a while`, list: ['crickets', 'clap', 'sweat'] };
   return { why: '', list: ['cheer', 'lol', 'boo'] };
+}
+/* the situation the whisper menu opens on: the answer to a whisper just in from the player it would go to, a deal
+   while an offer is on the table, a hurry-up for a player on the clock taking a while, else where this phone left it */
+function talkSit(st, reply) {
+  const others = st.players.filter(p => p.pid !== PID), a = activePid(st), h = TTP.heard;
+  const to = others.find(p => p.pid === TTP.to) || others.find(p => p.pid === TTP.reply) || others.find(p => p.pid === a) || others[0];
+  if (h && ttHas(TT_SIT, h.e) && to && h.p === to.pid && (reply || Date.now() - h.at < TT.moment)) return TT_ANSWER[TT_SIT[h.e]];
+  if (st.phase === 'turn' && st.offer) return 'deal';
+  if (st.phase === 'turn' && to && to.pid === a && clockRan(st) > 45000) return 'hurry';
+  return ttHas(TT_SITS, TTP.sit) ? TTP.sit : 'deal';
+}
+/* a whisper back: the sheet opens at its whisper menu, not at the stickers above it */
+function talkToWhisper() {
+  const sc = document.querySelector('#p-modal .m-talk .sh-scroll'), h = sc && sc.querySelector('.tthw');
+  if (h) sc.scrollTop += h.getBoundingClientRect().top - sc.getBoundingClientRect().top - 4;
 }
 /* The sheet: stickers for the moment, the rest of them, a whisper to one player, and a splat for whoever is on the clock. */
 function talkSheet(st, me) {
   const now = Date.now(), sug = talkSuggest(st, me), others = st.players.filter(p => p.pid !== me.pid);
   const eNo = talkNo('emo', now), wNo = talkNo('wsp', now);
-  const emo = (k, big) => `<button class="ttb${big ? ' big' : ''}" data-p="temo" data-arg="${k}" ${eNo ? 'disabled' : ''}><i style="background-image:var(--stk-${k})"></i><span>${TT_EMO[k]}</span></button>`;
+  const tone = ttHas(TT_TONES, TTP.tone) ? TTP.tone : 'all';
+  const emo = (k, big) => `<button class="ttb tt-${TT_TONE[k]}${big ? ' big' : ''}" data-p="temo" data-arg="${k}" ${eNo ? 'disabled' : ''}>${ttArtHTML(k)}<span>${esc(TT_EMO[k])}</span></button>`;
   const to = others.find(p => p.pid === TTP.to) || others.find(p => p.pid === TTP.reply) || others.find(p => p.pid === activePid(st)) || others[0];
   if (to) TTP.to = to.pid;
-  const words = o => Object.keys(o).map(k => `<button class="ttw" data-p="twsp" data-arg="${k}" ${wNo || !to ? 'disabled' : ''}>${esc(o[k])}</button>`).join('');
+  const sit = ttHas(TT_SITS, TTP.sit) ? TTP.sit : 'deal', lines = TT_SITS[sit][1];
+  const words = `<div class="ttsits" role="group" aria-label="Situation">${Object.keys(TT_SITS).map(k => `<button type="button" data-p="tsit" data-arg="${k}" aria-pressed="${k === sit}">${TT_SITS[k][0]}</button>`).join('')}</div>` +
+    `<div class="ttwords" role="group" aria-label="${TT_SITS[sit][0]}">${Object.keys(lines).map(k => `<button class="ttw" data-p="twsp" data-arg="${k}" ${wNo || !to ? 'disabled' : ''}>${esc(lines[k])}</button>`).join('')}</div>`;
   const ap = playerOf(st, activePid(st)), sNo = splatNo(st, me, TTP.used, ap ? TTP.lastOn[ap.pid] : 0, now);
   // on your own turn there is nobody to throw at, so the section is not there at all
   const splat = st.phase === 'turn' && ap && ap.pid !== me.pid ? `<h3 class="tth">Distract ${esc(ap.name)}</h3>` +
     (sNo ? `<p class="small muted ttno">${esc(sNo)}.</p>` : `<p class="small muted ttno">Lands on their board for a few seconds. One a turn.</p>`) +
-    `<div class="ttsplats">${Object.keys(TT_SPLAT).map(k => `<button class="ttb" data-p="tsplat" data-arg="${k}" ${sNo ? 'disabled' : ''}><i style="background-image:var(--stk-${k})"></i><span>${TT_SPLAT[k]}</span></button>`).join('')}</div>` : '';
-  const body = `<p class="ttlab">${sug.why ? esc(sug.why) : 'Stickers fly from your seat on the table screen'}</p>` +
-    `<div class="ttsug">${sug.list.map(k => emo(k, true)).join('')}</div>` +
-    `<div class="ttgrid">${Object.keys(TT_EMO).filter(k => !sug.list.includes(k)).map(k => emo(k)).join('')}</div>` +
-    `<h3 class="tth">Whisper</h3>` + (others.length ? `<div class="ttto" role="group" aria-label="Whisper to">${others.map(p => `<button class="sw" data-p="tto" data-arg="${p.pid}" aria-pressed="${p === to}"><span class="chip" style="background:var(--p-${p.color})"></span>${esc(p.name)}</button>`).join('')}</div>` +
-      `<div class="ttwords">${words(TT_SAY)}</div><div class="ttwords odd">${words(TT_WORD)}</div><p class="small muted ttno">Only ${esc(to ? to.name : 'they')} sees it. The announcer might read it out.</p>` : '<p class="small muted ttno">Nobody else is seated yet.</p>') +
+    `<div class="ttsplats">${Object.keys(TT_SPLAT).map(k => `<button class="ttb" data-p="tsplat" data-arg="${k}" ${sNo ? 'disabled' : ''}>${ttArtHTML(k)}<span>${TT_SPLAT[k]}</span></button>`).join('')}</div>` : '';
+  const body = `<p class="ttlab">Gas them up. Sell the bluff. Get in their head.</p>` +
+    `<div class="ttintent" role="group" aria-label="Sticker style">${Object.keys(TT_TONES).map(k => `<button type="button" class="tt-${k}" data-p="ttone" data-arg="${k}" aria-pressed="${tone === k}">${TT_TONES[k]}</button>`).join('')}</div>` +
+    (tone === 'all' ? (sug.why ? `<p class="ttlab">${esc(sug.why)}</p>` : '') + `<div class="ttsug">${sug.list.map(k => emo(k, true)).join('')}</div>` : '') +
+    `<div class="ttgrid">${Object.keys(TT_EMO).filter(k => tone === 'all' ? !sug.list.includes(k) : TT_TONE[k] === tone).map(k => emo(k)).join('')}</div>` +
+    `<h3 class="tth tthw">Whisper</h3>` + (others.length ? `<div class="ttto" role="group" aria-label="Whisper to">${others.map(p => `<button class="sw" data-p="tto" data-arg="${p.pid}" aria-pressed="${p === to}"><span class="chip" style="background:var(--p-${p.color})"></span>${esc(p.name)}</button>`).join('')}</div>` +
+      `${words}<p class="small muted ttno">Only ${esc(to ? to.name : 'they')} sees it. The announcer might read it out.</p>` : '<p class="small muted ttno">Nobody else is seated yet.</p>') +
     splat;
   return { kind: 'talk', label: 'Trash talk', view: 'talk', top: shTop('Trash talk'), hero: '', body, foot: '' };
 }
@@ -16836,10 +17113,12 @@ document.addEventListener('click', ev => {
     case 'clockok': act({ t: 'clockok', s: +pb.dataset.arg }); break;
     case 'hurry': if (act({ t: 'hurry' })) buzz(12); break;
     // trash talk: the sheet, and what is sent from it (the sheet closes behind a whisper or a splat, and a sticker pops out)
-    case 'talk': if (st && playerOf(st, PID)) { if (pb.dataset.arg === 'reply' && TTP.reply) TTP.to = TTP.reply; if (pb.dataset.arg === 'reply') TTP.wsp = null; openSheet('talk', pb); } break;
+    case 'talk': if (st && playerOf(st, PID)) { if (pb.dataset.arg === 'reply' && TTP.reply) TTP.to = TTP.reply; if (pb.dataset.arg === 'reply') TTP.wsp = null; TTP.sit = talkSit(st, pb.dataset.arg === 'reply'); openSheet('talk', pb); if (pb.dataset.arg === 'reply') talkToWhisper(); } break;
     case 'wspx': TTP.wsp = null; renderPlayer(); break;
     case 'tto': TTP.to = pb.dataset.arg; renderPlayer(); break;
-    case 'temo': if (talkSend({ k: 'emo', e: pb.dataset.arg })) { buzz(8); closeSheet('sent'); talkPop(pb.dataset.arg); } else renderPlayer(); break;
+    case 'tsit': if (ttHas(TT_SITS, pb.dataset.arg)) { TTP.sit = pb.dataset.arg; renderPlayer(); } break;
+    case 'ttone': if (ttHas(TT_TONES, pb.dataset.arg)) { TTP.tone = pb.dataset.arg; renderPlayer(); } break;
+    case 'temo': if (talkSend({ k: 'emo', e: pb.dataset.arg })) { buzz(8); talkPop(pb.dataset.arg); closeSheet('sent'); } else renderPlayer(); break;
     case 'twsp': { const to = st && playerOf(st, TTP.to);
       if (to && talkSend({ k: 'wsp', e: pb.dataset.arg, to: to.pid })) { buzz(8); closeSheet('sent'); toast(`Whispered \u201c${ttWord(pb.dataset.arg)}\u201d to ${to.name}`); } else renderPlayer(); break; }
     case 'tsplat': { const ap = st && playerOf(st, activePid(st));

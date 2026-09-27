@@ -25,7 +25,9 @@ TABLE = {"amb_city", "start", "turn", "join", "leave", "tension", "reel_spin", "
          "lights_on",                                                                  # the city powering up after set-up
          "clock_tick", "score_sting",                                                  # the room's clock and standings (release 2)
          "e_cheer", "e_boo", "e_lol", "e_clap", "e_crickets", "e_rain", "e_fire",       # the stickers' bites (release 3)
-         "e_sweat", "e_cry", "e_micdrop"}
+         "e_sweat", "e_cry", "e_micdrop",
+         "st_music", "st_rocket", "st_boom", "st_shots", "st_pop",                    # the victory show (release 6)
+         "giant_step", "giant_mech", "giant_beast"}                                 # and the giant
 def pack_of(n):
     if n.startswith("v_") and not n.startswith("v_taunt_"): return "table"
     return "table" if n in TABLE else "fx"
