@@ -30,3 +30,5 @@
 
 # Transparent three-frame stickers and splats
 !/art/talk/
+# the winner's poster painting (release 6): loaded by their phone when it makes the poster
+!/art/show/

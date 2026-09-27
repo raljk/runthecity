@@ -1604,6 +1604,28 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 .why .tfnote,p.tfnote{color:var(--ink);font-weight:700}
 @media (prefers-reduced-motion:reduce){.spot.foe .casing{animation:none}}
 /* ---------- end of Turf war CSS ---------- */
+/* ---------- Showtime (release 6): the winner's name over the board, the note in the banner, the selfie on their
+   phone, a burst of colour on every phone ---------- */
+#fx .sttitle{position:absolute;transform:translate(-50%,-50%);text-align:center;pointer-events:none;line-height:.9;white-space:nowrap;
+  font-family:'Barlow Condensed',Impact,system-ui,sans-serif;text-transform:uppercase;animation:stIn .75s cubic-bezier(.2,.9,.3,1.15) both}
+#fx .sttitle b{display:block;font-weight:900;font-size:1em;letter-spacing:.02em;color:var(--pc);
+  text-shadow:0 0 .1em rgba(0,0,0,.85),0 0 .3em var(--pc),0 0 .9em var(--pc)}
+#fx .sttitle span{display:block;margin-top:.16em;font-weight:800;font-size:.33em;letter-spacing:.42em;padding-left:.42em;color:#eef7fb;
+  text-shadow:0 0 .25em rgba(0,0,0,.9),0 0 .8em rgba(160,230,255,.45)}
+#fx .sttitle.out{animation:stOut .6s ease-in both}
+@keyframes stIn{from{opacity:0;transform:translate(-50%,-50%) scale(1.22);filter:blur(6px)}to{opacity:1;transform:translate(-50%,-50%) scale(1);filter:none}}
+@keyframes stOut{to{opacity:0;transform:translate(-50%,-50%) scale(.95)}}
+.stnote{display:block;font-size:.8rem;line-height:1.3;opacity:.72;margin-top:3px}
+.stself .stpic{margin:10px auto 12px;width:min(62vw,240px);aspect-ratio:1;border-radius:14px;overflow:hidden;box-shadow:0 0 0 2px var(--pc),0 0 22px var(--pc)}
+.stself .stpic img{display:block;width:100%;height:100%;object-fit:cover}
+.stself .stpic.up{animation:stUp 1.2s ease-out}
+@keyframes stUp{0%{box-shadow:0 0 0 2px var(--pc),0 0 0 var(--pc)}40%{box-shadow:0 0 0 3px #fff,0 0 44px var(--pc)}100%{box-shadow:0 0 0 2px var(--pc),0 0 22px var(--pc)}}
+.stself .sterr{color:#ff2e93}
+.stcam{position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none}
+#fx .stconf{position:absolute;top:-14px;width:8px;height:13px;background:var(--c);border-radius:1px;animation:stFall 3s cubic-bezier(.3,.1,.6,1) both}
+@keyframes stFall{from{transform:translate(0,0) rotate(0)}to{transform:translate(var(--dx),108vh) rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){#fx .sttitle,#fx .sttitle.out,.stself .stpic.up{animation:none}#fx .stconf{display:none}}
+/* ---------- end of Showtime CSS ---------- */
 /* ---------- the table screen, dressed like the front door (2026-09-26) ----------
    The landing page's night on the table screen and the board view: teal-black ground, paper-white type,
    square hairline panels, condensed capitals and small monospaced labels, the wordmark in the corner.
@@ -2129,7 +2151,7 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 <svg id="art-defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><image id="img-warehouse" href="art/game/4b02da62cf440c84.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-warehouse-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse"/></pattern><pattern id="tex-warehouse-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-nightlife" href="art/game/22125c17692b7615.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-nightlife-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife"/></pattern><pattern id="tex-nightlife-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-residential" href="art/game/a646c36d55d79d8d.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-residential-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential"/></pattern><pattern id="tex-residential-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-works" href="art/game/818f3fdcf8197d20.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-works-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works"/></pattern><pattern id="tex-works-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-tower" href="art/game/2fc42ec3373b927e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-tower-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower"/></pattern><pattern id="tex-tower-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-deadzone" href="art/game/f239b75fb869878e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-deadzone-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone"/></pattern><pattern id="tex-deadzone-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-wall_strata" href="art/game/11657f2b44ce62d9.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-wall_edge" href="art/game/d4118f94580bf8b4.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-rooftop" href="art/game/a84fbcb4b007ba84.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade" href="art/game/b14848bfcef00503.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_glass" href="art/game/884a677ea6bf6864.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_neon" href="art/game/e5eb9e891be0d2bb.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_shed" href="art/game/9e4045f14f544c07.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_works" href="art/game/68e62ef6f2bf6a43.jpg" width="1" height="1" preserveAspectRatio="none"/></defs></svg>
 <!-- ART:END -->
 <!-- SND:BEGIN (generated by sound/embed.py, do not edit by hand) -->
-<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"0e6807a90a","size":1596075}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"horn_1":["table",217980,5711,0.88,-11.5],"horn_2":["table",223691,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",232380,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",237621,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",244116,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",274592,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",280460,14802,2.4,-8.2],"reel_stop":["table",295262,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",298622,8689,1.36,-8.6],"seven":["table",307311,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"start":["table",328696,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",365127,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",376638,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",383603,7556,1.415,-0.4],"v_bank_2":["table",391159,6716,1.24,0.5],"v_buy_1":["table",397875,8156,1.524,0.8],"v_buy_2":["table",406031,5996,1.083,2.2],"v_c_backup":["table",412027,5756,1.039,2.1],"v_c_bustup":["table",417783,6116,1.116,-0.6],"v_c_connections":["table",423899,6236,1.138,-2.6],"v_c_fight":["table",430135,5756,1.035,-2.3],"v_c_legend":["table",435891,6716,1.243,-1.5],"v_c_luck":["table",442607,5156,0.934,0.7],"v_c_paidoff":["table",447763,8516,1.59,1.1],"v_c_rewind":["table",456279,7076,1.298,0.1],"v_c_roadcrew":["table",463355,7076,1.311,0.2],"v_c_shakedown":["table",470431,8156,1.534,-1.1],"v_c_silver":["table",478587,6236,1.14,1.0],"v_c_tipoff":["table",484823,7436,1.374,0.1],"v_c_wrecking":["table",492259,8516,1.597,-0.9],"v_cop_1":["table",500775,15020,4.827,-3.2],"v_cop_2":["table",515795,9836,3.115,-2.8],"v_cop_3":["table",525631,10160,3.21,-3.1],"v_crash_1":["table",535791,8396,1.577,-2.5],"v_crash_2":["table",544187,7676,1.425,-1.3],"v_crash_3":["table",551863,6596,1.217,-0.9],"v_crowd_1":["table",558459,7196,1.329,1.4],"v_crowd_2":["table",565655,7556,1.415,-0.7],"v_crowd_3":["table",573211,7556,1.41,1.9],"v_d_deadzone":["table",580767,8996,1.685,-2.5],"v_d_nightlife":["table",589763,8756,1.649,1.2],"v_d_residential":["table",598519,8276,1.558,1.0],"v_d_tower":["table",606795,6356,1.169,1.0],"v_d_warehouse":["table",613151,8396,1.562,-1.3],"v_d_works":["table",621547,6476,1.191,2.0],"v_deal":["table",628023,7076,1.319,-1.9],"v_deal_2":["table",635099,6956,1.29,-0.5],"v_deal_3":["table",642055,8396,1.562,2.0],"v_deal_4":["table",650451,7196,1.337,2.5],"v_dir_look":["table",657647,8156,1.52,-0.5],"v_dir_wake":["table",665803,7556,1.399,-2.5],"v_discard":["table",673359,18716,3.626,0.8],"v_down_bustup":["table",692075,11516,2.187,-0.7],"v_down_wrecking":["table",703591,8756,1.635,-2.4],"v_e_chase":["table",712347,5876,1.07,0.4],"v_e_concert":["table",718223,6716,1.242,-2.5],"v_e_fire":["table",724939,5996,1.09,-1.2],"v_e_gangwar":["table",730935,5876,1.06,-0.6],"v_e_race":["table",736811,6956,1.288,-2.1],"v_e_robbery":["table",743767,7916,1.473,-1.1],"v_fast_1":["table",751683,7556,1.407,0.4],"v_fast_2":["table",759239,7076,1.306,1.1],"v_fast_3":["table",766315,5396,0.983,0.6],"v_fast_4":["table",771711,7556,1.401,1.3],"v_fast_5":["table",779267,10436,1.976,-0.6],"v_held":["table",789703,6956,1.288,0.0],"v_hurry":["table",796659,11756,2.239,1.5],"v_icpt_1":["table",808415,12836,2.457,-2.4],"v_icpt_2":["table",821251,5396,0.977,-1.3],"v_icpt_3":["table",826647,6956,1.283,-2.6],"v_icpt_4":["table",833603,7676,1.43,-2.5],"v_ko":["table",841279,4676,0.818,-1.0],"v_legendary":["table",845955,5156,0.914,-0.4],"v_n_blue":["table",851111,2276,0.338,-1.8],"v_n_green":["table",853387,2756,0.45,-2.5],"v_n_orange":["table",856143,3116,0.507,-2.6],"v_n_purple":["table",859259,2516,0.395,-0.5],"v_n_red":["table",861775,1796,0.258,1.0],"v_n_white":["table",863571,2276,0.352,2.3],"v_nine":["table",865847,12716,2.434,-2.6],"v_offer":["table",878563,8156,1.516,-2.3],"v_op_1":["table",886719,10316,1.946,-2.5],"v_op_2":["table",897035,10076,1.905,-0.5],"v_op_3":["table",907111,6836,1.257,-1.5],"v_op_4":["table",913947,10556,1.997,0.3],"v_open":["table",924503,9476,1.778,-1.5],"v_p_far":["table",933979,4676,0.832,0.3],"v_p_front":["table",938655,5516,1.008,-0.5],"v_p_left":["table",944171,5396,0.974,-2.6],"v_p_mid":["table",949567,4916,0.874,-0.4],"v_p_right":["table",954483,5156,0.922,0.4],"v_pick":["table",959639,5876,1.076,-2.2],"v_place":["table",965515,7556,1.415,-1.7],"v_port_1":["table",973071,6956,1.279,-1.4],"v_port_2":["table",980027,6836,1.261,0.9],"v_rare":["table",986863,8036,1.49,0.5],"v_s_half":["table",994899,5636,1.022,2.5],"v_s_lead":["table",1000535,5756,1.049,0.6],"v_s_leads":["table",1006291,5996,1.092,2.5],"v_s_one":["table",1012287,5396,0.975,-2.1],"v_s_round_1":["table",1017683,6236,1.145,-1.2],"v_s_round_2":["table",1023919,5756,1.035,-1.3],"v_s_round_3":["table",1029675,12956,2.474,0.9],"v_s_tied":["table",1042631,8996,1.695,2.5],"v_s_two":["table",1051627,5396,0.975,-2.5],"v_says":["table",1057023,2996,0.498,-0.4],"v_slow_1":["table",1060019,15476,2.997,-2.5],"v_slow_2":["table",1075495,12716,2.429,-1.6],"v_slow_3":["table",1088211,4676,0.831,-0.9],"v_slow_4":["table",1092887,11156,2.131,0.9],"v_slow_5":["table",1104043,6716,1.232,-1.4],"v_splat_1":["table",1110759,6596,1.215,-0.2],"v_splat_2":["table",1117355,5876,1.076,-0.9],"v_splat_3":["table",1123231,7556,1.405,1.3],"v_start":["table",1130787,13796,2.657,-1.3],"v_sum_10":["table",1144583,3356,0.576,-0.0],"v_sum_11":["table",1147939,3596,0.604,2.5],"v_sum_12":["table",1151535,10916,2.07,2.2],"v_sum_2":["table",1162451,9836,1.868,0.1],"v_sum_3":["table",1172287,3356,0.557,-1.3],"v_sum_4":["table",1175643,3596,0.604,-1.2],"v_sum_5":["table",1179239,4076,0.698,-2.0],"v_sum_6":["table",1183315,4076,0.698,0.9],"v_sum_7":["table",1187391,11036,2.09,-0.5],"v_sum_8":["table",1198427,2876,0.458,2.5],"v_sum_9":["table",1201303,3836,0.65,0.3],"v_t_off_1":["table",1205139,7676,1.431,-0.2],"v_t_off_2":["table",1212815,7796,1.444,2.5],"v_t_on_1":["table",1220611,6596,1.218,0.9],"v_t_on_2":["table",1227207,11036,2.1,0.3],"v_taken":["table",1238243,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1249399,9476,1.794,-0.4],"v_timeup_1":["table",1258875,4796,0.862,-0.4],"v_timeup_2":["table",1263671,8036,1.5,0.1],"v_tower":["table",1271707,10436,1.987,-2.6],"v_up_blue":["table",1282143,6956,1.286,-2.5],"v_up_green":["table",1289099,7676,1.421,-2.6],"v_up_orange":["table",1296775,7076,1.316,-2.7],"v_up_purple":["table",1303851,7796,1.464,-2.5],"v_up_red":["table",1311647,6956,1.276,-1.6],"v_up_white":["table",1318603,7076,1.301,-0.9],"v_w_alltalk":["table",1325679,4796,0.845,-0.3],"v_w_anyday":["table",1330475,5276,0.938,1.6],"v_w_bet":["table",1335751,2636,0.422,2.5],"v_w_bigmove":["table",1338387,4316,0.765,0.1],"v_w_clean":["table",1342703,5156,0.932,1.4],"v_w_clock":["table",1347859,5636,1.024,0.2],"v_w_comfy":["table",1353495,5996,1.086,1.8],"v_w_coming":["table",1359491,6116,1.119,-0.7],"v_w_cooked":["table",1365607,4316,0.75,-0.5],"v_w_dobetter":["table",1369923,3956,0.677,0.3],"v_w_dreaming":["table",1373879,4916,0.879,-1.7],"v_w_energy":["table",1378795,6236,1.131,-0.0],"v_w_fairplay":["table",1385031,5036,0.89,-0.5],"v_w_holdthat":["table",1390067,4196,0.738,-1.4],"v_w_imin":["table",1394263,3716,0.627,2.3],"v_w_iseeyou":["table",1397979,4556,0.797,0.1],"v_w_keepwalking":["table",1402535,4916,0.867,-1.1],"v_w_lesschat":["table",1407451,7916,1.488,0.9],"v_w_letstalk":["table",1415367,4436,0.785,0.5],"v_w_myblock":["table",1419803,4196,0.731,-0.3],"v_w_nah":["table",1423999,3116,0.511,0.5],"v_w_nicetry":["table",1427115,5156,0.932,1.2],"v_w_notdone":["table",1432271,5276,0.946,1.2],"v_w_nothappening":["table",1437547,4916,0.866,1.7],"v_w_offer":["table",1442463,5516,0.986,-2.6],"v_w_okseeyou":["table",1447979,7796,1.442,1.5],"v_w_oweyou":["table",1455775,5396,0.981,-1.4],"v_w_owncorner":["table",1461171,7196,1.336,0.5],"v_w_playing":["table",1468367,6596,1.217,-1.6],"v_w_pockets":["table",1474963,6596,1.218,0.2],"v_w_proveit":["table",1481559,3716,0.643,-2.0],"v_w_quiet":["table",1485275,6476,1.178,-0.3],"v_w_rentsdue":["table",1491751,4676,0.839,-0.8],"v_w_respect":["table",1496427,4316,0.766,2.5],"v_w_rough":["table",1500743,4196,0.737,0.3],"v_w_runit":["table",1504939,3116,0.511,1.4],"v_w_sayless":["table",1508055,4916,0.882,0.8],"v_w_tryagain":["table",1512971,4916,0.868,-0.3],"v_w_wegood":["table",1517887,3956,0.679,-2.5],"v_w_weregood":["table",1521843,3956,0.674,-1.9],"v_w_worth":["table",1525799,5516,0.989,-1.0],"v_w_wronghood":["table",1531315,5996,1.083,-0.9],"v_w_youin":["table",1537311,3236,0.54,-2.7],"v_w_yourmove":["table",1540547,4196,0.733,-2.5],"v_w_youwont":["table",1544743,3476,0.599,-1.9],"v_win_blue":["table",1548219,7796,1.458,-2.6],"v_win_green":["table",1556015,7916,1.479,-2.6],"v_win_orange":["table",1563931,8396,1.562,-2.1],"v_win_purple":["table",1572327,8756,1.641,-1.9],"v_win_red":["table",1581083,6956,1.292,-1.3],"v_win_white":["table",1588039,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5]}}</script>
+<script type="application/json" id="snd-index">{"packs":{"fx":{"url":"sound-fx.bin","v":"6ecd8ccc96","size":402970},"table":{"url":"sound-table.bin","v":"a805b6feb8","size":2121903}},"clips":{"amb_city":["table",0,80432,20.0],"backoff":["fx",0,6025,0.928,-1.7],"backup":["fx",6025,8689,1.36,0.1],"bank":["fx",14714,7592,1.2,-8.2],"block":["fx",22306,2890,0.415,2.0],"build_holding":["fx",25196,16996,2.76,-6.7],"build_op":["fx",42192,10100,1.6,-8.5],"build_street":["fx",52292,7592,1.2,-8.4],"card_buy":["fx",59884,5241,0.795,0.4],"card_land":["fx",65125,1636,0.189,-1.0],"card_play":["fx",66761,2734,0.389,2.5],"card_whoosh":["fx",69495,3360,0.476,-9.3],"clock_beep":["fx",72855,1950,0.26,-8.2],"clock_tick":["table",80432,1009,0.09,-1.7],"connections":["fx",74805,5555,0.842,1.0],"crash_boom":["table",81441,21385,3.48,-6.6],"crash_bump":["table",102826,5711,0.88,-5.3],"crash_hit":["table",108537,11040,1.76,-6.5],"crash_skid":["table",119577,6495,0.999,-8.5],"crate":["fx",80360,3047,0.438,-2.0],"crumble":["fx",83407,7592,1.187,-6.6],"deal":["fx",90999,11040,1.76,-6.2],"discard":["fx",102039,4301,0.652,-9.6],"e_boo":["table",126072,9316,1.48,-9.6],"e_cheer":["table",135388,9316,1.48,-9.5],"e_clap":["table",144704,14645,2.357,0.4],"e_crickets":["table",159349,11197,1.787,-10.7],"e_cry":["table",170546,11667,1.86,-9.6],"e_fire":["table",182213,5398,0.834,-9.5],"e_lol":["table",187611,8689,1.36,-9.6],"e_micdrop":["table",196300,10100,1.6,-8.7],"e_rain":["table",206400,5085,0.776,-6.3],"e_sweat":["table",211485,6495,1.0,-9.6],"fight_bell":["fx",106340,11040,1.76,-6.6],"fight_end":["fx",117380,11040,1.76,-7.5],"giant_beast":["table",217980,21228,3.46,-6.6],"giant_mech":["table",239208,21855,3.564,-7.8],"giant_step":["table",261063,4301,0.65,-0.1],"horn_1":["table",265364,5711,0.88,-11.5],"horn_2":["table",271075,8689,1.36,-11.6],"hurry_start":["fx",128420,9473,1.506,-7.5],"hype":["fx",137893,7592,1.2,-7.5],"join":["table",279764,5241,0.8,-7.4],"ko":["fx",145485,13705,2.2,-5.6],"leave":["table",285005,6495,1.0,-9.5],"legend":["fx",159190,13705,2.2,-6.6],"lights_on":["table",291500,30476,5.0,-8.6],"lucky":["fx",172895,8219,1.281,-6.9],"paidoff":["fx",181114,3047,0.433,2.1],"patch":["fx",184161,3517,0.513,-4.6],"payout":["table",321976,5868,0.906,-9.5],"pull":["fx",187678,6495,1.0,-8.7],"punch":["fx",194173,3360,0.48,0.2],"punch_big":["fx",197533,4144,0.606,-0.3],"reel_spin":["table",327844,14802,2.4,-8.2],"reel_stop":["table",342646,3360,0.48,-5.4],"reveal":["fx",201677,7592,1.2,-4.2],"reveal_big":["fx",209269,11354,1.808,-5.1],"roadcrew":["fx",220623,8689,1.36,-7.4],"s_glitter":["fx",229312,7592,1.2,-6.3],"s_pigeon":["fx",236904,6338,0.99,-3.6],"s_smoke":["fx",243242,6338,0.969,-7.2],"s_tag":["fx",249580,6495,1.0,-6.8],"score_sting":["table",346006,8689,1.36,-8.6],"seven":["table",354695,21385,3.48,-5.6],"shakedown":["fx",256075,5711,0.883,2.5],"silver":["fx",261786,8376,1.319,-7.6],"siren":["fx",270162,11040,1.76,-7.6],"st_boom":["table",376080,11667,1.874,-7.8],"st_music":["table",387747,294260,48.96,-9.5],"st_pop":["table",682007,12451,2.0,-9.5],"st_rocket":["table",694458,38939,6.411,-6.6],"st_shots":["table",733397,18407,3.0,-9.7],"start":["table",751804,36431,6.0,-6.6],"steal":["fx",281202,2263,0.305,2.0],"tape":["fx",283465,5398,0.815,-8.6],"tension":["table",788235,11511,1.853,-6.5],"time_up":["fx",288863,7592,1.2,-6.5],"tipoff":["fx",296455,8689,1.36,-2.8],"trade_no":["fx",305144,5241,0.785,-9.6],"trade_offer":["fx",310385,3987,0.6,-8.6],"trade_yes":["fx",314372,3047,0.428,-9.6],"turf_off":["fx",317419,8689,1.36,-1.2],"turf_on":["fx",326108,10100,1.6,-6.6],"turn":["table",799746,6965,1.077,-6.0],"ui_confirm":["fx",336208,1793,0.23,-3.9],"ui_deny":["fx",338001,1636,0.192,-12.4],"ui_fold":["fx",339637,1323,0.15,-7.4],"ui_pick":["fx",340960,3360,0.48,-8.9],"ui_tap":["fx",344320,1950,0.249,-3.3],"undo":["fx",346270,5241,0.8,-9.6],"v_bank_1":["table",806711,7556,1.415,-0.4],"v_bank_2":["table",814267,6716,1.24,0.5],"v_buy_1":["table",820983,8156,1.524,0.8],"v_buy_2":["table",829139,5996,1.083,2.2],"v_c_backup":["table",835135,5756,1.039,2.1],"v_c_bustup":["table",840891,6116,1.116,-0.6],"v_c_connections":["table",847007,6236,1.138,-2.6],"v_c_fight":["table",853243,5756,1.035,-2.3],"v_c_legend":["table",858999,6716,1.243,-1.5],"v_c_luck":["table",865715,5156,0.934,0.7],"v_c_paidoff":["table",870871,8516,1.59,1.1],"v_c_rewind":["table",879387,7076,1.298,0.1],"v_c_roadcrew":["table",886463,7076,1.311,0.2],"v_c_shakedown":["table",893539,8156,1.534,-1.1],"v_c_silver":["table",901695,6236,1.14,1.0],"v_c_tipoff":["table",907931,7436,1.374,0.1],"v_c_wrecking":["table",915367,8516,1.597,-0.9],"v_cop_1":["table",923883,15020,4.827,-3.2],"v_cop_2":["table",938903,9836,3.115,-2.8],"v_cop_3":["table",948739,10160,3.21,-3.1],"v_crash_1":["table",958899,8396,1.577,-2.5],"v_crash_2":["table",967295,7676,1.425,-1.3],"v_crash_3":["table",974971,6596,1.217,-0.9],"v_crowd_1":["table",981567,7196,1.329,1.4],"v_crowd_2":["table",988763,7556,1.415,-0.7],"v_crowd_3":["table",996319,7556,1.41,1.9],"v_d_deadzone":["table",1003875,8996,1.685,-2.5],"v_d_nightlife":["table",1012871,8756,1.649,1.2],"v_d_residential":["table",1021627,8276,1.558,1.0],"v_d_tower":["table",1029903,6356,1.169,1.0],"v_d_warehouse":["table",1036259,8396,1.562,-1.3],"v_d_works":["table",1044655,6476,1.191,2.0],"v_deal":["table",1051131,7076,1.319,-1.9],"v_deal_2":["table",1058207,6956,1.29,-0.5],"v_deal_3":["table",1065163,8396,1.562,2.0],"v_deal_4":["table",1073559,7196,1.337,2.5],"v_dir_look":["table",1080755,8156,1.52,-0.5],"v_dir_wake":["table",1088911,7556,1.399,-2.5],"v_discard":["table",1096467,18716,3.626,0.8],"v_down_bustup":["table",1115183,11516,2.187,-0.7],"v_down_wrecking":["table",1126699,8756,1.635,-2.4],"v_e_chase":["table",1135455,5876,1.07,0.4],"v_e_concert":["table",1141331,6716,1.242,-2.5],"v_e_fire":["table",1148047,5996,1.09,-1.2],"v_e_gangwar":["table",1154043,5876,1.06,-0.6],"v_e_giant":["table",1159919,6716,1.238,1.5],"v_e_race":["table",1166635,6956,1.288,-2.1],"v_e_robbery":["table",1173591,7916,1.473,-1.1],"v_fast_1":["table",1181507,7556,1.407,0.4],"v_fast_2":["table",1189063,7076,1.306,1.1],"v_fast_3":["table",1196139,5396,0.983,0.6],"v_fast_4":["table",1201535,7556,1.401,1.3],"v_fast_5":["table",1209091,10436,1.976,-0.6],"v_giant_radio":["table",1219527,13724,4.415,-3.2],"v_held":["table",1233251,6956,1.288,0.0],"v_hurry":["table",1240207,11756,2.239,1.5],"v_icpt_1":["table",1251963,12836,2.457,-2.4],"v_icpt_2":["table",1264799,5396,0.977,-1.3],"v_icpt_3":["table",1270195,6956,1.283,-2.6],"v_icpt_4":["table",1277151,7676,1.43,-2.5],"v_ko":["table",1284827,4676,0.818,-1.0],"v_legendary":["table",1289503,5156,0.914,-0.4],"v_n_blue":["table",1294659,2276,0.338,-1.8],"v_n_green":["table",1296935,2756,0.45,-2.5],"v_n_orange":["table",1299691,3116,0.507,-2.6],"v_n_purple":["table",1302807,2516,0.395,-0.5],"v_n_red":["table",1305323,1796,0.258,1.0],"v_n_white":["table",1307119,2276,0.352,2.3],"v_nine":["table",1309395,12716,2.434,-2.6],"v_offer":["table",1322111,8156,1.516,-2.3],"v_op_1":["table",1330267,10316,1.946,-2.5],"v_op_2":["table",1340583,10076,1.905,-0.5],"v_op_3":["table",1350659,6836,1.257,-1.5],"v_op_4":["table",1357495,10556,1.997,0.3],"v_open":["table",1368051,9476,1.778,-1.5],"v_p_far":["table",1377527,4676,0.832,0.3],"v_p_front":["table",1382203,5516,1.008,-0.5],"v_p_left":["table",1387719,5396,0.974,-2.6],"v_p_mid":["table",1393115,4916,0.874,-0.4],"v_p_right":["table",1398031,5156,0.922,0.4],"v_pick":["table",1403187,5876,1.076,-2.2],"v_place":["table",1409063,7556,1.415,-1.7],"v_port_1":["table",1416619,6956,1.279,-1.4],"v_port_2":["table",1423575,6836,1.261,0.9],"v_rare":["table",1430411,8036,1.49,0.5],"v_s_half":["table",1438447,5636,1.022,2.5],"v_s_lead":["table",1444083,5756,1.049,0.6],"v_s_leads":["table",1449839,5996,1.092,2.5],"v_s_one":["table",1455835,5396,0.975,-2.1],"v_s_round_1":["table",1461231,6236,1.145,-1.2],"v_s_round_2":["table",1467467,5756,1.035,-1.3],"v_s_round_3":["table",1473223,12956,2.474,0.9],"v_s_tied":["table",1486179,8996,1.695,2.5],"v_s_two":["table",1495175,5396,0.975,-2.5],"v_says":["table",1500571,2996,0.498,-0.4],"v_slow_1":["table",1503567,15476,2.997,-2.5],"v_slow_2":["table",1519043,12716,2.429,-1.6],"v_slow_3":["table",1531759,4676,0.831,-0.9],"v_slow_4":["table",1536435,11156,2.131,0.9],"v_slow_5":["table",1547591,6716,1.232,-1.4],"v_splat_1":["table",1554307,6596,1.215,-0.2],"v_splat_2":["table",1560903,5876,1.076,-0.9],"v_splat_3":["table",1566779,7556,1.405,1.3],"v_st_count":["table",1574335,10916,2.081,-1.7],"v_st_crew_1":["table",1585251,5156,0.925,0.3],"v_st_crew_2":["table",1590407,8396,1.584,-1.8],"v_st_end":["table",1598803,10076,1.908,-1.2],"v_st_face_1":["table",1608879,6836,1.257,2.5],"v_st_face_2":["table",1615715,8756,1.638,-0.1],"v_st_lift_1":["table",1624471,4916,0.867,-2.0],"v_st_lift_2":["table",1629387,6596,1.216,-0.9],"v_st_orbit":["table",1635983,8036,1.507,0.9],"v_st_parade":["table",1644019,12596,2.402,-1.8],"v_start":["table",1656615,13796,2.657,-1.3],"v_sum_10":["table",1670411,3356,0.576,-0.0],"v_sum_11":["table",1673767,3596,0.604,2.5],"v_sum_12":["table",1677363,10916,2.07,2.2],"v_sum_2":["table",1688279,9836,1.868,0.1],"v_sum_3":["table",1698115,3356,0.557,-1.3],"v_sum_4":["table",1701471,3596,0.604,-1.2],"v_sum_5":["table",1705067,4076,0.698,-2.0],"v_sum_6":["table",1709143,4076,0.698,0.9],"v_sum_7":["table",1713219,11036,2.09,-0.5],"v_sum_8":["table",1724255,2876,0.458,2.5],"v_sum_9":["table",1727131,3836,0.65,0.3],"v_t_off_1":["table",1730967,7676,1.431,-0.2],"v_t_off_2":["table",1738643,7796,1.444,2.5],"v_t_on_1":["table",1746439,6596,1.218,0.9],"v_t_on_2":["table",1753035,11036,2.1,0.3],"v_taken":["table",1764071,11156,2.124,1.9],"v_taunt_1":["fx",351511,6596,1.22,2.5],"v_taunt_2":["fx",358107,7436,1.37,-1.4],"v_taunt_3":["fx",365543,8156,1.52,1.3],"v_tie":["table",1775227,9476,1.794,-0.4],"v_timeup_1":["table",1784703,4796,0.862,-0.4],"v_timeup_2":["table",1789499,8036,1.5,0.1],"v_tower":["table",1797535,10436,1.987,-2.6],"v_up_blue":["table",1807971,6956,1.286,-2.5],"v_up_green":["table",1814927,7676,1.421,-2.6],"v_up_orange":["table",1822603,7076,1.316,-2.7],"v_up_purple":["table",1829679,7796,1.464,-2.5],"v_up_red":["table",1837475,6956,1.276,-1.6],"v_up_white":["table",1844431,7076,1.301,-0.9],"v_w_alltalk":["table",1851507,4796,0.845,-0.3],"v_w_anyday":["table",1856303,5276,0.938,1.6],"v_w_bet":["table",1861579,2636,0.422,2.5],"v_w_bigmove":["table",1864215,4316,0.765,0.1],"v_w_clean":["table",1868531,5156,0.932,1.4],"v_w_clock":["table",1873687,5636,1.024,0.2],"v_w_comfy":["table",1879323,5996,1.086,1.8],"v_w_coming":["table",1885319,6116,1.119,-0.7],"v_w_cooked":["table",1891435,4316,0.75,-0.5],"v_w_dobetter":["table",1895751,3956,0.677,0.3],"v_w_dreaming":["table",1899707,4916,0.879,-1.7],"v_w_energy":["table",1904623,6236,1.131,-0.0],"v_w_fairplay":["table",1910859,5036,0.89,-0.5],"v_w_holdthat":["table",1915895,4196,0.738,-1.4],"v_w_imin":["table",1920091,3716,0.627,2.3],"v_w_iseeyou":["table",1923807,4556,0.797,0.1],"v_w_keepwalking":["table",1928363,4916,0.867,-1.1],"v_w_lesschat":["table",1933279,7916,1.488,0.9],"v_w_letstalk":["table",1941195,4436,0.785,0.5],"v_w_myblock":["table",1945631,4196,0.731,-0.3],"v_w_nah":["table",1949827,3116,0.511,0.5],"v_w_nicetry":["table",1952943,5156,0.932,1.2],"v_w_notdone":["table",1958099,5276,0.946,1.2],"v_w_nothappening":["table",1963375,4916,0.866,1.7],"v_w_offer":["table",1968291,5516,0.986,-2.6],"v_w_okseeyou":["table",1973807,7796,1.442,1.5],"v_w_oweyou":["table",1981603,5396,0.981,-1.4],"v_w_owncorner":["table",1986999,7196,1.336,0.5],"v_w_playing":["table",1994195,6596,1.217,-1.6],"v_w_pockets":["table",2000791,6596,1.218,0.2],"v_w_proveit":["table",2007387,3716,0.643,-2.0],"v_w_quiet":["table",2011103,6476,1.178,-0.3],"v_w_rentsdue":["table",2017579,4676,0.839,-0.8],"v_w_respect":["table",2022255,4316,0.766,2.5],"v_w_rough":["table",2026571,4196,0.737,0.3],"v_w_runit":["table",2030767,3116,0.511,1.4],"v_w_sayless":["table",2033883,4916,0.882,0.8],"v_w_tryagain":["table",2038799,4916,0.868,-0.3],"v_w_wegood":["table",2043715,3956,0.679,-2.5],"v_w_weregood":["table",2047671,3956,0.674,-1.9],"v_w_worth":["table",2051627,5516,0.989,-1.0],"v_w_wronghood":["table",2057143,5996,1.083,-0.9],"v_w_youin":["table",2063139,3236,0.54,-2.7],"v_w_yourmove":["table",2066375,4196,0.733,-2.5],"v_w_youwont":["table",2070571,3476,0.599,-1.9],"v_win_blue":["table",2074047,7796,1.458,-2.6],"v_win_green":["table",2081843,7916,1.479,-2.6],"v_win_orange":["table",2089759,8396,1.562,-2.1],"v_win_purple":["table",2098155,8756,1.641,-1.9],"v_win_red":["table",2106911,6956,1.292,-1.3],"v_win_white":["table",2113867,8036,1.49,-0.0],"whiff":["fx",373699,2890,0.405,-2.2],"whisper":["fx",376589,3987,0.593,-11.0],"win":["fx",380576,17153,2.771,-4.6],"your_turn":["fx",397729,5241,0.8,-7.5]}}</script>
 <!-- SND:END -->
 <div id="app"><main class="phone"><p class="muted">Loading the table…</p></main></div>
 <noscript><p style="padding:16px">This page needs JavaScript turned on.</p></noscript>
@@ -3656,7 +3678,7 @@ function placeCar(c, i) {
     if (!GEO.edges[c.e]) { c.e = 0; c.from = GEO.edges[0].a; }
     const d = c.t * S;
     if (k || !(d > D.line + 1 && d < S - D.line - 1)) c.t = between(D.line + 1, S - D.line - 1) / S;
-    ok = clear();
+    ok = clear() && !stShut(c.e);                                  // (not on a street closed for the parade: release 6)
   }
   if (!ok) return false;
   Object.assign(c, { amb: i < AMBIENT, lane: 1, to: farEnd(c.e, c.from), prev: -1, s: c.v * S * 0.6, hold: -1, held: -1,
@@ -4449,7 +4471,7 @@ function showBase(ctx) {
 
 /* ---------- the clock ---------- */
 function direct(st) {
-  if (SHOW.hush) return;
+  if (SHOW.hush || stHush()) return;               // (and nothing new while the victory show plays: release 6)
   const t = SHOW.t;
   let load = 0;
   SHOW.ev.forEach(e => { load += e.weight || 1; });
@@ -10700,6 +10722,7 @@ function boardSVG(st, o) {
     const v = GEO.verts[id], bd = st.buildings[id], p = bd && playerOf(st, bd.pid); if (!v || !p) return;
     const ink = pieceInk(p.color, lite), big = bd.k === 'c';
     back.push(pad(P, v, big ? 18 : 16, ink));
+    if (o.gone && o.gone.has(+id)) return;                          // a tower away as a rocket (release 6): its pad stays
     const b = building(P, C, v, ink, STREET_Y, big);
     if (!b) return;
     const r = (big ? HOLD_TIERS : OP_TIERS)[0].r;
@@ -10948,6 +10971,7 @@ function drawBoard() {
   view.raf = 0;
   const host = document.querySelector('.board3d'), st = G.state;
   if (!host || !st || !view.opts) return;
+  view.opts.gone = stGone();                                        // towers away as rockets, while they are drawn so (release 6)
   const was = document.activeElement, tag = was && was.closest && was.closest('[data-v],[data-e]');
   const key = tag && (tag.dataset.v !== undefined ? 'v' + tag.dataset.v : 'e' + tag.dataset.e);
   const t = performance.now();
@@ -11121,6 +11145,7 @@ function boardView(st, o) {
   view.opts.show = showWanted() ? Math.max(0, SHOW.q) : 0;         // the table screen gets the whole city after dark, as much as it can afford
   if (view.opts.show) showBoardCheck(st);
   view.opts.neon = view.opts.show && SHOW.neon ? SHOW.neon(st) : null;
+  view.opts.gone = stGone();                                        // towers away as rockets (release 6)
   fitMeasure(st);
   const fit0 = fitKey();
   setTimeout(() => {                                              // this markup is not in the document yet
@@ -12039,6 +12064,7 @@ function checkWin(st, p) {
   if (vpOf(st, p.pid) < WIN_VP) return;
   // an offer or free streets left over would be refused by every phone once the game is over
   st.phase = 'over'; st.win = p.pid; st.step = 'roll'; st.free = 0; st.offer = null;
+  if (STKEY.pub) st.pk = STKEY.pub;                // the key the winner's selfie is sealed for (release 6)
   say(`${p.name} runs the city with ${vpOf(st, p.pid)} points.`);
   recWin(st, p);
 }
@@ -12108,7 +12134,7 @@ function hostControl(act, arg) {
       if (!confirm('Go back to the lobby? Placed pieces are cleared, players stay seated.')) return;
       recEnd('lobby', st);
       Object.assign(st, { phase: 'lobby', order: [], contenders: [], rolls: {}, round: 1, starter: null, placeIdx: 0, step: 'operation', lastV: null, buildings: {}, streets: {},
-        turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, offer: null }, cardTable(st.players.length));
+        turnIdx: 0, turnNo: 1, dice: null, got: {}, pend: {}, win: null, offer: null, pk: undefined }, cardTable(st.players.length));
       st.players.forEach(p => Object.assign(p, cardSeat())); G.picks = null; G.fightClock = null;
       if (st.clock) { clockTurn(st, null); st.clock.hold = 0; }          // the clock keeps its setting and its OKs
       st.board.police = st.board.hexes.findIndex(h => h.t === 'deadzone');   // the police go home with the pieces
@@ -12415,7 +12441,7 @@ function seatsHTML(st, ro) {
 function renderHost() {
   const ro = WATCH, st = G.state;
   if (st) useGeo(st.board);
-  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(talkHostObserve, st); quietly(dirObserve, st);
+  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(talkHostObserve, st); quietly(dirObserve, st); quietly(stObserve, st);
   if (!$('#h-banner')) renderHostShell();
   tableAddress(st);
   const pill = ro ? (G.online ? (P.hostUp === false ? 'Table screen offline' : 'Live') : 'Connecting') : (G.fatal ? 'Offline' : G.online ? 'Relay connected' : G.client ? 'Reconnecting' : 'Connecting');
@@ -12466,6 +12492,7 @@ function renderHost() {
   } else if (st.phase === 'over') {
     const w = playerOf(st, st.win);
     what = `<span class="turnchip" style="background:var(--p-${w.color})"></span>${esc(w.name)} runs the city with ${vpOf(st, st.win)} points.`;
+    extra = stBannerNote(st);                     // who can send a selfie (release 6)
   } else what = `Set-up complete. ${esc(playerOf(st, st.starter).name)} takes the first turn.`;
   if (G.fatal) { what = esc(G.fatal); extra = '<button class="btn" data-p="reload">Reload</button>'; clk = ''; }
   setHTML('#h-banner', `<p class="what">${what}</p>${clk}${extra}`);
@@ -13086,6 +13113,7 @@ async function bootHost() {
   clockSync(G.state); clockArm();                  // a turn under way carries on from where the clock stood
   try { sessionStorage.removeItem('rtcity.autohost'); sessionStorage.setItem('rtcity.ontable', '1'); } catch (e) { /* private mode */ }
   renderHostShell(); renderHost(); keepAwake();
+  stKeys();                                        // the key a winner's selfie is sealed for (release 6)
   connectHost();
 }
 async function connectHost() {
@@ -13131,6 +13159,7 @@ function validState(s) {
   const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k), num = k => /^[0-9]{1,3}$/.test(k);
   const STEPS = { lobby: ['operation'], rolloff: ['operation'], place: ['operation', 'street'], done: ['operation'], turn: ['roll', 'luck', 'discard', 'police', 'steal', 'act', 'fight'], over: ['roll', 'act'] };
   if (!obj(s) || s.room !== joinRoom || !int(s.v) || !STEPS[s.phase] || !STEPS[s.phase].includes(s.step)) return false;
+  if (s.pk !== undefined && !(s.phase === 'over' && typeof s.pk === 'string' && /^[A-Za-z0-9_-]{87}$/.test(s.pk))) return false;   // the table's selfie key (release 6)
   const B = s.board;
   const g = obj(B) && Array.isArray(B.hexes) && GEOS[B.hexes.length];
   if (!g || !int(B.police) || B.police < 0 || B.police >= B.hexes.length) return false;
@@ -13728,6 +13757,7 @@ function turnParts(st, me) {
       out.bar = endDock(st, me, !(anyMove(st, me) || canOffer(st, me)));
     }
   }
+  if (st.phase === 'over') stPhoneParts(st, me, out);           // the winner's selfie (release 6)
   out.board = boardSec(st, bo, need, out.hint);
   out.need = need;
   // your turn on the clock: the time left sits at the head of the dock, whatever the dock is asking of you
@@ -14310,7 +14340,7 @@ function foldSec(pb) {
 function renderPlayer() {
   const st = G.state, screen = playerScreen(), me = st && playerOf(st, PID);
   if (st) useGeo(st.board);
-  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st);
+  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st); quietly(stObserve, st);
   if (!$('#p-main')) {
     $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: stickers, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
       <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-wsp" role="status"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
@@ -14613,6 +14643,7 @@ function talkIn(a, now = Date.now()) {
 function talkHost(body) {
   if (G.closing) return;
   let a = null; try { a = JSON.parse(body); } catch (e) { return; }
+  if (a && a.k === 'pic') { quietly(stPicIn, a); return; }                      // a piece of the winner's selfie (release 6)
   const m = talkIn(a); if (!m) return;
   send(G.client, hostBase() + '/said', JSON.stringify(m), false);
   talkShow(m);
@@ -14631,6 +14662,8 @@ function talkOk(m) {
   if (m.k === 'emo') return ttHas(TT_EMO, m.e) && m.to === undefined;
   if (m.k === 'wsp') return !!ttWord(m.e) && typeof m.to === 'string' && !!playerOf(st, m.to) && m.to !== m.p;
   if (m.k === 'splat') return ttHas(TT_SPLAT, m.e) && typeof m.to === 'string' && m.to === activePid(st) && m.to !== m.p && st.phase === 'turn';
+  if (m.k === 'pic') return st.phase === 'over' && m.p === st.win && (m.ok === 0 || m.ok === 1) && typeof m.c === 'string' && /^[a-z0-9]{6,12}$/.test(m.c) &&
+    (m.full === undefined || m.full === 1) && m.to === undefined && m.e === undefined && m.v === undefined;   // the table's answer about the winner's selfie (release 6)
   return false;
 }
 /* the relay's /said, on a phone or a board view (the table screen showed it already) */
@@ -14639,7 +14672,7 @@ function talkRecv(body) {
   if (!talkOk(m) || TTP.ids.includes(m.id)) return;
   TTP.ids.push(m.id); if (TTP.ids.length > 40) TTP.ids.shift();
   // an exception here would reach the relay library, which drops the connection over it
-  try { if (WATCH) talkShow(m); else talkSeen(m); } catch (e) { console.error(e); }
+  try { if (m.k === 'pic') stPicHeard(m); else if (WATCH) talkShow(m); else talkSeen(m); } catch (e) { console.error(e); }
 }
 /* the announcer's part, on any screen that speaks for the table (vox itself checks that) */
 function talkSay(m) {
@@ -15177,8 +15210,8 @@ function dirSay(kind, pt) {
 function dirSwoop(e) {
   let pt = null; try { pt = e.focus && e.focus(); } catch (err) { pt = null; }
   if (!pt) return false;
-  const moving = e.kind === 'chase' || e.kind === 'race', r = dirRest();
-  const yaw = (r.yaw + rand(-28, 28) + 360) % 360, pitch = rand(36, 44), zoom = moving ? rand(1.55, 1.75) : rand(1.8, 2.2);
+  const moving = e.kind === 'chase' || e.kind === 'race' || e.kind === 'giant', r = dirRest();
+  const yaw = (r.yaw + rand(-28, 28) + 360) % 360, pitch = rand(36, 44), zoom = e.kind === 'giant' ? rand(1.15, 1.3) : moving ? rand(1.55, 1.75) : rand(1.8, 2.2);
   const follow = () => { const f = !e.dead && e.focus && e.focus(); return f || null; };
   dirSay(e.kind, pt);
   dirGo({ yaw, pitch, zoom, pt: moving ? follow : pt }, 2400, { hold: moving ? 7000 : 6500, what: 'event', then: () => dirHome(2200) });
@@ -15213,6 +15246,7 @@ function dirThink() {
   if (DIR.shot && !DIR.raf && !DIR.timer) dirStop();   // a move that lost its frame (it cannot, but it must never wedge)
   dirPanelHush();
   if (!dirWanted()) { dirLeave(); return; }
+  if (stDirecting()) return;                             // the victory show has the camera (release 6)
   const rung = dirRung(st);
   dirPanelPump(st);
   if (rung < 3 || !dirMoves()) { if (DIR.shot) dirStop(); return; }
@@ -15264,7 +15298,7 @@ const DIR_SAY = {
 };
 const DIR_VOX = { bank: ['v_bank_1', 'v_bank_2'], terminal: ['v_port_1', 'v_port_2'], buy: ['v_buy_1', 'v_buy_2'] };
 /* what the record writes that is not a move of anybody's: an undo takes back the last move that is */
-const DIR_NOT_MOVE = new Set(['score', 'pres', 'talk', 'hurry', 'hurryup', 'hold', 'reload', 'swing', 'round', 'timeup', 'undo', 'turf']);
+const DIR_NOT_MOVE = new Set(['score', 'pres', 'talk', 'hurry', 'hurryup', 'hold', 'reload', 'swing', 'round', 'timeup', 'undo', 'turf', 'selfie']);
 const DIR_LIVE_W = { talk: 1, deal: 2, offer: 1, reply: 0.5, fought: 3, steal: 1, play: 1, buy: 1, hurry: 1, bank: 0.5 };
 const dirName = pid => (G.state && playerOf(G.state, pid)) || null;
 /* called by rec() on the table, for every line of the record as it is written */
@@ -15531,6 +15565,1511 @@ function turfBlocks(st, pid) { const s = turfOn(st) ? sliceOf(st, pid) : null; r
    board itself shows whose turf is whose */
 const seatMarksHTML = p => (onCall(p) ? '<span class="ocmark" title="Backup on call: Shakedown skips them until they lose a fight">&#10010;</span>' : '');
 /* ---------- end of Turf war ---------- */
+/* ---------- Showtime (release 6) ----------
+   When somebody wins, the table puts on a show for them: their crews pour out of their buildings firing into the
+   air, their towers turn into rockets and go into orbit, fireworks burst over the city in their colour, a parade
+   drives their streets with their selfie riding high above it, and every hologram in the city shows their face.
+   And now and then, in the middle of a game, something very big walks across town.
+
+   The selfie is taken on the winner's phone and goes to the table screen and nowhere else. The table shows its
+   own public key in the state once the game is over (st.pk); the phone seals the photo for that key alone (ECDH
+   on P-256, then AES-GCM), so the public relay only ever carries noise. The table keeps the photo in memory for
+   this game only: a board view and the other phones show the winner's crew in its place. The winner can keep it:
+   their phone makes a poster of it to save or share.
+
+   The rest is scenery, like the city after dark: worked out on each screen from the state, played on the table
+   screen and the board view only, never sent and never saved. */
+
+/* ---------- the photo's envelope ----------
+   base64url by hand: the page's own tests run it in node without atob, btoa or TextEncoder */
+const ST_B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+const ST_B64I = (() => { const t = new Int16Array(128).fill(-1); for (let i = 0; i < 64; i++) t[ST_B64.charCodeAt(i)] = i; return t; })();
+function stEnc(buf) {
+  const b = buf instanceof Uint8Array ? buf : new Uint8Array(buf), out = [];
+  for (let i = 0; i < b.length; i += 3) {
+    const n = (b[i] << 16) | ((b[i + 1] || 0) << 8) | (b[i + 2] || 0);
+    out.push(ST_B64[n >> 18 & 63] + ST_B64[n >> 12 & 63] + (i + 1 < b.length ? ST_B64[n >> 6 & 63] : '') + (i + 2 < b.length ? ST_B64[n & 63] : ''));
+  }
+  return out.join('');
+}
+function stDec(s) {
+  if (typeof s !== 'string' || s.length % 4 === 1) return null;
+  const out = new Uint8Array(Math.floor(s.length * 3 / 4));
+  let o = 0;
+  for (let i = 0; i < s.length; i += 4) {
+    const v = [0, 1, 2, 3].map(k => (i + k < s.length ? (s.charCodeAt(i + k) < 128 ? ST_B64I[s.charCodeAt(i + k)] : -1) : 0));
+    if (v.some(x => x < 0)) return null;
+    const n = (v[0] << 18) | (v[1] << 12) | (v[2] << 6) | v[3];
+    out[o++] = n >> 16 & 255;
+    if (i + 2 < s.length) out[o++] = n >> 8 & 255;
+    if (i + 3 < s.length) out[o++] = n & 255;
+  }
+  return out;
+}
+const stAscii = s => Uint8Array.from(String(s), c => c.charCodeAt(0) & 255);
+const stSubtle = () => (typeof crypto !== 'undefined' && crypto && crypto.subtle) || null;
+const ST_ECDH = { name: 'ECDH', namedCurve: 'P-256' };
+/* the key both ends arrive at: the ECDH secret run through HKDF, bound to this photo's own salt */
+async function stAes(priv, pubRaw, salt, use) {
+  const S = stSubtle(), pub = await S.importKey('raw', pubRaw, ST_ECDH, false, []);
+  const bits = await S.deriveBits({ name: 'ECDH', public: pub }, priv, 256);
+  const hk = await S.importKey('raw', bits, 'HKDF', false, ['deriveKey']);
+  return S.deriveKey({ name: 'HKDF', hash: 'SHA-256', salt, info: stAscii('run-the-city selfie') }, hk, { name: 'AES-GCM', length: 256 }, false, [use]);
+}
+/* The table's key pair, made once per page: the private half never leaves this tab, the public half (raw, 65
+   bytes, base64url) goes in the state when a game is over. */
+const STKEY = { pub: '', priv: null, busy: null };
+function stKeys() {
+  const S = stSubtle();
+  if (!S) return Promise.resolve('');
+  if (STKEY.busy) return STKEY.busy;
+  return (STKEY.busy = S.generateKey(ST_ECDH, false, ['deriveBits']).then(k => S.exportKey('raw', k.publicKey).then(raw => {
+    STKEY.priv = k.privateKey; STKEY.pub = stEnc(raw); stKeyShow(); return STKEY.pub;
+  })).catch(e => { console.warn('no selfie key:', e); STKEY.busy = null; return ''; }));
+}
+/* a game that is over on the table screen shows the key (a reload makes a new pair: the state follows it) */
+function stKeyShow() {
+  const st = G.state;
+  if (joinRoom || !st || st.phase !== 'over' || !STKEY.pub || st.pk === STKEY.pub) return;
+  st.pk = STKEY.pub; commit();
+}
+/* the phone's side: the photo sealed for the table's key, with a key pair made for this photo alone */
+async function stSeal(bytes, tablePk, aad) {
+  const S = stSubtle(), raw = stDec(tablePk);
+  if (!S || !raw || raw.length !== 65) throw new Error('no table key');
+  const mine = await S.generateKey(ST_ECDH, true, ['deriveBits']), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await stAes(mine.privateKey, raw, iv, 'encrypt');
+  const ct = await S.encrypt({ name: 'AES-GCM', iv, additionalData: aad }, key, bytes);
+  return { pk: stEnc(await S.exportKey('raw', mine.publicKey)), iv: stEnc(iv), ct: stEnc(ct) };
+}
+/* and the table's: opened with its own private key, or it throws */
+async function stUnseal(o, aad) {
+  const S = stSubtle(), pk = stDec(o.pk), iv = stDec(o.iv), ct = stDec(o.ct);
+  if (!S || !STKEY.priv || !pk || pk.length !== 65 || !iv || iv.length !== 12 || !ct) throw new Error('cannot open');
+  const key = await stAes(STKEY.priv, pk, iv, 'decrypt');
+  return new Uint8Array(await S.decrypt({ name: 'AES-GCM', iv, additionalData: aad }, key, ct));
+}
+
+/* ---------- the photo on its way: in pieces over /talk ----------
+   {pid, k: 'pic', id, i, n, d} with d a slice of the sealed photo; the first piece also carries the phone's key
+   for this photo (pk) and the nonce (iv). The sealed words name the game (stGame) and the photo's id, so pieces
+   recorded off the relay open for nothing else. The table takes pieces only from the winner, only while the game
+   is over, none over ST_PIC.total; a game takes ST_PIC.tries photos that open and ST_PIC.bad that do not, then
+   answers every new one "full". It answers on /said with {k: 'pic', p, c (the photo's id), ok, full?}. */
+const ST_PIC = { chunk: 12000, pieces: 10, total: 110000, tries: 4, bad: 8, side: 320, gap: 110, wait: 15000 };
+const STPIC = { game: '', parts: null, n: 0, bad: 0, seq: 0, shown: 0, img: null, url: '', holo: null, pid: '', at: 0 };
+/* one game, one winner: the photo belongs to it */
+const stGame = st => (st && st.phase === 'over' && st.win ? `${st.room}:${st.win}:${st.turnNo}:${st.turnIdx}` : '');
+function stPicIn(a) {
+  const st = G.state;
+  if (!st || st.phase !== 'over' || !a || a.pid !== st.win || !STKEY.priv) return;
+  if (typeof a.id !== 'string' || !/^[a-z0-9]{6,12}$/.test(a.id) || !Number.isInteger(a.n) || a.n < 1 || a.n > ST_PIC.pieces ||
+      !Number.isInteger(a.i) || a.i < 0 || a.i >= a.n || typeof a.d !== 'string' || !a.d || a.d.length > ST_PIC.chunk || !/^[A-Za-z0-9_-]+$/.test(a.d)) return;
+  if (a.i === 0 && (typeof a.pk !== 'string' || !/^[A-Za-z0-9_-]{87}$/.test(a.pk) || typeof a.iv !== 'string' || !/^[A-Za-z0-9_-]{16}$/.test(a.iv))) return;
+  const game = stGame(st);
+  if (STPIC.game !== game) { stPicForget(); STPIC.game = game; }
+  let P = STPIC.parts;
+  if (!P || P.id !== a.id) {
+    // a winner who keeps retaking (or somebody sending junk as them): past the limit, every new photo is told so
+    if (STPIC.n >= ST_PIC.tries || STPIC.bad >= ST_PIC.bad) { if (a.i === 0) stPicAck(a.pid, a.id, false, true); return; }
+    P = STPIC.parts = { id: a.id, n: a.n, got: new Array(a.n), have: 0, size: 0, pk: '', iv: '' };
+  }
+  if (P.n !== a.n || P.got[a.i] !== undefined) return;
+  if (a.i === 0) { P.pk = a.pk; P.iv = a.iv; }
+  P.size += a.d.length;
+  if (P.size > ST_PIC.total) { STPIC.parts = null; return; }
+  P.got[a.i] = a.d; P.have++;
+  if (P.have < P.n || !P.pk) return;
+  STPIC.parts = null;
+  // opened in the background: the newest photo to arrive is the one shown, whichever finishes opening first
+  const pid = a.pid, id = P.id, seq = ++STPIC.seq, done = ok => { if (ok) STPIC.n++; else STPIC.bad++; stPicAck(pid, id, ok, false); };
+  stUnseal({ pk: P.pk, iv: P.iv, ct: P.got.join('') }, stAscii(`${game}:${id}`))
+    .then(bytes => stPicLoad(bytes, pid, game, seq)).then(done, () => done(false));
+}
+/* A JPEG, the right size, still for this game, and newer than the one up: it becomes the picture the show uses.
+   Anything else is dropped. */
+function stPicLoad(bytes, pid, game, seq) {
+  return new Promise(done => {
+    if (!(bytes && bytes.length > 400 && bytes.length < 90000 && bytes[0] === 0xFF && bytes[1] === 0xD8) || typeof Image === 'undefined') { done(false); return; }
+    const url = URL.createObjectURL(new Blob([bytes], { type: 'image/jpeg' })), img = new Image();
+    img.onload = () => {
+      try {
+        const st = G.state, w = img.naturalWidth, h = img.naturalHeight, p = st && playerOf(st, pid);
+        if (!p || stGame(st) !== game || w < 64 || h < 64 || w > 1024 || h > 1024) { URL.revokeObjectURL(url); done(false); return; }
+        if (seq < STPIC.shown) { URL.revokeObjectURL(url); done(true); return; }   // a newer one is up already
+        const holo = stHoloPic(img, PIECE_RGB[p.color] || PIECE_RGB.white);
+        if (STPIC.url) URL.revokeObjectURL(STPIC.url);
+        Object.assign(STPIC, { img, url, pid, holo, at: SHOW.t, fresh: true, shown: seq });
+        rec('selfie', { p: pid });
+        done(true);
+        safeRender();                                             // the banner stops asking for it
+      } catch (e) { console.error('selfie:', e); try { URL.revokeObjectURL(url); } catch (x) { /* gone */ } done(false); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); done(false); };
+    img.src = url;
+  });
+}
+/* gone: a new game, the lobby, a new table (nothing of it was ever stored) */
+function stPicForget() {
+  if (STPIC.url) try { URL.revokeObjectURL(STPIC.url); } catch (e) { /* already gone */ }
+  Object.assign(STPIC, { game: '', parts: null, n: 0, bad: 0, seq: 0, shown: 0, img: null, url: '', holo: null, pid: '', at: 0, fresh: false });
+}
+function stPicAck(pid, c, ok, full) {
+  if (!G.client || !G.state) return;
+  send(G.client, hostBase() + '/said', JSON.stringify(Object.assign({ id: `${TTH.boot}${++TTH.n}`, k: 'pic', p: pid, c, ok: ok ? 1 : 0 }, full ? { full: 1 } : {})), false);
+}
+/* The photo as a hologram: a square, its light in the winner's colour (dark stays dark, so on a canvas that adds
+   light the face glows and the room behind it falls away), with the scanlines baked in. */
+function stHoloPic(src, rgb) {
+  const N = 256, cv = document.createElement('canvas');
+  cv.width = cv.height = N;
+  const g = cv.getContext('2d'), w = src.naturalWidth || src.width, h = src.naturalHeight || src.height, s = Math.min(w, h);
+  g.drawImage(src, (w - s) / 2, (h - s) * 0.4, s, s, 0, 0, N, N);
+  try {
+    const d = g.getImageData(0, 0, N, N), p = d.data;
+    for (let i = 0; i < p.length; i += 4) {
+      const y = i / 4 / N | 0, l = (0.3 * p[i] + 0.59 * p[i + 1] + 0.11 * p[i + 2]) / 255;
+      const v = Math.pow(Math.min(1, Math.max(0, (l - 0.08) / 0.84)), 1.15) * (y % 4 === 3 ? 0.45 : 1), wh = Math.max(0, v - 0.62) / 0.38;
+      p[i] = Math.min(255, rgb[0] * v + (255 - rgb[0]) * wh * 0.8);
+      p[i + 1] = Math.min(255, rgb[1] * v + (255 - rgb[1]) * wh * 0.8);
+      p[i + 2] = Math.min(255, rgb[2] * v + (255 - rgb[2]) * wh * 0.8);
+    }
+    g.putImageData(d, 0, 0);
+  } catch (e) { /* a canvas the browser will not read back: the photo as it is */ }
+  return cv;
+}
+
+/* ---------- the winner's phone ---------- */
+const STP = { game: '', jpeg: null, url: '', id: '', pk: '', say: 'none', timer: 0, poster: null, keep: false, err: '', full: false };
+const stPhoneReady = st => !!st && st.phase === 'over' && st.win === PID && typeof st.pk === 'string' && !!stSubtle();
+/* the photo from the camera: a square out of the middle (a little high, where a face is), small enough to send */
+async function stSnap(file) {
+  if (!file || !/^image\//.test(file.type || 'image/')) return;
+  STP.err = ''; STP.say = 'busy'; safeRender();
+  try {
+    let src, free = () => {};
+    if (typeof createImageBitmap === 'function') { try { src = await createImageBitmap(file, { imageOrientation: 'from-image' }); free = () => src.close && src.close(); } catch (e) { src = null; } }
+    const cv = document.createElement('canvas'), N = ST_PIC.side; cv.width = cv.height = N;
+    try {
+      if (!src) {
+        const u = URL.createObjectURL(file); src = new Image(); free = () => URL.revokeObjectURL(u);
+        await new Promise((ok, no) => { src.onload = ok; src.onerror = no; src.src = u; });
+      }
+      const w = src.naturalWidth || src.width, h = src.naturalHeight || src.height, s = Math.min(w, h);
+      cv.getContext('2d').drawImage(src, (w - s) / 2, (h - s) * 0.35, s, s, 0, 0, N, N);
+    } finally { free(); }
+    let blob = null;
+    for (const q of [0.82, 0.7, 0.55]) { blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', q)); if (blob && blob.size < 60000) break; }
+    if (!blob || blob.size >= 60000) throw new Error('too big');
+    stShotSet(new Uint8Array(await blob.arrayBuffer()), blob);
+    STP.say = 'shot';
+  } catch (e) { console.warn('selfie:', e); STP.say = STP.jpeg ? 'shot' : 'none'; STP.err = 'That photo would not open. Try another.'; }
+  safeRender();
+}
+function stShotSet(bytes, blob) {
+  if (STP.url) URL.revokeObjectURL(STP.url);
+  STP.jpeg = bytes; STP.url = blob ? URL.createObjectURL(blob) : ''; STP.poster = null; STP.id = '';
+}
+function stPhoneForget() {
+  clearTimeout(STP.timer);
+  if (STP.url) try { URL.revokeObjectURL(STP.url); } catch (e) { /* gone */ }
+  Object.assign(STP, { game: '', jpeg: null, url: '', id: '', pk: '', say: 'none', timer: 0, poster: null, keep: false, err: '', full: false });
+}
+/* sealed and sent in pieces, a breath apart; the table says when it is up */
+async function stSend() {
+  const st = G.state;
+  if (!STP.jpeg || !stPhoneReady(st) || STP.say === 'sending') return;
+  STP.say = 'sending'; STP.err = ''; safeRender();
+  try {
+    const id = makeCode(8, 'abcdefghjkmnpqrstuvwxyz23456789');
+    const sealed = await stSeal(STP.jpeg, st.pk, stAscii(`${stGame(st)}:${id}`)), n = Math.ceil(sealed.ct.length / ST_PIC.chunk);
+    if (n > ST_PIC.pieces) throw new Error('too big');
+    STP.id = id; STP.pk = st.pk;
+    for (let i = 0; i < n; i++) {
+      const m = { pid: PID, k: 'pic', id, i, n, d: sealed.ct.slice(i * ST_PIC.chunk, (i + 1) * ST_PIC.chunk) };
+      if (i === 0) { m.pk = sealed.pk; m.iv = sealed.iv; }
+      if (!talkPost(m)) throw new Error('offline');
+      if (i + 1 < n) await wait(ST_PIC.gap);
+    }
+    STP.say = 'sent';
+    clearTimeout(STP.timer);
+    STP.timer = setTimeout(() => { if (STP.say === 'sent' && STP.id === id) { STP.say = 'shot'; STP.err = 'The table did not answer. Send it again?'; safeRender(); } }, ST_PIC.wait);
+  } catch (e) { console.warn('selfie:', e); STP.say = 'shot'; STP.err = e && e.message === 'offline' ? 'Not connected. Try again in a moment.' : 'It did not go. Try again.'; }
+  safeRender();
+}
+/* the table's answer, on /said: about the photo this phone sent last, or it is not ours to hear */
+function stPicHeard(m) {
+  if (!joinRoom || WATCH || m.p !== PID || m.c !== STP.id || !(STP.say === 'sent' || STP.say === 'sending')) return;
+  clearTimeout(STP.timer);
+  STP.say = m.ok ? 'up' : 'shot';
+  STP.full = !!m.full;
+  STP.err = m.ok ? '' : m.full ? 'The table has had all the photos it takes this game.' : 'The table could not open it. Take another?';
+  if (m.ok) { buzz([20, 60, 20]); stPosterMake().then(o => { if (STP.poster && o) STP.poster.done = o; }); }
+  safeRender();
+}
+/* What the winner's phone shows once the game is over: the card that asks for a selfie, and the dock's buttons. */
+function stPhoneParts(st, me, out) {
+  if (!me || st.win !== me.pid) return;
+  const game = stGame(st);
+  if (STP.game !== game) { stPhoneForget(); STP.game = game; }
+  // the table screen restarted (a new key): the photo it had is gone with it
+  if (STP.say === 'up' && STP.pk && st.pk && st.pk !== STP.pk) { STP.say = 'shot'; STP.err = 'The table screen restarted. Send it again?'; }
+  if (!stPhoneReady(st)) {
+    out.panel = `<section class="card stself"><h2>Smile for the city</h2><p class="muted">${!stSubtle()
+      ? 'Selfies need the secure address (https://), and this page was opened without it.'
+      : 'The table screen can&rsquo;t take a selfie right now.'}</p></section>` + (out.panel || '');
+    return;
+  }
+  const shot = !!STP.url, s = STP.say;
+  out.panel = `<section class="card stself"><h2>${s === 'up' ? 'You&rsquo;re on the big screen' : 'Smile for the city'}</h2>` +
+    (shot ? `<figure class="stpic${s === 'up' ? ' up' : ''}" style="--pc:var(--p-${me.color})"><img src="${esc(STP.url)}" alt="Your selfie"></figure>` : '') +
+    `<p class="${s === 'up' ? '' : 'muted'}">${s === 'up' ? 'It rides the parade and fills every hologram on the table screen.'
+      : shot ? 'Send it to the table screen: it rides the parade and fills every hologram in the city.'
+      : 'Take a selfie: it rides the parade and fills every hologram in the city, on the table screen.'}</p>` +
+    `<p class="small muted">It goes to the table screen only, sealed on the way, and is gone when the next game starts. Keep it and your phone makes a poster of it.</p>` +
+    (STP.err ? `<p class="small sterr" role="alert">${esc(STP.err)}</p>` : '') + '</section>' + (out.panel || '');
+  const take = `<button class="btn${shot ? ' ghost' : ' big'}" data-st="cam" ${s === 'busy' ? 'disabled' : ''}>${shot ? 'Retake' : s === 'busy' ? 'Opening&hellip;' : 'Take a victory selfie'}</button>`;
+  const keep = `<button class="btn big" data-st="keep" ${STP.keep ? 'disabled' : ''}>${STP.keep ? 'Making it&hellip;' : 'Keep it'}</button>`;
+  out.bar = s === 'up' ? (STP.full ? keep : `${take}${keep}`)
+    : s === 'sending' || s === 'sent' ? '<button class="btn big" disabled>Sending to the table&hellip;</button>'
+    : STP.full ? (shot ? keep : '') : shot ? `${take}<button class="btn big" data-st="send">Send it to the table</button>` : take;
+  out.focus = out.focus || 'panel';
+}
+/* ---------- the poster: a picture to keep ----------
+   Made on the phone from the photo it took (the table sends nothing back): the photo in a frame of light in the
+   winner's colour over a painted night, their name and RUNS THE CITY, their points and the date. */
+const ST_POSTER_ART = 'art/show/poster.jpg';
+/* Made ahead, as soon as the photo is up on the table, so the tap on Keep it can hand it straight to the phone's
+   share sheet: a phone only opens that from inside the tap itself, not after waiting on a picture. */
+function stPosterMake() {
+  const st = G.state, me = st && playerOf(st, PID), url = STP.url;
+  if (!url || !me) return Promise.resolve(null);
+  if (STP.poster && STP.poster.url === url) return STP.poster.p;
+  const p = (async () => {
+    const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const g = cv.getContext('2d'), rgb = PIECE_RGB[me.color] || PIECE_RGB.white, css = a => rgbS(rgb, a);
+    const load = src => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
+    try { if (document.fonts && document.fonts.load) await Promise.race([Promise.all([document.fonts.load('900 150px "Barlow Condensed"'), document.fonts.load('700 40px "Barlow Condensed"')]), wait(2500)]); } catch (e) { /* the fallback face */ }
+    const [bg, pic] = await Promise.all([load(ST_POSTER_ART).then(i => i || load('../' + ST_POSTER_ART)), load(url)]);
+    if (!pic) return null;
+    g.fillStyle = '#06121b'; g.fillRect(0, 0, W, H);
+    if (bg) { const s = Math.max(W / bg.width, H / bg.height); g.globalAlpha = 0.9; g.drawImage(bg, (W - bg.width * s) / 2, (H - bg.height * s) / 2, bg.width * s, bg.height * s); g.globalAlpha = 1; }
+    const wash = g.createRadialGradient(W / 2, 560, 40, W / 2, 560, 760);
+    wash.addColorStop(0, css(0.34)); wash.addColorStop(1, 'rgba(6,18,27,0.2)'); g.fillStyle = wash; g.fillRect(0, 0, W, H);
+    const fade = g.createLinearGradient(0, H * 0.55, 0, H); fade.addColorStop(0, 'rgba(6,18,27,0)'); fade.addColorStop(1, 'rgba(6,18,27,0.94)');
+    g.fillStyle = fade; g.fillRect(0, 0, W, H);
+    // the photo in its frame of light
+    const S = 700, x = (W - S) / 2, y = 150, r = 36, frame = () => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + S, y, x + S, y + S, r); g.arcTo(x + S, y + S, x, y + S, r); g.arcTo(x, y + S, x, y, r); g.arcTo(x, y, x + S, y, r); g.closePath(); };
+    g.save(); frame(); g.clip(); g.drawImage(pic, x, y, S, S); g.restore();
+    g.save(); frame(); g.shadowColor = css(1); g.shadowBlur = 44; g.lineWidth = 16; g.strokeStyle = css(0.55); g.stroke();
+    g.shadowBlur = 14; g.lineWidth = 5; g.strokeStyle = rgbS(mixRGB(rgb, [255, 255, 255], 0.45)); g.stroke(); g.restore();
+    // the words
+    const cond = (wt, px) => `${wt} ${px}px "Barlow Condensed", "Arial Narrow", Impact, sans-serif`;
+    g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.font = cond(800, 96); g.fillStyle = css(1); g.shadowColor = css(0.9); g.shadowBlur = 30;
+    g.fillText(me.name.toUpperCase(), W / 2, 1000, W - 120);
+    g.font = cond(900, 150); g.fillStyle = '#f4fbff'; g.shadowColor = 'rgba(160,230,255,.5)'; g.shadowBlur = 24;
+    g.fillText('RUNS THE CITY', W / 2, 1150, W - 90);
+    g.shadowBlur = 0; g.font = cond(700, 40); g.fillStyle = 'rgba(214,236,244,.78)';
+    const when = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+    g.fillText(`${vpOf(st, me.pid)} POINTS  ·  ${when.toUpperCase()}`, W / 2, 1222, W - 120);
+    g.font = cond(700, 34); g.fillStyle = 'rgba(232,252,55,.9)'; g.fillText('PLAYRUNTHECITY.COM', W / 2, 1300);
+    const blob = await new Promise(res => cv.toBlob(res, 'image/jpeg', 0.9));
+    if (!blob) return null;
+    const name = `run-the-city-${me.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'winner'}.jpg`;
+    return { blob, name, file: typeof File === 'function' ? new File([blob], name, { type: 'image/jpeg' }) : null };
+  })().catch(e => { console.warn('poster:', e); return null; });
+  STP.poster = { url, p };
+  return p;
+}
+/* the tap: the share sheet at once if the poster is ready and the phone has one, else a download */
+function stKeep() {
+  const P = STP.poster, ready = P && P.url === STP.url && P.done;
+  const save = o => {
+    const a = document.createElement('a'), u = URL.createObjectURL(o.blob);
+    a.href = u; a.download = o.name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 30000);
+    toast('Poster saved to your downloads.');
+  };
+  if (ready) {
+    const o = P.done;
+    if (o.file && navigator.canShare && navigator.share && navigator.canShare({ files: [o.file] })) {
+      navigator.share({ files: [o.file], title: 'I run the city' }).catch(e => { if (!e || e.name !== 'AbortError') save(o); });
+    } else save(o);
+    return;
+  }
+  STP.keep = true; safeRender();
+  stPosterMake().then(o => { STP.keep = false; if (o) save(o); else toast('The poster could not be made on this phone.'); safeRender(); });
+}
+/* The camera: one file input kept on the page outside everything that re-renders, so a state arriving while the
+   camera is open cannot take the photo with it. capture="user" opens the front camera where there is one. */
+function stCam() {
+  let i = document.getElementById('st-cam');
+  if (!i) {
+    i = document.createElement('input');
+    Object.assign(i, { type: 'file', id: 'st-cam', accept: 'image/*', tabIndex: -1, className: 'stcam' });
+    i.setAttribute('capture', 'user'); i.setAttribute('aria-hidden', 'true');
+    i.addEventListener('change', () => { const f = i.files && i.files[0]; i.value = ''; if (f) stSnap(f); });
+    document.body.appendChild(i);
+  }
+  return i;
+}
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('click', e => {
+  const b = e.target && e.target.closest && e.target.closest('[data-st]');
+  if (!b || b.disabled) return;
+  const k = b.dataset.st;
+  if (k === 'cam') stCam().click(); else if (k === 'send') stSend(); else if (k === 'keep') stKeep();
+});
+
+/* ---------- the victory show, on the table screen and the board view ----------
+   A screen that watched the game being played (ST.saw) and sees it end puts on the show: about a minute, on a
+   list of beats timed from the moment it starts (ST.beats, on the show's own clock, so a hidden tab or a fight
+   still on the screen holds it). The camera is the Director's, borrowed: a hand on it wins, the camera row's
+   Director button keeps it still, and the show goes on either way. Then it settles into what it leaves behind
+   (ST.phase 'after'): the holograms keep the winner's face until the lobby, and a firework goes up now and then.
+   A screen that only arrives once the game is over gets that and no more. */
+const ST = {
+  saw: '', pend: '', key: '', phase: '',   // the table watched, a win waiting for the show to run, the game it is for, 'show' or 'after'
+  t0: 0, t: 0, win: null, rgb: null,      // SHOW.t at the start and since; the winner and their colour
+  beats: [], ops: [], holds: [], route: null,
+  crew: [], rockets: [], shells: [], bursts: [], tracers: [], puffs: [], conf: [], parade: null,
+  gone: new Set(), shut: new Set(),       // towers away as rockets (boardSVG, o.gone); streets closed for the parade
+  title: null, music: null, next: 0, seen: '', step: '', map: null,
+};
+const ST_WHITE = [255, 250, 240], ST_GOLD = [255, 206, 110], ST_SMOKE = [150, 150, 162], ST_WARM = [190, 160, 140];
+
+const stHush = () => ST.phase === 'show';                     // no new world events while it plays (direct)
+/* the Director leaves the camera to it while it plays, and to any of its shots still under way (a face after it) */
+const stDirecting = () => ST.phase === 'show' || !!(DIR.shot && DIR.shot.what === 'show');
+/* the towers away as rockets, on a screen that is drawing them as rockets: when the show is not running here
+   (Simple view, a screen resting at the lowest detail, less motion) the towers stand */
+const stLive = () => SHOW.on && !SHOW.still && SHOW.q >= 0 && !LITE.on;
+const stGone = () => (ST.gone.size && stLive() ? new Set(ST.gone) : null);
+/* a street closed for the parade: the traffic puts no car on it (placeCar) */
+const stShut = e => ST.shut.has(e);
+/* the camera is the show's to move: motion allowed, the Director on for this screen, no hand on it lately */
+const stCamOk = () => MOTION_OK && dirOn() && dirWanted() && !(DIR.at === 'hand' && performance.now() - DIR.hand < DIR_HAND);
+
+/* Every render, every screen. A table screen or board view that has seen the game played notes a win for the
+   show, which starts at the next frame the city runs (the cast below); if the table was in Simple view it
+   comes out of it for the show. A phone celebrates, and the winner's gets the selfie (stPhoneParts). */
+function stObserve(st) {
+  if (!st) return;
+  if (st.phase === 'turn') ST.saw = st.room;
+  const game = stGame(st);
+  if (joinRoom && !WATCH) {                                      // a phone: the burst only for a win it saw happen
+    // won by a fight: after its last round is played (the arena is over the page until then), as the win sound waits
+    if (game && ST.seen === 'turn') { if (ST.step === 'fight' && FX.on) setTimeout(() => { if (stGame(G.state) === game) stCheer(G.state); }, FIGHT.replay + 300); else stCheer(st); }
+    ST.seen = st.phase; ST.step = st.step;
+    if (!game && STP.game) stPhoneForget();
+    return;
+  }
+  if (!joinRoom && game && STKEY.pub && st.pk !== STKEY.pub) setTimeout(stKeyShow, 0);   // after this render, not inside it
+  if (!game) {
+    if (ST.key || ST.phase) stStop();
+    ST.pend = '';
+    if (STPIC.game && !joinRoom) stPicForget();
+    return;
+  }
+  if (ST.saw === st.room && ST.key !== game && ST.pend !== game) { ST.pend = game; stUnlite(); }
+}
+/* the show needs the lit city: Simple view is left for it (it was a choice for reading the game, which is over) */
+function stUnlite() {
+  if (!LITE.on || !MOTION_OK || STAGE.lv <= 0 || POCKET_SCREEN || typeof window === 'undefined' || Math.min(window.innerWidth, window.innerHeight) < 520) return;
+  LITE.on = false; STAGE.own = Object.assign({}, STAGE.own, { lite: false }); viewSave();
+  lightsOff(); sndAmb();
+}
+/* the table's banner, until the photo comes: who can send it */
+function stBannerNote(st) {
+  if (joinRoom || !st.pk || STPIC.holo && STPIC.game === stGame(st) || (typeof location !== 'undefined' && location.protocol !== 'https:')) return '';
+  const w = playerOf(st, st.win);
+  return w ? `<span class="stnote">${esc(w.name)} can send a selfie for the parade from their phone.</span>` : '';
+}
+
+/* ---------- the running order ---------- */
+function stStart(st) {
+  const p = playerOf(st, st.win);
+  if (!p) return;
+  const game = stGame(st);
+  stStop();
+  Object.assign(ST, { key: game, pend: '', phase: 'show', t0: SHOW.t, t: 0, win: p, rgb: PIECE_RGB[p.color] || PIECE_RGB.white, beats: [], next: 0 });
+  // the city in 3D is where the show leaves the table: the Director's ladder goes to its top step (a reload keeps it);
+  // a table that chose Map only gets the tour, and then its map back as it had it
+  ST.map = dirMode(st) === 'map' ? { yaw: CAM.yaw, pitch: CAM.pitch, zoom: CAM.zoom, ox: CAM.ox, oy: CAM.oy } : null;
+  DIR.woke = DIR.looked = true;
+  if (!ST.map && DIR.top < 4 && dirScreen()) { DIR.top = 4; STAGE.own = Object.assign({}, STAGE.own, { dtop: 4 }); viewSave(); }
+  const mine = Object.keys(st.buildings).filter(v => st.buildings[v].pid === p.pid).map(Number);
+  ST.ops = mine.filter(v => st.buildings[v].k !== 'c'); ST.holds = mine.filter(v => st.buildings[v].k === 'c');
+  ST.route = stRoute(st, p.pid);
+  // the chases and races under way would drive through the parade: they end here, off camera
+  SHOW.ev.forEach(e => { if (['chase', 'race', 'robbery'].includes(e.kind)) e.dead = true; else if (e.kind === 'giant') e.len = Math.min(e.len, e.s + 40); });
+  const B = [], at = (t, f) => B.push([t, f]);
+  at(0.3, () => stTitle(true));
+  at(0.6, () => stShot('wide'));
+  at(3.0, stCrews);
+  at(3.3, () => stMusic(true));
+  at(3.9, () => stSay(['v_st_crew_1', 'v_st_crew_2']));
+  let t = 8.5;
+  if (ST.holds.length) {
+    // the towers go up one after another, the first on the count
+    at(t - 1.4, () => stShot('pad'));
+    at(t, () => stSay(['v_st_count']));
+    ST.holds.forEach((v, k) => { ST.rockets.push(stRocket(v, t + 2.4 + k * 0.55)); });
+    at(t + 2.6, () => stShot('climb'));
+    at(t + 3.0, () => stSay(['v_st_lift_1', 'v_st_lift_2']));
+    at(t + 8.0, () => stSay(['v_st_orbit']));
+    t += 8.5;
+  }
+  at(t, () => stShot('sky'));
+  stFire(t + 0.5, ST.holds.length ? 14 : 18, 'show');
+  at(t + 1.0, () => stConfSky(70));
+  const pt = t + 6;
+  at(pt - 3, stBlimp);
+  if (ST.route) {
+    at(pt - 1.5, stClose);
+    at(pt, stParade);
+    at(pt + 0.4, () => stSay(['v_st_parade']));
+    at(pt + 1.6, () => stShot('parade'));
+    at(pt + 15, () => stShot('face'));
+  }
+  at(pt + 21, () => stShot('home'));
+  stFire(pt + 22, 9, 'finale');
+  at(pt + 22.5, () => stConfSky(120));
+  at(pt + 26, () => stSay(['v_st_end']));
+  at(pt + 30, () => stMusic(false));
+  at(pt + 33, stAfter);
+  ST.beats = B.sort((a, b) => a[0] - b[0]);
+}
+/* played: the city gets back to its night, the winner's face still on every hologram */
+function stAfter() {
+  ST.phase = 'after';
+  if (ST.gone.size) { ST.holds.forEach(v => stBurst(GEO.verts[v].x, STREET_Y + 40, GEO.verts[v].y, ST.rgb, 26)); ST.gone.clear(); stBoard(); }
+  if (!ST.parade) stOpen();                                       // (a parade still going by opens them when it has)
+  stTitle(false);
+  ST.crew.forEach(c => { c.home = ST.t + rand(0, 1.5); });
+  ST.next = ST.t + rand(18, 30);
+  if (ST.map && stCamOk()) dirGo(ST.map, 2800, { what: 'show', then: () => { DIR.at = 'rest'; } });
+  else if (DIR.shot && DIR.shot.what === 'show') dirHome(2400);
+}
+/* over: the lobby, an undo, a new table. Everything the show put on the city comes off it. */
+function stStop() {
+  if (ST.gone.size) { ST.gone.clear(); stBoard(); }
+  stOpen(); stTitle(false); stMusic(false);
+  Object.assign(ST, { key: '', phase: '', beats: [], crew: [], rockets: [], shells: [], bursts: [], tracers: [], puffs: [], conf: [], parade: null, route: null, map: null });
+  if (DIR.shot && DIR.shot.what === 'show') { dirStop(); DIR.at = 'away'; }
+  SHOW.ev.forEach(e => { if (e.kind === 'blimp' && e.ad === ST_AD) e.swap = 0; });
+}
+/* the blimp comes over for the parade, the winner on its screen (the show keeps new happenings out, so it is
+   started here by hand, as direct() would) */
+function stBlimp() {
+  const h = HAPPENINGS.blimp;
+  if (!h || SHOW.ev.some(e => e.kind === 'blimp' && !e.dead)) return;
+  let e = null;
+  try { e = h.start(G.state); } catch (err) { e = null; }
+  if (!e) return;
+  Object.assign(e, { kind: 'blimp', t0: SHOW.t, age: 0, weight: h.weight || 1, ad: ST_AD, swap: 1e6 });
+  SHOW.ev.push(e);
+}
+/* the board redrawn with the towers that are away (or back) */
+function stBoard() {
+  if (!view.opts) return;
+  view.opts.gone = stGone(); view.quiet = true; queueBoard();
+}
+function stSay(list) {
+  if (!sndHearsTable() || !SND.data) return;
+  const have = list.filter(n => SND.data.clips[n]);
+  if (have.length) vox(sndOne(have), { stale: 4000 });
+}
+/* a sound from a place on the board, panned to its side of the screen */
+function stSfx(name, x, z, o = {}) {
+  if (!sndHearsTable()) return;
+  if (!stSfx.ranked) {                                            // (the sound's lists are set up further down the page)
+    // when the table's few-at-once rule has to choose: a rocket or the giant's call over the volleys, the pops and the bursts
+    stSfx.ranked = true; SND_BIG.push('st_rocket', 'giant_beast', 'giant_mech'); SND_SMALL.push('st_shots', 'st_pop', 'st_boom', 'giant_step');
+  }
+  const C = SHOW.C, q = C && project(x, STREET_Y, z, C), vb = SHOW.vb;
+  const pan = q && vb.w ? Math.max(-1, Math.min(1, ((q.x - vb.x) / vb.w) * 2 - 1)) * 0.7 : 0;
+  sfx(name, Object.assign({ pan }, o));
+}
+/* The music: one long clip on the effects' bus (it dips under the announcer with them), faded in and out,
+   and outside the few-at-once rule the effects keep, which it would otherwise hog for a minute. */
+function stMusic(on, from) {
+  const c = SND.ctx, m = ST.music;
+  if (m) {
+    ST.music = null;
+    if (c) try { m.g.gain.cancelScheduledValues(c.currentTime); m.g.gain.setTargetAtTime(0, c.currentTime, 0.7); m.s.stop(c.currentTime + 3.5); } catch (e) { /* ended */ }
+  }
+  ST.musicAt = on ? from || 0 : null;
+  if (!on || !c || c.state !== 'running' || document.hidden || !SND.prefs.fx || !sndHearsTable() || !SND.data || !SND.data.clips.st_music) return;
+  const key = ST.key;
+  sndBuf('st_music').then(b => {
+    if (!b || ST.key !== key || ST.music || SND.ctx !== c || ST.phase !== 'show' || document.hidden) return;
+    const s = c.createBufferSource(), g = c.createGain(), t = c.currentTime, v = sndTrim('st_music'), off = Math.min(Math.max(0, ST.musicAt || 0), b.duration - 1);
+    s.buffer = b; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + (off ? 0.8 : 1.5));
+    s.connect(g); g.connect(SND.bus.fx); s.start(t, off);
+    ST.music = { s, g, t0: t - off };
+    s.onended = () => { if (ST.music && ST.music.s === s) ST.music = null; };
+  });
+}
+/* the table tab hidden mid-show: the show waits (its clock stops), so the music stops too, and picks up where it was */
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('visibilitychange', () => {
+  const c = SND.ctx;
+  if (document.hidden && ST.music && c) { const at = c.currentTime - ST.music.t0; stMusic(false); ST.musicAt = at; ST.musicHeld = true; }
+  else if (!document.hidden && ST.musicHeld) { ST.musicHeld = false; if (ST.phase === 'show') stMusic(true, ST.musicAt); }
+});
+/* the name in lights over the board for a few seconds */
+function stTitle(on) {
+  if (ST.title) { const el = ST.title; ST.title = null; el.classList.add('out'); setTimeout(() => el.remove(), 700); }
+  if (!on || !ST.win || typeof document === 'undefined') return;
+  const box = document.querySelector('.boardbox'), r = box && box.getBoundingClientRect();
+  if (!r || !r.width) return;
+  const el = document.createElement('div');
+  el.className = 'sttitle'; el.setAttribute('aria-hidden', 'true');
+  el.style.cssText = `--pc:var(--p-${ST.win.color});left:${(r.left + r.width / 2).toFixed(0)}px;top:${(r.top + FIT.top + (r.height - FIT.top - FIT.bottom) * 0.42).toFixed(0)}px;` +
+    `font-size:${Math.max(30, Math.min(r.width / 8.5, r.height / 5.2)).toFixed(0)}px`;
+  el.innerHTML = `<b>${esc(ST.win.name)}</b><span>runs the city</span>`;
+  fxLayer().appendChild(el); ST.title = el;
+  setTimeout(() => { if (ST.title === el) stTitle(false); }, 4300);
+}
+/* the ground shakes: the board and the light over it together, a few pixels, briefly (never the camera row) */
+function stShake(px, ms) {
+  if (!MOTION_OK || typeof document === 'undefined') return;
+  const k = [0, 1, -0.9, 0.6, -0.4, 0.2, 0].map(f => ({ transform: `translate(${(f * px).toFixed(1)}px,${(f * px * 0.55).toFixed(1)}px)` }));
+  [document.querySelector('.board3d'), SHOW.cv].forEach(el => { if (el && el.animate) try { el.animate(k, { duration: ms || 320, easing: 'ease-out' }); } catch (e) { /* no animation here */ } });
+}
+
+/* ---------- the camera ---------- */
+function stShot(kind) {
+  if (!stCamOk()) return;
+  const r0 = CAM_HOME.yaw;
+  const cen = vs => { let x = 0, z = 0; vs.forEach(v => { x += GEO.verts[v].x; z += GEO.verts[v].y; }); return { x: x / vs.length, z: z / vs.length }; };
+  const mine = ST.ops.concat(ST.holds);
+  if (kind === 'wide' && mine.length) {
+    // the winner's building with the most of their own streets round it: where their crew pours out
+    const st = G.state, own = v => GEO.verts[v].edges.filter(e => st.streets[e] === ST.win.pid).length;
+    const v = mine.slice().sort((a, b) => own(b) - own(a) || ST.holds.includes(b) - ST.holds.includes(a))[0], q = GEO.verts[v];
+    dirGo({ yaw: (r0 + 12) % 360, pitch: 52, zoom: 2.3, pt: { x: q.x, y: 12, z: q.y } }, 2800, { hold: 60000, what: 'show' });
+  } else if (kind === 'pad') {
+    const r = ST.rockets[0]; if (!r) return;
+    dirGo({ yaw: CAM.yaw, pitch: 30, zoom: 2.1, pt: { x: r.x, y: 44, z: r.z } }, 1700, { hold: 60000, what: 'show' });
+  } else if (kind === 'climb') {
+    const r = ST.rockets[0]; if (!r) return;
+    dirGo({ yaw: CAM.yaw, pitch: 23, zoom: 1.45, pt: () => (r.dead ? null : { x: r.x, y: STREET_Y + Math.min(r.y, 420) + 40, z: r.z }) }, 2400, { hold: 5200, what: 'show' });
+  } else if (kind === 'sky') {
+    dirGo({ yaw: (r0 + 350) % 360, pitch: 27, zoom: 1.1, pt: stMid(150) }, 2600, { hold: 60000, what: 'show' });
+  } else if (kind === 'parade') {
+    const P = ST.parade; if (!P) return;
+    dirGo({ yaw: CAM.yaw, pitch: 60, zoom: 2.1, pt: () => { const f = P.cars[1]; return f && f.p ? { x: f.p.x, y: 20, z: f.p.z } : null; } }, 2200, { hold: 13000, what: 'show' });
+  } else if (kind === 'face') {
+    const it = stHoloNear();
+    if (it) dirGo({ yaw: CAM.yaw, pitch: 30, zoom: 2.2, pt: { x: it.x, y: it.y + it.H * 0.55, z: it.z } }, 2300, { hold: 5200, what: 'show' });
+  } else if (kind === 'home') dirGo(Object.assign({}, DIR_ISO), 2800, { hold: 60000, what: 'show' });
+}
+/* the middle of the city, at a height */
+function stMid(y) { let x = 0, z = 0; GEO.hexes.forEach(h => { x += h.cx; z += h.cy; }); return { x: x / GEO.hexes.length, y, z: z / GEO.hexes.length }; }
+/* the hologram to look at for the winner's face: the one nearest the parade's float, or the middle */
+function stHoloNear() {
+  const f = ST.parade && ST.parade.cars[1] && ST.parade.cars[1].p, at = f || stMid(0);
+  const live = holoSet.items.filter(it => it.vis > 0.5 && it.ad === ST_AD);
+  return live.length ? live.reduce((a, b) => (Math.hypot(b.x - at.x, b.z - at.z) < Math.hypot(a.x - at.x, a.z - at.z) ? b : a)) : null;
+}
+/* the photo arrived: every hologram flickers over to it, and the announcer notices */
+function stFace() {
+  holoSet.items.forEach(it => { it.gl = SHOW.t + 0.45; it.gs = Math.random() * 1000; });
+  if (ST.phase === 'show' && ST.t > 6) stSay(['v_st_face_1', 'v_st_face_2']);
+  else if (ST.phase === 'after') {
+    stSay(['v_st_face_1', 'v_st_face_2']);
+    if (stCamOk() && !DIR.shot) { const it = stHoloNear(); if (it) dirGo({ yaw: CAM.yaw, pitch: 30, zoom: 2.2, pt: { x: it.x, y: it.y + it.H * 0.55, z: it.z } }, 2300, { hold: 5000, what: 'show', then: () => dirHome(2200) }); }
+  }
+  safeRender();
+}
+
+/* ---------- the crews ----------
+   Out of every one of the winner's buildings, a few of their people run out onto the streets beside it, stop,
+   and fire into the air: a flash at the muzzle, tracers going up. One of each crew throws money about. They
+   stay out to watch, cheering, and go back in once it is over. */
+function stCrews() {
+  const st = G.state, q = SHOW.q, per = q >= 2 ? 1 : q === 1 ? 0.7 : 0.5, pid = ST.win.pid;
+  const top = mixRGB(ST.rgb, [18, 20, 30], 0.12);
+  ST.ops.concat(ST.holds).forEach(v => {
+    const big = ST.holds.includes(v), n = Math.max(3, Math.round((big ? 10 : 7) * per)), V = GEO.verts[v];
+    const es = V.edges.slice().sort((a, b) => (st.streets[b] === pid) - (st.streets[a] === pid));
+    for (let k = 0; k < n; k++) {
+      const e = es[k % es.length], d = rand(14, 30), lane = rand(-6.5, 6.5), E = edgeAt(e, v, d / S, lane), a = Math.atan2(E.z - V.y, E.x - V.x);
+      ST.crew.push({ v, x0: V.x + Math.cos(a) * 8, z0: V.y + Math.sin(a) * 8, x1: E.x, z1: E.z, x: V.x, z: V.y, fx: Math.cos(a), fz: Math.sin(a),
+        t0: ST.t + rand(0, 1.3), run: rand(0.9, 1.5), h: rand(4.4, 5), top, legs: pick(MOB_LEGS), head: pick(MOB_SKIN),
+        fire: 0, shots: 0, gap: 0, stop: rand(13, 16), ph: rand(0, 6.3), cash: k === 0 && chance(0.7), home: 0, a: 0, flash: 0, face: rand(-0.7, 0.7) });
+    }
+  });
+}
+function stCrewStep(dt) {
+  for (let i = ST.crew.length - 1; i >= 0; i--) {
+    const c = ST.crew[i], t = ST.t - c.t0;
+    if (t < 0) { c.a = 0; continue; }
+    if (c.home && ST.t > c.home) {                            // back inside
+      const k = clamp01((ST.t - c.home) / 1.4);
+      c.x = c.x1 + (c.x0 - c.x1) * ease(k); c.z = c.z1 + (c.z0 - c.z1) * ease(k); c.a = 1 - clamp01((k - 0.7) / 0.3);
+      c.fx = c.x0 - c.x1; c.fz = c.z0 - c.z1; const m = Math.hypot(c.fx, c.fz) || 1; c.fx /= m; c.fz /= m;
+      if (k >= 1) ST.crew.splice(i, 1);
+      continue;
+    }
+    const k = clamp01(t / c.run), e = 1 - (1 - k) * (1 - k);
+    c.x = c.x0 + (c.x1 - c.x0) * e; c.z = c.z0 + (c.z1 - c.z0) * e; c.a = clamp01(t / 0.35);
+    if (k < 1) continue;
+    // face out and a little round, then fire in bursts of two to four until the rockets go
+    const turn = Math.atan2(c.z1 - c.z0, c.x1 - c.x0) + c.face; c.fx = Math.cos(turn); c.fz = Math.sin(turn);
+    c.flash = Math.max(0, c.flash - dt);
+    if (ST.phase !== 'show' || ST.t > c.t0 + c.stop) continue;
+    if ((c.gap -= dt) > 0) continue;
+    if (c.shots <= 0) { c.shots = 2 + ((Math.random() * 3) | 0); c.gap = rand(0.2, 0.9); stSfx('st_shots', c.x, c.z, { gap: 2600, vol: 0.75 }); continue; }
+    c.shots--; c.gap = c.shots ? rand(0.09, 0.14) : rand(0.8, 1.9); c.flash = 0.06;
+    const el = rand(1.2, 1.5), az = Math.atan2(c.fz, c.fx) + rand(-0.8, 0.8), sp = rand(150, 190), tip = stTip(c);
+    ST.tracers.push({ x: tip.x, y: tip.y, z: tip.z, vx: Math.cos(el) * Math.cos(az) * sp, vy: Math.sin(el) * sp, vz: Math.cos(el) * Math.sin(az) * sp, age: 0, life: rand(0.45, 0.7), g: 30, drag: 0.2 });
+    if (c.cash && chance(0.5)) for (let j = 0; j < 4; j++) ST.conf.push(stBit(tip.x, tip.y, tip.z, pick(MOB_CASH), rand(-8, 8), rand(14, 24), rand(-8, 8), 0.9));
+  }
+}
+/* where a crew member's gun is: held up over their head */
+const stTip = c => ({ x: c.x + c.fx * 0.9, y: STREET_Y + c.h * 1.3, z: c.z + c.fz * 0.9 });
+function stCrewStreet(C, put) {
+  for (const c of ST.crew) {
+    if (!(c.a > 0.02)) continue;
+    const bob = ST.phase === 'show' && ST.t > c.t0 + c.stop || ST.phase === 'after' && !(c.home && ST.t > c.home) ? Math.abs(Math.sin(SHOW.t * 5 + c.ph)) * 0.6 : 0;
+    const s = mobMan(C, c.x, STREET_Y + bob, c.z, c.fx, c.fz, c.h, c.top, c.legs, c.head);
+    if (!s) continue;
+    const a = project(c.x + c.fx * 0.25, STREET_Y + bob + c.h * 0.78, c.z + c.fz * 0.25, C), tip = stTip(c), b = project(tip.x, tip.y + bob, tip.z, C);
+    const arm = a && b ? `<line x1="${n1(a.x)}" y1="${n1(a.y)}" x2="${n1(b.x)}" y2="${n1(b.y)}" stroke="${rgbS(c.top)}" stroke-width="${n1(0.45 * a.k)}" stroke-linecap="round"/>` : '';
+    mobPut(put, C, c.x, STREET_Y + 1, c.z, s + arm, c.a);
+  }
+}
+
+/* ---------- the rockets ----------
+   A tower counts down (steam off its pad), lights its engine in a cloud of smoke, and goes: slowly, shaking,
+   then faster and faster, straight up and out of the sky. The tower itself leaves the board's markup as it
+   lights (o.gone) and the rocket is the same tower drawn in the traffic's slot for its junction, so the city
+   in front of it still hides it; it grows fins, and an engine. Back on the pad once the show is over. */
+function stRocket(v, ign) { const V = GEO.verts[v]; return { v, x: V.x, z: V.y, ign, y: 0, vy: 0, on: false, dead: false, sx: 0, sz: 0, vent: 0 }; }
+function stRocketStep(dt) {
+  const q = SHOW.q;
+  for (const r of ST.rockets) {
+    const t = ST.t - r.ign;
+    if (r.dead || t < -2.4) continue;
+    if (t < 0) {                                               // the count: steam off the pad
+      if ((r.vent -= dt) <= 0) { r.vent = q >= 2 ? 0.05 : 0.1; stPuff(r.x + rand(-9, 9), STREET_Y + 2, r.z + rand(-9, 9), { vx: rand(-6, 6), vy: rand(4, 9), vz: rand(-6, 6), c: [205, 210, 220], a: 0.2, r0: 2, grow: 5, life: rand(0.8, 1.3) }); }
+      continue;
+    }
+    if (!r.on) {
+      r.on = true; ST.gone.add(r.v); stBoard(); stShake(3, 420);
+      stSfx('st_rocket', r.x, r.z, { gap: 400 });
+      for (let k = 0; k < (q >= 2 ? 34 : 18); k++) {             // the cloud it lights in, out along the ground
+        const a = rand(0, Math.PI * 2), sp = rand(12, 38);
+        stPuff(r.x, STREET_Y + rand(1, 4), r.z, { vx: Math.cos(a) * sp, vy: rand(0, 6), vz: Math.sin(a) * sp, a: 0.34, r0: 10, grow: 15, life: rand(3, 5), drag: 0.9, c: chance(0.5) ? ST_WARM : ST_SMOKE });
+      }
+    }
+    if (t < 0.9) { r.sx = rand(-0.35, 0.35); r.sz = rand(-0.35, 0.35); }
+    else { r.sx *= 0.9; r.sz *= 0.9; r.vy += (14 + 30 * Math.min(1, (t - 0.9) / 3)) * dt; r.y += r.vy * dt; }
+    if (r.y < 700 && (r.vent -= dt) <= 0) {                     // the smoke it leaves behind
+      r.vent = q >= 2 ? 0.035 : q === 1 ? 0.06 : 0.1;
+      const low = r.y < 30;
+      stPuff(r.x + rand(-2, 2), STREET_Y + r.y - 6, r.z + rand(-2, 2), { vx: rand(-4, 4) * (low ? 5 : 1), vy: low ? rand(-2, 3) : rand(-6, -2), vz: rand(-4, 4) * (low ? 5 : 1),
+        a: 0.3, r0: 7, grow: low ? 14 : 10, life: rand(2.6, 3.8), drag: 0.8 });
+    }
+    if (r.y > 1300) r.dead = true;                              // in orbit
+  }
+}
+function stRocketStreet(C, put) {
+  const P = (x, y, z) => project(x, y, z, C);
+  for (const r of ST.rockets) {
+    if (!r.on || r.dead) continue;
+    const ink = pieceInk(ST.win.color, false), x = r.x + r.sx, z = r.z + r.sz, y = STREET_Y + r.y, body = building(P, C, { x, y: z }, ink, y, true);
+    if (!body) continue;
+    const axis = P(x, y + 12, z);
+    if (!axis) continue;
+    // the fins, and the engine under it; those behind the body first
+    const back = [], front = [];
+    for (let k = 0; k < 3; k++) {
+      const a = k * Math.PI * 2 / 3 + 0.4, ca = Math.cos(a), sa = Math.sin(a), pts2 = [[11.5, 0], [19.5, -4], [19.5, 6], [11.5, 25]].map(([rr, yy]) => P(x + ca * rr, y + yy, z + sa * rr));
+      if (pts2.some(p => !p)) continue;
+      let n = [-sa, 0, ca];
+      if (!faces(C, n, [x + ca * 15, y + 6, z + sa * 15])) n = [sa, 0, -ca];
+      const s = `<polygon points="${pts(pts2)}" fill="${lit(n, ink.body, 0.5)}"/><polyline points="${pts([pts2[1], pts2[2], pts2[3]])}" fill="none" stroke="${ink.hot}" stroke-width="${n1(0.9 * axis.k)}" stroke-linejoin="round"/>`;
+      const mid = P(x + ca * 15, y + 6, z + sa * 15);
+      (mid && mid.d > axis.d ? back : front).push(s);
+    }
+    const bell = [];
+    for (let k = 0; k < 6; k++) {
+      const a0 = k * Math.PI / 3, a1 = a0 + Math.PI / 3, am = a0 + Math.PI / 6, n = [Math.cos(am), -0.35, Math.sin(am)];
+      if (!faces(C, n, [x + Math.cos(am) * 8, y - 3, z + Math.sin(am) * 8])) continue;
+      const q = [P(x + Math.cos(a0) * 6.5, y, z + Math.sin(a0) * 6.5), P(x + Math.cos(a1) * 6.5, y, z + Math.sin(a1) * 6.5), P(x + Math.cos(a1) * 9, y - 6, z + Math.sin(a1) * 9), P(x + Math.cos(a0) * 9, y - 6, z + Math.sin(a0) * 9)];
+      if (q.every(Boolean)) bell.push(`<polygon points="${pts(q)}" fill="${lit(n, [52, 56, 66], 0.45)}"/>`);
+    }
+    const html = bell.join('') + back.join('') + body.s + front.join('');
+    const slot = r.y < 150 ? Math.max(0, ...GEO.verts[r.v].hexes.map(i => (LIFE.hexSlot && LIFE.hexSlot[i]) || 0)) : null;
+    if (slot !== null) put.slot(slot, html); else put(axis.d, html);
+  }
+}
+
+/* ---------- fireworks ---------- */
+function stFire(at, n, kind) {
+  const bs = ST.ops.concat(ST.holds), mid = stMid(0), fin = kind === 'finale';
+  for (let k = 0; k < n; k++) {
+    const from = bs.length && chance(0.8) ? GEO.verts[pick(bs)] : null, x0 = from ? from.x : mid.x + rand(-120, 120), z0 = from ? from.y : mid.z + rand(-120, 120);
+    const t = at + (fin ? k * 0.22 + rand(0, 0.25) : k * rand(0.5, 1.3) + rand(0, 0.3));
+    // the sky shot looks up (they go high); the finale and after are seen from the table's own view, so just over the roofs
+    const hi = kind === 'show' ? rand(150, 250) : rand(105, 175);
+    ST.shells.push({ t, x0: from || !fin ? x0 : mid.x + rand(-150, 150), z0: from || !fin ? z0 : mid.z + rand(-150, 150), x: x0 + rand(-40, 40), y: hi, z: z0 + rand(-40, 40),
+      c1: chance(0.6) ? mixRGB(ST.rgb, [255, 255, 255], 0.2) : pick(MOB_BOOM), c2: chance(0.5) ? ST_WHITE : chance(0.5) ? ST_GOLD : pick(MOB_BOOM),
+      kind: pick(fin ? ['peony', 'peony', 'ring', 'willow', 'crackle'] : ['peony', 'ring', 'willow', 'crackle']), up: false, done: false });
+  }
+}
+function stFireStep(dt) {
+  const q = SHOW.q;
+  for (const f of ST.shells) {
+    if (f.done || ST.t < f.t - 1.1) continue;
+    f.up = true;
+    if (ST.t < f.t) continue;
+    f.done = true;
+    const sp = [], n = q >= 2 ? (f.kind === 'ring' ? 48 : 64) : q === 1 ? 38 : 24, v0 = f.kind === 'willow' ? rand(55, 70) : rand(105, 135), tilt = rand(-0.5, 0.5);
+    for (let k = 0; k < n; k++) {
+      let u = rand(-1, 1), th = rand(0, Math.PI * 2);
+      if (f.kind === 'ring') { u = Math.sin(tilt) * Math.cos(th); th = k / n * Math.PI * 2; }
+      const r = Math.sqrt(1 - u * u), s = v0 * rand(0.88, 1.04);
+      sp.push({ x: f.x, y: f.y, z: f.z, vx: r * Math.cos(th) * s, vy: u * s + 3, vz: r * Math.sin(th) * s, age: 0, life: 9, c: k & 1,
+        g: f.kind === 'willow' ? 26 : 10, drag: f.kind === 'willow' ? 0.6 : 1.1 });
+    }
+    ST.bursts.push({ x: f.x, y: f.y, z: f.z, c1: f.kind === 'willow' ? ST_GOLD : f.c1, c2: f.kind === 'willow' ? ST_GOLD : f.c2, sp, age: 0,
+      life: f.kind === 'willow' ? rand(3, 3.6) : rand(2.1, 2.7), cr: [], pops: f.kind === 'crackle' && q ? [rand(0.7, 0.9), rand(0.9, 1.2), rand(1.1, 1.4)] : [] });
+    stSfx('st_boom', f.x, f.z, { gap: 70, detune: 180, vol: rand(0.55, 0.85) });
+  }
+  ST.shells = ST.shells.filter(f => !f.done);
+  for (let i = ST.bursts.length - 1; i >= 0; i--) {
+    const bu = ST.bursts[i];
+    bu.age += dt;
+    if (bu.age > bu.life) { ST.bursts.splice(i, 1); continue; }
+    stTick(bu.sp, dt);
+    while (bu.pops.length && bu.age > bu.pops[0]) {
+      bu.pops.shift();
+      const o = pick(bu.sp);
+      for (let k = 0; k < (q >= 2 ? 12 : 8); k++) {
+        const u = rand(-1, 1), th = rand(0, 6.2832), r = Math.sqrt(1 - u * u), v = rand(10, 16);
+        bu.cr.push({ x: o.x, y: o.y, z: o.z, vx: o.vx * 0.3 + r * Math.cos(th) * v, vy: o.vy * 0.3 + u * v, vz: o.vz * 0.3 + r * Math.sin(th) * v, age: 0, life: rand(0.3, 0.5) });
+      }
+    }
+    mobTick(bu.cr, dt, 6, 2);
+  }
+  // after the show: one now and then over the winner's blocks
+  if (ST.phase === 'after' && ST.t > ST.next) { stFire(ST.t + 1.2, pick([1, 2, 3]), 'after'); ST.next = ST.t + rand(20, 42); }
+}
+/* particles that each keep their own gravity and drag (a willow's hang longer) */
+function stTick(list, dt) {
+  for (let i = list.length - 1; i >= 0; i--) {
+    const b = list[i];
+    b.age += dt;
+    if (b.age >= b.life) { list[i] = list[list.length - 1]; list.pop(); continue; }
+    const k = Math.max(0, 1 - b.drag * dt);
+    b.vx *= k; b.vz *= k; b.vy = b.vy * k - b.g * dt;
+    b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+  }
+}
+/* a flash of colour where something was (a tower back on its pad) */
+function stBurst(x, y, z, c, n) {
+  const sp = [];
+  for (let k = 0; k < n; k++) {
+    const u = rand(-0.2, 1), th = rand(0, 6.2832), r = Math.sqrt(1 - u * u), s = rand(30, 50);
+    sp.push({ x, y, z, vx: r * Math.cos(th) * s, vy: u * s, vz: r * Math.sin(th) * s, age: 0, life: 9, c: k & 1, g: 18, drag: 1.4 });
+  }
+  ST.bursts.push({ x, y, z, c1: c, c2: ST_WHITE, sp, age: 0, life: 1.4, cr: [], pops: [] });
+}
+
+/* ---------- confetti, smoke, money ---------- */
+function stBit(x, y, z, c, vx, vy, vz, life) {
+  return { x, y, z, vx, vy, vz, c, age: 0, life: life || rand(3.5, 5.5), rot: rand(0, 6.3), spin: rand(5, 11), ph: rand(0, 6.3), s: rand(0.8, 1.4) };
+}
+/* a shower over the winner's side of town, from high up */
+function stConfSky(n) {
+  const bs = ST.ops.concat(ST.holds), mid = stMid(0), cs = [mixRGB(ST.rgb, [255, 255, 255], 0.15), ST_WHITE, ST_GOLD, [255, 92, 205], [60, 230, 255]];
+  n = Math.round(n * (SHOW.q >= 2 ? 1 : SHOW.q === 1 ? 0.6 : 0.35));
+  for (let k = 0; k < n; k++) {
+    const at = bs.length ? GEO.verts[pick(bs)] : { x: mid.x, y: mid.z };
+    ST.conf.push(stBit(at.x + rand(-70, 70), rand(110, 190), at.y + rand(-70, 70), pick(cs), rand(-4, 4), rand(-2, 3), rand(-4, 4), rand(5, 8)));
+  }
+}
+function stConfStep(dt) {
+  for (let i = ST.conf.length - 1; i >= 0; i--) {
+    const b = ST.conf[i];
+    b.age += dt;
+    if (b.age >= b.life || b.y < STREET_Y) { ST.conf[i] = ST.conf[ST.conf.length - 1]; ST.conf.pop(); continue; }
+    // paper: it falls slowly, fluttering, drifting on the air
+    const k = Math.max(0, 1 - 2.2 * dt);
+    b.vx = b.vx * k + Math.sin(b.age * 2.1 + b.ph) * 6 * dt; b.vz = b.vz * k + Math.cos(b.age * 1.7 + b.ph) * 6 * dt;
+    b.vy = b.vy * k - 16 * dt * k; if (b.vy < -7) b.vy = -7;
+    b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt; b.rot += b.spin * dt * 0.3;
+  }
+  for (let i = ST.puffs.length - 1; i >= 0; i--) {
+    const b = ST.puffs[i];
+    b.age += dt;
+    if (b.age >= b.life) { ST.puffs[i] = ST.puffs[ST.puffs.length - 1]; ST.puffs.pop(); continue; }
+    const k = Math.max(0, 1 - b.drag * dt);
+    b.vx *= k; b.vz *= k; b.vy = b.vy * k + 1.5 * dt;
+    b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+    if (b.y < STREET_Y + 1) { b.y = STREET_Y + 1; b.vy = 0; }
+  }
+  mobTick(ST.tracers, dt, 30, 0.2);
+}
+function stPuff(x, y, z, o) {
+  if (ST.puffs.length > 320) return;
+  ST.puffs.push(Object.assign({ x, y, z, vx: 0, vy: 1, vz: 0, age: 0, life: 2, r0: 3, grow: 5, a: 0.25, c: ST_SMOKE, drag: 1 }, o));
+}
+/* confetti as short strokes that turn over as they fall, one path per colour */
+function stConfPaint(ctx) {
+  const by = new Map();
+  for (const b of ST.conf) { let l = by.get(b.c); if (!l) by.set(b.c, l = []); l.push(b); }
+  by.forEach((list, c) => {
+    ctx.globalAlpha = 0.95; ctx.strokeStyle = mobCss(c); ctx.lineCap = 'butt';
+    let k = 0, n = 0; ctx.beginPath();
+    for (const b of list) {
+      const p = SP(b.x, b.y, b.z);
+      if (!p) continue;
+      const w = 0.9 * b.s * p.k, dx = Math.cos(b.rot) * w, dy = Math.sin(b.rot) * w * Math.abs(Math.cos(b.age * b.spin + b.ph));
+      ctx.moveTo(p.x - dx, p.y - dy); ctx.lineTo(p.x + dx, p.y + dy); k += p.k; n++;
+    }
+    if (!n) return;
+    ctx.lineWidth = 0.7 * k / n; ctx.stroke();
+  });
+}
+
+/* ---------- the parade ----------
+   The longest run of the winner's own streets (five at most, and made up to three with the streets beside
+   them), closed to the traffic a moment before: the cars on it go to the car park and its corners are held. A
+   police car leads; the float follows with its emitter, and the winner's face (or crew) rides high above the
+   rooftops in light; then a crew car, a truck that fires confetti, and one more crew car. */
+function stRoute(st, pid) {
+  const own = new Set(Object.keys(st.streets).filter(e => st.streets[e] === pid).map(Number));
+  let best = [], from = -1, steps = 0;
+  const walk = (v, used, path, start) => {
+    if (++steps > 40000) return;
+    if (path.length > best.length) { best = path.slice(); from = start; }
+    for (const e of GEO.verts[v].edges) if (own.has(e) && !used.has(e)) { used.add(e); path.push(e); walk(otherEnd(e, v), used, path, start); path.pop(); used.delete(e); }
+  };
+  const ends = new Set(); own.forEach(e => { ends.add(GEO.edges[e].a); ends.add(GEO.edges[e].b); });
+  ends.forEach(v => walk(v, new Set(), [], v));
+  if (!best.length) return null;
+  let edges = best.slice(0, 5), at = from;
+  const ends2 = [from]; edges.forEach(e => { at = otherEnd(e, at); ends2.push(at); });
+  // too short to be a parade: on along the streets beside it, never back the way it came
+  for (let g = 0; edges.length < 3 && g < 6; g++) {
+    const outs = GEO.verts[at].edges.filter(e => !edges.includes(e)), inner = outs.filter(mobInner), e = pick(inner.length ? inner : outs);
+    if (e === undefined) break;
+    edges.push(e); at = otherEnd(e, at);
+  }
+  return { from, edges };
+}
+const ST_LOOKS = () => {
+  const c = ST.rgb, dark = mixRGB([16, 19, 30], c, 0.42);
+  return [
+    { look: MOB_COP, cop: true, gap: 0 },
+    { look: mobLook(dark, { len: 13, wide: 4.2, tall: 1.5, cab: 1.4, cl: 0.26, co: -0.37, glass: [40, 48, 66] }), float: true, gap: 16 },
+    { look: mobLook(mixRGB([20, 22, 30], c, 0.3), { len: 7.4, wide: 3.4 }), glow: true, gap: 16 },
+    { look: mobLook(mixRGB([22, 24, 32], c, 0.5), { len: 9, wide: 3.8, tall: 2.2, cab: 1.1, cl: 0.36, co: -0.3 }), gun: true, gap: 14 },
+    { look: mobLook(mixRGB([20, 22, 30], c, 0.3), { len: 7.4, wide: 3.4 }), glow: true, gap: 14 },
+  ];
+};
+function stClose() {
+  const R = ST.route; if (!R) return;
+  const tr = mobTrail(R.edges[0], R.from, true, 14, 0);
+  mobAddPath(tr, otherEnd(R.edges[0], R.from), R.edges.slice(1));
+  mobBack(tr, 1); mobGrow(tr, null);
+  ST.parade = { tr, s: 0.35, cars: ST_LOOKS().map(o => Object.assign(o, { p: null, a: 0, pop: rand(0.5, 1) })), v: 12 / S, end: tr.seg.length - 0.2, t: 0 };
+  ST.shut = new Set(tr.seg.map(g => g.e));
+  stClear();
+}
+function stParade() { if (ST.parade) ST.parade.go = true; }
+/* A car on a closed street goes back to the car park and comes out again on a street that is open (placeCar
+   asks stShut), the way a towed wreck does; the traffic's own count of cars (retune) is left alone. The corners
+   at each end of a closed street are held, so nobody turns in. */
+function stClear() {
+  const P = ST.parade;
+  LIFE.cars.forEach(c => {
+    if (c.parked || c.wreck || c.fresh !== false || !ST.shut.has(c.e)) return;
+    if (P && P.go && P.cars.some(o => o.p && c.pose && Math.hypot(o.p.x - c.pose.x, o.p.z - c.pose.z) < 45)) return;   // not in plain sight of it
+    Object.assign(c, { fresh: true, hold: -1, held: -1, mad: false, late: 0, inc: null });
+  });
+}
+function stHold() {
+  if (!ST.shut.size) return;
+  const vs = new Set();
+  ST.shut.forEach(e => { vs.add(GEO.edges[e].a); vs.add(GEO.edges[e].b); });
+  vs.forEach(v => {
+    const e = GEO.verts[v].edges.find(x => ST.shut.has(x)), E = GEO.edges[e], V = GEO.verts[v];
+    SHOW.blocks.push({ e, from: E.a, t: E.a === v ? 0.01 : 0.99, wreck: { x: V.x, z: V.y }, pose: { x: V.x, z: V.y, ux: 1, uz: 0 }, s: 0, hold: -1, held: -1 });
+  });
+}
+function stOpen() { ST.shut = new Set(); }
+function stParadeStep(dt) {
+  const P = ST.parade;
+  if (!P) return;
+  if (ST.shut.size) { stHold(); stClear(); }
+  if (!P.go) return;
+  P.t += dt;
+  P.s += P.v * dt;
+  let off = 0;
+  P.cars.forEach(c => {
+    off += c.gap;
+    const s = P.s - off / S;
+    c.a = clamp01(P.t / 1.2) * (s < 0.2 ? clamp01(s / 0.2) : 1) * (1 - clamp01((s - (P.end - 0.35)) / 0.35));
+    c.p = s >= 0 ? mobAt(P.tr, Math.min(s, P.end), 0) : null;
+    if (c.gun && c.p && c.a > 0.5 && (c.pop -= dt) <= 0) {   // the confetti cannon
+      c.pop = rand(1.1, 1.9);
+      const n = SHOW.q >= 2 ? 26 : SHOW.q === 1 ? 16 : 9, cs = [mixRGB(ST.rgb, [255, 255, 255], 0.15), ST_WHITE, ST_GOLD, [255, 92, 205], [60, 230, 255]];
+      for (let k = 0; k < n; k++) ST.conf.push(stBit(c.p.x, STREET_Y + 3, c.p.z, pick(cs), rand(-9, 9), rand(28, 44), rand(-9, 9), rand(3.5, 5)));
+      if (chance(0.5)) stSfx('st_pop', c.p.x, c.p.z, { gap: 700, vol: 0.7 });
+    }
+  });
+  if (P.s - off / S > P.end) { ST.parade = null; stOpen(); }   // the last of it has gone by
+}
+function stParadeStreet(C, put) {
+  const P = ST.parade;
+  if (!P || !P.go) return;
+  for (const c of P.cars) {
+    if (!c.p || !(c.a > 0.02)) continue;
+    let svg = c.cop ? mobCopSVG(C, c.p, true, SHOW.t) : mobCarSVG(C, c.p, c.look);
+    if (svg && (c.float || c.glow || c.gun)) {                       // the winner's colour in neon round the top of it
+      const L = c.look, y = STREET_Y + 0.15 + L.tall, hl = L.len / 2, hw = L.wide / 2, q = [[1, 1], [1, -1], [-1, -1], [-1, 1]].map(([u, s]) => project(c.p.x + c.p.ux * hl * u - c.p.uz * hw * s, y, c.p.z + c.p.uz * hl * u + c.p.ux * hw * s, C));
+      if (q.every(Boolean)) svg += `<polygon points="${pts(q)}" fill="none" stroke="${rgbS(mixRGB(ST.rgb, [255, 255, 255], 0.3))}" stroke-width="${n1(0.5 * q[0].k)}" stroke-linejoin="round"/>`;
+    }
+    mobPut(put, C, c.p.x, STREET_Y + 1.5, c.p.z, svg, c.a);
+  }
+}
+/* the lights: the police bar, headlights, the crew cars' underglow, the float's emitter and what it throws up */
+function stParadePaint(ctx, C, pass) {
+  const P = ST.parade;
+  if (!P || !P.go) return;
+  for (const c of P.cars) {
+    if (!c.p || !(c.a > 0.02)) continue;
+    mobLamps(ctx, pass, c.p, c.look, c.a, false, false);
+    if (c.cop) mobBar(ctx, pass, c.p, c.a, SHOW.t, MOB_RED, MOB_BLUE, STREET_Y + 3.3, 0.5);
+    if (!c.cop && pass === 'ground') mobSpot(ctx, c.p.x, STREET_Y + 0.1, c.p.z, c.p.ux, c.p.uz, c.look.len * 0.8, 5, ST.rgb, 0.75 * c.a);
+    if (c.float) stFloat(ctx, C, pass, c);
+  }
+}
+/* high over the float, facing the camera: the face (or the crew) in light, framed, with the name under it */
+function stFloat(ctx, C, pass, c) {
+  const w = stWho(), rgb = ST.rgb;
+  if (!w) return;
+  const x = c.p.x, z = c.p.z, y = 66 + wobble(SHOW.t * 0.8, 3) * 2, e = SP(x, STREET_Y + 4, z), p = SP(x, y, z);
+  if (!e || !p) return;
+  if (pass === 'ground') { pool(ctx, x, STREET_Y + 0.2, z, 16, rgb, 0.5 * c.a); return; }
+  if (pass !== 'light') return;
+  const k = p.k, S2 = 34 * k, a = c.a * (0.9 + 0.1 * Math.sin(SHOW.t * 9));
+  beam(ctx, e, SP(x, y - 20, z) || p, 2.5 * e.k, 24 * k, rgb, 0.2 * a, false);
+  glow(ctx, e, 5, rgb, 0.9 * a, true);
+  glow(ctx, p, 60, rgb, 0.1 * a);
+  const x0 = p.x - S2 / 2, y0 = p.y - S2 * 0.72;
+  if (w.pic) { ctx.globalAlpha = Math.min(1, 0.85 * a); ctx.drawImage(w.pic, x0, y0, S2, S2); }
+  ctx.globalAlpha = Math.min(1, 0.9 * a); ctx.lineJoin = 'round';
+  ctx.strokeStyle = rgbS(rgb); ctx.lineWidth = 2.6 * k; ctx.globalAlpha = 0.35 * a; ctx.strokeRect(x0 - 1.5 * k, y0 - 1.5 * k, S2 + 3 * k, S2 + 3 * k);
+  ctx.strokeStyle = rgbS(mixRGB(rgb, [255, 255, 255], 0.45)); ctx.lineWidth = 0.9 * k; ctx.globalAlpha = 0.95 * a; ctx.strokeRect(x0 - 1.5 * k, y0 - 1.5 * k, S2 + 3 * k, S2 + 3 * k);
+  ctx.font = `800 ${(8 * k).toFixed(2)}px "Barlow Condensed","Arial Narrow",Impact,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = rgbS(mixRGB(rgb, [255, 255, 255], 0.35)); ctx.globalAlpha = 0.95 * a;
+  ctx.fillText(w.name.toUpperCase(), p.x, y0 + S2 + 7 * k, S2 * 1.6);
+}
+
+/* ---------- the paint: shade (smoke), ground (pools), air (confetti, money), light (flames, flashes, tracers, bursts) ---------- */
+function stPaint(ctx, C, pass) {
+  if (!ST.key) return;
+  if (pass === 'shade') { for (const b of ST.puffs) glow(ctx, SP(b.x, b.y, b.z), b.r0 + b.grow * b.age, b.c, b.a * (1 - b.age / b.life) * Math.min(1, b.age * 5), false); }
+  if (pass === 'air') stConfPaint(ctx);
+  stParadePaint(ctx, C, pass);
+  for (const r of ST.rockets) {
+    const t = ST.t - r.ign;
+    if (t < -2.4 || r.dead) continue;
+    if (pass === 'ground') {
+      if (t < 0) pool(ctx, r.x, STREET_Y + 0.2, r.z, 20, ST.rgb, 0.25 + 0.2 * Math.sin(SHOW.t * 12));
+      else pool(ctx, r.x, STREET_Y + 0.2, r.z, 55, MOB_FLAME, 0.55 * clamp01(1 - r.y / 110) * (0.85 + 0.15 * Math.random()));
+    } else if (pass === 'light' && r.on) {
+      const y = STREET_Y + r.y, n = SP(r.x, y - 5, r.z), f = 0.8 + 0.2 * Math.random(), hid = r.y < 60 && mobHid(r.x, y - 5, r.z) ? 0.25 : 1;
+      if (!n) continue;
+      glow(ctx, n, 7, [255, 250, 230], 0.95 * hid, true);
+      glow(ctx, SP(r.x, y - 11, r.z), 15 * f, MOB_FLAME, 0.7 * hid);
+      mobBeam(ctx, r.x, y - 5, r.z, r.x, y - 5 - rand(22, 34), r.z, 5, 1.2, MOB_CORE, 0.85 * hid);
+      if (r.y > 30) beam(ctx, SP(r.x, STREET_Y + 20, r.z), SP(r.x, y - 12, r.z), 2.5 * n.k, 1.2 * n.k, [255, 214, 180], 0.18 * clamp01(1.4 - t / 7), true);
+      if (r.y > 180) glow(ctx, n, 9 + r.y / 60, ST_WHITE, 0.7, true);
+    }
+  }
+  if (pass === 'ground') for (const c of ST.crew) if (c.a > 0.05) pool(ctx, c.x, STREET_Y + 0.2, c.z, 6, ST.rgb, 0.6 * c.a);   // each one stands in their colour
+  if (pass === 'light') {
+    for (const c of ST.crew) if (c.a > 0.05 && !mobHid(c.x, STREET_Y + c.h * 0.7, c.z)) glow(ctx, SP(c.x, STREET_Y + c.h * 0.7, c.z), 1.5, mixRGB(ST.rgb, [255, 255, 255], 0.35), 0.8 * c.a, true);
+    for (const c of ST.crew) if (c.flash > 0 && c.a > 0.5) { const tp = stTip(c), p = SP(tp.x, tp.y, tp.z); if (!mobHid(tp.x, tp.y, tp.z)) { glow(ctx, p, 3.6, MOB_MUZZLE, 1, true); glow(ctx, p, 12, MOB_MUZZLE, 0.3); } }
+    mobStreaks(ctx, ST.tracers, [255, 170, 90], 0.45, 1.3, 0.06);
+    mobStreaks(ctx, ST.tracers, [255, 236, 190], 1, 0.5, 0.06);
+    for (const f of ST.shells) if (f.up && !f.done) {
+      const k = clamp01(1 - (f.t - ST.t) / 1.1), e2 = 1 - (1 - k) * (1 - k), x = f.x0 + (f.x - f.x0) * e2, y = STREET_Y + (f.y - STREET_Y) * e2, z = f.z0 + (f.z - f.z0) * e2;
+      glow(ctx, SP(x, y, z), 1.4, MOB_CORE, 0.9, true);
+      mobBeam(ctx, x, y, z, x, y - 8, z, 0.5, 0.2, MOB_CORE, 0.5);
+    }
+    for (const bu of ST.bursts) {
+      const f = 1 - bu.age / bu.life, tw = bu.age > bu.life * 0.6 ? 0.55 + 0.45 * Math.random() : 1, al = Math.pow(f, 1.3) * tw, c = SP(bu.x, bu.y, bu.z);
+      if (bu.age < 0.35) glow(ctx, c, 70, bu.c1, 0.42 * (1 - bu.age / 0.35));
+      glow(ctx, c, 95, bu.c1, 0.12 * f);
+      for (let j = 0; j < 2; j++) { mobBloom(ctx, bu, j, j ? bu.c2 : bu.c1, al * 0.3, 2.4); mobBloom(ctx, bu, j, j ? ST_WHITE : bu.c1, al, 0.7); }
+      mobStreaks(ctx, bu.cr, [255, 246, 226], 0.95, 0.45, 0.035);
+    }
+  }
+}
+function stStreet(C, put) {
+  if (!ST.key) return;
+  stCrewStreet(C, put); stRocketStreet(C, put); stParadeStreet(C, put);
+}
+cast({
+  name: 'showtime',
+  depth() { return 0; },
+  step(dt, st) {
+    if (!ST.key) {
+      if (!ST.pend || stGame(st) !== ST.pend || boardAway() || lightsLive()) return;
+      stStart(st);
+      if (!ST.key) return;
+    }
+    if (stGame(st) !== ST.key) { stStop(); return; }
+    ST.t = SHOW.t - ST.t0;
+    while (ST.beats.length && ST.beats[0][0] <= ST.t) { const b = ST.beats.shift(); try { b[1](); } catch (err) { console.error('showtime:', err); } }
+    stCrewStep(dt); stRocketStep(dt); stFireStep(dt); stParadeStep(dt); stConfStep(dt);
+    if (STPIC.fresh && STPIC.game === ST.key) { STPIC.fresh = false; stFace(); }
+    // the blimp over the city carries the winner too
+    SHOW.ev.forEach(e => { if (e.kind === 'blimp' && e.ad !== ST_AD) { e.ad = ST_AD; e.swap = 1e6; } });
+  },
+  paint(ctx, C, pass) { stPaint(ctx, C, pass); },
+  street(C, put) { stStreet(C, put); },
+  reset() { if (ST.key) stStop(); },
+});
+
+/* ---------- every hologram, and the blimp: the winner ----------
+   One advert that is the winner: their face on the table screen (or their crew, anywhere else and until the
+   photo comes), framed, with their name and RUNS THE CITY. While a game is over it is on every hologram; the
+   holograms' own playlists and the concerts' takeover wait (the step round the holograms' own, below). */
+const ST_CREW = Object.create(null);
+function stCrewPic(color) {
+  if (color in ST_CREW) return ST_CREW[color];
+  ST_CREW[color] = null;
+  try {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--crew-' + color), m = /url\((["']?)(.+?)\1\)/.exec(v || '');
+    if (m) { const img = new Image(); img.onload = () => { ST_CREW[color] = stHoloPic(img, PIECE_RGB[color] || PIECE_RGB.white); }; img.src = m[2]; }
+  } catch (e) { /* no crew art: the frame and the name alone */ }
+  return null;
+}
+/* who the holograms show on this screen, and with what picture */
+function stWho() {
+  const st = G.state;
+  if (!st || st.phase !== 'over' || !st.win) return null;
+  const p = playerOf(st, st.win);
+  if (!p) return null;
+  const mine = !joinRoom && STPIC.holo && STPIC.game === stGame(st) && STPIC.pid === p.pid;
+  return { name: p.name, color: p.color, rgb: PIECE_RGB[p.color] || PIECE_RGB.white, pic: mine ? STPIC.holo : stCrewPic(p.color), face: !!mine };
+}
+const ST_AD = holoAd({
+  name: 'winner', kinds: ['showtime'], aspect: 0.8, rgb: [235, 245, 255], cw: 0.62,
+  words: [[72, 88, 36], [89, 97, 27]],
+  paint(ctx, t, W) {
+    const w = stWho();
+    if (!w) return;
+    const S2 = 64, x0 = -S2 / 2, y0 = 3;
+    if (w.pic && !holoInk.ghost) { ctx.globalAlpha = Math.min(1, holoInk.a * 0.72); ctx.drawImage(w.pic, x0, y0, S2, S2); }
+    ctx.beginPath(); ctx.rect(x0 - 2, y0 - 2, S2 + 4, S2 + 4); holoLine(ctx, w.rgb, 0.85, 1.3);
+    holoText(ctx, w.name.toUpperCase(), 0, 80, 14, w.rgb, 1, 0.3, W * 0.92);
+    holoText(ctx, 'RUNS THE CITY', 0, 93, 7.5, holoWhite, 0.9, 0.2, W * 0.9);
+  },
+});
+SHOW.ads.splice(SHOW.ads.indexOf(ST_AD), 1);                  // never on the blimp's reel between games
+(() => {
+  const h = CAST.find(a => a.name === 'holograms');
+  if (!h || !h.step) return;
+  const inner = h.step;
+  h.step = function (dt, st) {
+    const w = stWho(), on = !!w, now = SHOW.t;
+    if (w) {                                                     // the beam, the bloom and the glitch take its colour; the blimp says it
+      ST_AD.rgb = w.rgb;
+      airSlogans.showtime = [`${w.name.toUpperCase()} RUNS THE CITY`, `ALL HAIL THE NEW BOSS  ·  THE CITY IS ${w.name.toUpperCase()}'S  ·  `, w.rgb];
+    }
+    // while it is on, the playlists and the concerts see nothing to change (it.singer follows the concert on its block)
+    if (on) holoSet.items.forEach(it => { it.next = now + 1e5; it.singer = SHOW.ev.some(e => e.kind === 'concert' && e.venue === it.i && !e.dead); });
+    inner.call(this, dt, st);
+    holoSet.items.forEach(it => {
+      if (on) { if (!it.ad) it.ad = ST_AD; else if (it.ad !== ST_AD && !it.tr) holoSwap(it, ST_AD, st); }
+      else if (it.ad === ST_AD && !it.tr) { it.singer = false; holoSwap(it, holoNext(it), st); it.next = now + rand(16, 35); }
+      else if (it.next > now + 1e4) it.next = now + rand(16, 35);           // caught mid-change when the takeover ended
+    });
+  };
+})();
+
+/* ---------- a phone, as the game ends: a burst of colour ---------- */
+function stCheer(st) {
+  const w = playerOf(st, st.win);
+  if (!w || !FX.on || document.hidden) return;
+  const mine = w.pid === PID, l = fxLayer(), n = mine ? 46 : 22;
+  if (mine) buzz([30, 60, 30, 60, 90]);
+  for (let k = 0; k < n; k++) {
+    const b = document.createElement('i');
+    b.className = 'stconf';
+    b.style.cssText = `left:${rand(4, 96).toFixed(1)}%;--c:${k % 3 ? `var(--p-${w.color})` : pick(['#fff4e0', '#ffce6e', '#ff5ccd', '#3ce6ff'])};` +
+      `--dx:${rand(-40, 40).toFixed(0)}px;--r:${rand(-540, 540).toFixed(0)}deg;animation-delay:${rand(0, 0.7).toFixed(2)}s;animation-duration:${rand(2.2, 3.4).toFixed(2)}s`;
+    l.appendChild(b);
+    setTimeout(() => b.remove(), 4400);
+  }
+}
+
+/* ---------- the giant ----------
+   Once in about three games, in a round between the fourth and the ninth, something very big walks across the
+   city: in from off the tray on one side, along the streets, and out on the other, a minute or so later. Either a
+   works mech, hazard stripes and a cab for a head, or a beast like a giant axolotl, gills lit up and spots glowing
+   down its back. Nothing is hurt: it is a world event, like a chase, and the Director swoops in on it.
+   Whether it comes, when and which is dealt from the table's code, its seating order and the dice that decided it
+   (every game at a table rolls off again), so the table screen and a board view agree. Once it has walked this
+   screen remembers it for the rest of the game, reloads included (STAGE.own, like Simple view). The police
+   helicopter puts its light on it; the traffic stops for its feet.
+   Each part of it is a box in the world, drawn into the traffic's slot for its depth, so the buildings in front
+   hide it; its lights, and the dust it kicks up, are on the canvas. */
+const GIANT = { force: null };
+const stHash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; };
+function stGiantPlan(st) {
+  const rolls = st.rolls || {}, dice = Object.keys(rolls).sort().map(k => `${k}${(rolls[k] || []).join('')}`).join('');
+  const id = `${st.room}:${(st.order || []).join('')}:${dice}`, r = seeded(stHash(id));
+  return { id, yes: r() < 1 / 3, round: 4 + Math.floor(r() * 6), kind: r() < 0.5 ? 'mech' : 'beast' };
+}
+function stGiantNeed(st) {
+  if (GIANT.force) return true;
+  if (!st || st.phase !== 'turn' || SHOW.ev.some(e => e.kind === 'giant')) return false;
+  const g = stGiantPlan(st);
+  return g.yes && (st.turnNo || 1) >= g.round && !(STAGE.own && STAGE.own.giant === g.id);
+}
+function stGiantStart(st) {
+  const g = stGiantPlan(st), kind = GIANT.force || g.kind;
+  GIANT.force = null;
+  const path = stGiantPath();
+  if (!path) return null;                                         // no walk found this time: it tries again shortly
+  STAGE.own = Object.assign({}, STAGE.own, { giant: g.id }); viewSave();
+  const e = stGiantNew(kind, path);
+  e.radio = kind === 'mech' ? pick(['All units · heavy machinery walking through town · do not engage', 'Works unit off its leash · all units keep clear'])
+    : pick(['All units · large unidentified animal in the streets · keep clear', 'Something big came in off the terminals · do not approach']);
+  setTimeout(() => { if (!e.dead && sndHearsTable()) { if (!SND.q.length) vox('v_giant_radio', { stale: 5000 }); } }, 900);
+  return e;
+}
+happening('giant', { ev: true, every: [5, 9], first: [6, 12], weight: 3, max: 1, need: stGiantNeed, start: stGiantStart });
+
+/* The walk: from a junction on the coast to the one most nearly across the city from it, by the streets, with a
+   stretch off the tray at each end; smoothed into a curve, measured along its length. */
+function stGiantPath() {
+  const coast = GEO.verts.map((v, i) => i).filter(i => GEO.verts[i].edges.some(e => GEO.edges[e].hexes.length === 1));
+  if (coast.length < 2) return null;
+  let cx = 0, cz = 0; GEO.hexes.forEach(h => { cx += h.cx; cz += h.cy; }); cx /= GEO.hexes.length; cz /= GEO.hexes.length;
+  const A = pick(coast), a = GEO.verts[A], ax = a.x - cx, az = a.y - cz;
+  const B = coast.reduce((best, i) => { const v = GEO.verts[i], s = -((v.x - cx) * ax + (v.y - cz) * az) + rand(-30, 30) * 60; return s > best[1] ? [i, s] : best; }, [A, -Infinity])[0];
+  const edges = route(A, B);
+  if (!edges || edges.length < 3) return null;
+  // in from the dark at the edge of the tray: on the apron, just inside the rim, straight out from the middle through the corner
+  const out = v => { const p = GEO.verts[v], dx = p.x - cx, dz = p.y - cz, m = Math.hypot(dx, dz) || 1, r = stRim(cx, cz, dx / m, dz / m) - 22;
+    return r > m + 10 ? [cx + dx / m * r, cz + dz / m * r] : [p.x + dx / m * 10, p.y + dz / m * 10]; };
+  let ps = [out(A), [a.x, a.y]], at = A;
+  edges.forEach(e => { at = otherEnd(e, at); ps.push([GEO.verts[at].x, GEO.verts[at].y]); });
+  ps.push(out(B));
+  for (let k = 0; k < 3; k++) {                                       // corners cut into curves
+    const q = [ps[0]];
+    for (let i = 0; i + 1 < ps.length; i++) { const [x0, z0] = ps[i], [x1, z1] = ps[i + 1]; q.push([x0 * 0.75 + x1 * 0.25, z0 * 0.75 + z1 * 0.25], [x0 * 0.25 + x1 * 0.75, z0 * 0.25 + z1 * 0.75]); }
+    q.push(ps[ps.length - 1]); ps = q;
+  }
+  const L = [0];
+  for (let i = 1; i < ps.length; i++) L.push(L[i - 1] + Math.hypot(ps[i][0] - ps[i - 1][0], ps[i][1] - ps[i - 1][1]));
+  return { ps, L, len: L[L.length - 1] };
+}
+/* where a foot comes down: the street, or the apron round the city (never up on a block) */
+const stFloor = (x, z) => Math.min(STREET_Y, groundY(x, z));
+/* how far from (cx, cz) the tray's rim is, looking along (ux, uz) */
+function stRim(cx, cz, ux, uz) {
+  const R = GEO.rim;
+  let best = Infinity;
+  for (let i = 0; i < R.length; i++) {
+    const [ax, az] = R[i], [bx, bz] = R[(i + 1) % R.length], ex = bx - ax, ez = bz - az, den = ux * ez - uz * ex;
+    if (Math.abs(den) < 1e-9) continue;
+    const t = ((ax - cx) * ez - (az - cz) * ex) / den, s = ((ax - cx) * uz - (az - cz) * ux) / den;
+    if (t > 0 && s >= 0 && s <= 1) best = Math.min(best, t);
+  }
+  return best === Infinity ? airRim() : best;
+}
+/* a place on the walk, s along it: where, and which way it runs */
+function stAlong(P, s) {
+  const L = P.L, n = L.length;
+  s = Math.max(0, Math.min(P.len, s));
+  let lo = 0, hi = n - 1;
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (L[m] <= s) lo = m; else hi = m; }
+  const a = P.ps[lo], b = P.ps[hi], k = (s - L[lo]) / ((L[hi] - L[lo]) || 1), dx = b[0] - a[0], dz = b[1] - a[1], m = Math.hypot(dx, dz) || 1;
+  return { x: a[0] + dx * k, z: a[1] + dz * k, tx: dx / m, tz: dz / m };
+}
+/* ---------- solid parts, as boxes in the world ----------
+   A box is eight corners, four round one end and the same four round the other; its faces turn out from its middle,
+   the ones facing away are dropped, and the rest are lit and sorted far to near. */
+const ST_BOXF = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]];
+function stBox(C, cs, rgb, amb, out, only) {
+  const P = cs.map(q => project(q[0], q[1], q[2], C));
+  if (P.some(p => !p)) return;
+  const m = [0, 1, 2].map(j => cs.reduce((s, q) => s + q[j], 0) / 8);
+  ST_BOXF.forEach((f, fi) => {
+    if (only && !only.includes(fi)) return;
+    const a = cs[f[0]], b = cs[f[1]], c = cs[f[2]], u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+    let n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const len = Math.hypot(n[0], n[1], n[2]) || 1, fc = [0, 1, 2].map(j => f.reduce((s, i) => s + cs[i][j], 0) / 4);
+    n = n.map(x => x / len);
+    if (n[0] * (fc[0] - m[0]) + n[1] * (fc[1] - m[1]) + n[2] * (fc[2] - m[2]) < 0) n = n.map(x => -x);
+    if (!faces(C, n, fc)) return;
+    out.push({ d: f.reduce((s, i) => s + P[i].d, 0) / 4, s: `<polygon points="${pts(f.map(i => P[i]))}" fill="${Array.isArray(rgb) && Array.isArray(rgb[0]) ? lit(n, rgb[fi] || rgb[0], amb) : lit(n, rgb, amb)}"/>` });
+  });
+}
+/* a box between two points: w across (along `side`), d the other way, each end its own size */
+function stLimb(C, A, B, side, wA, dA, wB, dB, rgb, amb, out) {
+  const u = [B[0] - A[0], B[1] - A[1], B[2] - A[2]], lu = Math.hypot(u[0], u[1], u[2]) || 1;
+  u[0] /= lu; u[1] /= lu; u[2] /= lu;
+  const k = side[0] * u[0] + side[1] * u[1] + side[2] * u[2];
+  let s = [side[0] - u[0] * k, side[1] - u[1] * k, side[2] - u[2] * k];
+  const ls = Math.hypot(s[0], s[1], s[2]) || 1; s = s.map(x => x / ls);
+  const f = [u[1] * s[2] - u[2] * s[1], u[2] * s[0] - u[0] * s[2], u[0] * s[1] - u[1] * s[0]];
+  const ring = (P, w, d) => [[1, 1], [-1, 1], [-1, -1], [1, -1]].map(([a, b]) => [P[0] + s[0] * a * w / 2 + f[0] * b * d / 2, P[1] + s[1] * a * w / 2 + f[1] * b * d / 2, P[2] + s[2] * a * w / 2 + f[2] * b * d / 2]);
+  stBox(C, ring(A, wA, dA).concat(ring(B, wB, dB)), rgb, amb, out);
+}
+/* a box set square to the giant: centred at o (in its own frame: forward and left in its units, then a height in the
+   world's), sized along those in its units, turned by its heading */
+function stBlock(C, G, o, sz, rgb, amb, out, only) {
+  const cs = [], k = G.s || 1;
+  for (const up of [-1, 1]) for (const [a, b] of [[1, 1], [-1, 1], [-1, -1], [1, -1]]) {
+    const f = (o[0] + a * sz[0] / 2) * k, l = (o[1] + b * sz[1] / 2) * k, y = o[2] + up * sz[2] / 2 * k;
+    cs.push([G.x + G.tx * f - G.tz * l, y, G.z + G.tz * f + G.tx * l]);
+  }
+  stBox(C, cs, rgb, amb, out, only);
+}
+/* the part as markup, in the traffic's slot for how deep its middle is */
+function stPart(C, put, list, at, alpha) {
+  if (!list.length) return;
+  const p = project(at[0], at[1], at[2], C);
+  if (!p) return;
+  list.sort((a, b) => b.d - a.d);
+  const s = list.map(f => f.s).join('');
+  put(p.d, alpha < 0.98 ? `<g opacity="${alpha.toFixed(2)}">${s}</g>` : s);
+}
+/* where a leg's knee goes: two bones, hip to foot, bent the way `bend` points */
+function stKnee(H, F, L1, L2, bend) {
+  const dx = F[0] - H[0], dy = F[1] - H[1], dz = F[2] - H[2], d0 = Math.hypot(dx, dy, dz) || 1, d = Math.min(d0, L1 + L2 - 0.01);
+  const u = [dx / d0, dy / d0, dz / d0], a = (L1 * L1 - L2 * L2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
+  const k = bend[0] * u[0] + bend[1] * u[1] + bend[2] * u[2];
+  let b = [bend[0] - u[0] * k, bend[1] - u[1] * k, bend[2] - u[2] * k];
+  const lb = Math.hypot(b[0], b[1], b[2]) || 1; b = b.map(x => x / lb);
+  return [H[0] + u[0] * a + b[0] * h, H[1] + u[1] * a + b[1] * h, H[2] + u[2] * a + b[2] * h];
+}
+
+/* ---------- one giant, walking ---------- */
+const ST_MECH = { s: 1.15, hip: 62, l1: 34, l2: 34, stride: 36, feet: [[0, 1], [0.5, -1]], hipL: 10, footL: 6.5, yel: [196, 150, 40], dark: [38, 40, 48], steel: [92, 96, 108], glass: [34, 64, 80] };
+// a beast's foot: when in the stride, which side, how far along the walk from its middle, and the ring of its spine it hangs from
+const ST_BEAST = { s: 1.3, hip: 34, l1: 24, l2: 26, stride: 30, feet: [[0, 1, -2, 2], [0.5, -1, -2, 2], [0.5, 1, -68, 8], [0, -1, -68, 8]], footL: 16, skin: [120, 78, 104], belly: [158, 116, 134],
+  fin: [150, 84, 128], gill: [255, 92, 190], spot: [[60, 230, 255], [255, 110, 200]] };
+function stGiantNew(kind, path) {
+  const M = kind === 'mech' ? ST_MECH : ST_BEAST, T = 55, v = Math.max(9, Math.min(15, path.len / T));
+  const e = {
+    g: kind, M, path, s: 0, v, len: path.len, feet: M.feet.map(() => ({ x: 0, y: STREET_Y, z: 0, down: true, n: -1 })), dust: [], call: rand(5, 8), smoke: 0, a: 0,
+    at: null,                                                 // where it is this frame: x, z, tx, tz (the path at its middle)
+    step(dt) {
+      if (GEO !== this.geo) return false;
+      this.s += this.v * dt;
+      if (this.s > this.len) return false;
+      this.a = clamp01(this.s / 45) * clamp01((this.len - this.s) / 45);
+      this.at = stAlong(this.path, this.s);
+      const M2 = this.M, ph = this.s / (2 * M2.stride * M2.s);
+      this.ph = ph;
+      M2.feet.forEach((f, j) => {                              // each foot: planted for half a stride, then swung to the next
+        const u0 = ph + f[0], n = Math.floor(u0), u = u0 - n, lat = f[1] * M2.footL * M2.s, back = this.g === 'mech' ? 0 : f[2] * M2.s;
+        const plant = k => { const q = stAlong(this.path, (k - f[0] + 0.25) * 2 * M2.stride * M2.s + back); return [q.x - q.tz * lat, q.z + q.tx * lat]; };
+        const ft = this.feet[j], p0 = plant(n);
+        if (u < 0.5) {
+          Object.assign(ft, { x: p0[0], z: p0[1], y: stFloor(p0[0], p0[1]), down: true });
+          if (ft.n !== n) { ft.n = n; if (this.s > 20 && this.s < this.len - 20) this.fall(ft); }
+        } else {
+          const p1 = plant(n + 1), w = ease((u - 0.5) / 0.5);
+          const x = p0[0] + (p1[0] - p0[0]) * w, z = p0[1] + (p1[1] - p0[1]) * w;
+          Object.assign(ft, { x, z, y: stFloor(x, z) + Math.sin(Math.PI * (u - 0.5) / 0.5) * (this.g === 'mech' ? 11 : 8) * M2.s, down: false });
+        }
+        if (ft.down) showStand(ft.x, ft.z, this.at.tx, this.at.tz);   // the traffic stops for a foot in the road
+      });
+      for (let i = this.dust.length - 1; i >= 0; i--) {
+        const b = this.dust[i]; b.age += dt;
+        if (b.age >= b.life) { this.dust.splice(i, 1); continue; }
+        const k = Math.max(0, 1 - 1.4 * dt); b.vx *= k; b.vz *= k; b.vy = b.vy * k + 2 * dt; b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+      }
+      if (this.g === 'mech' && (this.smoke -= dt) <= 0) {        // the exhaust stacks
+        this.smoke = SHOW.q >= 2 ? 0.12 : 0.25;
+        const G2 = this.pose(), top = this.M.s * (this.M.hip + 64);
+        for (const sd of [-1, 1]) this.dust.push({ x: G2.x - G2.tx * 16 * this.M.s - G2.tz * sd * 7, y: top, z: G2.z - G2.tz * 16 * this.M.s + G2.tx * sd * 7, vx: rand(-2, 2), vy: rand(8, 12), vz: rand(-2, 2), age: 0, life: rand(1.8, 2.6), r0: 3, grow: 6, a: 0.2, c: ST_SMOKE });
+      }
+      if ((this.call -= dt) <= 0) { this.call = rand(13, 19); if (this.a > 0.5) stSfx(this.g === 'mech' ? 'giant_mech' : 'giant_beast', this.at.x, this.at.z, { gap: 4000 }); }
+      return true;
+    },
+    /* a foot comes down: dust out along the ground, the thud, the screen shakes a little if it is near */
+    fall(ft) {
+      const n = SHOW.q >= 2 ? 12 : 6;
+      for (let k = 0; k < n; k++) { const a = rand(0, 6.3), sp = rand(8, 22); this.dust.push({ x: ft.x, y: ft.y + 2, z: ft.z, vx: Math.cos(a) * sp, vy: rand(1, 5), vz: Math.sin(a) * sp, age: 0, life: rand(1.4, 2.4), r0: 3, grow: 6, a: 0.24, c: ST_WARM }); }
+      if (this.a > 0.4) {
+        stSfx('giant_step', ft.x, ft.z, { gap: 250, detune: 120, vol: this.g === 'mech' ? 0.9 : 0.7 });
+        const p = SP(ft.x, STREET_Y, ft.z), vb = SHOW.vb;
+        if (p && p.x > vb.x && p.x < vb.x + vb.w && p.y > vb.y && p.y < vb.y + vb.h) stShake(this.g === 'mech' ? 2.2 : 1.4, 260);
+      }
+    },
+    /* the body's frame this frame: heading along the walk, a bob in its step */
+    pose() {
+      const q = this.at || stAlong(this.path, this.s), M2 = this.M;
+      return { x: q.x, z: q.z, tx: q.tx, tz: q.tz, bob: (this.g === 'mech' ? 2.4 : 1.6) * M2.s * Math.cos(4 * Math.PI * (this.ph || 0)), s: M2.s };
+    },
+    street(C, put) { if (this.at && this.a > 0.01) (this.g === 'mech' ? stMechDraw : stBeastDraw)(C, put, this); },
+    paint(ctx, C, pass) {
+      if (!this.at || !(this.a > 0.01)) return;
+      if (pass === 'shade') for (const b of this.dust) glow(ctx, SP(b.x, b.y, b.z), b.r0 + b.grow * b.age, b.c, b.a * this.a * (1 - b.age / b.life) * Math.min(1, b.age * 5), false);
+      (this.g === 'mech' ? stMechLight : stBeastLight)(ctx, C, pass, this);
+    },
+    focus() { const q = this.at; return q ? { x: q.x, y: (this.g === 'mech' ? 80 : 44) * this.M.s, z: q.z, pri: 3 } : null; },
+    depth(C) { const q = this.at, p = q && project(q.x, 60, q.z, C); return p ? p.d : 0; },
+  };
+  e.geo = GEO;
+  e.at = stAlong(path, 0);
+  return e;
+}
+
+/* ---------- the mech ---------- */
+function stMechDraw(C, put, e) {
+  const G2 = e.pose(), s = G2.s, M = e.M, H = (M.hip) * s + G2.bob, parts = [];
+  const W = (f, l, y) => [G2.x + G2.tx * f * s - G2.tz * l * s, y, G2.z + G2.tz * f * s + G2.tx * l * s];
+  const side = [-G2.tz, 0, G2.tx], fwd = [G2.tx, 0, G2.tz], ph = e.ph || 0, yb = y => H + y * s;
+  const part = (fn, at) => { const out = []; fn(out); parts.push({ out, at }); };
+  // legs: hip to knee to ankle, knees forward, and a foot flat along its heading
+  e.feet.forEach((ft, j) => {
+    const hip = W(0, M.feet[j][1] * M.hipL, H), foot = [ft.x, ft.y + 4 * s, ft.z], knee = stKnee(hip, foot, M.l1 * s, M.l2 * s, fwd);
+    part(o => stLimb(C, hip, knee, side, 10 * s, 11 * s, 8.5 * s, 9.5 * s, M.yel, 0.42, o), knee);
+    part(o => { stLimb(C, knee, foot, side, 8.5 * s, 9.5 * s, 7 * s, 8 * s, M.dark, 0.45, o); stLimb(C, [knee[0], knee[1] + 2.5 * s, knee[2]], [knee[0], knee[1] - 2.5 * s, knee[2]], side, 11 * s, 12 * s, 11 * s, 12 * s, M.steel, 0.45, o); }, [(knee[0] + foot[0]) / 2, (knee[1] + foot[1]) / 2, (knee[2] + foot[2]) / 2]);
+    part(o => stBlock(C, { x: ft.x, z: ft.z, tx: G2.tx, tz: G2.tz }, [3 * s, 0, ft.y + 2.5 * s], [18 * s, 11 * s, 5 * s], M.dark, 0.45, o), [ft.x, ft.y, ft.z]);
+  });
+  // the pelvis, the chest with its stripes, the backpack and its stacks
+  part(o => stBlock(C, G2, [0, 0, yb(2)], [16, 26, 12], M.dark, 0.45, o), W(0, 0, yb(2)));
+  part(o => {
+    stBlock(C, G2, [1, 0, yb(28)], [24, 40, 44], M.yel, 0.42, o);
+    for (let k = 0; k < 7; k++) stBlock(C, G2, [13.3, -15 + k * 5, yb(20)], [0.8, 5, 7], k & 1 ? M.dark : [236, 190, 52], 0.5, o, [2, 3, 4, 5, 1]);
+    stBlock(C, G2, [-17, 0, yb(26)], [10, 28, 30], M.steel, 0.42, o);
+    for (const l of [-7, 7]) stBlock(C, G2, [-19, l, yb(49)], [4, 4, 16], M.dark, 0.45, o);
+  }, W(0, 0, yb(28)));
+  // the cab, its glass to the front
+  part(o => stBlock(C, G2, [4, 0, yb(58)], [20, 22, 14], [M.yel, M.yel, M.yel, M.yel, M.yel, M.glass], 0.42, o), W(4, 0, yb(58)));
+  // arms: shoulder to elbow to a loader's fork, swinging against the legs
+  for (const sd of [-1, 1]) {
+    const sw = 0.4 * Math.sin(2 * Math.PI * ph + (sd > 0 ? Math.PI : 0)), sh = W(0, sd * 25, yb(44)), el = W(Math.sin(sw) * 26, sd * 27, yb(44) - Math.cos(sw) * 26 * s);
+    const hd = W(Math.sin(sw) * 26 + 18, sd * 27, yb(44) - Math.cos(sw) * 26 * s - 10 * s);
+    part(o => { stBlock(C, G2, [0, sd * 25, yb(46)], [15, 11, 13], M.yel, 0.42, o); stLimb(C, sh, el, fwd, 8 * s, 8 * s, 7 * s, 7 * s, M.dark, 0.45, o); }, sh);
+    part(o => { stLimb(C, el, hd, side, 7 * s, 7 * s, 6 * s, 6 * s, M.yel, 0.42, o);
+      for (const pr of [-2.5, 2.5]) stLimb(C, [hd[0] - G2.tz * pr * s, hd[1], hd[2] + G2.tx * pr * s], [hd[0] + G2.tx * 9 * s - G2.tz * pr * s, hd[1] - 2 * s, hd[2] + G2.tz * 9 * s + G2.tx * pr * s], side, 1.6 * s, 2 * s, 1.2 * s, 1.5 * s, M.steel, 0.5, o); }, el);
+  }
+  parts.map(p => ({ p, d: (project(p.at[0], p.at[1], p.at[2], C) || { d: 0 }).d })).sort((a, b) => b.d - a.d).forEach(({ p }) => stPart(C, put, p.out, p.at, e.a));
+}
+/* its lights: the amber beacon going round on the cab, the visor, two floodlights on the shoulders sweeping the road */
+function stMechLight(ctx, C, pass, e) {
+  const G2 = e.pose(), s = G2.s, H = e.M.hip * s + G2.bob, W = (f, l, y) => [G2.x + G2.tx * f * s - G2.tz * l * s, y, G2.z + G2.tz * f * s + G2.tx * l * s], a = e.a, t = SHOW.t;
+  const sweep = Math.sin(t * 0.9) * 0.35;
+  if (pass === 'ground') {
+    for (const sd of [-1, 1]) { const f = 60 + 20 * Math.sin(t * 0.7 + sd), g = W(f, sd * 14 + sweep * 30, 0); pool(ctx, g[0], STREET_Y + 0.2, g[2], 26, [235, 240, 255], 0.3 * a); }
+    return;
+  }
+  if (pass !== 'light') return;
+  const bc = W(4, 0, H + 67 * s), rot = t * 5, bx = bc[0] + Math.cos(rot) * 30, bz = bc[2] + Math.sin(rot) * 30;
+  glow(ctx, SP(bc[0], bc[1], bc[2]), 3, [255, 170, 40], 0.95 * a, true);
+  glow(ctx, SP(bc[0], bc[1], bc[2]), 16, [255, 170, 40], (0.25 + 0.2 * Math.max(0, Math.cos(rot - Math.atan2(C.ez - bc[2], C.ex - bc[0])))) * a);
+  mobBeam(ctx, bc[0], bc[1], bc[2], bx, bc[1] - 4, bz, 2, 14, [255, 170, 40], 0.16 * a);
+  const v = W(14.6, 0, H + 58 * s);
+  for (const l of [-6, -2, 2, 6]) { const q = W(14.6, l, H + 59 * s); glow(ctx, SP(q[0], q[1], q[2]), 2.2, [150, 230, 255], 0.8 * a, true); }
+  glow(ctx, SP(v[0], v[1], v[2]), 12, [150, 230, 255], 0.2 * a);
+  for (const sd of [-1, 1]) {
+    const o = W(4, sd * 25, H + 53 * s), f = 60 + 20 * Math.sin(t * 0.7 + sd), g = W(f, sd * 14 + sweep * 30, STREET_Y);
+    glow(ctx, SP(o[0], o[1], o[2]), 2.6, [240, 245, 255], 0.95 * a, true);
+    mobBeam(ctx, o[0], o[1], o[2], g[0], g[1], g[2], 3, 22, [235, 240, 255], 0.13 * a);
+  }
+}
+
+/* ---------- the beast ----------
+   Its body follows its own walk like a train follows the track: the spine is the path behind its head, so it bends
+   round the corners of the streets; the tail sways. Four legs splayed out to the sides, feathered gills lit up at
+   the back of its head, glowing spots down its back. */
+function stBeastSpine(e) {
+  const M = e.M, s = M.s, n = 14, out = [];
+  for (let k = 0; k <= n; k++) {
+    const back = k * 11 * s, q = stAlong(e.path, e.s + 20 * s - back), u = k / n;
+    const sway = u > 0.55 ? Math.sin(SHOW.t * 2.4 - k * 0.6) * (u - 0.55) * 26 * s : 0;
+    // head, neck, body, hips, tail: [half width, half height, height of the middle]
+    const w = (k === 0 ? 17 : k === 1 ? 19 : k < 3 ? 15 : k < 8 ? 20 - Math.abs(k - 5) * 1.2 : 16 * (1 - (u - 0.5) / 0.55)) * s;
+    const h = (k === 0 ? 8 : k === 1 ? 10 : k < 3 ? 10 : k < 8 ? 13 : 11 * (1 - (u - 0.5) / 0.6)) * s;
+    const y = (M.hip + (k < 2 ? 6 : k < 8 ? 10 : 10 - (u - 0.5) * 30)) * s + (k < 8 ? (e.bob || 0) : 0);
+    out.push({ x: q.x - q.tz * sway, z: q.z + q.tx * sway, tx: q.tx, tz: q.tz, w: Math.max(0.6, w), h: Math.max(0.6, h), y: Math.max(STREET_Y + 6, y) });
+  }
+  return out;
+}
+function stBeastDraw(C, put, e) {
+  const M = e.M, s = M.s, sp = stBeastSpine(e), parts = [];
+  e.bob = 1.4 * s * Math.cos(4 * Math.PI * (e.ph || 0));
+  const ring = q => [[1, 0.55], [-1, 0.55], [-1, -0.8], [1, -0.8]].map(([a, b]) => [q.x - q.tz * a * q.w, q.y + b * q.h, q.z + q.tx * a * q.w]);
+  for (let k = 0; k + 1 < sp.length; k++) {                       // the body, a box from each ring to the next
+    const A = sp[k], B = sp[k + 1], cs = ring(A).concat(ring(B)), col = [M.skin, M.skin, M.skin, M.belly, M.skin, M.skin];
+    const out = []; stBox(C, cs, col, 0.42, out);
+    if (k > 7) {                                                  // the tail's fin, standing along its top
+      const f = [[A.x, A.y + A.h * 0.5, A.z], [B.x, B.y + B.h * 0.5, B.z], [B.x, B.y + B.h * 0.5 + 9 * s * (1 - k / sp.length), B.z], [A.x, A.y + A.h * 0.5 + 9 * s * (1 - (k - 1) / sp.length), A.z]];
+      const P = f.map(q => project(q[0], q[1], q[2], C));
+      if (P.every(Boolean)) out.push({ d: P.reduce((t, p) => t + p.d, 0) / 4 - 0.5, s: `<polygon points="${pts(P)}" fill="${rgbS(M.fin)}" opacity=".8"/>` });
+    }
+    parts.push({ out, at: [(A.x + B.x) / 2, (A.y + B.y) / 2, (A.z + B.z) / 2] });
+  }
+  // the legs, splayed: from the side of the body out and down to the foot, the knee up and out
+  e.feet.forEach((ft, j) => {
+    const f = M.feet[j], q = sp[f[3]], sd = f[1], hip = [q.x - q.tz * sd * q.w * 0.8, q.y - q.h * 0.3, q.z + q.tx * sd * q.w * 0.8];
+    const foot = [ft.x, ft.y + 2 * s, ft.z], knee = stKnee(hip, foot, M.l1 * s, M.l2 * s, [-q.tz * sd, 0.9, q.tx * sd]), side = [q.tx, 0, q.tz];
+    const out = [];
+    stLimb(C, hip, knee, side, 8 * s, 8 * s, 6 * s, 6 * s, M.skin, 0.42, out);
+    stLimb(C, knee, foot, side, 6 * s, 6 * s, 7 * s, 5 * s, M.belly, 0.42, out);
+    parts.push({ out, at: knee });
+  });
+  parts.map(p => ({ p, d: (project(p.at[0], p.at[1], p.at[2], C) || { d: 0 }).d })).sort((a, b) => b.d - a.d).forEach(({ p }) => stPart(C, put, p.out, p.at, e.a));
+  e.spine = sp;
+}
+/* its light: the gills, the spots, the eyes */
+function stBeastLight(ctx, C, pass, e) {
+  const sp = e.spine, M = e.M, s = M.s, t = SHOW.t, a = e.a;
+  if (!sp || pass !== 'light') return;
+  const hd = sp[1], nx = -hd.tz, nz = hd.tx;
+  for (const sd of [-1, 1]) {                                      // three feathered stalks a side, swaying
+    for (let g = 0; g < 3; g++) {
+      const base = [hd.x + nx * sd * hd.w * 0.9 - hd.tx * g * 3 * s, hd.y + hd.h * (0.2 + g * 0.25), hd.z + nz * sd * hd.w * 0.9 - hd.tz * g * 3 * s];
+      const wv = Math.sin(t * 2.2 + g + sd) * 0.3, L = (13 + g * 2) * s, ang = 0.5 + g * 0.35 + wv;
+      const tip = [base[0] + nx * sd * L * Math.cos(ang) - hd.tx * L * 0.5, base[1] + L * Math.sin(ang), base[2] + nz * sd * L * Math.cos(ang) - hd.tz * L * 0.5];
+      const p0 = SP(base[0], base[1], base[2]), p1 = SP(tip[0], tip[1], tip[2]);
+      if (!p0 || !p1) continue;
+      const hid = mobHid(tip[0], tip[1], tip[2]) ? 0.3 : 1;
+      ctx.globalAlpha = 0.35 * a * hid; ctx.strokeStyle = mobCss(M.gill); ctx.lineWidth = 4 * p0.k; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.stroke();
+      ctx.globalAlpha = 0.95 * a * hid; ctx.strokeStyle = mobCss([255, 190, 235]); ctx.lineWidth = 1.1 * p0.k; ctx.stroke();
+      for (let f = 1; f <= 4; f++) {                               // the feathers
+        const u = f / 5, fx = p0.x + (p1.x - p0.x) * u, fy = p0.y + (p1.y - p0.y) * u, l = 2.6 * p0.k;
+        ctx.globalAlpha = 0.7 * a * hid; ctx.lineWidth = 0.7 * p0.k; ctx.beginPath(); ctx.moveTo(fx - l, fy - l * 0.4); ctx.lineTo(fx + l, fy + l * 0.4); ctx.stroke();
+      }
+      glow(ctx, p1, 5, M.gill, 0.5 * a * hid);
+    }
+  }
+  sp.forEach((q, k) => {                                          // spots down the back, breathing
+    if (k < 2 || k > 12) return;
+    for (const sd of [-0.45, 0.45]) {
+      const x = q.x - q.tz * sd * q.w, y = q.y + q.h * 0.62, z = q.z + q.tx * sd * q.w, pulse = 0.55 + 0.45 * Math.sin(t * 1.8 - k * 0.7 + sd * 3);
+      glow(ctx, SP(x, y, z), 1.6 * s, M.spot[k & 1], 0.9 * a * pulse * (mobHid(x, y, z) ? 0.25 : 1), true);
+    }
+  });
+  const f0 = sp[0];
+  for (const sd of [-1, 1]) {
+    const x = f0.x + f0.tx * 5 * s - f0.tz * sd * f0.w * 0.6, y = f0.y + f0.h * 0.5, z = f0.z + f0.tz * 5 * s + f0.tx * sd * f0.w * 0.6;
+    glow(ctx, SP(x, y, z), 1.5 * s, [210, 250, 255], 0.95 * a, true);
+  }
+}
+/* ---------- end of Showtime ---------- */
 /* =====================================================================
    Showmanship: the dice machine, and cards that fly.
 
