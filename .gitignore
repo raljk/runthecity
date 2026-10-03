@@ -1,6 +1,9 @@
 # Publish the game, landing-page artwork, sound packs and sound scripts. Everything else stays local (notes, raw art, the API key file).
 /*
 !/index.html
+!/giphy.js
+!/giphy-config.js
+!/GIPHY.md
 !/sound-fx.bin
 !/sound-table.bin
 # the scripts that make the sound, but not the audio they make or the audition pages
@@ -32,6 +35,7 @@
 !/art/talk/
 # the game loads the WebP copies; the PNG masters stay on the machine that made them (dev/webp/convert.py)
 /art/talk/*.png
+!/art/talk/powered-by-giphy.png
 # the winner's poster painting (release 6): loaded by their phone when it makes the poster
 !/art/show/
 # the coach's lines (onboarding): fetched only by a phone being coached

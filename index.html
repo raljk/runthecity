@@ -1445,7 +1445,6 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
   .clk .cr1,.bigcount .bcr .cr1{transition:none}
 }
 /* ---------- trash talk (release 3): stickers from the seats, whispers, splats ---------- */
-@font-face{font-family:'RTC Marker';src:url(art/talk/permanent-marker.ttf) format('truetype');font-weight:400;font-style:normal;font-display:swap}
 #talk{position:fixed;inset:0;pointer-events:none;z-index:38;overflow:hidden;contain:layout style}
 .ttstk{position:fixed;left:0;top:0;background:center/contain no-repeat;filter:drop-shadow(0 6px 12px rgba(0,0,0,.55));will-change:transform,opacity;pointer-events:none}
 #talk .ttstk{position:absolute}
@@ -1458,19 +1457,9 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 .tt-playing .tt-frame:first-child{animation:tt-frame-out calc(var(--tt-land,480ms) + 320ms) step-end var(--tt-age,0ms) both}
 .tt-playing .tt-frame:nth-child(2){animation:tt-frame-out 420ms step-end calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 320ms) forwards}
 .tt-playing .tt-frame:nth-child(3){animation:tt-frame-in 1ms step-end calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 740ms) forwards}
-.tt-playing.tt-banter{animation:tt-react 1100ms ease-in-out calc(var(--tt-age,0ms) + var(--tt-land,480ms)) both}
-.tt-echo{z-index:-1;animation:tt-dash-echo 320ms linear 60ms both}
-.tt-playing.tt-banter::before{content:"";position:absolute;z-index:-2;inset:-4%;background:repeating-conic-gradient(from 8deg,transparent 0deg 19deg,var(--tt-ink) 20deg 23deg,transparent 24deg 39deg);mask-image:radial-gradient(closest-side,transparent 50%,#000 58%,transparent 97%);animation:tt-hit 340ms linear calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 320ms) both}
-@keyframes tt-react{0%,100%{transform:scale(1) rotate(0deg)}15%{transform:scale(.92,1.04) rotate(-4deg)}29%{transform:scale(1.12,.94) rotate(3deg)}67%{transform:scale(.98,1.02) rotate(-2deg)}}
-@keyframes tt-dash-echo{0%{opacity:0;transform:translate(-75%,-46%) scale(1.05,.92)}30%{opacity:.3}100%{opacity:0;transform:translate(-48%,-50%) scale(1.1,1)}}
-@keyframes tt-hit{0%{opacity:0;transform:scale(.7)}15%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(1.16)}}
-.tt-hype{--tt-ink:#e5fb35}.tt-bluff{--tt-ink:#64e8f3}.tt-wind{--tt-ink:#ff77b6}
-.tt-tag{position:absolute;z-index:1;left:50%;bottom:-7%;transform:translateX(-50%) rotate(-7deg);max-width:150%;padding:2px 3px 5px;color:var(--tt-ink,#e5fb35);white-space:nowrap;font:400 var(--tt-letter,24px)/1.15 'RTC Marker','Barlow Condensed',Impact,sans-serif;letter-spacing:-.045em;text-transform:uppercase;-webkit-text-stroke:5px #06121b;paint-order:stroke fill;text-shadow:2px 4px 0 #06121b}
-.tt-playing .tt-tag{animation:tt-banter-in 220ms cubic-bezier(.2,.9,.3,1.2) calc(var(--tt-age,0ms) + var(--tt-land,480ms) + 80ms) both}
-@keyframes tt-banter-in{from{opacity:0;transform:translateX(-50%) rotate(-12deg) scale(.55)}to{opacity:1;transform:translateX(-50%) rotate(-5deg) scale(1)}}
 @keyframes tt-frame-out{from{opacity:1}to{opacity:0}}
 @keyframes tt-frame-in{from{opacity:0}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){.tt-playing.tt-banter{animation:none!important}.tt-art .tt-frame{animation:none!important;opacity:0!important}.tt-art .tt-frame:nth-child(3){opacity:1!important}.tt-tag{animation:none!important}.tt-echo,.tt-playing.tt-banter::before{display:none!important}}
+@media(prefers-reduced-motion:reduce){.tt-art .tt-frame{animation:none!important;opacity:0!important}.tt-art .tt-frame:nth-child(3){opacity:1!important}}
 /* the words the announcer caught: quiet, the sender's colour down the side */
 .ttsay{position:absolute;display:grid;justify-items:center;gap:2px;padding:10px 20px 12px;background:rgba(6,18,27,.94);border:1px solid rgba(178,232,255,.24);
   border-left:3px solid var(--pc);color:#eaf6ff;text-align:center;box-shadow:0 12px 34px rgba(0,0,0,.55);white-space:nowrap}
@@ -1505,15 +1494,42 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 #p-hud .hudwho .wspchip{align-self:flex-start;max-width:100%;padding:3px 10px 3px 5px;font-size:.84rem}
 /* the sheet */
 .m-talk .sh-body{display:grid;gap:12px;padding-bottom:22px}
+/* Live reactions. The picker owns its DOM so game updates never reset a search. */
+.gif-picker{min-width:0;display:grid;gap:12px}
+.gif-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gif-head h3{margin:0;font:800 24px/1 'Barlow Condensed',system-ui,sans-serif;text-transform:uppercase;letter-spacing:.025em}
+.gif-brand{display:block;width:116px;height:auto;flex:none}
+.gif-search{display:flex;gap:6px;min-width:0}
+.gif-search input{min-width:0;width:100%;flex:1;border:1px solid #49606b;background:#07151e;color:#f2f7f7;padding:11px 10px;font:400 16px/1.3 system-ui,sans-serif;border-radius:0}
+.gif-search button,.gif-more,.gif-retry{appearance:none;border:1px solid #dcf536;background:#dcf536;color:#101a16;padding:10px 13px;font:700 15px/1.2 'Barlow Condensed',system-ui,sans-serif;text-transform:uppercase;cursor:pointer;min-height:44px}
+.gif-queries{display:flex;flex-wrap:wrap;gap:6px}
+.gif-queries button{appearance:none;min-height:36px;padding:7px 10px;border:1px solid #3b535f;background:#0b1d28;color:#d8e6eb;font:600 14px/1.2 'Barlow Condensed',system-ui,sans-serif;cursor:pointer}
+.gif-queries button[aria-pressed=true]{background:#233824;border-color:#dcf536;color:#e7ff6c}
+.gif-context,.gif-status{margin:0;color:#a8bdc6;font:400 13px/1.4 system-ui,sans-serif}
+.gif-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:start}
+.gif-tile{appearance:none;position:relative;display:block;width:100%;padding:0;border:1px solid #34505d;background:#060f16;color:#dce9ed;cursor:pointer;overflow:hidden;touch-action:manipulation}
+.gif-tile img{display:block;width:100%;height:132px;object-fit:contain}
+.gif-tile:focus-visible,.gif-picker button:focus-visible{outline:3px solid #dcf536;outline-offset:2px}
+.gif-tile:hover,.gif-tile:active{border-color:#dcf536}
+.gif-tile:disabled{opacity:.5;cursor:default}
+.gif-tile span{display:block;padding:6px 8px;min-height:26px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 11px/1.3 system-ui,sans-serif;text-align:left}
+.gif-more{justify-self:center;width:100%;background:transparent;color:#dcf536;border-color:#425349}
+.gif-picker button:disabled{cursor:default;opacity:.5}
+.gif-picker [hidden]{display:none!important}
+.gif-error{display:grid;justify-items:start;gap:10px;padding:16px;border:1px solid #3b535f;background:#0a1720}
+.gif-error p{margin:0;font-size:14px;line-height:1.4;color:#c0cfd5}
+.gif-skeleton{height:154px;border:1px solid #243d49;background:linear-gradient(135deg,#112936,#0a1823)}
+.ttgif{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:0;padding:4px;background:#07131eee;border:1px solid #6d939f;box-shadow:0 7px 24px #0008;overflow:hidden}
+.ttgif>img{display:block;width:100%;height:100%;min-height:0;object-fit:contain;background:#03090e}
+.ttgif.gif-loading::before{content:'Loading GIF…';position:absolute;left:8px;right:8px;top:35%;text-align:center;color:#a8bdc6;font:12px/1.4 system-ui,sans-serif}
+.ttgif footer{display:grid;justify-items:center;gap:2px;padding:4px 2px 1px;min-width:0}
+.ttgif footer b{color:#eaf6ff;font:600 12px/1.25 'Barlow Condensed',system-ui,sans-serif;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttgif footer img{display:block;width:100px;height:auto;max-width:100%}
+.gif-missing{display:grid;place-items:center;text-align:center;color:#a8bdc6;font-size:12px;padding:10px}
+@media(min-width:600px){.gif-tile img{height:164px}}
 .ttlab{margin:0;font-size:.8rem;color:var(--muted);text-align:center}
-.ttintent{display:flex;gap:5px}
-.ttintent button{flex:1;min-width:0;padding:9px 3px;border:1px solid rgba(151,204,218,.22);background:transparent;color:#96aeb8;font:600 12px/1.2 'Barlow Condensed',system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
-.ttintent button[aria-pressed=true]{border-color:var(--tt-ink,#e5fb35);background:var(--tt-ink,#e5fb35);color:#07131c}
-.ttb[data-p=temo]>span:last-child{color:var(--tt-ink,#eaf6ff);font:400 clamp(12px,3.5vw,16px)/1.25 'RTC Marker','Barlow Condensed',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.035em;overflow-wrap:anywhere}
-.ttintent button,.ttb{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.ttsug,.ttgrid,.ttsplats{display:grid;gap:8px}
-.ttsug{grid-template-columns:repeat(3,1fr)}
-.ttgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ttb{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.ttsplats{display:grid;gap:10px}
 .ttsplats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .ttb{appearance:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-width:0;padding:8px 2px 7px;border:1px solid var(--line);border-radius:12px;
   background:rgba(255,255,255,.03);color:var(--ink);font:inherit;font-size:.72rem;line-height:1.15;text-align:center;cursor:pointer}
@@ -2278,6 +2294,8 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="giphy-config.js"></script>
+<script src="giphy.js"></script>
 <script>
 (() => {
 'use strict';
@@ -14526,10 +14544,21 @@ function modalSync(sh) {
   const sheet = el.querySelector('.sheet'), view0 = MODAL.view, hero0 = MODAL.heroK;
   // the control that has focus now, so a rebuilt part can hand it straight back
   const fa = document.activeElement, fkey = fa && sheet.contains(fa) && fa.dataset && fa.dataset.p ? `[data-p="${fa.dataset.p}"]${fa.dataset.arg ? `[data-arg="${fa.dataset.arg}"]` : ''}` : null;
-  const part = (sel, html) => { const p = sheet.querySelector(sel); if (p.__h === html) return false; p.__h = html; p.innerHTML = html; return true; };
+  const part = (sel, html) => {
+    const p = sheet.querySelector(sel); if (p.__h === html) return false;
+    // Keep the live GIF picker (and its search focus) when a turn updates the whisper/splat controls.
+    const picker = sh.kind === 'talk' && sel === '.sh-body' && p.querySelector('[data-gif-picker]');
+    const focused = picker && picker.contains(document.activeElement) ? document.activeElement : null;
+    const selection = focused && focused.tagName === 'INPUT' ? [focused.selectionStart, focused.selectionEnd] : null;
+    p.__h = html; p.innerHTML = html;
+    if (picker) { const slot = p.querySelector('[data-gif-picker]'); if (slot) slot.replaceWith(picker); }
+    if (focused && focused.isConnected) { focused.focus(how); if (selection) focused.setSelectionRange(...selection); }
+    return true;
+  };
   part('.sh-top', sh.top || '');
   const heroNew = part('.sh-hero', sh.hero || ''), bodyNew = part('.sh-body', sh.body || '');
   part('.sh-foot', sh.foot || '');
+  if (sh.kind === 'talk') talkGifSync();
   if (!fresh && sh.view !== view0) MODAL.at = performance.now();   // a new view under the finger: the second tap of a double tap is not for it
   if (!fresh && FX.on && sh.view !== view0) {                  // the market's list and a card from it slide past each other
     ['.sh-hero', '.sh-body'].forEach(s => { const p = sheet.querySelector(s); p.classList.remove('fwd', 'bwd'); void p.offsetWidth; p.classList.add(sh.view === 'list' ? 'bwd' : 'fwd'); });
@@ -14569,6 +14598,7 @@ function sheetEnter(el) {
    straight on underneath it while it plays its exit. */
 function sheetLeave(el) {
   const out = $('#p-modal-out'), exit = MODAL.exit || 'close', kind = el.dataset.kind;
+  if (kind === 'talk') talkGifClose();
   MODAL.exit = '';
   el.inert = true; el.classList.remove('enter');
   if (!out || !FX.on || document.hidden) { el.remove(); return; }
@@ -14887,7 +14917,7 @@ function renderPlayer() {
   if (st) useGeo(st.board);
   stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); quietly(modeObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st); quietly(stObserve, st);
   if (!$('#p-main')) {
-    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: stickers, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
+    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: GIFs, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
       <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-wsp" role="status"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
     document.body.classList.add('pview');
   }
@@ -15046,11 +15076,11 @@ async function bootPlayer() {
    Trash talk (release 3, from the play-test of 2026-09-25)
 
    Nothing here is a move. A phone puts what its player wants to say on the
-   table's side channel (/talk); the table checks it (a seated player, a sticker
-   or phrase it knows, not too often), notes it in the game record and passes
+   table's side channel (/talk); the table checks it (a seated player, validated GIF media
+   or a phrase it knows, not too often), notes it in the game record and passes
    it on to every screen (/said), where each screen shows its own part:
-   - a sticker: flies out of the sender's seat on the table screen and the
-     board view, with its sound bite;
+   - a GIF: flies out of the sender's seat on the table screen and the
+     board view, with the player’s name;
    - a whisper: one line of street banter from a fixed menu (nine situations,
      five lines each), to one player. An envelope crosses the table from seat
      to seat and only that player's phone shows the words. Now and then the
@@ -15063,10 +15093,6 @@ async function bootPlayer() {
    see it. What the announcer says about it the table decides once (m.v), so
    the table screen and a board view say the same thing.
    ===================================================================== */
-const TT_EMO = { cheer: 'Big W', boo: 'Cap', lol: "I'm dead", clap: 'Aura +', crickets: 'Touch grass', rain: 'Money talks', fire: "Let ’em cook", sweat: 'Cooked', cry: 'Skill issue', micdrop: 'Too easy' };
-// Sticker lines are quick public banter. Stable reaction IDs retain their existing relay and sound cues.
-const TT_TONES = { all:'All', hype:'Gas up', bluff:'Bluff', wind:'Wind up' };
-const TT_TONE = { cheer:'hype', fire:'hype', clap:'hype', boo:'bluff', rain:'bluff', micdrop:'bluff', lol:'wind', sweat:'wind', crickets:'wind', cry:'wind' };
 /* The whispers: quick street banter (deals, bluffing, winding each other up), five lines in each of nine situations.
    A line's key is its name on the relay, in the game record and in the announcer's voice pack (v_w_<key>).
    TT_ANSWER is where a whisper back most likely comes from: "You in?" gets "Bet.", "My block." gets "All talk." */
@@ -15085,45 +15111,34 @@ const TT_SAY = {}, TT_SIT = {};           // every line's words, and the situati
 Object.keys(TT_SITS).forEach(s => Object.keys(TT_SITS[s][1]).forEach(k => { TT_SAY[k] = TT_SITS[s][1][k]; TT_SIT[k] = s; }));
 const TT_ANSWER = { deal: 'agree', agree: 'agree', decline: 'deal', turf: 'bluff', bluff: 'trash', props: 'props', trash: 'revenge', revenge: 'bluff', hurry: 'agree' };
 const TT_SPLAT = { tag: 'Spray paint', smoke: 'Smoke bomb', glitter: 'Glitter bomb', pigeon: 'Pigeon' };
-const TT_ART = {
-  cheer:['graffiti-reactions-a',0], boo:['graffiti-reactions-a',1], lol:['graffiti-reactions-a',2], clap:['graffiti-reactions-a',3], crickets:['graffiti-reactions-a',4],
-  rain:['graffiti-reactions-b',0], fire:['graffiti-reactions-b',1], sweat:['graffiti-reactions-b',2], cry:['graffiti-reactions-b',3], micdrop:['graffiti-reactions-b',4],
-  tag:['graffiti-splats',0], smoke:['graffiti-splats',1], glitter:['graffiti-splats',2], pigeon:['graffiti-splats',3]
-};
-/* The generated sheets have slightly uneven gutters. Explicit per-column crop bounds keep adjacent poses out. */
-const TT_ATLASES = {
-  'graffiti-reactions-a': { w:971, h:1619, cuts:[[0,333,632,967,1216,1619],[0,333,638,933,1242,1619],[0,342,642,935,1245,1619]] },
-  'graffiti-reactions-b': { w:971, h:1619, cuts:[[0,329,639,941,1253,1619],[0,328,638,948,1238,1619],[0,326,645,941,1253,1619]] },
-  'graffiti-splats': { w:1086, h:1448, cuts:[[0,365,730,1067,1448],[0,383,720,1045,1448],[0,386,728,1056,1448]] }
-};
+const TT_ART = { tag:['graffiti-splats',0], smoke:['graffiti-splats',1], glitter:['graffiti-splats',2], pigeon:['graffiti-splats',3] };
+/* The remaining splats use three illustrated poses; public reactions come from GIPHY. */
+const TT_ATLASES = { 'graffiti-splats': { w:1086, h:1448, cuts:[[0,365,730,1067,1448],[0,383,720,1045,1448],[0,386,728,1056,1448]] } };
 // Retain decoded images so the first reaction has no fetch or image-decode work on the tap path.
 const TT_IMAGES = [], TT_ART_HTML = Object.create(null);
 let ttWarmPromise = null;
 function ttWarm() {
   if (ttWarmPromise || typeof Image === 'undefined') return ttWarmPromise;
-  if (document.fonts) document.fonts.load('18px "RTC Marker"').catch(() => {});
   ttWarmPromise = Promise.all(Object.keys(TT_ATLASES).map(name => {
-    const img = new Image(); img.decoding = 'async'; img.fetchPriority = name.includes('reactions') ? 'high' : 'low';
+    const img = new Image(); img.decoding = 'async'; img.fetchPriority = 'low';
     TT_IMAGES.push(img); img.src = `art/talk/${name}.webp`;
     return typeof img.decode === 'function' ? img.decode().then(() => true, () => false) : Promise.resolve(true);
   }));
   return ttWarmPromise;
 }
-function ttArtHTML(k, play = false, words = false) {
+function ttArtHTML(k, play = false) {
   const art = Object.prototype.hasOwnProperty.call(TT_ART, k) && TT_ART[k];
   if (!art) return `<span class="tt-art" style="background:var(--stk-whisper) center/contain no-repeat" aria-hidden="true"></span>`;
-  const cacheKey = `${k}:${play}:${words}`;
+  const cacheKey = `${k}:${play}`;
   if (TT_ART_HTML[cacheKey]) return TT_ART_HTML[cacheKey];
-  const [file, row] = art, atlas = TT_ATLASES[file], banter = !!(words && TT_EMO[k]);
+  const [file, row] = art, atlas = TT_ATLASES[file];
   const cells = [0,1,2].map(col => {
       const x = Math.round(col * atlas.w / 3), y = atlas.cuts[col][row];
       const w = Math.round((col + 1) * atlas.w / 3) - x, h = atlas.cuts[col][row + 1] - y, side = Math.max(w, h);
       return `--tt-width:${96 * w / side}%;--tt-height:${96 * h / side}%;--tt-size:${100 * atlas.w / w}% ${100 * atlas.h / h}%;--tt-position:${100 * x / (atlas.w - w)}% ${100 * y / (atlas.h - h)}%`;
     });
-  return TT_ART_HTML[cacheKey] = `<span class="tt-art${play ? ' tt-playing' : ''}${banter ? ' tt-banter' : ''}${TT_TONE[k] ? ' tt-' + TT_TONE[k] : ''}" aria-hidden="true" style="--tt-atlas:url(art/talk/${file}.webp)">` +
-    cells.map(style => `<span class="tt-frame" style="${style}"></span>`).join('') +
-    (play && banter ? `<span class="tt-echo" style="${cells[0]}"></span>` : '') +
-    (banter ? `<span class="tt-tag">${esc(TT_EMO[k])}</span>` : '') + '</span>';
+  return TT_ART_HTML[cacheKey] = `<span class="tt-art${play ? ' tt-playing' : ''}" aria-hidden="true" style="--tt-atlas:url(art/talk/${file}.webp)">` +
+    cells.map(style => `<span class="tt-frame" style="${style}"></span>`).join('') + '</span>';
 }
 const ttHas = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
 const ttWord = k => (ttHas(TT_SAY, k) ? TT_SAY[k] : '');
@@ -15155,8 +15170,10 @@ function talkIn(a, now = Date.now()) {
   const p = playerOf(st, a.pid); if (!p) return null;
   const k = a.k, e = a.e, h = TTH.by[p.pid] || (TTH.by[p.pid] = { emo: [], wsp: -1e9 });
   const m = { id: `${TTH.boot}${++TTH.n}`, k, p: p.pid, e };
-  if (k === 'emo') {
-    if (!ttHas(TT_EMO, e)) return null;
+  if (k === 'gif') {
+    if (!window.RTCGiphy || !window.RTCGiphy.validate(a.gif) || e !== a.gif.id || a.to !== undefined) return null;
+    const { id, title, url, still, width, height, rating } = a.gif;
+    m.gif = { id, title, url, still, width, height, rating };
     h.emo = h.emo.filter(t => now - t < TT.emoWin);
     if (h.emo.length >= TT.emoBurst || (h.emo.length && now - h.emo[h.emo.length - 1] < TT.emoGap)) return null;
     h.emo.push(now);
@@ -15203,7 +15220,7 @@ function talkOk(m) {
   if (!st || !m || typeof m !== 'object' || typeof m.id !== 'string' || m.id.length > 24 || !playerOf(st, m.p)) return false;
   if (m.v !== undefined && !(Array.isArray(m.v) && m.v.length <= 4 && m.v.every(n => typeof n === 'string' && TT_VOX.test(n)))) return false;
   if (m.x !== undefined && !(m.x === 1 && m.k === 'wsp')) return false;
-  if (m.k === 'emo') return ttHas(TT_EMO, m.e) && m.to === undefined;
+  if (m.k === 'gif') return !!window.RTCGiphy && window.RTCGiphy.validate(m.gif) && m.e === m.gif.id && m.to === undefined;
   if (m.k === 'wsp') return !!ttWord(m.e) && typeof m.to === 'string' && !!playerOf(st, m.to) && m.to !== m.p;
   if (m.k === 'splat') return ttHas(TT_SPLAT, m.e) && typeof m.to === 'string' && m.to === activePid(st) && m.to !== m.p && st.phase === 'turn';
   if (m.k === 'pic') return st.phase === 'over' && m.p === st.win && (m.ok === 0 || m.ok === 1) && typeof m.c === 'string' && /^[a-z0-9]{6,12}$/.test(m.c) &&
@@ -15241,8 +15258,7 @@ function seatAt(pid) {
 }
 const ttMid = () => { const b = (document.getElementById('h-board') || document.body).getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; };
 function ttSticker(k, s) {
-  const d = document.createElement('div'); d.className = 'ttstk'; d.innerHTML = ttArtHTML(k, FX.on, true);
-  d.style.setProperty('--tt-letter', Math.round(s * .12) + 'px');
+  const d = document.createElement('div'); d.className = 'ttstk'; d.innerHTML = ttArtHTML(k, FX.on);
   d.style.width = d.style.height = s + 'px'; const l = ttLayer(); l.appendChild(d);
   const all = l.querySelectorAll('.ttstk'); if (all.length > 8) all[0].remove();     // a flurry: the oldest gives way
   return d;
@@ -15255,27 +15271,25 @@ function talkShow(m) {
   const from = playerOf(st, m.p), to = m.to ? playerOf(st, m.to) : null;
   talkSay(m);
   // Schedule against the audio clock while the art travels, so the cue starts on landing.
-  if (m.k === 'emo') sfx('e_' + m.e, { gap: 0, at: FX.on ? 480 : 0, detune: (Math.random() - 0.5) * 80 });
-  else if (m.k === 'wsp') sfx('whisper', { vol: 0.7 });
+  if (m.k === 'wsp') sfx('whisper', { vol: 0.7 });
   else if (m.k === 'splat') sfx('s_' + m.e, { at: FX.on ? 600 : 0 });
   if (document.hidden) return;
   const s = ttSize(), a = ttFit(seatAt(m.p), s), c = ttMid(), anim = FX.on;
   const at = (d, p, sz) => { d.style.left = (p.x - sz / 2) + 'px'; d.style.top = (p.y - sz / 2) + 'px'; };
-  if (m.k === 'emo') {
-    const d = ttSticker(m.e, s); at(d, a, s);
-    // Land at 480ms, then let the three poses and banter play at the destination.
-    let dx = c.x - a.x, dy = c.y - a.y; const len = Math.hypot(dx, dy) || 1, go = Math.min(len * 0.45, s * 2.6); dx = dx / len * go; dy = dy / len * go;
-    const r = (Math.random() - 0.5) * 12;
-    if (!anim) { ttGo(d, [{ opacity: 1 }, { opacity: 1, offset: 2000 / 2200 }, { opacity: 0 }], { duration: 2200 }); return; }
-    // Keep travel separate from the post-landing reaction, then fade the final pose and caption together.
-    ttGo(d, [
-      { transform: `translate(0,0) scale(.55) rotate(${r - 12}deg)`, opacity: .35 },
-      { transform: `translate(${-dx * .025}px,${-dy * .025}px) scale(.62) rotate(${r - 9}deg)`, opacity: 1, offset: 80 / 2200 },
-      { transform: `translate(${dx}px,${dy - 14}px) scale(1.06,.98) rotate(${r + 2}deg)`, opacity: 1, offset: 360 / 2200 },
-      { transform: `translate(${dx}px,${dy - 14}px) scale(1) rotate(${r}deg)`, opacity: 1, offset: 480 / 2200 },
-      { transform: `translate(${dx}px,${dy - 14}px) scale(1) rotate(${r}deg)`, opacity: 1, offset: 2000 / 2200 },
-      { transform: `translate(${dx}px,${dy - 38}px) scale(.94) rotate(${r + 3}deg)`, opacity: 0 },
-    ], { duration: 2200, easing: 'linear' });
+  if (m.k === 'gif') {
+    const d = talkGifCard(m.gif, s, from && from.name); if (!d) return;
+    at(d, a, s); ttLayer().appendChild(d);
+    const all = ttLayer().querySelectorAll('.ttgif'); if (all.length > 4) all[0].remove();
+    let dx = c.x - a.x, dy = c.y - a.y;
+    const len = Math.hypot(dx, dy) || 1, go = Math.min(len * .35, s * 1.5);
+    const dest = ttFit({ x:a.x + dx / len * go, y:a.y + dy / len * go }, s);
+    dx = dest.x - a.x; dy = dest.y - a.y;
+    talkGifPlay(d, anim ? [
+      { transform:'scale(.7)', opacity:0 },
+      { transform:`translate(${dx}px,${dy}px) scale(1)`, opacity:1, offset:.1 },
+      { transform:`translate(${dx}px,${dy}px) scale(1)`, opacity:1, offset:.92 },
+      { transform:`translate(${dx}px,${dy - 12}px) scale(.96)`, opacity:0 }
+    ] : [{ opacity:0 }, { opacity:1, offset:.06 }, { opacity:1, offset:.94 }, { opacity:0 }], { duration:4400, easing:'ease-out' });
     return;
   }
   const target = to ? seatAt(to.pid) : c, env = m.k === 'wsp';
@@ -15327,40 +15341,37 @@ function talkShow(m) {
 /* ---------- a phone: the Trash talk sheet, a whisper, a splat ---------- */
 /* this phone's side: what it has sent (so its own buttons know the limits), whispers and splats that landed on it,
    the moment the stickers are suggested for, and the /said ids it has seen (the relay may say one twice) */
-const TTP = { ids: [], emo: [], wspAt: -1e9, used: '', lastOn: {}, wsp: null, splat: null, reply: null, to: null, tone: 'all', moment: null, prev: null, sit: '', heard: null, timer: 0 };
+const TTP = { ids: [], emo: [], wspAt: -1e9, used: '', lastOn: {}, wsp: null, splat: null, reply: null, to: null, moment: null, prev: null, sit: '', heard: null, timer: 0 };
 const TALKICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v10H11l-4.5 3.8V15.5H4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></svg>';
 /* sent from here: the phone keeps the table's limits so its buttons say no before the table would */
 function talkNo(k, now = Date.now()) {
-  if (k === 'emo') { const e = TTP.emo.filter(t => now - t < TT.emoWin); return e.length >= TT.emoBurst ? 'Easy: a few seconds' : e.length && now - e[e.length - 1] < TT.emoGap ? 'wait' : ''; }
+  if (k === 'gif') { const e = TTP.emo.filter(t => now - t < TT.emoWin); return e.length >= TT.emoBurst ? 'Easy: a few seconds' : e.length && now - e[e.length - 1] < TT.emoGap ? 'wait' : ''; }
   if (k === 'wsp') return now - TTP.wspAt < TT.wspGap ? 'wait' : '';
   return '';
 }
 let talkPost = msg => send(G.client, P.base + '/talk', JSON.stringify(msg), false);     // (a lab loops it back)
 function talkSend(body) {
   const st = G.state, me = st && playerOf(st, PID), now = Date.now(); if (!me) return false;
+  if (body.k === 'gif' && (!window.RTCGiphy || !window.RTCGiphy.validate(body.gif) || body.e !== body.gif.id)) return false;
+  if (!['gif', 'wsp', 'splat'].includes(body.k)) return false;
   if (body.k === 'splat' ? splatNo(st, me, TTP.used, TTP.lastOn[activePid(st)], now) : talkNo(body.k, now)) return false;
   if (body.k === 'splat') body = Object.assign({ to: activePid(st) }, body);
   if (!talkPost(Object.assign({ pid: PID }, body))) { toast('Not connected. Trying again in a moment.'); return false; }
-  if (body.k === 'emo') { TTP.emo = TTP.emo.filter(t => now - t < TT.emoWin); TTP.emo.push(now); }
+  if (body.k === 'gif') { TTP.emo = TTP.emo.filter(t => now - t < TT.emoWin); TTP.emo.push(now); }
   else if (body.k === 'wsp') TTP.wspAt = now;
   else if (body.k === 'splat') TTP.used = ttTurn(st);
   return true;
 }
 /* one of yours, sent: it pops out of the button you opened the sheet with */
-function talkPop(k) {
+function talkPop(gif) {
   if (document.hidden) return;
   const b = document.querySelector(ui.full ? '#p-hud .talkbtn' : '.pbar .talkbtn'), r = b && b.getBoundingClientRect(); if (!r || !r.width) return;
-  const s = Math.round(Math.min(136, innerWidth * .34, innerHeight * .25)), d = document.createElement('div');
-  d.className = 'ttstk'; d.innerHTML = ttArtHTML(k, FX.on, true); d.style.width = d.style.height = s + 'px'; d.style.setProperty('--tt-letter', Math.round(s * .12) + 'px');
-  d.style.setProperty('--tt-land', '320ms');
+  const s = Math.round(Math.min(170, innerWidth * .46, innerHeight * .28)), d = talkGifCard(gif, s, 'You'); if (!d) return;
   const pos = ttFit({ x:r.left + r.width / 2, y:r.bottom + s / 2 + 8 }, s);
   d.style.left = (pos.x - s / 2) + 'px'; d.style.top = (pos.y - s / 2) + 'px'; fxLayer().appendChild(d);
-  ttGo(d, FX.on ? [{ transform: 'translateY(-10px) scale(.65) rotate(-10deg)', opacity: .4 },
-    { transform: 'translateY(0) scale(1.06,.98) rotate(2deg)', opacity: 1, offset: 220 / 2040 },
-    { transform: 'translateY(0) scale(1)', opacity: 1, offset: 320 / 2040 },
-    { transform: 'translateY(0) scale(1)', opacity: 1, offset: 1840 / 2040 },
-    { transform: 'translateY(-12px) scale(.95)', opacity: 0 }]
-    : [{ opacity:1 }, { opacity:1, offset:1840 / 2040 }, { opacity:0 }], { duration: 2040, easing: 'linear' });
+  talkGifPlay(d, FX.on ? [{ transform:'translateY(-8px) scale(.8)', opacity:0 },
+    { transform:'none', opacity:1, offset:.1 }, { transform:'none', opacity:1, offset:.9 }, { transform:'translateY(-10px)', opacity:0 }]
+    : [{ opacity:0 }, { opacity:1, offset:.06 }, { opacity:1, offset:.94 }, { opacity:0 }], { duration:3600, easing:'ease-out' });
 }
 /* what landed on this phone */
 function talkSeen(m) {
@@ -15369,9 +15380,8 @@ function talkSeen(m) {
   if (m.k === 'splat') TTP.lastOn[m.to] = now;
   if (m.p === PID) { if (m.k === 'splat') TTP.used = ttTurn(G.state); return; }   // your own, coming back
   talkSay(m);                                               // heard only with "Hear the whole table" (vox checks)
-  if (m.k === 'emo' && sndHearsTable()) sfx('e_' + m.e, { gap: 0, at: FX.on ? 480 : 0 });
   if (again && m.to === PID) return;                        // one splat at a time on a phone
-  if (m.to !== PID || m.k === 'emo') return;
+  if (m.to !== PID || m.k === 'gif') return;
   if (m.k === 'wsp') {
     TTP.wsp = { p: m.p, e: m.e, at: now, id: m.id }; TTP.reply = m.p; TTP.heard = { p: m.p, e: m.e, at: now };
     sfx('whisper'); buzz([10, 60, 10]);
@@ -15446,23 +15456,23 @@ function talkObserve(st, me) {
   const ap = playerOf(st, activePid(st)), mine = ap && ap.pid === me.pid;
   const sum = st.dice ? st.dice[0] + st.dice[1] : 0;
   if (st.phase === 'turn' && st.dice && (st.dice.join('') !== prev.dice || ttTurn(st) !== prev.turn) && sum === 7 && ap && !mine)
-    say(`${ap.name} rolled a seven`, handCount(me) > 7 ? ['sweat', 'boo', 'cry'] : ['boo', 'sweat', 'crickets']);
+    say(`${ap.name} rolled a seven`, handCount(me) > 7 ? ['nervous', 'no way', 'bad luck'] : ['no way', 'nervous', 'still waiting']);
   if (st.board.police !== prev.police && !mine && GEO.hexes[st.board.police] && GEO.hexes[st.board.police].vs.some(v => st.buildings[v] && st.buildings[v].pid === me.pid))
-    say('The police are on your block', ['boo', 'cry', 'sweat']);
-  if (prev.fight && !st.fight) say(prev.fight.includes(me.pid) ? 'Got the last word?' : 'Give them their flowers', prev.fight.includes(me.pid) ? ['micdrop', 'lol', 'cry'] : ['cheer', 'fire', 'clap']);
+    say('The police are on your block', ['no way', 'bad luck', 'nervous']);
+  if (prev.fight && !st.fight) say(prev.fight.includes(me.pid) ? 'Got the last word?' : 'Give them their flowers', prev.fight.includes(me.pid) ? ['mic drop', 'laughing', 'bad luck'] : ['big win', 'let him cook', 'respect']);
   const nine = st.players.find(p => p.pid !== me.pid && vpOf(st, p.pid) === WIN_VP - 1 && (prev.vp[p.pid] | 0) < WIN_VP - 1);
-  if (top && top !== prev.top) { const t = playerOf(st, top); if (t) say(t.pid === me.pid ? 'Let them know' : `${t.name} took the lead`, t.pid === me.pid ? ['micdrop', 'rain', 'lol'] : ['cheer', 'fire', 'sweat']); }
-  if (nine) say(`${nine.name} is one away`, ['sweat', 'boo', 'cry']);
-  if (st.phase === 'over' && prev.phase !== 'over') say(top === me.pid ? 'You run this city' : 'Game over', top === me.pid ? ['micdrop', 'rain', 'fire'] : ['clap', 'cry', 'cheer']);
+  if (top && top !== prev.top) { const t = playerOf(st, top); if (t) say(t.pid === me.pid ? 'Let them know' : `${t.name} took the lead`, t.pid === me.pid ? ['mic drop', 'money', 'laughing'] : ['big win', 'let him cook', 'nervous']); }
+  if (nine) say(`${nine.name} is one away`, ['nervous', 'no way', 'bad luck']);
+  if (st.phase === 'over' && prev.phase !== 'over') say(top === me.pid ? 'You run this city' : 'Game over', top === me.pid ? ['mic drop', 'money', 'let him cook'] : ['respect', 'bad luck', 'big win']);
 }
 function talkSuggest(st, me) {
   const m = TTP.moment, ap = playerOf(st, activePid(st));
   if (st.phase === 'turn' && st.offer) return st.offer.from === me.pid
-    ? { why:'Sell the bluff', list:['rain', 'micdrop', 'boo'] }
-    : { why:'Buying that?', list:['boo', 'sweat', 'cry'] };
+    ? { why:'Sell the bluff', list:['money', 'mic drop', 'no way'] }
+    : { why:'Buying that?', list:['no way', 'nervous', 'bad luck'] };
   if (m && Date.now() - m.at < TT.moment) return m;
-  if (st.phase === 'turn' && ap && ap.pid !== me.pid && clockRan(st) > 45000) return { why: `${ap.name} is taking a while`, list: ['crickets', 'clap', 'sweat'] };
-  return { why: '', list: ['cheer', 'lol', 'boo'] };
+  if (st.phase === 'turn' && ap && ap.pid !== me.pid && clockRan(st) > 45000) return { why: `${ap.name} is taking a while`, list: ['still waiting', 'respect', 'nervous'] };
+  return { why: '', list: ['big win', 'laughing', 'no way'] };
 }
 /* the situation the whisper menu opens on: the answer to a whisper just in from the player it would go to, a deal
    while an offer is on the table, a hurry-up for a player on the clock taking a while, else where this phone left it */
@@ -15479,12 +15489,10 @@ function talkToWhisper() {
   const sc = document.querySelector('#p-modal .m-talk .sh-scroll'), h = sc && sc.querySelector('.tthw');
   if (h) sc.scrollTop += h.getBoundingClientRect().top - sc.getBoundingClientRect().top - 4;
 }
-/* The sheet: stickers for the moment, the rest of them, a whisper to one player, and a splat for whoever is on the clock. */
+/* The sheet: live GIFs, a whisper to one player, and a splat for whoever is on the clock. */
 function talkSheet(st, me) {
-  const now = Date.now(), sug = talkSuggest(st, me), others = st.players.filter(p => p.pid !== me.pid);
-  const eNo = talkNo('emo', now), wNo = talkNo('wsp', now);
-  const tone = ttHas(TT_TONES, TTP.tone) ? TTP.tone : 'all';
-  const emo = (k, big) => `<button class="ttb tt-${TT_TONE[k]}${big ? ' big' : ''}" data-p="temo" data-arg="${k}" ${eNo ? 'disabled' : ''}>${ttArtHTML(k)}<span>${esc(TT_EMO[k])}</span></button>`;
+  const now = Date.now(), others = st.players.filter(p => p.pid !== me.pid);
+  const wNo = talkNo('wsp', now);
   const to = others.find(p => p.pid === TTP.to) || others.find(p => p.pid === TTP.reply) || others.find(p => p.pid === activePid(st)) || others[0];
   if (to) TTP.to = to.pid;
   const sit = ttHas(TT_SITS, TTP.sit) ? TTP.sit : 'deal', lines = TT_SITS[sit][1];
@@ -15495,14 +15503,159 @@ function talkSheet(st, me) {
   const splat = st.phase === 'turn' && ap && ap.pid !== me.pid ? `<h3 class="tth">Distract ${esc(ap.name)}</h3>` +
     (sNo ? `<p class="small muted ttno">${esc(sNo)}.</p>` : `<p class="small muted ttno">Lands on their board for a few seconds. One a turn.</p>`) +
     `<div class="ttsplats">${Object.keys(TT_SPLAT).map(k => `<button class="ttb" data-p="tsplat" data-arg="${k}" ${sNo ? 'disabled' : ''}>${ttArtHTML(k)}<span>${TT_SPLAT[k]}</span></button>`).join('')}</div>` : '';
-  const body = `<p class="ttlab">Gas them up. Sell the bluff. Get in their head.</p>` +
-    `<div class="ttintent" role="group" aria-label="Sticker style">${Object.keys(TT_TONES).map(k => `<button type="button" class="tt-${k}" data-p="ttone" data-arg="${k}" aria-pressed="${tone === k}">${TT_TONES[k]}</button>`).join('')}</div>` +
-    (tone === 'all' ? (sug.why ? `<p class="ttlab">${esc(sug.why)}</p>` : '') + `<div class="ttsug">${sug.list.map(k => emo(k, true)).join('')}</div>` : '') +
-    `<div class="ttgrid">${Object.keys(TT_EMO).filter(k => tone === 'all' ? !sug.list.includes(k) : TT_TONE[k] === tone).map(k => emo(k)).join('')}</div>` +
+  const body = '<div data-gif-picker></div>' +
     `<h3 class="tth tthw">Whisper</h3>` + (others.length ? `<div class="ttto" role="group" aria-label="Whisper to">${others.map(p => `<button class="sw" data-p="tto" data-arg="${p.pid}" aria-pressed="${p === to}"><span class="chip" style="background:var(--p-${p.color})"></span>${esc(p.name)}</button>`).join('')}</div>` +
       `${words}<p class="small muted ttno">Only ${esc(to ? to.name : 'they')} sees it. The announcer might read it out.</p>` : '<p class="small muted ttno">Nobody else is seated yet.</p>') +
     splat;
   return { kind: 'talk', label: 'Trash talk', view: 'talk', top: shTop('Trash talk'), hero: '', body, foot: '' };
+}
+/* ---------- live GIF picker: requests only while the sheet is open ---------- */
+const TTG = { root:null, client:null, key:'', controller:null, request:0, items:[], analytics:{}, query:'', next:null, loading:false, observer:null, coolTimer:0 };
+const GIPHY_MARK = 'art/talk/powered-by-giphy.png';
+const talkGifMotion = () => FX.on && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+function talkGifCard(gif, size, name) {
+  if (!window.RTCGiphy || !window.RTCGiphy.validate(gif)) return null;
+  const d = document.createElement('div'); d.className = 'ttstk ttgif gif-loading';
+  d.style.width = d.style.height = size + 'px';
+  const img = document.createElement('img'); img.alt = gif.title || 'GIF reaction'; img.decoding = 'async';
+  img.onload = () => d.classList.remove('gif-loading');
+  img.src = talkGifMotion() ? gif.url : gif.still;
+  img.onerror = () => {
+    if (img.src !== gif.still) img.src = gif.still;
+    else { const fallback = document.createElement('span'); fallback.className = 'gif-missing'; fallback.textContent = 'GIF unavailable'; d.classList.remove('gif-loading'); img.replaceWith(fallback); }
+  };
+  const foot = document.createElement('footer'), who = document.createElement('b'), brand = document.createElement('img');
+  who.textContent = name || 'Reaction'; brand.src = GIPHY_MARK; brand.alt = 'Powered by GIPHY';
+  foot.append(who, brand); d.append(img, foot); return d;
+}
+function talkGifPlay(d, frames, options) {
+  const img = d.querySelector('img');
+  if (img.complete && img.naturalWidth) { ttGo(d, frames, options); return; }
+  // Give a cold board screen time to fetch the reaction before its hold/fade clock starts.
+  d.style.visibility = 'hidden'; let started = false, timer;
+  const start = () => {
+    if (started) return; started = true; clearTimeout(timer); img.removeEventListener('load', start);
+    if (!d.isConnected) return;
+    if (document.hidden) { d.remove(); return; }
+    d.style.visibility = ''; ttGo(d, frames, options);
+  };
+  img.addEventListener('load', start, { once:true }); timer = setTimeout(start, 3000);
+}
+function talkGifClose() {
+  if (TTG.controller) TTG.controller.abort();
+  if (TTG.observer) TTG.observer.disconnect();
+  clearTimeout(TTG.coolTimer); TTG.coolTimer = 0;
+  TTG.request++; TTG.root = null; TTG.controller = null; TTG.observer = null;
+  // No stored GIF catalogue or media cache: reopening fetches current content.
+  TTG.items = []; TTG.analytics = {}; TTG.query = ''; TTG.next = null; TTG.loading = false;
+}
+function talkGifSync() {
+  const root = document.querySelector('#p-modal [data-gif-picker]'); if (!root) return;
+  if (TTG.root !== root) {
+    talkGifClose(); TTG.root = root; root.className = 'gif-picker';
+    root.innerHTML = `<div class="gif-head"><h3>Say it with a GIF</h3><img class="gif-brand" src="${GIPHY_MARK}" alt="Powered by GIPHY"></div>` +
+      '<form class="gif-search" role="search" aria-label="Search GIFs"><input type="search" aria-label="Search GIFs and memes" placeholder="Find the perfect reaction" maxlength="50" autocomplete="off" enterkeyhint="search"><button type="submit">Search</button></form>' +
+      '<p class="gif-context" hidden></p><div class="gif-queries" role="group" aria-label="GIF searches"></div>' +
+      '<p class="gif-status" role="status" aria-live="polite"></p><div class="gif-grid" aria-label="GIF results"></div>' +
+      '<div class="gif-error" hidden><p></p><button type="button" class="gif-retry">Try again</button></div>' +
+      '<button type="button" class="gif-more" hidden>More GIFs</button>';
+    root.addEventListener('submit', ev => { ev.preventDefault(); ev.stopPropagation(); talkGifLoad(root.querySelector('input').value); });
+    root.addEventListener('click', ev => {
+      ev.stopPropagation();
+      const button = ev.target.closest('button');
+      if (!button || button.disabled || MODAL.swallow || performance.now() - MODAL.at < 320) return;
+      if (button.hasAttribute('data-gif-query')) {
+        root.querySelector('input').value = button.dataset.gifQuery; talkGifLoad(button.dataset.gifQuery);
+      } else if (button.classList.contains('gif-more')) talkGifLoad(TTG.query, true);
+      else if (button.classList.contains('gif-retry')) talkGifLoad(TTG.query, TTG.items.length > 0);
+      else if (button.dataset.gifId) {
+        const gif = TTG.items.find(item => item.id === button.dataset.gifId); if (!gif) return;
+        TTG.client.track(TTG.analytics[gif.id], 'onclick');
+        if (talkNo('gif')) { toast('Give that reaction a moment.'); talkGifCooldown(); return; }
+        if (talkSend({ k:'gif', e:gif.id, gif })) {
+          TTG.client.track(TTG.analytics[gif.id], 'onsent'); buzz(8); talkPop(gif); closeSheet('sent');
+        } else talkGifCooldown();
+      }
+    });
+    const key = typeof window.RTC_GIPHY_API_KEY === 'string' ? window.RTC_GIPHY_API_KEY.trim() : '';
+    if (window.RTCGiphy && (!TTG.client || key !== TTG.key)) { TTG.client = window.RTCGiphy.createClient(key); TTG.key = key; }
+    if (typeof IntersectionObserver === 'function') TTG.observer = new IntersectionObserver((entries, observer) => {
+      for (const entry of entries) if (entry.isIntersecting) {
+        const tile = entry.target, img = tile.querySelector('img');
+        observer.unobserve(tile);
+        if (TTG.root !== root || !root.isConnected || !root.contains(tile)) continue;
+        if (img && img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; }
+        if (TTG.client) TTG.client.track(TTG.analytics[tile.dataset.gifId], 'onload');
+      }
+    }, { root:root.closest('.sh-scroll'), threshold:.15 });
+    talkGifLoad('');
+  }
+  const st = G.state, me = st && playerOf(st, PID), sug = me ? talkSuggest(st, me) : { why:'', list:[] };
+  const context = root.querySelector('.gif-context'); context.textContent = sug.why; context.hidden = !sug.why;
+  const queries = root.querySelector('.gif-queries');
+  const html = `<button type="button" data-gif-query="" aria-pressed="${!TTG.query}">Trending</button>` +
+    sug.list.map(q => `<button type="button" data-gif-query="${esc(q)}" aria-pressed="${TTG.query === q}">${esc(q)}</button>`).join('');
+  if (queries.__h !== html) { queries.innerHTML = html; queries.__h = html; }
+  talkGifCooldown();
+}
+function talkGifCooldown() {
+  clearTimeout(TTG.coolTimer); TTG.coolTimer = 0;
+  const root = TTG.root; if (!root || !root.isConnected) return;
+  const reason = talkNo('gif');
+  root.querySelectorAll('.gif-tile').forEach(b => { b.disabled = !!reason || b.dataset.unavailable === '1'; });
+  if (reason) TTG.coolTimer = setTimeout(talkGifCooldown, 300);
+}
+async function talkGifLoad(query, more = false) {
+  const root = TTG.root; if (!root || !root.isConnected) return;
+  query = String(query || '').slice(0, 50); // Search terms reach GIPHY exactly as entered.
+  if (more && (TTG.loading || TTG.next === null)) return;
+  if (TTG.controller) TTG.controller.abort();
+  const request = ++TTG.request, controller = new AbortController(); TTG.controller = controller;
+  const offset = more ? TTG.next : 0, grid = root.querySelector('.gif-grid'), status = root.querySelector('.gif-status');
+  const errorBox = root.querySelector('.gif-error'), moreButton = root.querySelector('.gif-more');
+  if (!more) {
+    if (TTG.observer) TTG.observer.disconnect();
+    TTG.query = query; TTG.items = []; TTG.analytics = {}; TTG.next = null;
+    grid.innerHTML = '<div class="gif-skeleton" aria-hidden="true"></div>'.repeat(4);
+  }
+  TTG.loading = true; errorBox.hidden = true; moreButton.hidden = true; grid.setAttribute('aria-busy', 'true');
+  status.textContent = more ? 'Loading more GIFs…' : query ? `Searching for “${query}”…` : 'Finding what’s trending…';
+  root.querySelectorAll('[data-gif-query]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.gifQuery === query)));
+  try {
+    if (!TTG.client || !TTG.key) throw Object.assign(new Error('GIFs aren’t available at this table yet.'), { code:'MISSING_KEY' });
+    const result = await TTG.client.list({ query, offset, signal:controller.signal });
+    if (request !== TTG.request || root !== TTG.root || !root.isConnected) return;
+    if (!more) grid.replaceChildren();
+    TTG.items.push(...result.items); Object.assign(TTG.analytics, result.analytics); TTG.next = result.nextOffset;
+    for (const gif of result.items) {
+      const tile = document.createElement('button'); tile.type = 'button'; tile.className = 'gif-tile'; tile.dataset.gifId = gif.id;
+      tile.setAttribute('aria-label', `Send ${gif.title || 'GIF reaction'}`);
+      const img = document.createElement('img'); img.alt = gif.title || 'GIF reaction'; img.decoding = 'async'; img.loading = 'lazy';
+      const src = talkGifMotion() ? gif.url : gif.still;
+      if (TTG.observer) { img.src = gif.still; img.dataset.src = src; } else img.src = src;
+      img.onerror = () => {
+        if (img.src !== gif.still) { delete img.dataset.src; img.src = gif.still; }
+        else { tile.disabled = true; tile.dataset.unavailable = '1'; tile.title = 'This GIF is unavailable'; }
+      };
+      const label = document.createElement('span'); label.textContent = gif.title || 'Send GIF';
+      tile.append(img, label); grid.appendChild(tile);
+      if (TTG.observer) TTG.observer.observe(tile); else TTG.client.track(TTG.analytics[gif.id], 'onload');
+    }
+    status.textContent = TTG.items.length ? (query ? `“${query}” · tap a GIF to send` : 'Trending now · tap a GIF to send') : 'No GIFs found. Try another search.';
+    moreButton.hidden = TTG.next === null;
+  } catch (error) {
+    if (request !== TTG.request || root !== TTG.root || error.name === 'AbortError') return;
+    if (!more) grid.replaceChildren();
+    const messages = { MISSING_KEY:'GIFs aren’t available at this table yet. You can still whisper below.', INVALID_KEY:'GIFs are unavailable right now. You can still whisper below.',
+      RATE_LIMIT:'GIFs are taking a breather. Try again later.', TIMEOUT:'GIFs took too long to load. Try again.', OFFLINE:'Can’t reach GIPHY. Check your connection and try again.', NETWORK:'Can’t reach GIPHY. Check your connection and try again.' };
+    status.textContent = more ? 'Couldn’t load more GIFs.' : 'GIFs unavailable'; errorBox.hidden = false;
+    errorBox.querySelector('p').textContent = messages[error.code] || 'Couldn’t load GIFs. Please try again.';
+    errorBox.querySelector('button').hidden = ['MISSING_KEY', 'INVALID_KEY'].includes(error.code);
+  } finally {
+    if (request === TTG.request && root === TTG.root) {
+      TTG.loading = false; TTG.controller = null; grid.setAttribute('aria-busy', 'false'); talkGifCooldown();
+    }
+  }
 }
 /* ---------- end of trash talk ---------- */
 
@@ -17814,7 +17967,7 @@ function landingModesHTML() {
    pack of their own (sound-coach.bin), fetched the first time a coached phone needs one; the table
    never plays them. The bubble never sits on what it points at, nor on the dock; it folds itself
    to a small chip once it has said its piece, and a tap on it never reaches the board under it. */
-const COACH_SAY = /*SAY*/{ "hello": "Welcome to the city. I'm your coach. The first time each move comes up, I'll show you what to tap, and talk you through it.", "goal": "The job is simple. First crew to ten points runs the city. Every operation you open is worth one point. A major holding is worth two.", "rolloff": "First, everybody rolls. Highest roll places first. Tap Roll the dice.", "place_op": "Set-up time. Tap a glowing corner to put down your first operation. Pick a corner that touches plenty of blocks.", "place_pick": "Red numbers, six and eight, come up the most. And try to touch different colours, so you collect all five kinds of card.", "place_confirm": "Good spot. Now tap the button to place it.", "place_street": "Now lay a street. Tap a glowing path next to your operation. Streets are how you reach new corners to build on.", "place_second": "Your second operation. This one pays straight away: one card for every block it touches.", "wait": "It's someone else's turn now. You can't build, but when their dice hit your blocks, you still get paid. So keep watching.", "roll": "Your turn. Every turn starts with the dice. Tap Roll the dice. Every block on that number pays whoever's built around it.", "paid": "Payday! Your building touches that block, so the cards went into your hand. Down here is everything you're holding.", "nopay": "Nothing for you on that roll. It happens. Build around more numbers, and you'll get paid more often.", "act": "Now it's building time. This list shows what you can make. A lit card is one you hold. An empty outline is one you're still missing.", "key": "Not sure which block pays what? Tap Key, up top. Each colour of block pays its own card.", "build_street": "A street costs one muscle and one product. Tap a glowing path, then tap Build.", "build_op": "An operation costs one muscle, one product, one talent and one cash. It goes on a free corner at the end of your street, and it's worth a point.", "build_holding": "Upgrade an operation to a major holding, for two cash and three influence. It's worth two points, and it pays double.", "trade_bank": "Short a card? Trade at a terminal. Four of one kind buys one of any other. Build on the coast by a terminal, and you get a better rate.", "offer": "Or deal with the other crews. Pick what you'll give, and what you want. They answer on their phones, and you choose who to deal with.", "answer": "Someone's offering you a trade. Take it if it gets you closer to building something. Or pass. It costs you nothing either way.", "end": "When you've done all you want, tap End my turn, then Yes. The dice pass to the next crew.", "seven": "A seven! Nobody gets paid on a seven. Anyone holding more than seven cards loses half. And the police are on their way.", "discard": "You're holding more than seven cards, so you drop half. Tap the cards you can best spare, then drop them.", "police": "You rolled the seven, so you move the police. Tap a block. It stops paying until the police move on. Pick one where your rivals earn.", "steal": "Now lean on somebody with a building on that block. You take one of their cards, unseen.", "robbed": "The police are sitting on one of your blocks. It won't pay you, until somebody moves them on.", "market": "Skills and talents are special cards. Open the market to buy one. Each one bends the rules, once. You can play one a turn.", "cardplay": "You're holding a skill or talent. Tap Play a skill or talent to read it, and play it when the moment's right.", "fight": "Street fight! Each round, you both pick a move at the same time. A swing is free. The big hits cost cards. Knock their strength to zero, and you win.", "luck": "Lucky Streak! You threw three dice. Keep the two that pay you best.", "clock": "See the clock? When it runs out, the table finishes your turn for you. So don't hang about.", "talk": "One more thing. Tap the speech bubble up top, to throw stickers and whisper to the other crews. Trash talk is half the game.", "players": "Want the score? Open Players, to see everyone's points, and how many cards they're holding.", "done": "That's the lot. You know the streets now, so I'll go quiet. Good luck out there.", "lx_intro": "This is a practice game. The other two crews are run by the computer, and I'm rigging the dice a little, so you get to see everything. Nothing here counts.", "lx_gift": "Here. The bank's spotting you a few cards, so you can try building.", "lx_short": "You're one talent short of an operation. Trade four cash for it at a terminal. Tap Trade at a terminal.", "lx_trade": "Now try trading. Tap Trade at a terminal, and swap four of one kind for a card you need.", "lx_seven": "Watch this. Somebody's about to roll a seven.", "lx_offer": "Try a deal. Tap Offer the table a trade, and ask the other crews for a card you need.", "lx_done": "That's the practice done. You can roll, build, trade, and handle the police. Keep playing if you like, or go and start a real game." }/*SAY*/;
+const COACH_SAY = /*SAY*/{ "hello": "Welcome to the city. I'm your coach. The first time each move comes up, I'll show you what to tap, and talk you through it.", "goal": "The job is simple. First crew to ten points runs the city. Every operation you open is worth one point. A major holding is worth two.", "rolloff": "First, everybody rolls. Highest roll places first. Tap Roll the dice.", "place_op": "Set-up time. Tap a glowing corner to put down your first operation. Pick a corner that touches plenty of blocks.", "place_pick": "Red numbers, six and eight, come up the most. And try to touch different colours, so you collect all five kinds of card.", "place_confirm": "Good spot. Now tap the button to place it.", "place_street": "Now lay a street. Tap a glowing path next to your operation. Streets are how you reach new corners to build on.", "place_second": "Your second operation. This one pays straight away: one card for every block it touches.", "wait": "It's someone else's turn now. You can't build, but when their dice hit your blocks, you still get paid. So keep watching.", "roll": "Your turn. Every turn starts with the dice. Tap Roll the dice. Every block on that number pays whoever's built around it.", "paid": "Payday! Your building touches that block, so the cards went into your hand. Down here is everything you're holding.", "nopay": "Nothing for you on that roll. It happens. Build around more numbers, and you'll get paid more often.", "act": "Now it's building time. This list shows what you can make. A lit card is one you hold. An empty outline is one you're still missing.", "key": "Not sure which block pays what? Tap Key, up top. Each colour of block pays its own card.", "build_street": "A street costs one muscle and one product. Tap a glowing path, then tap Build.", "build_op": "An operation costs one muscle, one product, one talent and one cash. It goes on a free corner at the end of your street, and it's worth a point.", "build_holding": "Upgrade an operation to a major holding, for two cash and three influence. It's worth two points, and it pays double.", "trade_bank": "Short a card? Trade at a terminal. Four of one kind buys one of any other. Build on the coast by a terminal, and you get a better rate.", "offer": "Or deal with the other crews. Pick what you'll give, and what you want. They answer on their phones, and you choose who to deal with.", "answer": "Someone's offering you a trade. Take it if it gets you closer to building something. Or pass. It costs you nothing either way.", "end": "When you've done all you want, tap End my turn, then Yes. The dice pass to the next crew.", "seven": "A seven! Nobody gets paid on a seven. Anyone holding more than seven cards loses half. And the police are on their way.", "discard": "You're holding more than seven cards, so you drop half. Tap the cards you can best spare, then drop them.", "police": "You rolled the seven, so you move the police. Tap a block. It stops paying until the police move on. Pick one where your rivals earn.", "steal": "Now lean on somebody with a building on that block. You take one of their cards, unseen.", "robbed": "The police are sitting on one of your blocks. It won't pay you, until somebody moves them on.", "market": "Skills and talents are special cards. Open the market to buy one. Each one bends the rules, once. You can play one a turn.", "cardplay": "You're holding a skill or talent. Tap Play a skill or talent to read it, and play it when the moment's right.", "fight": "Street fight! Each round, you both pick a move at the same time. A swing is free. The big hits cost cards. Knock their strength to zero, and you win.", "luck": "Lucky Streak! You threw three dice. Keep the two that pay you best.", "clock": "See the clock? When it runs out, the table finishes your turn for you. So don't hang about.", "talk": "One more thing. Tap the speech bubble up top, to send GIFs and whisper to the other crews. Trash talk is half the game.", "players": "Want the score? Open Players, to see everyone's points, and how many cards they're holding.", "done": "That's the lot. You know the streets now, so I'll go quiet. Good luck out there.", "lx_intro": "This is a practice game. The other two crews are run by the computer, and I'm rigging the dice a little, so you get to see everything. Nothing here counts.", "lx_gift": "Here. The bank's spotting you a few cards, so you can try building.", "lx_short": "You're one talent short of an operation. Trade four cash for it at a terminal. Tap Trade at a terminal.", "lx_trade": "Now try trading. Tap Trade at a terminal, and swap four of one kind for a card you need.", "lx_seven": "Watch this. Somebody's about to roll a seven.", "lx_offer": "Try a deal. Tap Offer the table a trade, and ask the other crews for a card you need.", "lx_done": "That's the practice done. You can roll, build, trade, and handle the police. Keep playing if you like, or go and start a real game." }/*SAY*/;
 // the lessons that make a player: once these are all given the coach says goodbye
 const COACH_CORE = ['goal', 'rolloff', 'place_op', 'place_street', 'place_second', 'roll', 'act', 'build_street', 'end', 'wait',
   'discard', 'police', 'steal', 'trade_bank', 'offer', 'answer', 'players'];
@@ -19985,8 +20138,6 @@ document.addEventListener('click', ev => {
     case 'wspx': TTP.wsp = null; renderPlayer(); break;
     case 'tto': TTP.to = pb.dataset.arg; renderPlayer(); break;
     case 'tsit': if (ttHas(TT_SITS, pb.dataset.arg)) { TTP.sit = pb.dataset.arg; renderPlayer(); } break;
-    case 'ttone': if (ttHas(TT_TONES, pb.dataset.arg)) { TTP.tone = pb.dataset.arg; renderPlayer(); } break;
-    case 'temo': if (talkSend({ k: 'emo', e: pb.dataset.arg })) { buzz(8); talkPop(pb.dataset.arg); closeSheet('sent'); } else renderPlayer(); break;
     case 'twsp': { const to = st && playerOf(st, TTP.to);
       if (to && talkSend({ k: 'wsp', e: pb.dataset.arg, to: to.pid })) { buzz(8); closeSheet('sent'); toast(`Whispered \u201c${ttWord(pb.dataset.arg)}\u201d to ${to.name}`); } else renderPlayer(); break; }
     case 'tsplat': { const ap = st && playerOf(st, activePid(st));
