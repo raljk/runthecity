@@ -1586,9 +1586,18 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 .gif-search{display:flex;gap:6px;min-width:0}
 .gif-search input{min-width:0;width:100%;flex:1;border:1px solid #49606b;background:#07151e;color:#f2f7f7;padding:11px 10px;font:400 16px/1.3 system-ui,sans-serif;border-radius:0}
 .gif-search button,.gif-more,.gif-retry{appearance:none;border:1px solid #dcf536;background:#dcf536;color:#101a16;padding:10px 13px;font:700 15px/1.2 'Barlow Condensed',system-ui,sans-serif;text-transform:uppercase;cursor:pointer;min-height:44px}
-.gif-queries{display:flex;flex-wrap:wrap;gap:6px}
-.gif-queries button{appearance:none;min-height:36px;padding:7px 10px;border:1px solid #3b535f;background:#0b1d28;color:#d8e6eb;font:600 14px/1.2 'Barlow Condensed',system-ui,sans-serif;cursor:pointer}
+.gif-queries{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.gif-queries button{appearance:none;min-width:0;min-height:44px;padding:8px 4px;border:1px solid #3b535f;background:#0b1d28;color:#d8e6eb;font:600 14px/1.2 'Barlow Condensed',system-ui,sans-serif;cursor:pointer}
 .gif-queries button[aria-pressed=true]{background:#233824;border-color:#dcf536;color:#e7ff6c}
+.gif-topics{display:grid;gap:8px;min-width:0}
+.gif-topics h4{margin:0;color:#e3edf0;font:700 17px/1.2 'Barlow Condensed',system-ui,sans-serif;text-transform:uppercase;letter-spacing:.05em}
+.gif-distractions{padding:12px;border:1px solid #68537f;background:linear-gradient(120deg,#271c35,#131e2b)}
+.gif-distractions h4{color:#e5b9ff}
+.gif-distractions .gif-queries button[aria-pressed=true]{background:#543265;border-color:#dcb0ff;color:#f7e5ff}
+.gif-target{display:grid;gap:6px;padding:12px;border:1px solid #ba82dc;background:#24182f}
+.gif-target strong{color:#f0d5ff;font:700 18px/1.2 'Barlow Condensed',system-ui,sans-serif}
+.gif-target button,.tt-distract{appearance:none;min-height:44px;padding:10px 12px;border:1px solid #ba82dc;background:#372145;color:#f2ddff;font:700 15px/1.2 'Barlow Condensed',system-ui,sans-serif;cursor:pointer}
+.tt-distract:disabled{opacity:.5;cursor:default}
 .gif-context,.gif-status{margin:0;color:#a8bdc6;font:400 13px/1.4 system-ui,sans-serif}
 .gif-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:start}
 .gif-tile{appearance:none;position:relative;display:block;width:100%;padding:0;border:1px solid #34505d;background:#060f16;color:#dce9ed;cursor:pointer;overflow:hidden;touch-action:manipulation}
@@ -1603,12 +1612,11 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 .gif-error{display:grid;justify-items:start;gap:10px;padding:16px;border:1px solid #3b535f;background:#0a1720}
 .gif-error p{margin:0;font-size:14px;line-height:1.4;color:#c0cfd5}
 .gif-skeleton{height:154px;border:1px solid #243d49;background:linear-gradient(135deg,#112936,#0a1823)}
-.ttgif{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:0;padding:4px;background:#07131eee;border:1px solid #6d939f;box-shadow:0 7px 24px #0008;overflow:hidden}
-.ttgif>img{display:block;width:100%;height:100%;min-height:0;object-fit:contain;background:#03090e}
+.ttgif{display:grid;place-items:center;padding:0;background:transparent;border:0;box-shadow:none;filter:none;overflow:visible}
+.ttgif>img{display:block;width:100%;height:100%;min-height:0;object-fit:contain;background:transparent}
 .ttgif.gif-loading::before{content:'Loading GIF…';position:absolute;left:8px;right:8px;top:35%;text-align:center;color:#a8bdc6;font:12px/1.4 system-ui,sans-serif}
-.ttgif footer{display:grid;justify-items:center;gap:2px;padding:4px 2px 1px;min-width:0}
-.ttgif footer b{color:#eaf6ff;font:600 12px/1.25 'Barlow Condensed',system-ui,sans-serif;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ttgif footer img{display:block;width:100px;height:auto;max-width:100%}
+.gif-credit{display:none;position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));width:120px;height:auto;z-index:41;pointer-events:none;filter:drop-shadow(0 1px 3px #000)}
+body:has(.ttgif)>.gif-credit{display:block}
 .gif-missing{display:grid;place-items:center;text-align:center;color:#a8bdc6;font-size:12px;padding:10px}
 @media(min-width:600px){.gif-tile img{height:164px}}
 .ttlab{margin:0;font-size:.8rem;color:var(--muted);text-align:center}
@@ -1652,6 +1660,8 @@ body.clkend::after{content:"";position:fixed;inset:0;z-index:38;pointer-events:n
 .ttsplat.tt-still{animation-name:ttfade!important}
 .ttsplat.sp-smoke{animation-name:ttsmoke;animation-timing-function:ease-out}
 .ttsplat.sp-pigeon{animation-name:ttpigeon;animation-timing-function:linear}
+.ttsplat.ttgif{position:absolute;filter:none;rotate:none;translate:-50% -50%;animation:ttfade 4.2s linear both}
+.ttsplat.ttgif.gif-loading{visibility:hidden;animation:none}
 @keyframes ttland{0%{transform:scale(.35) rotate(-12deg);opacity:0}8%{transform:scale(.85);opacity:1}12%{transform:scale(1.08,.96)}16%,72%{transform:scale(1);opacity:1}100%{transform:scale(1.02) translateY(16px);opacity:0}}
 @keyframes ttsmoke{0%{transform:scale(.35);opacity:0}8%{transform:scale(.78);opacity:1}16%{transform:scale(1);opacity:1}65%{transform:scale(1);opacity:.92}100%{transform:scale(1.08) translateY(-12px);opacity:0}}
 @keyframes ttpigeon{0%{transform:translateX(-34%) translateY(6%) scale(.55);opacity:0}8%{opacity:1;transform:translateX(-8%) scale(.98,.9)}12%{transform:translateX(2%) translateY(-2%) scale(1.05)}
@@ -13131,7 +13141,6 @@ function qrSVG(text) {
 }
 
 function renderHostShell() {
-  ttWarm();
   $('#app').innerHTML = `<div class="hframe">
   <header class="bar"><a class="brand tbbrand homelink" href="./" data-l="home" title="Front page"><img class="tblogo" src="art/landing/run-the-city.svg" width="90" height="40" alt="Run the City"></a><span class="tbwhere">${WATCH ? 'Board view &middot; table ' + esc(joinRoom) : 'Table screen'}</span><span class="grow"></span>${hostKeyHTML()}${sndBtnHTML()}${sndVolHTML()}${fsBtnHTML()}<span id="h-status" class="pill">Connecting</span></header>
   <main class="host">
@@ -13768,6 +13777,8 @@ function landingCardFanHTML() {
 /* Patch notes, newest first: [date, what, a line on it], and 'fix' fourth when it mends something (left out, it is
    something new). A shipped change adds its line at the top. */
 const PATCH_NOTES = [
+  ['2026-10-04', 'GIF distractions', 'Pick a GIF to distract the player whose turn it is. It lands on their board for a few seconds, once per turn, replacing the old spray paint, smoke, glitter and pigeon effects.'],
+  ['2026-10-04', 'More GIF reactions', 'Live GIPHY choices cover getting paid, boss moves, big wins, getting busted, betrayal, deals, robberies and payback. Emote, Booty, Sexy and Party mode have their own Distractions row. GIFs appear on the board without a frame or name strip.'],
   ['2026-10-04', 'Taken from you', 'When the police, a Tip-off, a Shakedown or a fight takes a card from you, your phone says what it was and who took it, even if it was in your pocket at the time. On the table a −1 rises from the player it was taken from.'],
   ['2026-10-04', 'Safe House', 'A new talent: when a seven would make you drop half your cards, play it and keep them all. It works on anybody’s seven.'],
   ['2026-10-04', 'Spy', 'A new rare skill you can’t buy. When the dice land on a block that pays influence and you have a major holding there, a Spy can turn up in your hand. Play it to see everything a rival holds for the rest of your turn.'],
@@ -13875,7 +13886,7 @@ function renderLanding() {
         <div class="lp-wrap release-wrap" id="roadmap"><details class="release-notes"><summary><span>The city so far</span><small>Releases 01–05 · Already in the game</small><i aria-hidden="true">+</i></summary><ol class="release-list">
           <li><span>01</span><div><h3>The foundations</h3><p>Game records, board views, city lights, and a refined sound mix.</p></div></li>
           <li><span>02</span><div><h3>Set the pace</h3><p>Optional timed turns and tools to keep the game moving.</p></div></li>
-          <li><span>03</span><div><h3>Trash talk</h3><p>Stickers, whispers, and splats bring the table’s personalities into the city.</p></div></li>
+          <li><span>03</span><div><h3>Trash talk</h3><p>GIF reactions, whispers, and distractions bring the table’s personalities into the city.</p></div></li>
           <li><span>04</span><div><h3>The director</h3><p>A moving camera, story panels, and an announcer follow the action.</p></div></li>
           <li><span>05</span><div><h3>Turf wars</h3><p>Claim territory, challenge rival buildings, and keep Backup on call.</p></div></li>
         </ol></details>${patchNotesHTML()}</div>
@@ -15270,7 +15281,7 @@ function renderPlayer() {
   if (st) useGeo(st.board);
   stageSync(st); fxObserve(st); quietly(tookWatch, st); quietly(scoreObserve, st); quietly(clockObserve, st); quietly(modeObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st); quietly(stObserve, st);
   if (!$('#p-main')) {
-    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: GIFs, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
+    $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: GIFs, whispers, distractions" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
       <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-wsp" role="status"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
     document.body.classList.add('pview');
   }
@@ -15433,14 +15444,13 @@ async function bootPlayer() {
    table's side channel (/talk); the table checks it (a seated player, validated GIF media
    or a phrase it knows, not too often), notes it in the game record and passes
    it on to every screen (/said), where each screen shows its own part:
-   - a GIF: flies out of the sender's seat on the table screen and the
-     board view, with the player’s name;
+   - a GIF: flies out of the sender's seat on the table screen and board view;
    - a whisper: one line of street banter from a fixed menu (nine situations,
      five lines each), to one player. An envelope crosses the table from seat
      to seat and only that player's phone shows the words. Now and then the
      announcer intercepts one and reads it out: he can only say what he has
      recorded, which is why the menu is fixed;
-   - a splat: a waiting player throws one at the player whose turn it is. It
+   - a distraction GIF: a waiting player sends one to the player whose turn it is. It
      lands over the board on that phone for a few seconds, under the board's
      own buttons and never taking a tap: the board still works through it.
    None of it is in the game state, so undo, a reload and validState never
@@ -15464,35 +15474,8 @@ const TT_SITS = {
 const TT_SAY = {}, TT_SIT = {};           // every line's words, and the situation it is in
 Object.keys(TT_SITS).forEach(s => Object.keys(TT_SITS[s][1]).forEach(k => { TT_SAY[k] = TT_SITS[s][1][k]; TT_SIT[k] = s; }));
 const TT_ANSWER = { deal: 'agree', agree: 'agree', decline: 'deal', turf: 'bluff', bluff: 'trash', props: 'props', trash: 'revenge', revenge: 'bluff', hurry: 'agree' };
-const TT_SPLAT = { tag: 'Spray paint', smoke: 'Smoke bomb', glitter: 'Glitter bomb', pigeon: 'Pigeon' };
-const TT_ART = { tag:['graffiti-splats',0], smoke:['graffiti-splats',1], glitter:['graffiti-splats',2], pigeon:['graffiti-splats',3] };
-/* The remaining splats use three illustrated poses; public reactions come from GIPHY. */
-const TT_ATLASES = { 'graffiti-splats': { w:1086, h:1448, cuts:[[0,365,730,1067,1448],[0,383,720,1045,1448],[0,386,728,1056,1448]] } };
-// Retain decoded images so the first reaction has no fetch or image-decode work on the tap path.
-const TT_IMAGES = [], TT_ART_HTML = Object.create(null);
-let ttWarmPromise = null;
-function ttWarm() {
-  if (ttWarmPromise || typeof Image === 'undefined') return ttWarmPromise;
-  ttWarmPromise = Promise.all(Object.keys(TT_ATLASES).map(name => {
-    const img = new Image(); img.decoding = 'async'; img.fetchPriority = 'low';
-    TT_IMAGES.push(img); img.src = `art/talk/${name}.webp`;
-    return typeof img.decode === 'function' ? img.decode().then(() => true, () => false) : Promise.resolve(true);
-  }));
-  return ttWarmPromise;
-}
-function ttArtHTML(k, play = false) {
-  const art = Object.prototype.hasOwnProperty.call(TT_ART, k) && TT_ART[k];
-  if (!art) return `<span class="tt-art" style="background:var(--stk-whisper) center/contain no-repeat" aria-hidden="true"></span>`;
-  const cacheKey = `${k}:${play}`;
-  if (TT_ART_HTML[cacheKey]) return TT_ART_HTML[cacheKey];
-  const [file, row] = art, atlas = TT_ATLASES[file];
-  const cells = [0,1,2].map(col => {
-      const x = Math.round(col * atlas.w / 3), y = atlas.cuts[col][row];
-      const w = Math.round((col + 1) * atlas.w / 3) - x, h = atlas.cuts[col][row + 1] - y, side = Math.max(w, h);
-      return `--tt-width:${96 * w / side}%;--tt-height:${96 * h / side}%;--tt-size:${100 * atlas.w / w}% ${100 * atlas.h / h}%;--tt-position:${100 * x / (atlas.w - w)}% ${100 * y / (atlas.h - h)}%`;
-    });
-  return TT_ART_HTML[cacheKey] = `<span class="tt-art${play ? ' tt-playing' : ''}" aria-hidden="true" style="--tt-atlas:url(art/talk/${file}.webp)">` +
-    cells.map(style => `<span class="tt-frame" style="${style}"></span>`).join('') + '</span>';
+function ttArtHTML() {
+  return '<span class="tt-art" style="background:var(--stk-whisper) center/contain no-repeat" aria-hidden="true"></span>';
 }
 const ttHas = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
 const ttWord = k => (ttHas(TT_SAY, k) ? TT_SAY[k] : '');
@@ -15511,7 +15494,7 @@ function splatNo(st, p, used, lastOn, now) {
   if (a === p.pid) return 'Not on your own turn';
   if (st.step === 'fight' || st.fight) return 'Not during a fight';
   if (st.clock && st.clock.up) return 'Their time is up already';
-  if (used === ttTurn(st)) return 'One splat a turn: thrown';
+  if (used === ttTurn(st)) return 'One distraction a turn: sent';
   if (now - (lastOn || -1e9) < TT.splatGap) return 'They just got one';
   return '';
 }
@@ -15544,10 +15527,12 @@ function talkIn(a, now = Date.now()) {
       TTH.icptAt = now; m.x = 1; m.v = [ttPick('v_icpt', 4), 'v_n_' + p.color, 'v_says', 'v_w_' + e];
     }
   } else if (k === 'splat') {
-    if (!ttHas(TT_SPLAT, e)) return null;
+    if (!window.RTCGiphy || !window.RTCGiphy.validate(a.gif) || e !== a.gif.id) return null;
     const to = activePid(st);
-    if (a.to !== to) return null;                                // thrown at whoever was on the clock when it left the phone
+    if (a.to !== to || a.turn !== ttTurn(st)) return null;       // never retarget a selection after its turn changes
     if (splatNo(st, p, TTH.splatBy[p.pid], TTH.splatOn[to], now)) return null;
+    const { id, title, url, still, width, height, rating } = a.gif;
+    m.gif = { id, title, url, still, width, height, rating }; m.turn = a.turn;
     TTH.splatBy[p.pid] = ttTurn(st); TTH.splatOn[to] = now; m.to = to;
     if (now - TTH.sayAt > TT.sayGap && Math.random() < TT.sayP) { TTH.sayAt = now; m.v = [ttPick('v_splat', 3)]; }
   } else return null;
@@ -15576,7 +15561,8 @@ function talkOk(m) {
   if (m.x !== undefined && !(m.x === 1 && m.k === 'wsp')) return false;
   if (m.k === 'gif') return !!window.RTCGiphy && window.RTCGiphy.validate(m.gif) && m.e === m.gif.id && m.to === undefined;
   if (m.k === 'wsp') return !!ttWord(m.e) && typeof m.to === 'string' && !!playerOf(st, m.to) && m.to !== m.p;
-  if (m.k === 'splat') return ttHas(TT_SPLAT, m.e) && typeof m.to === 'string' && m.to === activePid(st) && m.to !== m.p && st.phase === 'turn';
+  if (m.k === 'splat') return !!window.RTCGiphy && window.RTCGiphy.validate(m.gif) && m.e === m.gif.id &&
+    typeof m.to === 'string' && m.to === activePid(st) && m.to !== m.p && m.turn === ttTurn(st) && st.phase === 'turn';
   if (m.k === 'pic') return st.phase === 'over' && m.p === st.win && (m.ok === 0 || m.ok === 1) && typeof m.c === 'string' && /^[a-z0-9]{6,12}$/.test(m.c) &&
     (m.full === undefined || m.full === 1) && m.to === undefined && m.e === undefined && m.v === undefined;   // the table's answer about the winner's selfie (release 6)
   return false;
@@ -15626,17 +15612,16 @@ function talkShow(m) {
   talkSay(m);
   // Schedule against the audio clock while the art travels, so the cue starts on landing.
   if (m.k === 'wsp') sfx('whisper', { vol: 0.7 });
-  else if (m.k === 'splat') sfx('s_' + m.e, { at: FX.on ? 600 : 0 });
   if (document.hidden) return;
   const s = ttSize(), a = ttFit(seatAt(m.p), s), c = ttMid(), anim = FX.on;
   const at = (d, p, sz) => { d.style.left = (p.x - sz / 2) + 'px'; d.style.top = (p.y - sz / 2) + 'px'; };
-  if (m.k === 'gif') {
+  if (m.k === 'gif' || m.k === 'splat') {
     const d = talkGifCard(m.gif, s, from && from.name); if (!d) return;
     at(d, a, s); ttLayer().appendChild(d);
     const all = ttLayer().querySelectorAll('.ttgif'); if (all.length > 4) all[0].remove();
     let dx = c.x - a.x, dy = c.y - a.y;
     const len = Math.hypot(dx, dy) || 1, go = Math.min(len * .35, s * 1.5);
-    const dest = ttFit({ x:a.x + dx / len * go, y:a.y + dy / len * go }, s);
+    const dest = m.k === 'splat' ? ttFit(seatAt(m.to), s) : ttFit({ x:a.x + dx / len * go, y:a.y + dy / len * go }, s);
     dx = dest.x - a.x; dy = dest.y - a.y;
     talkGifPlay(d, anim ? [
       { transform:'scale(.7)', opacity:0 },
@@ -15706,10 +15691,11 @@ function talkNo(k, now = Date.now()) {
 let talkPost = msg => send(G.client, P.base + '/talk', JSON.stringify(msg), false);     // (a lab loops it back)
 function talkSend(body) {
   const st = G.state, me = st && playerOf(st, PID), now = Date.now(); if (!me) return false;
-  if (body.k === 'gif' && (!window.RTCGiphy || !window.RTCGiphy.validate(body.gif) || body.e !== body.gif.id)) return false;
+  if ((body.k === 'gif' || body.k === 'splat') && (!window.RTCGiphy || !window.RTCGiphy.validate(body.gif) || body.e !== body.gif.id)) return false;
   if (!['gif', 'wsp', 'splat'].includes(body.k)) return false;
+  if (body.k === 'gif' && body.to !== undefined) return false;
+  if (body.k === 'splat' && (body.to !== activePid(st) || body.turn !== ttTurn(st))) return false;
   if (body.k === 'splat' ? splatNo(st, me, TTP.used, TTP.lastOn[activePid(st)], now) : talkNo(body.k, now)) return false;
-  if (body.k === 'splat') body = Object.assign({ to: activePid(st) }, body);
   if (!talkPost(Object.assign({ pid: PID }, body))) { toast('Not connected. Trying again in a moment.'); return false; }
   if (body.k === 'gif') { TTP.emo = TTP.emo.filter(t => now - t < TT.emoWin); TTP.emo.push(now); }
   else if (body.k === 'wsp') TTP.wspAt = now;
@@ -15740,15 +15726,16 @@ function talkSeen(m) {
     TTP.wsp = { p: m.p, e: m.e, at: now, id: m.id }; TTP.reply = m.p; TTP.heard = { p: m.p, e: m.e, at: now };
     sfx('whisper'); buzz([10, 60, 10]);
   } else if (m.k === 'splat') {
-    TTP.splat = { e: m.e, at: now, id: m.id };
-    sfx('s_' + m.e, { at: FX.on ? 672 : 0 }); buzz([40, 50, 30]);
+    if (TTP.splat) { clearTimeout(TTP.splat.loadTimer); if (TTP.splat.el) TTP.splat.el.remove(); }
+    TTP.splat = { gif:m.gif, at:now, id:m.id, readyAt:0, until:now + 3000 + TT.splatMs, el:null, loadTimer:0 };
+    buzz([40, 50, 30]);
   }
   talkTimer(); safeRender();
 }
 /* one timer for whatever ends next: a whisper's chip going, a splat wearing off */
 function talkTimer() {
   clearTimeout(TTP.timer);
-  const now = Date.now(), ends = [TTP.wsp && TTP.wsp.at + (now < TTP.wsp.at + TT.wspMs ? TT.wspMs : TT.wspMs + TT.wspOut), TTP.splat && TTP.splat.at + TT.splatMs].filter(Boolean);
+  const now = Date.now(), ends = [TTP.wsp && TTP.wsp.at + (now < TTP.wsp.at + TT.wspMs ? TT.wspMs : TT.wspMs + TT.wspOut), TTP.splat && TTP.splat.until].filter(Boolean);
   if (ends.length) TTP.timer = setTimeout(() => { safeRender(); talkTimer(); }, Math.max(60, Math.min(...ends) - now + 30));
 }
 /* a splat lives inside the board's picture (.board3d), which holds nothing but the board: the camera buttons and the
@@ -15757,22 +15744,42 @@ function talkTimer() {
    carried on from where it was by a negative delay. */
 function talkSplatSync() {
   const s = TTP.splat, now = Date.now();
-  document.querySelectorAll('.ttsplat').forEach(el => { if (!s || el.dataset.id !== s.id || !el.closest('#ps-board .board3d')) el.remove(); });
+  document.querySelectorAll('.ttsplat').forEach(el => { if (!s || el.dataset.id !== s.id) el.remove(); });
   if (!s) return;
-  if (now - s.at >= TT.splatMs) { TTP.splat = null; document.querySelectorAll('.ttsplat').forEach(el => el.remove()); return; }
-  const box = document.querySelector('#ps-board .board3d');
-  if (!box) return;
+  if (now >= s.until) {
+    clearTimeout(s.loadTimer); if (s.el) s.el.remove(); TTP.splat = null; return;
+  }
+  const box = document.querySelector('#ps-board .board3d'); if (!box) return;
   const bounds = box.getBoundingClientRect(), size = Math.min(bounds.width * .84, bounds.height * .78, ui.full ? 640 : 560);
-  const existing = box.querySelector('.ttsplat');
-  if (existing) { existing.style.width = existing.style.height = size + 'px'; return; }
-  const el = document.createElement('div'); el.className = `ttsplat sp-${s.e}${FX.on ? '' : ' tt-still'}`; el.dataset.id = s.id; el.setAttribute('aria-hidden', 'true');
-  el.innerHTML = ttArtHTML(s.e, FX.on);
-  const h = [...s.id].reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) % 997, 7);
+  let el = s.el;
+  if (!el) {
+    el = talkGifCard(s.gif, size, 'Distraction'); if (!el) { TTP.splat = null; return; }
+    s.el = el; el.classList.remove('ttstk'); el.classList.add('ttsplat'); el.dataset.id = s.id; el.setAttribute('aria-hidden', 'true');
+    const img = el.querySelector('img');
+    const ready = () => {
+      if (TTP.splat !== s || s.readyAt) return;
+      clearTimeout(s.loadTimer); s.readyAt = Date.now(); s.until = s.readyAt + TT.splatMs;
+      el.classList.remove('gif-loading');
+      if (typeof el.animate === 'function') {
+        el.style.animation = 'none';
+        s.animation = el.animate([{ opacity:0 }, { opacity:1, offset:.08 }, { opacity:1, offset:.8 }, { opacity:0 }], { duration:TT.splatMs, fill:'both' });
+      } else el.style.animationDelay = '0ms';
+      talkTimer();
+    };
+    img.addEventListener('load', ready, { once:true });
+    s.loadTimer = setTimeout(ready, Math.max(0, 3000 - (now - s.at)));
+    if (img.complete && img.naturalWidth) ready();
+  }
   el.style.width = el.style.height = size + 'px';
-  el.style.setProperty('--r', ((h % 15) - 7) + 'deg'); el.style.setProperty('--dx', ((h % 7) - 3) + '%');
-  el.style.animationDelay = -(now - s.at) + 'ms';
-  el.style.setProperty('--tt-age', -(now - s.at) + 'ms');
-  box.appendChild(el);
+  // The same media element survives board redraws; its remaining fade time does not restart.
+  if (el.parentNode !== box) {
+    box.appendChild(el);
+    if (s.readyAt) {
+      const age = Math.max(0, now - s.readyAt);
+      if (s.animation) s.animation.currentTime = age;
+      else { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; el.style.animationDelay = -age + 'ms'; }
+    }
+  }
 }
 /* the whisper, where your eye is: a note across the top of the screen, over the page (the top bar had no room for
    it: a long name or phrase was cut off). The whole note is readable; a tap on it opens the sheet to whisper back,
@@ -15786,12 +15793,12 @@ function talkChipHTML(st) {
     `<button class="wspx" data-p="wspx" aria-label="Put the whisper away">${XICO}</button></div>`;
 }
 function talkGone() {
+  if (TTP.splat) { clearTimeout(TTP.splat.loadTimer); if (TTP.splat.el) TTP.splat.el.remove(); }
   TTP.wsp = null; TTP.splat = null;
   if (ui.sheet === 'talk') { ui.sheet = null; layerPop(); }
   modalSync(null); talkBar(G.state, null); talkSplatSync();
 }
 function talkBar(st, me) {
-  if (me) ttWarm();
   const bar = document.querySelector('.pbar'); if (!bar) return;
   const b = bar.querySelector('[data-p=talk].talkbtn'); if (b) b.hidden = !me;
   const chip = me && st ? talkChipHTML(st) : '';
@@ -15843,7 +15850,7 @@ function talkToWhisper() {
   const sc = document.querySelector('#p-modal .m-talk .sh-scroll'), h = sc && sc.querySelector('.tthw');
   if (h) sc.scrollTop += h.getBoundingClientRect().top - sc.getBoundingClientRect().top - 4;
 }
-/* The sheet: live GIFs, a whisper to one player, and a splat for whoever is on the clock. */
+/* The sheet: live GIF reactions, whispers, and a targeted GIF distraction. */
 function talkSheet(st, me) {
   const now = Date.now(), others = st.players.filter(p => p.pid !== me.pid);
   const wNo = talkNo('wsp', now);
@@ -15855,8 +15862,8 @@ function talkSheet(st, me) {
   const ap = playerOf(st, activePid(st)), sNo = splatNo(st, me, TTP.used, ap ? TTP.lastOn[ap.pid] : 0, now);
   // on your own turn there is nobody to throw at, so the section is not there at all
   const splat = st.phase === 'turn' && ap && ap.pid !== me.pid ? `<h3 class="tth">Distract ${esc(ap.name)}</h3>` +
-    (sNo ? `<p class="small muted ttno">${esc(sNo)}.</p>` : `<p class="small muted ttno">Lands on their board for a few seconds. One a turn.</p>`) +
-    `<div class="ttsplats">${Object.keys(TT_SPLAT).map(k => `<button class="ttb" data-p="tsplat" data-arg="${k}" ${sNo ? 'disabled' : ''}>${ttArtHTML(k)}<span>${TT_SPLAT[k]}</span></button>`).join('')}</div>` : '';
+    (sNo ? `<p class="small muted ttno">${esc(sNo)}.</p>` : `<p class="small muted ttno">Choose a GIF to land on their board for a few seconds. One per turn.</p>`) +
+    `<button type="button" class="tt-distract" data-p="tdistract" data-arg="${esc(ap.pid)}" ${sNo ? 'disabled' : ''}>Choose a distraction GIF</button>` : '';
   const body = '<div data-gif-picker></div>' +
     `<h3 class="tth tthw">Whisper</h3>` + (others.length ? `<div class="ttto" role="group" aria-label="Whisper to">${others.map(p => `<button class="sw" data-p="tto" data-arg="${p.pid}" aria-pressed="${p === to}"><span class="chip" style="background:var(--p-${p.color})"></span>${esc(p.name)}</button>`).join('')}</div>` +
       `${words}<p class="small muted ttno">Only ${esc(to ? to.name : 'they')} sees it. The announcer might read it out.</p>` : '<p class="small muted ttno">Nobody else is seated yet.</p>') +
@@ -15864,13 +15871,20 @@ function talkSheet(st, me) {
   return { kind: 'talk', label: 'Trash talk', view: 'talk', top: shTop('Trash talk'), hero: '', body, foot: '' };
 }
 /* ---------- live GIF picker: requests only while the sheet is open ---------- */
-const TTG = { root:null, client:null, key:'', controller:null, request:0, items:[], analytics:{}, query:'', next:null, loading:false, observer:null, coolTimer:0 };
+const TTG = { root:null, client:null, key:'', controller:null, request:0, items:[], analytics:{}, query:'', next:null, loading:false, observer:null, coolTimer:0, target:null, turn:'' };
 const GIPHY_MARK = 'art/talk/powered-by-giphy.png';
+// Live topic searches keep the picker on-theme; GIPHY's global trending feed cannot be filtered by topic.
+const TT_GIF_GROUPS = [
+  { id:'city', title:'Power plays', topics:[['Get paid', 'money rain'], ['Boss moves', 'boss move'], ['Big wins', 'victory celebration'], ['Busted', 'police busted'], ['Betrayal', 'betrayal reaction'], ['Deal done', 'deal handshake'], ['Robbed', 'you got robbed'], ['Payback', 'revenge reaction']] },
+  { id:'distractions', title:'Distractions', topics:[['Emote', 'emote'], ['Booty', 'booty'], ['Sexy', 'sexy women'], ['Party mode', 'club dancing']] }
+];
+const TT_GIF_DEFAULT = TT_GIF_GROUPS[0].topics[0][1];
 const talkGifMotion = () => FX.on && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 function talkGifCard(gif, size, name) {
   if (!window.RTCGiphy || !window.RTCGiphy.validate(gif)) return null;
   const d = document.createElement('div'); d.className = 'ttstk ttgif gif-loading';
   d.style.width = d.style.height = size + 'px';
+  d.setAttribute('aria-label', `${name || 'Player'}: ${gif.title || 'GIF reaction'}`);
   const img = document.createElement('img'); img.alt = gif.title || 'GIF reaction'; img.decoding = 'async';
   img.onload = () => d.classList.remove('gif-loading');
   img.src = talkGifMotion() ? gif.url : gif.still;
@@ -15878,9 +15892,12 @@ function talkGifCard(gif, size, name) {
     if (img.src !== gif.still) img.src = gif.still;
     else { const fallback = document.createElement('span'); fallback.className = 'gif-missing'; fallback.textContent = 'GIF unavailable'; d.classList.remove('gif-loading'); img.replaceWith(fallback); }
   };
-  const foot = document.createElement('footer'), who = document.createElement('b'), brand = document.createElement('img');
-  who.textContent = name || 'Reaction'; brand.src = GIPHY_MARK; brand.alt = 'Powered by GIPHY';
-  foot.append(who, brand); d.append(img, foot); return d;
+  // Keep provider credit separate from the reaction; one corner mark serves all visible GIFs.
+  if (!document.getElementById('gif-credit')) {
+    const brand = document.createElement('img'); brand.id = 'gif-credit'; brand.className = 'gif-credit';
+    brand.src = GIPHY_MARK; brand.alt = 'Powered by GIPHY'; document.body.appendChild(brand);
+  }
+  d.append(img); return d;
 }
 function talkGifPlay(d, frames, options) {
   const img = d.querySelector('img');
@@ -15901,15 +15918,22 @@ function talkGifClose() {
   clearTimeout(TTG.coolTimer); TTG.coolTimer = 0;
   TTG.request++; TTG.root = null; TTG.controller = null; TTG.observer = null;
   // No stored GIF catalogue or media cache: reopening fetches current content.
-  TTG.items = []; TTG.analytics = {}; TTG.query = ''; TTG.next = null; TTG.loading = false;
+  TTG.items = []; TTG.analytics = {}; TTG.query = ''; TTG.next = null; TTG.loading = false; TTG.target = null; TTG.turn = '';
 }
 function talkGifSync() {
   const root = document.querySelector('#p-modal [data-gif-picker]'); if (!root) return;
   if (TTG.root !== root) {
     talkGifClose(); TTG.root = root; root.className = 'gif-picker';
-    root.innerHTML = `<div class="gif-head"><h3>Say it with a GIF</h3><img class="gif-brand" src="${GIPHY_MARK}" alt="Powered by GIPHY"></div>` +
-      '<form class="gif-search" role="search" aria-label="Search GIFs"><input type="search" aria-label="Search GIFs and memes" placeholder="Find the perfect reaction" maxlength="50" autocomplete="off" enterkeyhint="search"><button type="submit">Search</button></form>' +
-      '<p class="gif-context" hidden></p><div class="gif-queries" role="group" aria-label="GIF searches"></div>' +
+    root.innerHTML = `<div class="gif-head"><h3>City reactions</h3><img class="gif-brand" src="${GIPHY_MARK}" alt="Powered by GIPHY"></div>` +
+      '<p class="gif-context">Live picks for money moves &amp; table drama.</p>' +
+      '<form class="gif-search" role="search" aria-label="Search GIFs"><input type="search" aria-label="Search GIFs and memes" placeholder="Search GIFs & memes" maxlength="50" autocomplete="off" enterkeyhint="search"><button type="submit">Search</button></form>' +
+      TT_GIF_GROUPS.map(group => `<section class="gif-topics${group.id === 'distractions' ? ' gif-distractions' : ''}" aria-labelledby="gif-${group.id}-title">` +
+        `<h4 id="gif-${group.id}-title">${esc(group.title)}</h4>` +
+        (group.id === 'distractions' ? '<p class="gif-context">Throw them off their game.</p>' : '') +
+        `<div class="gif-queries" role="group" aria-label="${esc(group.title)}">` +
+        group.topics.map(([label, query]) => `<button type="button" data-gif-query="${esc(query)}" aria-pressed="false">${esc(label)}</button>`).join('') + '</div></section>').join('') +
+      '<div class="gif-target" hidden><strong></strong><p class="gif-context"></p><button type="button" class="gif-untarget">Back to reactions</button></div>' +
+      '<p class="gif-context gif-moment" hidden></p>' +
       '<p class="gif-status" role="status" aria-live="polite"></p><div class="gif-grid" aria-label="GIF results"></div>' +
       '<div class="gif-error" hidden><p></p><button type="button" class="gif-retry">Try again</button></div>' +
       '<button type="button" class="gif-more" hidden>More GIFs</button>';
@@ -15918,15 +15942,19 @@ function talkGifSync() {
       ev.stopPropagation();
       const button = ev.target.closest('button');
       if (!button || button.disabled || MODAL.swallow || performance.now() - MODAL.at < 320) return;
-      if (button.hasAttribute('data-gif-query')) {
+      if (button.classList.contains('gif-untarget')) {
+        TTG.target = null; TTG.turn = ''; talkGifCooldown();
+      } else if (button.hasAttribute('data-gif-query')) {
         root.querySelector('input').value = button.dataset.gifQuery; talkGifLoad(button.dataset.gifQuery);
       } else if (button.classList.contains('gif-more')) talkGifLoad(TTG.query, true);
       else if (button.classList.contains('gif-retry')) talkGifLoad(TTG.query, TTG.items.length > 0);
       else if (button.dataset.gifId) {
         const gif = TTG.items.find(item => item.id === button.dataset.gifId); if (!gif) return;
         TTG.client.track(TTG.analytics[gif.id], 'onclick');
-        if (talkNo('gif')) { toast('Give that reaction a moment.'); talkGifCooldown(); return; }
-        if (talkSend({ k:'gif', e:gif.id, gif })) {
+        const reason = talkGifNo();
+        if (reason) { toast(reason === 'wait' ? 'Give that reaction a moment.' : reason); talkGifCooldown(); return; }
+        const body = TTG.target ? { k:'splat', e:gif.id, gif, to:TTG.target, turn:TTG.turn } : { k:'gif', e:gif.id, gif };
+        if (talkSend(body)) {
           TTG.client.track(TTG.analytics[gif.id], 'onsent'); buzz(8); talkPop(gif); closeSheet('sent');
         } else talkGifCooldown();
       }
@@ -15942,26 +15970,48 @@ function talkGifSync() {
         if (TTG.client) TTG.client.track(TTG.analytics[tile.dataset.gifId], 'onload');
       }
     }, { root:root.closest('.sh-scroll'), threshold:.15 });
-    talkGifLoad('');
+    talkGifLoad(TT_GIF_DEFAULT);
   }
   const st = G.state, me = st && playerOf(st, PID), sug = me ? talkSuggest(st, me) : { why:'', list:[] };
-  const context = root.querySelector('.gif-context'); context.textContent = sug.why; context.hidden = !sug.why;
-  const queries = root.querySelector('.gif-queries');
-  const html = `<button type="button" data-gif-query="" aria-pressed="${!TTG.query}">Trending</button>` +
-    sug.list.map(q => `<button type="button" data-gif-query="${esc(q)}" aria-pressed="${TTG.query === q}">${esc(q)}</button>`).join('');
-  if (queries.__h !== html) { queries.innerHTML = html; queries.__h = html; }
+  const context = root.querySelector('.gif-moment'); context.textContent = sug.why; context.hidden = !sug.why;
   talkGifCooldown();
+}
+function talkGifNo() {
+  if (!TTG.target) return talkNo('gif');
+  const st = G.state, me = st && playerOf(st, PID);
+  if (!st || TTG.turn !== ttTurn(st) || TTG.target !== activePid(st)) return 'That turn ended. Choose a distraction again.';
+  return splatNo(st, me, TTP.used, TTP.lastOn[TTG.target], Date.now());
+}
+function talkGifDistract(pid) {
+  const st = G.state, me = st && playerOf(st, PID);
+  if (!st || pid !== activePid(st) || splatNo(st, me, TTP.used, TTP.lastOn[pid], Date.now())) { renderPlayer(); return; }
+  talkGifSync(); if (!TTG.root) return;
+  TTG.target = pid; TTG.turn = ttTurn(st);
+  const query = TT_GIF_GROUPS.find(group => group.id === 'distractions').topics[0][1];
+  TTG.root.querySelector('input').value = query;
+  talkGifLoad(query); talkGifCooldown();
+  const scroll = TTG.root.closest('.sh-scroll'); if (scroll) scroll.scrollTop = 0;
 }
 function talkGifCooldown() {
   clearTimeout(TTG.coolTimer); TTG.coolTimer = 0;
   const root = TTG.root; if (!root || !root.isConnected) return;
-  const reason = talkNo('gif');
-  root.querySelectorAll('.gif-tile').forEach(b => { b.disabled = !!reason || b.dataset.unavailable === '1'; });
-  if (reason) TTG.coolTimer = setTimeout(talkGifCooldown, 300);
+  const reason = talkGifNo(), target = TTG.target && G.state && playerOf(G.state, TTG.target);
+  const mode = root.querySelector('.gif-target'); mode.hidden = !TTG.target;
+  mode.querySelector('strong').textContent = target ? `Distract ${target.name}` : 'Distraction GIF';
+  mode.querySelector('p').textContent = reason || (target ? `Lands on ${target.name}’s board. One per turn.` : '');
+  root.querySelectorAll('.gif-tile').forEach(b => {
+    b.disabled = !!reason || b.dataset.unavailable === '1';
+    const title = b.querySelector('img').alt || 'GIF';
+    b.setAttribute('aria-label', target ? `Distract ${target.name} with ${title}` : `Send ${title}`);
+  });
+  if (reason || TTG.target) TTG.coolTimer = setTimeout(talkGifCooldown, 300);
 }
 async function talkGifLoad(query, more = false) {
   const root = TTG.root; if (!root || !root.isConnected) return;
   query = String(query || '').slice(0, 50); // Search terms reach GIPHY exactly as entered.
+  if (!query) query = TT_GIF_DEFAULT;
+  const topic = TT_GIF_GROUPS.flatMap(group => group.topics).find(([, q]) => q === query);
+  const label = topic ? topic[0] : `“${query}”`;
   if (more && (TTG.loading || TTG.next === null)) return;
   if (TTG.controller) TTG.controller.abort();
   const request = ++TTG.request, controller = new AbortController(); TTG.controller = controller;
@@ -15973,7 +16023,7 @@ async function talkGifLoad(query, more = false) {
     grid.innerHTML = '<div class="gif-skeleton" aria-hidden="true"></div>'.repeat(4);
   }
   TTG.loading = true; errorBox.hidden = true; moreButton.hidden = true; grid.setAttribute('aria-busy', 'true');
-  status.textContent = more ? 'Loading more GIFs…' : query ? `Searching for “${query}”…` : 'Finding what’s trending…';
+  status.textContent = more ? 'Loading more GIFs…' : `Finding ${label} GIFs…`;
   root.querySelectorAll('[data-gif-query]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.gifQuery === query)));
   try {
     if (!TTG.client || !TTG.key) throw Object.assign(new Error('GIFs aren’t available at this table yet.'), { code:'MISSING_KEY' });
@@ -15995,7 +16045,7 @@ async function talkGifLoad(query, more = false) {
       tile.append(img, label); grid.appendChild(tile);
       if (TTG.observer) TTG.observer.observe(tile); else TTG.client.track(TTG.analytics[gif.id], 'onload');
     }
-    status.textContent = TTG.items.length ? (query ? `“${query}” · tap a GIF to send` : 'Trending now · tap a GIF to send') : 'No GIFs found. Try another search.';
+    status.textContent = TTG.items.length ? `${label} · tap a GIF to send` : 'No GIFs found. Try another search.';
     moreButton.hidden = TTG.next === null;
   } catch (error) {
     if (request !== TTG.request || root !== TTG.root || error.name === 'AbortError') return;
@@ -20622,8 +20672,7 @@ document.addEventListener('click', ev => {
     case 'tsit': if (ttHas(TT_SITS, pb.dataset.arg)) { TTP.sit = pb.dataset.arg; renderPlayer(); } break;
     case 'twsp': { const to = st && playerOf(st, TTP.to);
       if (to && talkSend({ k: 'wsp', e: pb.dataset.arg, to: to.pid })) { buzz(8); closeSheet('sent'); toast(`Whispered \u201c${ttWord(pb.dataset.arg)}\u201d to ${to.name}`); } else renderPlayer(); break; }
-    case 'tsplat': { const ap = st && playerOf(st, activePid(st));
-      if (ap && talkSend({ k: 'splat', e: pb.dataset.arg })) { buzz(14); closeSheet('sent'); toast(`${TT_SPLAT[pb.dataset.arg]} thrown at ${ap.name}`); } else renderPlayer(); break; }
+    case 'tdistract': talkGifDistract(pb.dataset.arg); break;
     case 'roll': if (act({ t: 'roll' })) { ui.pending = true; renderPlayer(); clearTimeout(ui.pendTimer); ui.pendTimer = setTimeout(() => { if (ui.pending) { ui.pending = false; renderPlayer(); } }, 4000); } break;
     case 'mode': ui.mode = ui.mode === pb.dataset.arg ? null : pb.dataset.arg; ui.sel = null; ui.give = null; ui.get = null; renderPlayer(); break;
     case 'offadd': case 'offsub': {
