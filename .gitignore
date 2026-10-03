@@ -40,3 +40,5 @@
 !/art/show/
 # the coach's lines (onboarding): fetched only by a phone being coached
 !/sound-coach.bin
+# publish rules for the Cloudflare Pages build (export-ignore)
+!/.gitattributes

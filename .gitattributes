@@ -1,0 +1,7 @@
+# The site is published from `git archive HEAD` (Cloudflare Pages build), so
+# anything marked export-ignore stays in the repo but never goes on the site.
+*.md export-ignore
+*.py export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+CNAME export-ignore
