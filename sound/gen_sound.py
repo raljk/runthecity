@@ -577,6 +577,11 @@ LINES.update({
     "v_c_stall":     dict(text="Stalling. Nobody's rushing this one.", style=0.5),
     "v_c_rush":      dict(text="Rush job! Somebody's in a hurry.", style=0.55),
 })
+# Safe House and Spy (2026-10-04): said by sndPlay as the card is played, like every card's line
+LINES.update({
+    "v_c_safehouse": dict(text="Safe house. The stash stays put.", style=0.5),
+    "v_c_spy":       dict(text="Somebody's watching your hand.", style=0.55),
+})
 
 
 def post(path, body, out, query=""):
