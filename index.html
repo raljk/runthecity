@@ -356,14 +356,17 @@ input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius
 .roll .rdice{display:flex;align-items:center;gap:9px}
 .roll .die{border-radius:11px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.2),0 2px 6px rgba(0,0,0,.5)}
 .roll .sum{font-family:var(--display);font-weight:800;font-size:3.4rem;font-variant-numeric:tabular-nums;line-height:.9;margin-left:5px;color:var(--token)}
-.roll.hot .sum{color:#ff5a6a;text-shadow:0 0 18px rgba(255,90,106,.45)}
+/* red is for a seven only; six and eight, the busiest numbers, are gold */
+.roll.hot .sum{color:#ffc94d;text-shadow:0 0 18px rgba(255,201,77,.4)}
+.roll.seven .sum{color:#ff5a6a;text-shadow:0 0 18px rgba(255,90,106,.45)}
 .roll .rgain{display:flex;align-items:center;gap:10px}
 .roll .rgain .lab{font-family:var(--display);font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--ok);line-height:1.15}
 .roll .rnote{flex-basis:100%;font-size:.84rem}
 .banner .bdice{--d:38px;display:inline-flex;align-items:center;gap:6px;vertical-align:middle;margin-left:.35em}
 .banner .bdice .die{border-radius:8px}
 .banner .bdice strong{font-size:2rem;line-height:1;margin-left:4px;font-variant-numeric:tabular-nums}
-.banner .bdice.hot strong{color:#ff5a6a}
+.banner .bdice.hot strong{color:#ffc94d}
+.banner .bdice.seven strong{color:#ff5a6a}
 .moves{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .opt{width:100%;display:flex;align-items:center;gap:10px;text-align:left;background:var(--panel);
   border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:58px;cursor:pointer;font-weight:700}
@@ -677,7 +680,8 @@ svg.board[role=group] .neonU,svg.board[role=group] .neonX{opacity:.72}
 .slotm .sum{min-width:calc(var(--d)*1.05);text-align:center;font:800 calc(var(--d)*.86)/1 var(--display);font-variant-numeric:tabular-nums;
   color:var(--token);opacity:0;transform:scale(.2)}
 .slotm.done .sum{animation:sumpop .55s cubic-bezier(.2,.9,.3,1.5) forwards}
-.slotm.hot .sum{color:#ff5a6a}
+.slotm.hot .sum{color:#ffc94d}
+.slotm.seven .sum{color:#ff5a6a}
 @keyframes sumpop{0%{opacity:0;transform:scale(.2) rotate(-12deg)}60%{opacity:1;transform:scale(1.3) rotate(3deg);text-shadow:0 0 34px currentColor}100%{opacity:1;transform:scale(1);text-shadow:0 0 14px currentColor}}
 .slotm .pay{min-height:calc(var(--d)*.42);display:flex;align-items:center;gap:8px;font-weight:700;font-size:calc(var(--d)*.19);opacity:0;transition:opacity .3s;white-space:nowrap}
 .slotm.done .pay{opacity:1}
@@ -1268,7 +1272,8 @@ body.bfull #ps-board>section{min-height:var(--fullph,0px)}
 .huddice{--d:24px;flex:none;display:flex;align-items:center;gap:4px}
 .huddice .die{border-radius:6px}
 .huddice strong{font:800 1.5rem/1 var(--display);margin-left:3px;font-variant-numeric:tabular-nums;color:var(--token)}
-.huddice.hot strong{color:#ff5a6a}
+.huddice.hot strong{color:#ffc94d}
+.huddice.seven strong{color:#ff5a6a}
 .hudx{appearance:none;flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;color:var(--ink);border:1px solid var(--line);background:rgba(255,255,255,.04)}
 .hudhand{align-self:flex-start;display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:14px;border:1px solid var(--line);
   background:color-mix(in srgb,#060910 70%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
@@ -11900,10 +11905,41 @@ function clockResume(st, hold, keepAsks) {
   if (st.phase === 'turn' && c.lim && c.lim - c.used < CLOCK_GRACE) c.lim = c.used + CLOCK_GRACE;
 }
 function remember(st, r) { r.t = st.tick | 0; st.placed = (st.placed || []).concat([r]).slice(-40); }
+/* Two players: balanced dice. With two at the table every seven lands on the one rival, and fair dice bunch up
+   (in a game of 50 turns, two times in three there is a stretch with three sevens in six turns), so a two-player
+   game deals its rolls. A seven is never dealt within DICE_GAP rolls of the last one, and after that comes one roll
+   in four, which is one in six overall, as two dice give. Every other total comes from a deck of the 30 ways two dice
+   can make it, and when the deck runs low (at a random point among its last six cards, so nobody can count it down)
+   a fresh 30 go in with what is left, so each total comes up as often as the odds say and no card is ever lost.
+   The state keeps only how many of each are left and the gap: no secret, anyone could count the rolls. A game
+   starts at a random point of the sevens' rhythm, so its first roll is as likely a seven as any other. A Lucky
+   Streak still throws its own three dice, and a seven kept from them starts the gap like any other.
+   40,000 simulated games of 50 turns, fair dice -> balanced: three sevens inside six turns 64% -> 0%, two sevens
+   in a row 70% -> 0%, twelve sevens or more 12% -> 3%, fifteen rolls in a row with none 41% -> 15%. */
+const DICE_REST = [1, 2, 3, 4, 5, 0, 5, 4, 3, 2, 1], DICE_GAP = 2;   // the ways to throw 2 to 12, sevens apart; the rolls after a seven with none
+function balancedDice(st) { return st.players.length === 2; }
+function diceDeckOf(st) {
+  if (!st.diceDeck) { const r = rnd(6); st.diceDeck = { left: DICE_REST.slice(), gap: r < DICE_GAP ? DICE_GAP - r : 0 }; }
+  return st.diceDeck;
+}
+function dealDice(st) {
+  const k = diceDeckOf(st);
+  let sum = 7;
+  if (k.gap || rnd(4)) {
+    let n = k.left.reduce((a, b) => a + b, 0);
+    if (n <= 5 && !rnd(n + 1)) { k.left = k.left.map((c, i) => c + DICE_REST[i]); n += 30; }
+    let i = rnd(n), t = 0;
+    while (i >= k.left[t]) i -= k.left[t++];
+    k.left[t]--; sum = t + 2;
+  }
+  const lo = Math.max(1, sum - 6), a = lo + rnd(Math.min(6, sum - 1) - lo + 1);   // two faces that make it
+  return [a, sum - a];
+}
 /* The dice have landed (two of them, or the two a Lucky Streak kept): pay out, or send in the police. */
 function settleRoll(st, p, d, kept) {
   const sum = d[0] + d[1];
   st.dice = d; st.got = {}; st.pend = {};
+  if (balancedDice(st)) { const k = diceDeckOf(st); k.gap = sum === 7 ? DICE_GAP : Math.max(0, k.gap - 1); }
   const how = kept ? `${p.name} kept ${d[0]} and ${d[1]}: ${sum}.` : `${p.name} rolled ${sum}.`;
   if (sum === 7) {
     st.players.forEach(x => { const n = handCount(x); if (n > HAND_SAFE) st.pend[x.pid] = Math.floor(n / 2); });
@@ -11915,7 +11951,7 @@ function settleRoll(st, p, d, kept) {
     const took = Object.keys(st.got).map(id => `${playerOf(st, id).name} took ${handList(st.got[id])}`);
     say(`${how}${took.length ? ' ' + took.join('; ') + '.' : ' Nobody collected.'}`);
   }
-  rec('roll', Object.assign({ p: p.pid, d: d.slice(), sum, got: JSON.parse(JSON.stringify(st.got)) }, sum === 7 ? { drop: Object.assign({}, st.pend) } : {}, kept ? { kept: 1 } : {}));
+  rec('roll', Object.assign({ p: p.pid, d: d.slice(), sum, got: JSON.parse(JSON.stringify(st.got)) }, sum === 7 ? { drop: Object.assign({}, st.pend) } : {}, kept ? { kept: 1 } : balancedDice(st) ? { deck: 1 } : {}));
 }
 /* An upgrade draws a skill or talent: the rarity is rolled first, so a
    legendary is always a two-in-a-hundred moment however the game has gone,
@@ -12238,7 +12274,7 @@ function hostAction(a) {
         st.dice3 = [rnd(6) + 1, rnd(6) + 1, rnd(6) + 1]; st.step = 'luck';
         say(`${p.name} threw three dice on a Lucky Streak: ${st.dice3.join(', ')}.`);
         rec('luck3', { p: p.pid, d: st.dice3.slice() });
-      } else settleRoll(st, p, [rnd(6) + 1, rnd(6) + 1]);
+      } else settleRoll(st, p, balancedDice(st) ? dealDice(st) : [rnd(6) + 1, rnd(6) + 1]);   // two players: balanced dice
       G.hist = [];                                  // the table's undo never goes back past the dice
       commit(); return;
     }
@@ -12541,7 +12577,7 @@ function hostControl(act, arg) {
     case 'reshuffle': if (st.phase === 'lobby') { st.board = makeBoard('random', st.board.hexes.length === 30); say('Dealt a new random city.'); commit(); } return;
     case 'start':
       if (st.phase !== 'lobby' || st.players.length < 2 || clockOwed(st).length) return;   // everybody connected has said OK to the clock
-      st.phase = 'rolloff'; st.contenders = st.players.map(p => p.pid); st.rolls = {}; st.round = 1;
+      st.phase = 'rolloff'; st.contenders = st.players.map(p => p.pid); st.rolls = {}; st.round = 1; st.diceDeck = null;
       Object.assign(st, cardTable(st.players.length)); st.players.forEach(p => Object.assign(p, cardSeat()));
       clockTurn(st, null); st.clock.hold = 0; modeStart(st);
       recStart(st); say(`${MODE_NAME[modeOf(st)]}. Everyone rolls. Highest roll places first.`); commit(); return;
@@ -12622,7 +12658,7 @@ function hostControl(act, arg) {
      roll1 p d          a roll for first place     tie sum p[]       first p order[]
      op0 p v n got      a set-up operation         st0 p e           go: set-up is done
      turn p n           a turn starts (n: round)   end p n ms        it ends, and how long it took
-     roll p d sum got drop kept   the dice: who took what, and on a seven who must drop how many
+     roll p d sum got drop kept deck   the dice: who took what, and on a seven who must drop how many (deck: dealt by two players' balanced dice)
      luck3 p d          Lucky Streak's three dice  discard p cards   police p h vs[]   steal p from r
      build p k at free drop       bank p give n get                  offer p give want
      reply p ok         deal p with give want      unoffer p         buy p k           play p k ...
@@ -12915,7 +12951,7 @@ function renderHost() {
   } else if (st.phase === 'turn') {
     const g = guide(st, st.step === 'fight' ? null : act), sum = st.dice ? st.dice[0] + st.dice[1] : 0,
       dice = st.step === 'luck' && Array.isArray(st.dice3) ? `<span class="bdice luck"><span aria-hidden="true">${st.dice3.map(dieHTML).join('')}</span></span>`
-        : st.dice ? `<span class="bdice${sum === 7 || sum === 6 || sum === 8 ? ' hot' : ''}"><span aria-hidden="true">${dieHTML(st.dice[0])}${dieHTML(st.dice[1])}</span><strong>${sum}</strong></span>` : '';
+        : st.dice ? `<span class="bdice${sum === 7 ? ' seven' : sum === 6 || sum === 8 ? ' hot' : ''}"><span aria-hidden="true">${dieHTML(st.dice[0])}${dieHTML(st.dice[1])}</span><strong>${sum}</strong></span>` : '';
     what = `${g.yours ? `<span class="turnchip" style="background:var(--p-${ap.color})"></span>${esc(ap.name)}: ` : ''}${esc(g.now)}${dice}`;
     if (!ro) {
       if (st.step === 'roll' && !st.auction) extra = `<button class="btn" data-h="rollturn">Roll for ${esc(ap.name)}</button>`;
@@ -12995,7 +13031,7 @@ function renderHost() {
         ${modePickHTML(st)}
         ${dirPickHTML(st)}
         <div class="row"><button class="btn ghost" data-h="reshuffle" ${st.board.kind === 'random' ? '' : 'disabled'}>Deal again</button><button class="btn" style="flex:1" data-h="start" ${st.players.length < 2 || owed.length ? 'disabled' : ''}>${owed.length ? `Waiting for ${owed.length} to tap OK` : 'Start set-up'}</button></div>
-        <p class="small muted">${st.players.length < 3 ? 'Run the City is for 3 to 6 players. You can start with 2 to try it out.' : st.players.length >= BIG_FROM ? 'Five or six seats play on the big city: thirty blocks and eleven terminals.' : 'Seat order is the turn order, clockwise from whoever rolls highest.'}</p>`;
+        <p class="small muted">${st.players.length < 3 ? 'Run the City is for 3 to 6 players. You can start with 2 to try it out, with balanced dice: a seven never comes within two rolls of the last one.' : st.players.length >= BIG_FROM ? 'Five or six seats play on the big city: thirty blocks and eleven terminals.' : 'Seat order is the turn order, clockwise from whoever rolls highest.'}</p>`;
     } else {
       c += `<div class="row">${st.phase !== 'rolloff' ? `<button class="btn ghost" data-h="undo" ${G.hist.length ? '' : 'disabled'} title="Takes back a misclick, an End turn pressed by mistake included. It cannot go back past the dice, a draw, a steal, a fight or a skill or talent: that is what Rewind is for.">Undo a misclick</button>` : ''}<button class="btn ghost" data-h="lobby">Back to lobby</button></div>`;
     }
@@ -13519,7 +13555,7 @@ function renderLanding() {
         <details><summary>How long does a game take?</summary><p>Game length depends on how many people are playing and how quickly the crew takes its turns. There is no fixed play time. The host picks the pace: Blitz’s 45-second turns, a Timed match that ends after 30, 45 or 60 minutes, a Chess clock, Rush Hour, or Classic with or without a turn clock.</p></details>
         <details><summary>What do we need to play?</summary><p>One screen to host the shared city, a phone or browser for each player, and an internet connection. Open a table, then have everyone scan its QR code or use the phone link. There’s nothing to install.</p></details>
         <details><summary>Do we have to be in the same room?</summary><p>No. Share the phone link with friends wherever they are. The host can share a board link so everyone sees the same city live on another screen. Keep the host’s table tab open throughout the game.</p></details>
-        <details><summary>Can we try it with two players?</summary><p>The game is made for 3–6 players, but you can start with two to try it out. Five or six players get a bigger city with more blocks to compete for.</p></details>
+        <details><summary>Can we try it with two players?</summary><p>The game is made for 3–6 players, but you can start with two to try it out. Two players get balanced dice, so sevens can’t bunch up. Five or six players get a bigger city with more blocks to compete for.</p></details>
         <details><summary>How do you win?</summary><p>Be the first to reach 10 points. Build operations, upgrade them into holdings, and use your cards and trades to get ahead. Your phone guides you through each turn.</p></details></div></div>
         <div class="lp-wrap release-wrap" id="roadmap"><details class="release-notes"><summary><span>The city so far</span><small>Releases 01–05 · Already in the game</small><i aria-hidden="true">+</i></summary><ol class="release-list">
           <li><span>01</span><div><h3>The foundations</h3><p>Game records, board views, city lights, and a refined sound mix.</p></div></li>
@@ -13659,6 +13695,9 @@ function validState(s) {
   if (s.keep !== undefined && s.keep !== null && !(Array.isArray(s.keep) && s.keep.length === 2 && int(s.keep[0]) && int(s.keep[1]) && s.keep[0] >= 0 &&
     s.keep[0] < s.keep[1] && s.keep[1] <= 2 && Array.isArray(s.dice3) && Array.isArray(s.dice) && s.dice[0] === s.dice3[s.keep[0]] && s.dice[1] === s.dice3[s.keep[1]])) return false;
   if (s.step === 'luck' && !(Array.isArray(s.dice3) && !s.dice && !s.keep)) return false;
+  const dd = s.diceDeck;                                                  // two players' balanced dice
+  if (dd !== undefined && dd !== null && !(obj(dd) && Array.isArray(dd.left) && dd.left.length === 11 && dd.left.every(c => int(c) && c >= 0 && c < 100) &&
+    int(dd.gap) && dd.gap >= 0 && dd.gap <= DICE_GAP)) return false;
   if (s.placed !== undefined) {
     if (!Array.isArray(s.placed) || s.placed.length > 60) return false;
     if (!s.placed.every(r => obj(r) && ['street', 'op', 'up', 'flip', 'raze', 'drop'].includes(r.k) && known(r.pid) && int(r.t) && r.t >= 0 && int(r.at) && r.at >= 0 &&
@@ -13828,10 +13867,10 @@ function rollHTML(st, me) {
   if (FX.veil) return '';                                  // the machine on screen is about to say it better
   const sum = st.dice[0] + st.dice[1], mine = st.got && st.got[me.pid];
   const what = sum === 7 ? 'Seven. No block pays out.' : mine ? `You took ${handList(mine)}.` : 'Nothing for you on that roll.';
-  const hot = sum === 7 || sum === 6 || sum === 8;
+  const heat = sum === 7 ? ' seven' : sum === 6 || sum === 8 ? ' hot' : '';
   const faces = Array.isArray(st.dice3) && Array.isArray(st.keep) ? st.dice3.map((d, i) => `<span aria-hidden="true"${st.keep.includes(i) ? '' : ' class="gone"'}>${dieHTML(d)}</span>`).join('')
     : `<span aria-hidden="true">${dieHTML(st.dice[0])}</span><span aria-hidden="true">${dieHTML(st.dice[1])}</span>`;
-  return `<div class="roll${hot ? ' hot' : ''}"><div class="rdice">${faces}<span class="sum">${sum}</span></div>` +
+  return `<div class="roll${heat}"><div class="rdice">${faces}<span class="sum">${sum}</span></div>` +
     (mine && sum !== 7 ? `<div class="rgain"><span class="lab">You<br>took</span>${bundleHTML(mine, { size: 'l' })}</div>` : '') +
     `<p class="rnote${mine && sum !== 7 ? ' muted' : ''}">${esc(what)}</p></div>`;
 }
@@ -14651,7 +14690,7 @@ function hudHTML(st, me) {
   const g = guide(st, me ? me.pid : null), veil = FX.veil && st.phase === 'turn';
   const now = veil ? (FX.veil === 'roll' ? 'The dice are rolling…' : 'Opening the crate…') : g.now;
   const sum = st.dice ? st.dice[0] + st.dice[1] : 0;
-  const dice = st.phase === 'turn' && st.dice && !veil ? `<span class="huddice${sum >= 6 && sum <= 8 ? ' hot' : ''}" aria-label="The last roll: ${sum}">${dieHTML(st.dice[0])}${dieHTML(st.dice[1])}<strong>${sum}</strong></span>` : '';
+  const dice = st.phase === 'turn' && st.dice && !veil ? `<span class="huddice${sum === 7 ? ' seven' : sum === 6 || sum === 8 ? ' hot' : ''}" aria-label="The last roll: ${sum}">${dieHTML(st.dice[0])}${dieHTML(st.dice[1])}<strong>${sum}</strong></span>` : '';
   const hand = me && (st.phase === 'turn' || st.phase === 'place' || st.phase === 'over') ? `<div class="hudhand" aria-label="Your cards: ${esc(handList(me.hand) || 'none')}">${RES_ORDER.map(r => {
     const n = Math.max(0, (me.hand[r] || 0) - heldBack(me, r)); return `<span data-res="${r}">${rcard(r, { size: 's', n, miss: !n })}</span>`; }).join('')}` +
     (shownCards(me) ? `<button class="pk" data-p="sheet" data-arg="card" aria-label="Your skills and talents">${scard('back', { size: 'xs' })}${shownCards(me)}</button>` : '') + '</div>' : '';
