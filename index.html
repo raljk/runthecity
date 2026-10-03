@@ -1119,6 +1119,39 @@ html{overflow-anchor:none}            /* the phone keeps its own place when the 
 .phone.focusboard #ps-hand{order:3}
 .phone.focusboard #ps-table{order:4}
 .phone.focusboard #ps-bar{order:5}
+/* set-up: what you can build (4 Oct 2026). The three pieces side by side, each priced in cards: lit where your
+   operations would earn the card, an outline where they would not, a tick when the whole price is covered */
+.splan{display:flex;flex-direction:column;gap:10px}
+.sp-cols{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.sp-col{position:relative;display:flex;flex-direction:column;gap:6px;min-width:0;padding:8px 6px 8px 7px;
+  border:1px dashed var(--tb-line2,var(--line));background:rgba(4,12,18,.45)}
+.sp-col.ok{border-style:solid;border-color:rgba(100,232,243,.5);box-shadow:inset 0 -2px 0 var(--tb-cyan,var(--ok))}
+.sp-top{display:flex;align-items:flex-start;gap:4px;min-height:20px}
+.sp-col .pi{width:18px;height:18px;opacity:.5}
+.sp-col.ok .pi{opacity:1}
+.sp-nm{min-width:0;font:700 .96rem/1 var(--tb-cond,var(--display));color:var(--tb-muted,var(--muted))}
+.sp-col.ok .sp-nm{color:var(--tb-paper,var(--ink))}
+.sp-cost{display:flex;flex-wrap:wrap;align-items:center;gap:3px}
+.sp-cost .rc.s,.sp-k .rc.s,.sp-c .rc.s{width:18px;height:25px;border-radius:3px}
+.sp-cost .fan.s .rc+.rc{margin-left:-11px}
+.sp-cost .fan.new .rc:not(.miss){box-shadow:0 0 0 1.5px var(--tb-paper,#fff),0 0 10px rgba(255,255,255,.45)}
+/* the tick sits on the corner of a covered piece, like a badge, so the name keeps the column's width */
+.sp-ok{position:absolute;top:-8px;right:4px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;color:var(--tb-ground,#06121b);background:var(--tb-cyan,var(--ok));
+  box-shadow:0 0 0 2px var(--tb-panel,#0a1924),0 0 12px rgba(100,232,243,.55);animation:spok .38s cubic-bezier(.2,.9,.3,1.5) both}
+.sp-ok svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+@keyframes spok{from{opacity:0;transform:scale(.4)}}
+.sp-line{display:flex;align-items:center;gap:10px}
+.sp-lab{flex:none;width:106px;font:500 9.5px/1.35 var(--tb-mono,monospace);letter-spacing:1.2px;text-transform:uppercase;color:var(--tb-muted,var(--muted))}
+.sp-cards{display:inline-flex;align-items:center;gap:4px 10px;flex-wrap:wrap}
+.sp-c{display:inline-flex;align-items:center;gap:4px}
+.sp-c .kn{font:700 .8rem/1 var(--body);color:var(--tb-paper,var(--ink));font-variant-numeric:tabular-nums}
+.sp-c .kn.red{color:#ff6b78}
+.sp-none{font-size:.82rem;color:var(--tb-dim,var(--muted))}
+.sp-note{margin:0;font-size:.8rem;line-height:1.5;color:var(--tb-muted,var(--muted))}
+.sp-k{display:inline-flex;gap:3px;vertical-align:-7px;margin:0 2px}
+@media (prefers-reduced-motion:reduce){.sp-ok{animation:none}}
+/* the narrowest phones: the names keep their room, the piece's shape goes */
+@media (max-width:350px){.sp-col .pi{display:none}.sp-lab{width:84px}}
 
 /* ---------- look here ---------- */
 @keyframes attn{0%{box-shadow:0 0 0 0 rgba(255,46,147,0),0 0 0 0 rgba(255,46,147,0)}
@@ -13608,6 +13641,7 @@ function landingCardFanHTML() {
 }
 /* Patch notes, newest first: [date, what, a line on it]. A shipped change adds its line at the top. */
 const PATCH_NOTES = [
+  ['2026-10-04', 'What you can build, at set-up', 'While you place your first two operations, a list under the board shows what you can build: a street, an operation and a major holding, priced in cards. Tap a spot and the cards it would earn light up, and a tick means your spots earn every card a piece takes.'],
   ['2026-10-04', 'Rock, paper, scissors', 'Street fights are rock, paper, scissors now. Each round both crews throw at once, and whoever wins the throw lands a hit. A draw, nobody does.'],
   ['2026-10-04', 'All In', 'A new talent for fights. Call it with a throw and from then on every hit by or on your crew does double. It does not count as your one card a turn.'],
   ['2026-10-03', 'Fewer sevens', 'A seven now comes about one roll in nine instead of one in six, in every game. After a seven the police sit out a full round, so sevens never pile up.'],
@@ -14059,6 +14093,66 @@ function tradeOptHTML(st, me, live) {
   return live ? `<li><button class="opt stack${can.length ? ' can' : ''}" data-p="mode" data-arg="trade" aria-pressed="${ui.mode === 'trade'}" ${can.length ? '' : 'disabled'}>${inner}</button></li>`
     : `<li><div class="opt stack${can.length ? ' can' : ' cant'}">${inner}</div></li>`;
 }
+/* ---------- set-up: what you can build (4 Oct 2026) ----------
+   Where your two operations go decides which cards you earn for the rest of the game, and so what you can build.
+   While you place them, under the board, the phone prices each piece in cards: lit where your operations would earn
+   that card (the junction you have picked counted in), an empty outline where they would not (in the colour of the
+   blocks that pay it, so the board says where to look), and a tick when the whole price is covered. Under that, the
+   cards each operation earns with its blocks' numbers as the board shows them, and one line on what is still
+   missing. It only reads the board and changes nothing, so the table and the other phones never hear of it. */
+function spotEarns(st, v) {
+  return GEO.verts[v].hexes.map(h => ({ h, r: RESOURCE_OF[st.board.hexes[h].t], n: st.board.hexes[h].n })).filter(x => x.r)
+    .sort((a, b) => RES_ORDER.indexOf(a.r) - RES_ORDER.indexOf(b.r) || a.n - b.n);
+}
+// the terminal an operation on this junction would trade at, if any: 'any' or the card it takes two of
+function spotTerminal(st, v) {
+  const i = GEO.terminalEdges.findIndex(e => GEO.edges[e].a === v || GEO.edges[e].b === v);
+  return i < 0 ? null : st.board.terminals[i];
+}
+// the junction this phone is weighing up: picked, still free, and only while its player places an operation
+function planSpot(st, me) {
+  return st.phase === 'place' && st.step === 'operation' && activePid(st) === me.pid && ui.sel && ui.sel.kind === 'v' &&
+    legalOperations(st).includes(ui.sel.id) ? ui.sel.id : null;
+}
+const CHECKICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+// one card for each block, the block's number beside it (6 and 8 in red, as on the board and the key)
+const earnHTML = list => list.length ? `<span class="sp-cards">${list.map(x => `<span class="sp-c">${rcard(x.r, { size: 's' })}` +
+  `<span class="kn${x.n === 6 || x.n === 8 ? ' red' : ''}">${x.n}</span></span>`).join('')}</span>` : '<span class="sp-none">nothing</span>';
+const kindsHTML = rs => `<span class="sp-k">${rs.map(r => rcard(r, { size: 's' })).join('')}</span>`;
+// the list under the board while this phone places its operations and their streets
+function setupPlanHTML(st, me) {
+  const picking = st.step === 'operation', street = !picking, v = planSpot(st, me);
+  const ops = buildingsOf(st, me.pid).map(Number), add = v === null ? [] : spotEarns(st, v);
+  const base = [].concat(...ops.map(x => spotEarns(st, x))).sort((a, b) => RES_ORDER.indexOf(a.r) - RES_ORDER.indexOf(b.r) || a.n - b.n);
+  const got = new Set(base.concat(add).map(x => x.r)), fresh = new Set(ops.length ? add.map(x => x.r).filter(r => !base.some(x => x.r === r)) : []);
+  const miss = RES_ORDER.filter(r => !got.has(r));
+  // the three pieces side by side, priced in cards: lit if your operations would earn it, the ones this spot adds marked
+  const cols = ['street', 'operation', 'holding'].map(k => {
+    const ok = !!got.size && RES_ORDER.every(r => !COST[k][r] || got.has(r));
+    const cards = RES_ORDER.filter(r => COST[k][r]).map(r => `<span class="fan s${fresh.has(r) ? ' new' : ''}">${Array.from({ length: COST[k][r] }, () => rcard(r, { size: 's', miss: !got.has(r) })).join('')}</span>`).join('');
+    return `<li class="sp-col${ok ? ' ok' : ''}" aria-label="${cap(PIECE[k])}: ${ok ? 'your operations would earn every card it takes' : got.size ? 'still needs ' + andList(RES_ORDER.filter(r => COST[k][r] && !got.has(r))) : 'takes ' + handList(COST[k])}">` +
+      `<span class="sp-top">${pieceIcon(k, me.color)}<span class="sp-nm">${cap(PIECE[k])}</span></span><span class="sp-cost">${cards}</span>${ok ? `<span class="sp-ok">${CHECKICO}</span>` : ''}</li>`;
+  }).join('');
+  const line = (lab, list) => `<div class="sp-line"><span class="sp-lab">${lab}</span>${earnHTML(list)}</div>`;
+  const note = s => `<p class="sp-note">${s}</p>`;
+  // the verdict: all five kinds earned, or which are missing and what to do about them
+  const them = miss.length === 1 ? 'it' : 'them';
+  const verdict = !ops.length && v === null ? '' : !miss.length ? note('Every card covered: you can build it all.')
+    : ops.length + (v === null ? 0 : 1) < 2 ? note(street ? `Point your street toward ${kindsHTML(miss)} blocks.` : v === null
+      ? `Look for ${kindsHTML(miss)}: tap a glowing junction to see what it adds.` : `Your second operation can pick up ${kindsHTML(miss)}.`)
+    : note(`Still missing ${kindsHTML(miss)}: trade for ${them} at a terminal, or build toward ${them} later.`);
+  let more = '';
+  if (ops.length) more += line(ops.length > 1 ? 'Your operations' : picking ? 'Your first operation' : 'Your operation', base);
+  if (street) more += verdict;
+  else if (v === null) more += ops.length ? verdict : note('Tap a glowing junction to see what it earns.');
+  else {
+    const t = spotTerminal(st, v), rs = new Set(add.map(x => x.r));
+    more += line(ops.length ? 'This spot adds' : 'This spot earns', add) + verdict;
+    if (ops.length) more += note(`You also start with these cards${rs.has('muscle') && rs.has('product') ? ': enough for a street' : ''}.`);
+    if (t) more += note(`It sits on a terminal: ${t === 'any' ? '3 of a kind' : '2 ' + t} buys any card.`);
+  }
+  return sec('plan', 'What you can build', () => `<div class="splan"><ul class="sp-cols">${cols}</ul>${more}</div>`, { force: true });
+}
 const barHTML = inner => `<div class="actionbar">${inner}</div>`;
 function offerOptHTML(st, me) {
   const ok = canOffer(st, me);
@@ -14306,6 +14400,7 @@ function turnParts(st, me) {
       out.hint = st.step === 'operation' ? hintHTML(pieceIcon('operation', me.color), `Your ${ordinal(st.placeIdx < st.order.length ? 1 : 2)} operation`, 'Tap a glowing junction')
         : hintHTML(pieceIcon('street', me.color), 'Your street', 'Tap a glowing path beside it');
       out.bar = `<button class="btn big" data-p="confirm" ${ui.sel && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Placing…' : ui.sel ? `Place your ${st.step} here` : `Pick a spot for your ${st.step}`}</button>`;
+      out.panel = setupPlanHTML(st, me);            // under the board: what your operations would let you build (4 Oct 2026)
     } else out.bar = statusDock(st, me);
   } else if (inTurn && veil) {
     out.bar = statusDock(st, me);                     // nothing to press until the dice have landed
@@ -14871,8 +14966,12 @@ function attend(focus, later) {
   setTimeout(() => {
     const smooth = FX.on && !document.hidden ? 'smooth' : 'auto';
     if (focus === 'board') {
-      const b = slot.querySelector('.boardbox') || slot;
-      try { b.scrollIntoView({ block: 'center', behavior: smooth }); } catch (e) { b.scrollIntoView(false); }
+      const b = slot.querySelector('.boardbox') || slot, plan = $('#ps-panel .splan');
+      if (plan && G.state && G.state.phase === 'place') {
+        // set-up: the board at the top of the screen, so what you can build fits under it (it grows once a junction is picked)
+        const d = b.getBoundingClientRect().top - 8;
+        if (Math.abs(d) >= 1) window.scrollTo({ top: Math.max(0, window.scrollY + d), behavior: smooth });
+      } else try { b.scrollIntoView({ block: 'center', behavior: smooth }); } catch (e) { b.scrollIntoView(false); }
     } else if (focus === 'panel' || focus === 'offer') {
       const r = slot.getBoundingClientRect(), dock = $('#ps-bar'), room = window.innerHeight - (dock && dock.firstChild ? dock.offsetHeight + 16 : 0);
       if (r.top < 8 || r.top > room - 120) window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 12), behavior: smooth });
