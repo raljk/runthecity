@@ -2363,11 +2363,71 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 
 @keyframes wspdrop{from{opacity:0;transform:translateY(-16px)}}
 @media (prefers-reduced-motion:reduce){.pview #p-wsp .wspchip{animation:none}}
+/* sold out, not for sale, Safe House, Spy, taken from you (4 Oct 2026) */
+.sc.out .art{filter:grayscale(1) brightness(.4)}
+.sc.out .nm{opacity:.55}
+.sc .stamp{position:absolute;left:50%;top:44%;z-index:4;transform:translate(-50%,-50%) rotate(-16deg);padding:3px 6px;border:2px solid #ff2e93;border-radius:4px;
+  background:rgba(14,3,9,.84);color:#ff5aa8;font:900 .5rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;box-shadow:0 0 10px rgba(255,46,147,.45)}
+.sc.s .stamp{font-size:.36rem;padding:2px 4px;border-width:1.5px}
+.sc.l .stamp{font-size:.9rem;padding:5px 10px;border-width:3px}
+.sc.xl .stamp{font-size:1.35rem;padding:7px 14px;border-width:3px;border-radius:7px}
+.sc.xs .stamp{left:-30%;right:-30%;top:50%;height:3px;padding:0;border:0;border-radius:0;background:#ff2e93;transform:translateY(-50%) rotate(-55deg);box-shadow:0 0 4px #ff2e93}
+.mkh{margin:18px 2px 6px;font:800 .74rem/1.2 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mkintro+.mkh{margin-top:8px}
+.mksub{margin:-2px 2px 8px}
+.opt.mk.gone .grow{opacity:.62}
+.opt.mk .left.out,.mkleft.out{color:#ff5aa8}
+.opt.mk .how{display:block;margin-top:6px;font-size:.76rem;font-weight:500;line-height:1.35;color:var(--ink);opacity:.86}
+.mkhow{margin:4px 0 10px;padding:9px 11px;border-radius:10px;border:1px dashed var(--line);font-size:.82rem;line-height:1.4}
+.mkhow b{display:block;font:800 .7rem/1.2 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.hm.out em{color:#ff5aa8}
+.hm.earn em{font-style:normal}
+.safeh{display:flex;align-items:center;gap:10px;padding:10px;margin:2px 0 12px;border:1px solid rgba(232,184,74,.6);border-radius:12px;background:rgba(232,184,74,.09)}
+.safeh p{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;margin:0;font-size:.86rem}
+.safeh p span{color:var(--muted);font-size:.76rem;line-height:1.3}
+.safeh .btn{flex:none}
+.perk.spy{border-color:#7ad7ff;color:#bfeaff}
+button.perk.spy{cursor:pointer;font:inherit;font-size:.74rem;background:rgba(122,215,255,.1)}
+.spyhero{display:flex;flex-direction:column;align-items:center;gap:12px;padding:4px 0 6px}
+.spyw{margin:0;display:flex;align-items:center;gap:8px;font:800 1rem var(--display)}
+.spyres{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.spyc{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.72rem;font-weight:700}
+.spyc.none{opacity:.4}
+.spyst{display:flex;flex-direction:column;gap:8px}
+.spyk{display:flex;align-items:center;gap:10px;font-size:.8rem;color:var(--muted)}
+.tooknote{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid #ff2e93;background:rgba(255,46,147,.12);color:var(--ink);font-size:.84rem;
+  box-shadow:0 0 18px rgba(255,46,147,.18)}
+.tooknote ul{flex:1;min-width:0;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.tooknote li{display:flex;align-items:center;gap:10px}
+.tooknote li>span:last-child{display:flex;flex-direction:column;min-width:0}
+.tooknote .why{font-size:.74rem;color:var(--muted)}
+.tooknote .tkm{display:flex;gap:3px;flex:none}
+.tooknote .btn{flex:none;min-height:40px;padding:0 14px}
+#fx .fxtaken{position:absolute;left:50%;top:32%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 20px 20px;
+  width:min(340px,calc(100vw - 32px));box-sizing:border-box;border-radius:20px;border:2px solid #ff2e93;background:rgba(10,4,9,.94);box-shadow:0 0 0 1px rgba(0,0,0,.6),0 0 42px rgba(255,46,147,.4),0 24px 60px rgba(0,0,0,.7);
+  animation:tkin .42s cubic-bezier(.2,.9,.3,1.25) both}
+#fx .fxtaken.away{animation:tkout .3s ease-in both}
+#fx .tkstamp{font:900 1.5rem/1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:#ff2e93;text-shadow:0 0 16px rgba(255,46,147,.7);transform:rotate(-4deg)}
+#fx .tkrow{display:flex;flex-direction:column;align-items:center;gap:10px}
+#fx .tkcards{display:flex;gap:8px}
+#fx .tkcards .rc{width:62px;height:84px;border-radius:11px}
+#fx .tkcards>*{animation:tkcard .9s ease-out both}
+#fx .tkrow p{margin:0;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center}
+#fx .tkrow b{display:flex;align-items:center;gap:8px;font:800 1.05rem var(--display);color:var(--ink)}
+#fx .tkrow b .turnchip{margin:0}
+#fx .tkrow p>span{font-size:.82rem;color:var(--muted)}
+#fx .lostpop{position:absolute;transform:translate(-50%,-50%);font:900 1.3rem/1 var(--display);font-style:normal;color:#ff2e93;text-shadow:0 0 10px rgba(255,46,147,.8),0 2px 3px #000;
+  animation:lostpop 1.5s cubic-bezier(.2,.8,.3,1) both}
+#fx .lostpop.tb{font-size:3rem}
+@keyframes tkin{0%{opacity:0;transform:translate(-50%,-50%) scale(.82)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes tkout{to{opacity:0;transform:translate(-50%,-62%) scale(.96)}}
+@keyframes tkcard{0%{transform:rotate(0)}30%{transform:rotate(-7deg) translateX(-4px)}60%{transform:rotate(5deg) translateX(3px)}100%{transform:none}}
+@keyframes lostpop{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}18%{opacity:1;transform:translate(-50%,-70%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-260%) scale(1)}}
 </style>
 </head>
 <body>
 <!-- ART:BEGIN (generated by art/embed.py, do not edit by hand) -->
-<style id="art-css">:root{--ico-muscle:url(art/game/4f72d22a0caf5661.png);--ico-product:url(art/game/3e41141da067d107.png);--ico-talent:url(art/game/e0773fb86349a561.png);--ico-cash:url(art/game/06f35ff4d0b975b3.png);--ico-influence:url(art/game/4b297b6dca3ed085.png);--hero:url(art/game/e6062d040b44edda.jpg);--card-tipoff:url(art/game/e5e52833fcbb46bc.jpg);--card-luck:url(art/game/347d663ae97a0cea.jpg);--card-silver:url(art/game/5c1a84a5950c4c63.jpg);--card-paidoff:url(art/game/0fceb00cf409a897.jpg);--card-backup:url(art/game/f43689b1dd488b97.jpg);--card-allin:url(art/game/4ee345d82df99881.jpg);--card-shakedown:url(art/game/cb6a472a2abd1afc.jpg);--card-fight:url(art/game/84e8c7d4aee1db6e.jpg);--card-bustup:url(art/game/477f1419601c42e5.jpg);--card-wrecking:url(art/game/576e4873d1079a55.jpg);--card-roadcrew:url(art/game/abd78f9989f8de1d.jpg);--card-connections:url(art/game/0e39ec7061f0f74b.jpg);--card-legend:url(art/game/ac00196638c359e6.jpg);--card-rewind:url(art/game/ed8bb16d162884b0.jpg);--card-back:url(art/game/306c5c5dea367bb4.jpg);--crew-red:url(art/game/d179350cacbb5c8c.png);--crew-blue:url(art/game/dc170a435b1b7729.png);--crew-white:url(art/game/e3773649193fc3b9.png);--crew-orange:url(art/game/9e37338ca05ae5cd.png);--crew-green:url(art/game/213a37ccb44dd1df.png);--crew-purple:url(art/game/42708b72167684a2.png);--fight-bg:url(art/game/4179f368a832fd3d.jpg);--stk-cheer:url(art/game/0caffb0f44e8d648.webp);--stk-boo:url(art/game/832602f3be04199b.webp);--stk-lol:url(art/game/e79909dee0d78239.webp);--stk-clap:url(art/game/2baef21007417167.webp);--stk-crickets:url(art/game/676a852d09bbb87c.webp);--stk-rain:url(art/game/6aae5d49bc82f265.webp);--stk-fire:url(art/game/5edd961d2f564191.webp);--stk-sweat:url(art/game/bd5b6007fc43b1c7.webp);--stk-cry:url(art/game/1a12cf224ebaaeb7.webp);--stk-micdrop:url(art/game/41cdc77661daac8b.webp);--stk-whisper:url(art/game/5c2e1d7cf687478f.webp);--stk-tag:url(art/game/95972e5d8986ec47.webp);--stk-smoke:url(art/game/45b3ed0fb098abdc.webp);--stk-glitter:url(art/game/6a334716e77d90f5.webp);--stk-pigeon:url(art/game/6b75a40740008cbb.webp)}</style>
+<style id="art-css">:root{--ico-muscle:url(art/game/4f72d22a0caf5661.png);--ico-product:url(art/game/3e41141da067d107.png);--ico-talent:url(art/game/e0773fb86349a561.png);--ico-cash:url(art/game/06f35ff4d0b975b3.png);--ico-influence:url(art/game/4b297b6dca3ed085.png);--hero:url(art/game/e6062d040b44edda.jpg);--card-tipoff:url(art/game/e5e52833fcbb46bc.jpg);--card-luck:url(art/game/347d663ae97a0cea.jpg);--card-silver:url(art/game/5c1a84a5950c4c63.jpg);--card-paidoff:url(art/game/0fceb00cf409a897.jpg);--card-backup:url(art/game/f43689b1dd488b97.jpg);--card-spy:url(art/game/9acaa5f25b37ce99.jpg);--card-safehouse:url(art/game/693de2f3293b9f2d.jpg);--card-allin:url(art/game/4ee345d82df99881.jpg);--card-shakedown:url(art/game/cb6a472a2abd1afc.jpg);--card-fight:url(art/game/84e8c7d4aee1db6e.jpg);--card-bustup:url(art/game/477f1419601c42e5.jpg);--card-wrecking:url(art/game/576e4873d1079a55.jpg);--card-roadcrew:url(art/game/abd78f9989f8de1d.jpg);--card-connections:url(art/game/0e39ec7061f0f74b.jpg);--card-legend:url(art/game/ac00196638c359e6.jpg);--card-rewind:url(art/game/ed8bb16d162884b0.jpg);--card-back:url(art/game/306c5c5dea367bb4.jpg);--crew-red:url(art/game/d179350cacbb5c8c.png);--crew-blue:url(art/game/dc170a435b1b7729.png);--crew-white:url(art/game/e3773649193fc3b9.png);--crew-orange:url(art/game/9e37338ca05ae5cd.png);--crew-green:url(art/game/213a37ccb44dd1df.png);--crew-purple:url(art/game/42708b72167684a2.png);--fight-bg:url(art/game/4179f368a832fd3d.jpg);--stk-cheer:url(art/game/0caffb0f44e8d648.webp);--stk-boo:url(art/game/832602f3be04199b.webp);--stk-lol:url(art/game/e79909dee0d78239.webp);--stk-clap:url(art/game/2baef21007417167.webp);--stk-crickets:url(art/game/676a852d09bbb87c.webp);--stk-rain:url(art/game/6aae5d49bc82f265.webp);--stk-fire:url(art/game/5edd961d2f564191.webp);--stk-sweat:url(art/game/bd5b6007fc43b1c7.webp);--stk-cry:url(art/game/1a12cf224ebaaeb7.webp);--stk-micdrop:url(art/game/41cdc77661daac8b.webp);--stk-whisper:url(art/game/5c2e1d7cf687478f.webp);--stk-tag:url(art/game/95972e5d8986ec47.webp);--stk-smoke:url(art/game/45b3ed0fb098abdc.webp);--stk-glitter:url(art/game/6a334716e77d90f5.webp);--stk-pigeon:url(art/game/6b75a40740008cbb.webp)}</style>
 <svg id="art-defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><image id="img-warehouse" href="art/game/4b02da62cf440c84.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-warehouse-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse"/></pattern><pattern id="tex-warehouse-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-warehouse" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-nightlife" href="art/game/22125c17692b7615.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-nightlife-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife"/></pattern><pattern id="tex-nightlife-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-nightlife" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-residential" href="art/game/a646c36d55d79d8d.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-residential-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential"/></pattern><pattern id="tex-residential-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-residential" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-works" href="art/game/818f3fdcf8197d20.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-works-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works"/></pattern><pattern id="tex-works-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-works" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-tower" href="art/game/2fc42ec3373b927e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-tower-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower"/></pattern><pattern id="tex-tower-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-tower" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-deadzone" href="art/game/f239b75fb869878e.jpg" width="1" height="1" preserveAspectRatio="xMidYMid slice"/><pattern id="tex-deadzone-a" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone"/></pattern><pattern id="tex-deadzone-b" patternUnits="objectBoundingBox" patternContentUnits="objectBoundingBox" width="1" height="1"><use href="#img-deadzone" transform="translate(1,0) scale(-1,1)"/></pattern><image id="img-wall_strata" href="art/game/11657f2b44ce62d9.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-wall_edge" href="art/game/d4118f94580bf8b4.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-rooftop" href="art/game/a84fbcb4b007ba84.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade" href="art/game/b14848bfcef00503.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_glass" href="art/game/884a677ea6bf6864.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_neon" href="art/game/e5eb9e891be0d2bb.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_shed" href="art/game/9e4045f14f544c07.jpg" width="1" height="1" preserveAspectRatio="none"/><image id="img-facade_works" href="art/game/68e62ef6f2bf6a43.jpg" width="1" height="1" preserveAspectRatio="none"/></defs></svg>
 <!-- ART:END -->
 <!-- SND:BEGIN (generated by sound/embed.py, do not edit by hand) -->
@@ -2418,7 +2478,7 @@ const STOCK = { street: 15, operation: 5, holding: 4 };
 const PIECE = { street: 'street', operation: 'operation', holding: 'major holding' };
 const WIN_VP = 10;
 const HAND_SAFE = 7;   // hold more than this when a seven lands and you lose half
-const PROTO = 6;       // bumped when the state grows something an older phone would refuse (3: Bust Up, Wrecking Crew, Backup on call; 4: game modes; 5: dealt dice in every game, a seven's gap as long as a round; 6: rock, paper, scissors fights, All In)
+const PROTO = 7;       // bumped when the state grows something an older phone would refuse (3: Bust Up, Wrecking Crew, Backup on call; 4: game modes; 5: dealt dice in every game, a seven's gap as long as a round; 6: rock, paper, scissors fights, All In; 7: Safe House, Spy, what was taken from whom)
 /* The turn clock (play-test 2, release 2). The lobby picks off, 60, 90 or 120 seconds a turn, and every
    connected phone says OK to it before the game can start. It runs only while the turn is its player's to
    play: it stops for a street fight, while anybody else drops cards on a seven, and while the table pauses
@@ -2450,13 +2510,17 @@ const CARDS = {
   paidoff:     { name: 'Paid Off', kind: 'talent', tier: 'common', price: { product: 1, cash: 1 }, n: 3, when: 'any',
     verb: 'The police look the other way',
     text: 'Until your next turn nobody else can send the police to a block that touches one of your buildings.' },
+  // a seven's drop, skipped: played by whoever owes it, on anybody's turn (4 Oct 2026)
+  safehouse:   { name: 'Safe House', kind: 'talent', tier: 'common', price: { product: 1, muscle: 1 }, n: 3, when: 'seven',
+    verb: 'Keep your cards on a seven',
+    text: 'When a seven would make you drop half your resources, play it and keep every one. It works on anybody’s seven, and it is your one card for that turn.' },
   backup:      { name: 'Backup', kind: 'talent', tier: 'common', price: { muscle: 1, talent: 1 }, n: 3, when: 'react',
     verb: 'Three more on your side in a fight',
     text: 'When a rival picks a fight with you, call three more of your crew: your side gets 3 more strength, even past full. It goes with your throw. They stay on call after: Shakedown skips you until you lose a fight.' },
   // called with a throw in a fight, by either crew, and not the one card a turn (the user's choice, 4 Oct 2026)
-  allin:       { name: 'All In', kind: 'talent', tier: 'common', price: { muscle: 1, cash: 1 }, n: 3, when: 'fight',
+  allin:       { name: 'All In', kind: 'talent', tier: 'rare', price: null, n: 3, when: 'fight', src: 'muscle',   // found on the dice, never bought (4 Oct 2026)
     verb: 'Hit double, get hit double',
-    text: 'In a fight, call it with a throw: from then on every throw you win hits for double, and every throw you lose, they hit you for double. It is not your one card a turn.' },
+    text: 'In a fight, call it with a throw: from then on every throw you win hits for double, and every throw you lose, they hit you for double. It is not your one card a turn. Not for sale: now and then one turns up when the dice land on a block that pays muscle where you have a major holding.' },
   shakedown:   { name: 'Shakedown', kind: 'skill', tier: 'common', price: { muscle: 1, influence: 1 }, n: 3, when: 'act',
     verb: 'Every rival hands you one',
     text: 'Name a resource. Every rival who holds one hands one over, unless their Backup is on call, and if that comes to fewer than two the bank makes it up to two.' },
@@ -2476,6 +2540,10 @@ const CARDS = {
   connections: { name: 'Connections', kind: 'talent', tier: 'uncommon', price: null, n: 3, when: 'any',
     verb: 'Any two resources from the bank',
     text: 'Take any two resources you like from the bank. Not for sale: it only comes from an upgrade.' },
+  // never for sale and never drawn: found now and then on the dice, by a major holding on influence (src, findCards, 4 Oct 2026)
+  spy:         { name: 'Spy', kind: 'skill', tier: 'rare', price: null, n: 3, when: 'act', src: 'influence',
+    verb: 'See a rival’s whole hand',
+    text: 'Pick a rival: for the rest of your turn your phone shows every resource, skill and talent they hold. Not for sale: now and then one turns up when the dice land on a block that pays influence where you have a major holding.' },
   legend:      { name: 'Local Legend', kind: 'talent', tier: 'rare', price: null, n: 2, when: 'never',
     verb: 'One point, for good',
     text: 'Scores you one point from the start of your next turn, for the rest of the game. You never play it: it just counts. Not for sale.' },
@@ -3286,6 +3354,41 @@ function rewindTargets(st) {
   return out;
 }
 const placeSig = r => `${r.k}:${r.at}:${r.pid}:${r.t}`;
+/* Spy (4 Oct 2026): any rival. */
+const spyTargets = (st, pid) => st.players.filter(q => q.pid !== pid).map(q => q.pid);
+/* Cards that are never bought or drawn, only found (4 Oct 2026, the user's call: "random and rare"). When the dice land
+   on a block that pays a card's resource (src), every major holding on it has one chance in FIND_ODDS of turning one up,
+   while the market still has one: Spy on influence, All In on muscle. Not on a seven, and not where the police are. */
+const FIND_ODDS = 10;
+function findCards(st, sum) {
+  const found = [];
+  if (!st.stock) return found;
+  st.board.hexes.forEach((h, i) => {
+    if (h.n !== sum || i === st.board.police) return;
+    const k = CARD_ORDER.find(x => CARDS[x].src && CARDS[x].src === RESOURCE_OF[h.t] && inPlay(st, x));
+    if (!k) return;
+    GEO.hexes[i].vs.forEach(v => {
+      const b = st.buildings[v], p = b && b.k === 'c' && playerOf(st, b.pid);
+      if (p && deckOf(st, k) > 0 && rnd(FIND_ODDS) === 0) { st.stock[k]--; giveCard(p, k); found.push({ p: p.pid, k, v }); }
+    });
+  });
+  return found;
+}
+// on a phone: the major holding a found card turned up at, for the crate (the dice say which blocks paid)
+function foundAt(st, pid, k) {
+  if (!st.dice || !CARDS[k] || !CARDS[k].src) return undefined;
+  const sum = st.dice[0] + st.dice[1], v = Object.keys(st.buildings).find(x => st.buildings[x].pid === pid && st.buildings[x].k === 'c' &&
+    GEO.verts[x].hexes.some(h => h !== st.board.police && st.board.hexes[h].n === sum && RESOURCE_OF[st.board.hexes[h].t] === CARDS[k].src));
+  return v === undefined ? undefined : +v;
+}
+/* What was taken from whom (4 Oct 2026): like the board game, whoever loses a card to the police, a Tip-off, a
+   Shakedown or a fight is told what it was. A round of it is kept, so a phone asleep at the time says so when it wakes. */
+const TOOK_HOW = ['police', 'tipoff', 'shakedown', 'fight'];
+function tookNote(st, by, from, r, how) {
+  st.took = (st.took || []).filter(x => x.t >= (st.tick | 0) - st.order.length);
+  st.took.push({ t: st.tick | 0, by, from, r, how });
+  if (st.took.length > 24) st.took = st.took.slice(-24);
+}
 function canPlay(st, p, k) {
   if (!isCard(k) || !p) return no('');
   const c = CARDS[k];
@@ -3302,6 +3405,10 @@ function canPlay(st, p, k) {
   if (st.clock && st.clock.up && turnOf(st, p)) return no('Your time is up.');
   if (st.auction && turnOf(st, p)) return no('The auction comes first.');
   if (c.mode && !inPlay(st, k)) return no('Only in a Rush Hour game.');
+  if (c.when === 'seven') {                         // Safe House: whoever owes a seven's drop, on anybody's turn (4 Oct 2026)
+    if (st.phase !== 'turn' || st.step !== 'discard' || !(st.pend && st.pend[p.pid])) return no('Only when a seven makes you drop half your cards.');
+    return yes('Keep every card you hold.');
+  }
   if (c.when === 'react') {
     const f = st.fight, v = f && fightView(f);
     if (st.phase !== 'turn' || st.step !== 'fight' || !v || f.d !== p.pid) return no('Only in a fight somebody picks with you.');
@@ -3326,6 +3433,7 @@ function canPlay(st, p, k) {
     case 'overtime': case 'stall': case 'rush': return modeCanPlay(st, p, k);
     case 'luck': return (p.luck | 0) > 0 ? no('Your streak is still running.') : yes(st.step === 'roll' ? 'This roll and your next.' : 'Your next two rolls.');
     case 'paidoff': return p.paid ? no('The police are already paid off.') : yes('Safe until your next turn.');
+    case 'spy': return spyTargets(st, p.pid).length ? yes('Pick a rival to look at.') : no('Nobody to spy on.');
   }
   return yes('');
 }
@@ -3516,7 +3624,8 @@ function guide(st, pid) {
   const owe = me && st.pend ? (st.pend[pid] || 0) : 0;
   if (st.step === 'discard') {
     const owing = Object.keys(st.pend).map(id => playerOf(st, id)).filter(Boolean).map(x => x.name);
-    if (owe) return { yours: true, act, ap, title: 'Your move', now: `Seven rolled. Drop ${owe} ${owe === 1 ? 'card' : 'cards'}.`, hint: 'Anyone holding more than seven loses half of them.' };
+    if (owe) return { yours: true, act, ap, title: 'Your move', now: `Seven rolled. Drop ${owe} ${owe === 1 ? 'card' : 'cards'}.`,
+      hint: canPlay(st, me, 'safehouse').ok ? 'Or play Safe House and keep them all.' : 'Anyone holding more than seven loses half of them.' };
     return { yours: false, act, ap, title: `Waiting on ${andList(owing)}`, now: `Seven rolled. ${andList(owing)} must drop half their cards.`,
       hint: me ? 'You are under eight cards, so your hand is safe.' : '' };
   }
@@ -12013,7 +12122,7 @@ function clockFresh(s) { return { s: CLOCK_S.includes(s) ? s : 0, ok: {}, used: 
   m: 'classic', x: 0, bank: {}, hus: {}, rushed: {}, mt: 0, m0: 0, mlim: 0, last: 0, rh: 0, rhN: 0, stall: 0, hl: 0, sd: 0, rs: 0, fin: 0 }; }   // the game mode (release 9)
 /* Everything skills and talents add to a table and to a seat, in one place, so a new
    table, a new seat, Back to lobby and a table saved by an older build all agree. */
-function cardTable(seats) { return { stock: freshStock(seats), played: {}, free: 0, dice3: null, keep: null, fight: null, placed: [], tick: 0, auction: null }; }
+function cardTable(seats) { return { stock: freshStock(seats), played: {}, free: 0, dice3: null, keep: null, fight: null, placed: [], tick: 0, auction: null, took: [], spy: null }; }
 const cardSeat = () => ({ cards: {}, fresh: {}, legend: 0, luck: 0, paid: false, drops: 0, oncall: false });
 function upgradeState(st) {
   st.proto = PROTO;
@@ -12078,6 +12187,7 @@ function dealDice(st) {
 function settleRoll(st, p, d, kept) {
   const sum = d[0] + d[1];
   st.dice = d; st.got = {}; st.pend = {};
+  let found = [];
   const k = diceDeckOf(st); k.gap = sum === 7 ? diceGap(st) : Math.max(0, k.gap - 1);
   const how = kept ? `${p.name} kept ${d[0]} and ${d[1]}: ${sum}.` : `${p.name} rolled ${sum}.`;
   if (sum === 7) {
@@ -12089,8 +12199,11 @@ function settleRoll(st, p, d, kept) {
     st.got = produce(st, sum); st.step = 'act';
     const took = Object.keys(st.got).map(id => `${playerOf(st, id).name} took ${handList(st.got[id])}`);
     say(`${how}${took.length ? ' ' + took.join('; ') + '.' : ' Nobody collected.'}`);
+    found = findCards(st, sum);
+    found.forEach(f => say(`${playerOf(st, f.p).name}'s major holding turned up ${CARDS[f.k].name}.`));
   }
-  rec('roll', Object.assign({ p: p.pid, d: d.slice(), sum, got: JSON.parse(JSON.stringify(st.got)) }, sum === 7 ? { drop: Object.assign({}, st.pend) } : {}, kept ? { kept: 1 } : { deck: 2 }));
+  rec('roll', Object.assign({ p: p.pid, d: d.slice(), sum, got: JSON.parse(JSON.stringify(st.got)) }, sum === 7 ? { drop: Object.assign({}, st.pend) } : {}, kept ? { kept: 1 } : { deck: 2 },
+    found.length ? { found: found.map(f => ({ p: f.p, k: f.k })) } : {}));
 }
 /* An upgrade draws a skill or talent: the rarity is rolled first, so a
    legendary is always a two-in-a-hundred moment however the game has gone,
@@ -12101,7 +12214,7 @@ function drawDrop(st) {
   const names = RARITY.map(x => x[0]), at = names.indexOf(tier);
   const order = names.slice(0, at + 1).reverse().concat(names.slice(at + 1));   // step down a tier, then up
   for (const t of order) {
-    const ks = CARD_ORDER.filter(k => CARDS[k].tier === t && deckOf(st, k) > 0);
+    const ks = CARD_ORDER.filter(k => CARDS[k].tier === t && !CARDS[k].src && deckOf(st, k) > 0);
     if (ks.length) return ks[rnd(ks.length)];
   }
   return null;
@@ -12162,7 +12275,7 @@ function endFight(st, v) {
   } else {
     const pool = [];
     RES_ORDER.forEach(r => { for (let i = 0; i < (A.hand[r] || 0); i++) pool.push(r); });
-    if (pool.length) { const r = pool[rnd(pool.length)]; A.hand[r]--; D.hand[r] = (D.hand[r] || 0) + 1; }
+    if (pool.length) { const r = pool[rnd(pool.length)]; A.hand[r]--; D.hand[r] = (D.hand[r] || 0) + 1; tookNote(st, D.pid, A.pid, r, 'fight'); }
     say(`${D.name}'s crew held ${hit ? `their ${fightThing(f)}` : 'the street'}${v.why === 'off' ? ` when ${A.name}'s backed off` : ''}${pool.length ? `, and took a resource from ${A.name}` : ''}.`);
   }
   // Backup on call goes home when its player loses a fight (release 5)
@@ -12451,6 +12564,7 @@ function hostAction(a) {
       }
       if (k === 'shakedown' && !RES_ORDER.includes(a.r)) return;
       if (k === 'rush' && !rushTargets(st, p.pid).includes(a.to)) return;
+      if (k === 'spy' && !spyTargets(st, p.pid).includes(a.on)) return;
       if (k === 'connections') { tgt = cleanBundle(a.take, null); if (!tgt || bundleSize(tgt) !== 2) return; }
       if (k === 'rewind') { tgt = rewindTargets(st).find(r => r.i === a.i); if (!tgt || a.sig !== placeSig(tgt)) return; }
       snapshot();
@@ -12481,7 +12595,7 @@ function hostAction(a) {
           if (a.from) {
             const q = playerOf(st, a.from), pool = [];
             RES_ORDER.forEach(r => { for (let i = 0; i < (q.hand[r] || 0); i++) pool.push(r); });
-            const r = pool[rnd(pool.length)]; q.hand[r]--; p.hand[r] = (p.hand[r] || 0) + 1;
+            const r = pool[rnd(pool.length)]; q.hand[r]--; p.hand[r] = (p.hand[r] || 0) + 1; tookNote(st, p.pid, q.pid, r, 'tipoff');
             took = `, and ${p.name} took a resource from ${q.name}`;
             Object.assign(det, { from: q.pid, r });
           }
@@ -12492,7 +12606,7 @@ function hostAction(a) {
         case 'shakedown': {
           const from = [], safe = [];
           // a rival whose Backup is on call is skipped (release 5)
-          st.players.forEach(q => { if (q.pid !== p.pid && (q.hand[a.r] || 0) > 0) { if (onCall(q)) { safe.push(q); return; } q.hand[a.r]--; from.push(q.name); } });
+          st.players.forEach(q => { if (q.pid !== p.pid && (q.hand[a.r] || 0) > 0) { if (onCall(q)) { safe.push(q); return; } q.hand[a.r]--; from.push(q.name); tookNote(st, p.pid, q.pid, a.r, 'shakedown'); } });
           const top = Math.max(0, 2 - from.length);
           p.hand[a.r] = (p.hand[a.r] || 0) + from.length + top;
           Object.assign(det, { r: a.r, paid: from.length, bank: top }, safe.length ? { skip: safe.map(q => q.pid) } : {});
@@ -12502,6 +12616,15 @@ function hostAction(a) {
         }
         case 'luck': p.luck = 2; say(`${p.name} is on a Lucky Streak: ${st.step === 'roll' ? 'this roll and the next' : 'the next two rolls'} are three dice, keep two.`); break;
         case 'silver': say(`${p.name} played Silver Tongue: two for one at every terminal this turn.`); break;
+        case 'safehouse':                            // a seven's drop, skipped, on anybody's turn (4 Oct 2026)
+          delete st.pend[p.pid];
+          say(`${p.name} played Safe House and kept every card.`);
+          if (!Object.keys(st.pend).length) st.step = 'police';
+          break;
+        case 'spy': {                                // a look at a rival's whole hand, for the rest of the turn
+          const q = playerOf(st, a.on); st.spy = { by: p.pid, on: q.pid }; det.on = q.pid;
+          say(`${p.name} played Spy on ${q.name}.`); break;
+        }
         case 'paidoff': p.paid = true; say(`${p.name} paid off the police: they stay away from ${p.name}'s blocks until their next turn.`); break;
         case 'roadcrew': st.free = Math.min(2, left(st, p.pid, 'street')); det.n = st.free; say(`${p.name} played Road Crew: ${st.free} free street${st.free === 1 ? '' : 's'}.`); break;
         case 'connections':
@@ -12513,7 +12636,8 @@ function hostAction(a) {
       }
       rec('play', Object.assign({ p: p.pid, k }, det));
       if (k === 'rewind') checkWin(st, p);             // a piece taken back can open a line of turf (release 5)
-      did(); pruneOffer(st);
+      if (k !== 'safehouse') did();                    // a Safe House is somebody else's move on this turn
+      pruneOffer(st);
       G.hist = [];
       commit(); return;
     }
@@ -12574,7 +12698,7 @@ function hostAction(a) {
       RES_ORDER.forEach(r => { for (let i = 0; i < (q.hand[r] || 0); i++) pool.push(r); });
       const r = pool[rnd(pool.length)];
       q.hand[r]--; p.hand[r] = (p.hand[r] || 0) + 1;
-      st.step = 'act'; say(`${p.name} took a card from ${q.name}.`); rec('steal', { p: p.pid, from: q.pid, r });
+      st.step = 'act'; say(`${p.name} took a card from ${q.name}.`); rec('steal', { p: p.pid, from: q.pid, r }); tookNote(st, p.pid, q.pid, r, 'police');
       G.hist = [];
       pruneOffer(st); commit(); return;
     }
@@ -12670,6 +12794,7 @@ function nextTurn(st) {
   st.tick = (st.tick | 0) + 1; st.played = {}; st.free = 0; st.fight = null; st.dice3 = null; st.keep = null;
   st.players.forEach(x => { x.fresh = {}; });
   st.placed = (st.placed || []).filter(r => r.t >= st.tick - st.order.length);
+  st.spy = null; if (st.took) st.took = st.took.filter(x => x.t >= st.tick - st.order.length);
   if (modeEnd(st)) return;                           // a timed match whose last round is over (release 9)
   modeRound(st); clockTurn(st, prev);                // a rush-hour round or an auction; the clock for the turn it is now
   const p = playerOf(st, st.order[st.turnIdx]);
@@ -13641,9 +13766,13 @@ function landingCardFanHTML() {
 }
 /* Patch notes, newest first: [date, what, a line on it]. A shipped change adds its line at the top. */
 const PATCH_NOTES = [
+  ['2026-10-04', 'Taken from you', 'When the police, a Tip-off, a Shakedown or a fight takes a card from you, your phone says what it was and who took it, even if it was in your pocket at the time. On the table a −1 rises from the player it was taken from.'],
+  ['2026-10-04', 'Safe House', 'A new talent: when a seven would make you drop half your cards, play it and keep them all. It works on anybody’s seven.'],
+  ['2026-10-04', 'Spy', 'A new rare skill you can’t buy. When the dice land on a block that pays influence and you have a major holding there, a Spy can turn up in your hand. Play it to see everything a rival holds for the rest of your turn.'],
+  ['2026-10-04', 'A clearer market', 'The market lists what you can buy first, then the cards you can only earn, each saying how to get it. Sold-out cards are stamped and moved to the bottom.'],
   ['2026-10-04', 'What you can build, at set-up', 'While you place your first two operations, a list under the board shows what you can build: a street, an operation and a major holding, priced in cards. Tap a spot and the cards it would earn light up, and a tick means your spots earn every card a piece takes.'],
   ['2026-10-04', 'Rock, paper, scissors', 'Street fights are rock, paper, scissors now. Each round both crews throw at once, and whoever wins the throw lands a hit. A draw, nobody does.'],
-  ['2026-10-04', 'All In', 'A new talent for fights. Call it with a throw and from then on every hit by or on your crew does double. It does not count as your one card a turn.'],
+  ['2026-10-04', 'All In', 'A new talent for fights. Call it with a throw and from then on every hit by or on your crew does double. It does not count as your one card a turn. You can’t buy it: now and then it turns up when the dice land on a block that pays muscle where you have a major holding.'],
   ['2026-10-03', 'Fewer sevens', 'A seven now comes about one roll in nine instead of one in six, in every game. After a seven the police sit out a full round, so sevens never pile up.'],
   ['2026-10-03', 'Red means seven', 'Only a seven is shown in red now. Six and eight, the busiest numbers, are gold.'],
   ['2026-09-28', 'Game modes', 'Pick your pace in the lobby: Blitz, Chess clock, Timed match, Rush Hour or Classic.'],
@@ -13863,8 +13992,11 @@ function validState(s) {
   if (s.stock !== undefined && !(obj(s.stock) && Object.keys(s.stock).every(k => isCard(k) && int(s.stock[k]) && s.stock[k] >= 0 && s.stock[k] <= 9))) return false;
   if (s.tick !== undefined && !(int(s.tick) && s.tick >= 0)) return false;
   if (s.free !== undefined && !(int(s.free) && s.free >= 0 && s.free <= 2 && (!s.free || s.step === 'act'))) return false;
+  if (s.took !== undefined && !(Array.isArray(s.took) && s.took.length <= 24 && s.took.every(x => obj(x) && int(x.t) && x.t >= 0 && known(x.by) && known(x.from) &&
+    x.by !== x.from && RES_ORDER.includes(x.r) && TOOK_HOW.includes(x.how)))) return false;
+  if (s.spy !== undefined && s.spy !== null && !(obj(s.spy) && known(s.spy.by) && known(s.spy.on) && s.spy.by !== s.spy.on && s.spy.by === s.order[s.turnIdx])) return false;
   if (s.played !== undefined && !(obj(s.played) && Object.keys(s.played).every(k => known(k) && isCard(s.played[k]) && CARDS[s.played[k]].when !== 'never' &&
-    (CARDS[s.played[k]].when === 'react') === (k !== s.order[s.turnIdx])))) return false;
+    (CARDS[s.played[k]].when === 'seven' || (CARDS[s.played[k]].when === 'react') === (k !== s.order[s.turnIdx]))))) return false;
   const die = d => int(d) && d >= 1 && d <= 6;
   if (s.dice3 !== undefined && s.dice3 !== null && !(Array.isArray(s.dice3) && s.dice3.length === 3 && s.dice3.every(die))) return false;
   if (s.keep !== undefined && s.keep !== null && !(Array.isArray(s.keep) && s.keep.length === 2 && int(s.keep[0]) && int(s.keep[1]) && s.keep[0] >= 0 &&
@@ -14214,18 +14346,19 @@ const handSec = me => sec('hand', 'Your cards', handHTML(me) + skillRowHTML(me),
    and red, talents in gold, so the badge is learnt by colour before it is read.
    Resources stay the little coloured cards they always were: anything with
    words on it is a skill or a talent. */
-const CARD_GLYPH = { allin: '♠', bustup: '✸', wrecking: '⚒', tipoff: '☎', luck: '☘', silver: '✦', paidoff: '✉', backup: '✚', shakedown: '✊', fight: '✖', roadcrew: '⛏', connections: '☏', legend: '★', rewind: '↺', overtime: '⏱', stall: '✋', rush: '»' };
-const WHEN_TEXT = { any: 'On your turn, before or after you roll.', act: 'On your turn, after you roll.', react: 'When a rival picks a fight with you.', never: 'Never played: it scores at the start of your next turn.' };
+const CARD_GLYPH = { safehouse: '⌂', spy: '◉', allin: '♠', bustup: '✸', wrecking: '⚒', tipoff: '☎', luck: '☘', silver: '✦', paidoff: '✉', backup: '✚', shakedown: '✊', fight: '✖', roadcrew: '⛏', connections: '☏', legend: '★', rewind: '↺', overtime: '⏱', stall: '✋', rush: '»' };
+const WHEN_TEXT = { any: 'On your turn, before or after you roll.', act: 'On your turn, after you roll.', react: 'When a rival picks a fight with you.', seven: 'When a seven makes you drop half your cards.', never: 'Never played: it scores at the start of your next turn.' };
 function scard(k, o) {
   o = o || {};
   const size = o.size || 'm';
   if (k === 'back') return `<span class="sc back ${size}" aria-hidden="true">${o.n !== undefined ? `<span class="n">${o.n}</span>` : ''}</span>`;
   const c = CARDS[k];
-  return `<span class="sc ${c.kind} t-${c.tier} ${size}${o.dim ? ' dim' : ''}${o.fresh ? ' fresh' : ''}" style="--art:var(--card-${k})">` +
+  return `<span class="sc ${c.kind} t-${c.tier} ${size}${o.dim ? ' dim' : ''}${o.fresh ? ' fresh' : ''}${o.out ? ' out' : ''}" style="--art:var(--card-${k})">` +
     `<span class="art">${ART && !CARD_NOART.has(k) ? '' : `<b>${CARD_GLYPH[k]}</b>`}</span>` +
     (size === 'xs' ? '' : `<span class="nm">${esc(c.name)}</span>`) +
     (size === 'l' || size === 'xl' ? `<span class="bd ${c.kind}">${c.kind}</span><span class="vb">${esc(c.verb)}</span>` : '') +
-    (o.n > 1 ? `<span class="n">${o.n}</span>` : '') + (o.fresh ? '<span class="new" title="New: ready once the turn passes"></span>' : '') + '</span>';
+    (o.n > 1 ? `<span class="n">${o.n}</span>` : '') + (o.fresh ? '<span class="new" title="New: ready once the turn passes"></span>' : '') +
+    (o.out ? `<span class="stamp">${size === 'xs' ? '' : esc(o.out)}</span>` : '') + '</span>';
 }
 const kindTag = k => `<span class="bd ${CARDS[k].kind}">${CARDS[k].kind}</span>`;
 /* your skills and talents, under your resources: tap one to read it or play it */
@@ -14237,7 +14370,7 @@ function skillRowHTML(me) {
   const perks = [(me.luck | 0) > 0 ? `<span class="perk luck">☘ ${me.luck} lucky roll${me.luck === 1 ? '' : 's'}</span>` : '',
     me.paid ? '<span class="perk paid">The police are paid off</span>' : '',
     onCall(me) ? '<span class="perk oncall">&#10010; Backup on call: Shakedown skips you</span>' : '',
-    (me.legend | 0) > 0 ? `<span class="perk legend">★ Local Legend +${me.legend}</span>` : ''].join('');
+    (me.legend | 0) > 0 ? `<span class="perk legend">★ Local Legend +${me.legend}</span>` : '', spyPerkHTML(st, me)].join('');
   // one you could play right now glows, so a ready card is seen before it is read
   return `<div class="stwrap"><p class="stlab"><span>Skills &amp; talents</span>${ks.length ? '<span class="sthint">Tap one to read or play it</span>' : ''}</p>${ks.length
     ? `<div class="strow">${ks.map(k => { const ready = !!st && st.phase === 'turn' && canPlay(st, me, k).ok;
@@ -14250,15 +14383,18 @@ function seatBadges(p) {
     (p.paid ? '<span class="perk paid" title="The police are paid off">$</span>' : '') +
     (n ? `<span class="cbacks" title="Skills and talents held">${scard('back', { size: 'xs' })}${n}</span>` : '');
 }
+/* for sale, then earned, then gone: the same order as a phone's market (4 Oct 2026) */
+const hostMarketOrder = (st, left2) => { const ks = CARD_ORDER.filter(k => inPlay(st, k)), has = k => left2(k) > 0;
+  return ks.filter(k => CARDS[k].price && has(k)).concat(ks.filter(k => !CARDS[k].price && has(k)), ks.filter(k => !has(k))); };
 /* the table screen's market: what is left, at a glance from across the room */
 function hostMarketHTML(st) {
   if (!st.stock) return '';
   const left2 = k => deckOf(st, k) + (FX.cardHold && FX.cardHold.k === k ? 1 : 0);
   const rule = 'Buy on your turn after you roll; your first two upgrades each draw one. One a turn, and nothing is ready on the turn you got it.';
   return `<h2 class="stl" title="${rule}">Skills &amp; talents</h2>` +
-    `<div class="hmk" style="--n:${CARD_ORDER.filter(k => inPlay(st, k)).length}">${CARD_ORDER.filter(k => inPlay(st, k)).map(k => { const c = CARDS[k], n = left2(k);
-      return `<span class="hm${n ? '' : ' out'}" data-k="${k}" title="${esc(c.name)}: ${esc(c.verb)}">${scard(k, { size: 'xs', dim: !n })}` +
-        `<span><strong>${esc(c.name)}</strong><em>${!n ? (c.price ? 'Sold out' : 'None left') : c.price ? n + ' left' : n + ' in crates'}</em></span></span>`; }).join('')}</div>`;
+    `<div class="hmk" style="--n:${CARD_ORDER.filter(k => inPlay(st, k)).length}">${hostMarketOrder(st, left2).map(k => { const c = CARDS[k], n = left2(k);
+      return `<span class="hm${n ? '' : ' out'}${c.price ? '' : ' earn'}" data-k="${k}" title="${esc(c.name)}: ${esc(c.verb)}${c.price ? '' : '. Not for sale: ' + esc(cardHow(st, k))}">${scard(k, { size: 'xs', out: n ? '' : 'Sold out' })}` +
+        `<span><strong>${esc(c.name)}</strong><em>${!n ? (c.price ? 'Sold out' : 'All gone') : c.price ? n + ' left' : 'Earn it'}</em></span></span>`; }).join('')}</div>`;
 }
 /* the two rows under "What you can do": play what you hold, or go to the market */
 function skillOptsHTML(st, me, live) {
@@ -14362,6 +14498,13 @@ function luckHTML(st, me, yours) {
         `<span class="kd">${dieHTML(st.dice3[o.i[0]])}${dieHTML(st.dice3[o.i[1]])}</span><strong class="ks${o.sum === 7 ? ' hot' : ''}">${o.sum}</strong>` +
         `<span class="grow">${o.sum === 7 ? `<span class="why">Seven: nobody collects${yours ? ', and you move the police' : ''}.</span>` : bundleSize(mine) ? `<span class="kpay">${yours ? 'You get' : 'You would get'} ${bundleHTML(mine, { size: 's' })}</span>` : '<span class="why">Nothing for you.</span>'}</span></${tag}></li>`; }).join('')}</ul></section>`;
 }
+/* Safe House, offered right where a seven asks you to drop half (4 Oct 2026) */
+function safeHouseHTML(st, me) {
+  if (!heldCard(me, 'safehouse')) return '';
+  const cp = canPlay(st, me, 'safehouse');
+  return `<div class="safeh${cp.ok ? '' : ' no'}">${scard('safehouse', { size: 's', fresh: readyCard(me, 'safehouse') <= 0 })}<p><b>Safe House</b><span>${cp.ok ? 'Play it and keep every card you hold.' : esc(cp.why)}</span></p>` +
+    `<button class="btn" data-p="play" data-arg="safehouse" ${cp.ok && !ui.pending ? '' : 'disabled'}>${ui.pending ? 'Hiding them…' : 'Keep them all'}</button></div>`;
+}
 function tableSec(st, me) {
   return sec('table', 'Players', () => tallyHTML(st, me) +
     (turfBlocks(st, me.pid) ? `<p class="small tfnote">Your turf: ${turfBlocks(st, me.pid)} blocks walled off, ${SLICE.vp} of your points. A rival building on your line, or a street of it lost, breaks it.</p>` : `<p class="small muted">Turf: a line of your streets from one edge of the city to another that walls off ${SLICE.min} blocks or more is worth ${SLICE.vp} points while it holds.</p>`) +
@@ -14420,7 +14563,7 @@ function turnParts(st, me) {
   } else if (inTurn && st.step === 'discard') {
     if (owe) {
       const chosen = RES_ORDER.reduce((n, r) => n + (ui.drop[r] || 0), 0);
-      out.panel = `<section class="card"><h2>Pick ${owe} to drop</h2>
+      out.panel = `<section class="card"><h2>Pick ${owe} to drop</h2>${safeHouseHTML(st, me)}
         <div class="picks">${RES_ORDER.map(r => { const have = (me.hand[r] || 0) - (ui.drop[r] || 0);
           return `<button class="pick cardy" data-p="drop" data-arg="${r}" aria-label="Drop one ${r}" ${have > 0 && chosen < owe ? '' : 'disabled'}>${rcard(r, { size: 'm', miss: have <= 0 })}<span>${r}</span><span class="n">${have} left</span></button>`; }).join('')}</div>
         ${dealHTML({ lab: 'Dropping', b: ui.drop, none: 'tap the cards you can spare' }, { lab: 'Still to pick', b: {}, none: chosen < owe ? String(owe - chosen) : 'that is the lot' }, { oneway: true })}
@@ -14592,12 +14735,14 @@ function sheetOf(st, me) {
   if (ui.sheet === 'end') return turnOf(st, me) && st.step === 'act' ? endSheet(st, me) : null;
   if (ui.sheet === 'card') return cardSheet(st, me);
   if (ui.sheet === 'market') return st.stock ? marketSheet(st, me) : null;
+  if (ui.sheet === 'spy') return spySheet(st, me);
   return null;
 }
 /* why a card of yours cannot be played, in the few words a button has room for */
 function cardNo(st, me, k) {
   const c = CARDS[k];
   if (c.when === 'react') return 'Only when a rival picks a fight';
+  if (c.when === 'seven') return 'Only when a seven makes you drop half';
   if (c.when === 'fight') return 'Call it in a fight, with a throw';
   if (!turnOf(st, me)) return 'Play it on your turn';
   if (playedBy(st, me.pid)) return 'One a turn: already played';
@@ -14618,7 +14763,7 @@ function cardSheet(st, me) {
   const k = held.includes(ui.card) ? ui.card : held[0]; ui.card = k;
   const c = CARDS[k], cp = canPlay(st, me, k), busy = ui.pending;
   const fresh = readyCard(me, k) <= 0 && c.when !== 'never';
-  const when = c.when === 'act' ? 'Play it on your turn, after you roll.' : c.when === 'any' ? 'Play it on your turn, before or after you roll.' : c.when === 'fight' ? 'Call it in a fight, with a throw.' : '';
+  const when = c.when === 'act' ? 'Play it on your turn, after you roll.' : c.when === 'any' ? 'Play it on your turn, before or after you roll.' : c.when === 'fight' ? 'Call it in a fight, with a throw.' : c.when === 'seven' ? 'Play it when a seven makes you drop half.' : '';
   let pick = '', ok = cp.ok, label;
   if (k === 'shakedown' && cp.ok) {
     const r = RES_ORDER.includes(ui.res) ? ui.res : null; ok = !!r;
@@ -14627,6 +14772,9 @@ function cardSheet(st, me) {
   } else if (k === 'rush' && cp.ok) {                   // Rush: the rival it goes at (release 9)
     const r = rushPickHTML(st, me); ok = !!r.to; pick = r.html;
     label = r.to ? `Rush ${esc(playerOf(st, r.to).name)}` : 'Pick a rival first';
+  } else if (k === 'spy' && cp.ok) {                    // Spy: the rival it looks at (4 Oct 2026)
+    const r = spyPickHTML(st, me); ok = !!r.on; pick = r.html;
+    label = r.on ? `Spy on ${esc(playerOf(st, r.on).name)}` : 'Pick a rival first';
   } else if (k === 'connections' && cp.ok) {
     const t = ui.take || {}, n = bundleSize(t); ok = n === 2;
     pick = `<div class="picks">${RES_ORDER.map(x => `<button class="pick cardy" data-p="take" data-arg="${x}" ${n >= 2 ? 'disabled' : ''}>${rcard(x, { size: 'm', n: t[x] || undefined })}<span>${x}</span><span class="n">have ${me.hand[x] || 0}</span></button>`).join('')}</div>` +
@@ -14647,24 +14795,40 @@ function cardSheet(st, me) {
       : `<button class="btn big" data-p="shplay" data-arg="${k}" ${ok && !busy ? '' : 'disabled'}>${label}${aim && !busy ? ARROW : ''}</button>`}</div>`;
   return { kind: 'card', label: c.name, view: 'card', top, hero, body, foot };
 }
+/* how a card that is never for sale comes to you, said in the market (4 Oct 2026) */
+const CARD_HOW = { spy: 'Have a major holding on a block that pays influence. Each time the dice land on it, there is a small chance a Spy turns up in your hand. Rare.',
+  allin: 'Have a major holding on a block that pays muscle. Each time the dice land on it, there is a small chance All In turns up in your hand. Rare.' };
+const cardHow = (st, k) => CARD_HOW[k] || `Your first ${DROPS === 2 ? 'two' : DROPS} upgrades to a major holding each draw a skill or talent at random, and this is one they can draw.` +
+  (st && isRush(st) ? ' In Rush Hour it can come up at an auction too.' : '');
 /* The market: the list, and a card from it. Same sheet, so going between them slides rather than reopens. */
 function marketSheet(st, me) {
   const k = isCard(ui.buy) ? ui.buy : null;
-  if (!k) return { kind: 'market', label: 'The market', view: 'list', top: shTop('The market'), hero: '', body:
-    '<p class="small muted mkintro">Skills are moves your crew can make; talents are gifts. What you buy is ready once the turn passes.</p>' +
-    `<ul class="moves mklist">${CARD_ORDER.filter(x => inPlay(st, x)).map(x => {
-      const c = CARDS[x], cb = canBuy(st, me, x), n = deckOf(st, x);
-      return `<li><button class="opt mk${cb.ok ? ' can' : ''}" data-p="mkpick" data-arg="${x}">${scard(x, { size: 'm', dim: !n })}` +
+  // what you can buy first, then what you can only earn and how, and last what is all gone (4 Oct 2026)
+  if (!k) {
+    const ks = CARD_ORDER.filter(x => inPlay(st, x)), out = x => deckOf(st, x) > 0 ? '' : CARDS[x].price ? 'Sold out' : 'All gone';
+    const item = x => {
+      const c = CARDS[x], cb = canBuy(st, me, x), n = deckOf(st, x), o = out(x);
+      return `<li><button class="opt mk${cb.ok ? ' can' : ''}${o ? ' gone' : ''}" data-p="mkpick" data-arg="${x}">${scard(x, { size: 'm', out: o })}` +
         `<span class="grow"><span class="nm">${esc(c.name)}</span><span class="tags">${kindTag(x)} ${TIER_NAME[c.tier]}</span><span class="why">${esc(c.verb)}</span>` +
-        `<span class="price">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : '<span class="small muted">Only from an upgrade</span>'}<span class="left">${c.price ? (n ? n + ' left' : 'Sold out') : n + ' in the crates'}</span></span></span></button></li>`;
-    }).join('')}</ul>` };
+        (o ? `<span class="price"><span class="left out">${o}</span></span>`
+          : c.price ? `<span class="price">${bundleHTML(c.price, { size: 's', have: me.hand })}<span class="left">${n} left</span></span>`
+          : `<span class="how">${esc(cardHow(st, x))}</span><span class="price"><span class="left">${n} left</span></span>`) + '</span></button></li>';
+    };
+    const group = (h, sub, xs) => xs.length ? `<h3 class="mkh">${h}</h3>${sub ? `<p class="small muted mksub">${sub}</p>` : ''}<ul class="moves mklist">${xs.map(item).join('')}</ul>` : '';
+    return { kind: 'market', label: 'The market', view: 'list', top: shTop('The market'), hero: '', body:
+      '<p class="small muted mkintro">Skills are moves your crew can make; talents are gifts. What you buy is ready once the turn passes.</p>' +
+      group('For sale', '', ks.filter(x => CARDS[x].price && !out(x))) +
+      group('Not for sale', 'You can’t buy these: each one says how it comes to you.', ks.filter(x => !CARDS[x].price && !out(x))) +
+      group('Sold out', '', ks.filter(x => out(x))) };
+  }
   const c = CARDS[k], cb = canBuy(st, me, k), n = deckOf(st, k), busy = ui.pending;
-  const when = c.when === 'act' ? 'Play it after you roll.' : c.when === 'any' ? 'Play it before or after you roll.' : c.when === 'fight' ? 'Call it in a fight, with a throw.' : '';
+  const when = c.when === 'act' ? 'Play it after you roll.' : c.when === 'any' ? 'Play it before or after you roll.' : c.when === 'fight' ? 'Call it in a fight, with a throw.' : c.when === 'seven' ? 'Play it when a seven makes you drop half.' : '';
   const label = busy ? 'Buying…' : cb.ok ? `Buy ${esc(c.name)}` : !n ? 'Sold out'
     : !turnOf(st, me) ? 'Buy on your turn' : st.step === 'roll' ? 'Roll first, then buy' : st.step !== 'act' ? 'Not right now' : 'Can’t afford it yet';
-  return { kind: 'market', label: c.name, view: 'card', top: shTop('The market', 'mkback'), hero: `<div class="mkhero ${c.kind}" data-k="${k}">${scard(k, { size: 'xl', dim: !n })}</div>`, body:
+  return { kind: 'market', label: c.name, view: 'card', top: shTop('The market', 'mkback'), hero: `<div class="mkhero ${c.kind}" data-k="${k}">${scard(k, { size: 'xl', out: n ? '' : c.price ? 'Sold out' : 'All gone' })}</div>`, body:
     `<p class="mkdesc">${esc(c.text)}${when ? ` <span class="muted">${when}</span>` : ''}</p>` +
-    `<div class="mkprice">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : ''}<span class="mkleft">${n ? n + (c.price ? ' left' : ' in the crates') : 'None left'}</span></div>`,
+    (c.price ? '' : `<p class="mkhow"><b>How to get it</b>${esc(cardHow(st, k))}</p>`) +
+    `<div class="mkprice">${c.price ? bundleHTML(c.price, { size: 's', have: me.hand }) : ''}<span class="mkleft${n ? '' : ' out'}">${n ? n + ' left' : c.price ? 'Sold out' : 'All gone'}</span></div>`,
     // a card that is never for sale says so in its own text, so it gets no buy button at all
     foot: `<div class="mkacts">${c.price ? `<button class="btn big" data-p="buy" ${cb.ok && !busy ? '' : 'disabled'}>${label}</button>` : ''}` +
     `<button class="btn ghost${c.price ? '' : ' big'}" data-p="mkback">Back</button></div>` };
@@ -15022,15 +15186,17 @@ function fxHandoff(p) {
 /* somebody else's skill or talent, on a phone: told in a line at the top, unless it lands on you */
 function fxHitsMe(st, ev) {
   if (ev.k === 'shakedown') return true;
+  if (ev.k === 'spy') return !!st.spy && st.spy.on === PID;
   if (FIGHT_CARDS.includes(ev.k)) return !!st.fight && st.fight.d === PID;
   if (ev.k === 'tipoff') return GEO.hexes[st.board.police].vs.some(v => st.buildings[v] && st.buildings[v].pid === PID);
   if (ev.k === 'rewind' && ev.gone) return ev.gone[2] === PID || ev.gone[0] === 'flip' || ev.gone[0] === 'raze' || ev.gone[0] === 'drop';   // placeSig is kind:at:pid:t; a street won in a fight has two owners
   return false;
 }
+const spyOnText = () => { const st = G.state, s = st && st.spy, q = s && playerOf(st, s.on); return !q ? '' : joinRoom && !WATCH && q.pid === PID ? ' on you' : ' on ' + q.name; };
 function fxPlayMini(ev, p, c) {
   const el = document.createElement('div');
   el.className = 'fxmini ' + c.kind;
-  el.innerHTML = `${scard(ev.k, { size: 's' })}<p><b>${esc(p.name)} ${ev.k === 'legend' ? 'is a Local Legend' : 'plays ' + esc(c.name)}</b><span>${esc(c.verb)}</span></p>`;
+  el.innerHTML = `${scard(ev.k, { size: 's' })}<p><b>${esc(p.name)} ${ev.k === 'legend' ? 'is a Local Legend' : 'plays ' + esc(c.name) + esc(spyOnText())}</b><span>${esc(c.verb)}</span></p>`;
   fxLayer().appendChild(el);
   setTimeout(() => el.remove(), 2700);
   return wait(FIGHT_CARDS.includes(ev.k) ? 700 : 900).then(() => {
@@ -15091,7 +15257,7 @@ function foldSec(pb) {
 function renderPlayer() {
   const st = G.state, screen = playerScreen(), me = st && playerOf(st, PID);
   if (st) useGeo(st.board);
-  stageSync(st); fxObserve(st); quietly(scoreObserve, st); quietly(clockObserve, st); quietly(modeObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st); quietly(stObserve, st);
+  stageSync(st); fxObserve(st); quietly(tookWatch, st); quietly(scoreObserve, st); quietly(clockObserve, st); quietly(modeObserve, st); sndObserve(st); quietly(s => talkObserve(s, me), st); quietly(stObserve, st);
   if (!$('#p-main')) {
     $('#app').innerHTML = `<header class="bar pbar"><a class="brand homelink" href="./" data-l="home" title="Front page"><img class="pvlogo" src="art/landing/run-the-city.svg" width="68" height="30" alt="Run the City"></a><span id="p-status" class="pill">Connecting</span><span class="grow"></span><span id="p-key" style="display:contents"></span><button type="button" class="talkbtn" data-p="talk" aria-label="Trash talk: GIFs, whispers, splats" hidden>${TALKICO}</button>${sndBtnHTML()}</header>
       <main class="phone"><div id="p-keypanel" class="slot"></div><div id="p-alert"></div><div id="p-main" style="display:contents"></div></main><div id="p-fightpill"></div><div id="p-hud"></div><div id="p-wsp" role="status"></div><div id="p-arena"></div><div id="p-modal"></div><div id="p-modal-out" aria-hidden="true"></div>`;
@@ -15108,8 +15274,8 @@ function renderPlayer() {
   pill.className = 'pill' + (G.online ? ' on' : ''); pill.title = G.online ? `Connected to table ${joinRoom}` : 'Connecting to the table';
   setHTML('#p-status', G.online ? esc(joinRoom) : 'Connecting');
   setHTML('#p-key', st ? keyBtnHTML() : ''); setHTML('#p-keypanel', st ? keyPanelHTML(st, me) : '');
-  setHTML('#p-alert', P.newer ? '<div class="warn"><p><strong>This table runs a newer version of the game.</strong> Reload to catch up. Your seat is safe.</p><button class="btn" data-p="reload">Reload</button></div>'
-    : st && P.hostUp === false ? '<div class="warn"><p><strong>The table screen is offline.</strong> Your seat is safe. Play resumes when it reconnects.</p></div>' : '');
+  setHTML('#p-alert', (P.newer ? '<div class="warn"><p><strong>This table runs a newer version of the game.</strong> Reload to catch up. Your seat is safe.</p><button class="btn" data-p="reload">Reload</button></div>'
+    : st && P.hostUp === false ? '<div class="warn"><p><strong>The table screen is offline.</strong> Your seat is safe. Play resumes when it reconnects.</p></div>' : '') + tookAlertHTML(st));
   if (ownMove) { ui.pending = false; clearTimeout(ui.pendTimer); }
   const turnKey = st ? [st.phase, st.round, st.placeIdx, st.step, st.turnIdx, st.turnNo, Object.keys(st.buildings || {}).length,
     Object.keys(st.streets || {}).length, me ? handCount(me) : 0, st.rolls && st.rolls[PID] ? 1 : 0,
@@ -15133,6 +15299,7 @@ function renderPlayer() {
       P.freeBack !== `${st.turnIdx}:${st.turnNo}:${st.free}` && left(st, me.pid, 'street') > 0 && legalStreets(st, me.pid).length) ui.mode = 'street';
   }
   // a sheet closes itself once your own move has done what it was opened for
+  if (st && me && ui.sheet === 'card' && ui.sheetPlay === 'spy' && st.spy && st.spy.by === me.pid) { ui.sheet = 'spy'; ui.sheetPlay = null; }
   if (st && me && ui.sheet === 'card' && ui.sheetPlay && st.played && st.played[me.pid] === ui.sheetPlay) { ui.sheet = null; ui.sheetPlay = null; ui.res = null; ui.take = {}; MODAL.exit = 'played'; layerPop(); }
   if (st && me && ui.sheet === 'market' && ui.sheetBuy && heldCard(me, ui.sheetBuy.k) > ui.sheetBuy.n) { ui.sheet = null; ui.buy = null; ui.sheetBuy = null; MODAL.exit = 'bought'; layerPop(); }
   const changed = screen !== P.screen; P.screen = screen;
@@ -18056,6 +18223,32 @@ function modePhoneParts(st, me, out) {
     out.bar = auctionDock(st, me); out.focus = 'panel';
   }
 }
+/* ---------- Spy (4 Oct 2026) ----------
+   The one looking picks a rival in the card sheet, then sees their whole hand in a sheet of its own until the turn
+   ends, kept up as it changes. The one looked at is told, on their phone. Nobody else sees what is in it. */
+function spyPickHTML(st, me) {
+  const ts = spyTargets(st, me.pid), on = ts.includes(ui.spyOn) ? ui.spyOn : null;
+  return { on, html: `<p class="small muted" style="text-align:center">Whose hand do you want to see?</p><ul class="moves">${ts.map(id => { const q = playerOf(st, id);
+    return `<li><button class="opt" data-p="spyon" data-arg="${esc(id)}" aria-pressed="${on === id}"><span class="chip" style="background:var(--p-${q.color})"></span><span class="grow">${esc(q.name)}` +
+      `<span class="why">${handCount(q)} resource${handCount(q) === 1 ? '' : 's'}, ${cardCount(q)} skill${cardCount(q) === 1 ? '' : 's'} and talents</span></span>${rcard('back', { size: 's', n: handCount(q) })}</button></li>`; }).join('')}</ul>` };
+}
+function spySheet(st, me) {
+  const s = st.phase === 'turn' && st.spy, q = s && s.by === me.pid ? playerOf(st, s.on) : null;
+  if (!q) return null;
+  const ks = CARD_ORDER.filter(k => heldCard(q, k) > 0), n = handCount(q), m = cardCount(q);
+  const hero = `<div class="spyhero"><p class="spyw"><span class="turnchip" style="background:var(--p-${q.color})"></span>${esc(q.name)} holds ${n} resource${n === 1 ? '' : 's'}</p>` +
+    `<div class="spyres">${RES_ORDER.map(r => `<span class="spyc${q.hand[r] ? '' : ' none'}">${rcard(r, { n: q.hand[r] || undefined, miss: !q.hand[r] })}<span>${r}</span></span>`).join('')}</div></div>`;
+  const body = `<h3 class="mkh">${m ? `${m} skill${m === 1 ? '' : 's'} and talents` : 'Skills &amp; talents'}</h3>` +
+    (ks.length ? `<div class="spyst">${ks.map(k => `<span class="spyk">${scard(k, { size: 's', n: heldCard(q, k) })}<span>${esc(CARDS[k].verb)}</span></span>`).join('')}</div>` : '<p class="small muted">None.</p>') +
+    '<p class="small muted mksub">Only you can see this. It keeps up as their hand changes, until your turn ends.</p>';
+  return { kind: 'spy', label: `${q.name}'s hand`, view: 'spy', top: shTop('Spy'), hero, body, foot: '<div class="mkacts"><button class="btn ghost big" data-p="shclose">Close</button></div>' };
+}
+function spyPerkHTML(st, me) {
+  const s = st && st.phase === 'turn' && st.spy; if (!s) return '';
+  if (s.by === me.pid) { const q = playerOf(st, s.on); return q ? `<button class="perk spy" data-p="sheet" data-arg="spy" aria-haspopup="dialog">◉ Spying on ${esc(q.name)}: see their hand</button>` : ''; }
+  if (s.on === me.pid) { const q = playerOf(st, s.by); return q ? `<span class="perk spy">◉ ${esc(q.name)} can see your hand this turn</span>` : ''; }
+  return '';
+}
 /* Rush, in the card sheet: the rival it goes at */
 function rushPickHTML(st, me) {
   const ts = rushTargets(st, me.pid), to = ts.includes(ui.to) ? ui.to : null;
@@ -18655,6 +18848,7 @@ function learnJob(st) {
   // anyone's part of a seven, a fight, or an answer to your offer
   if (st.step === 'discard') {
     const id = Object.keys(st.pend).find(bot); if (!id) return null;
+    if (canPlay(st, playerOf(st, id), 'safehouse').ok) return { pid: id, t: 'play', k: 'safehouse' };
     const p = playerOf(st, id), drop = {}; let k = st.pend[id];
     RES_ORDER.slice().sort((x, y) => (p.hand[y] || 0) - (p.hand[x] || 0)).forEach(r => { const t = Math.min(k, p.hand[r] || 0); if (t) { drop[r] = t; k -= t; } });
     return { pid: id, t: 'discard', cards: drop };
@@ -18836,13 +19030,14 @@ function fxPlan(st, was, now) {
     } else {
       // nobody but the two of them sees what was taken: by the police, by a Tip-off, or as the spoils of a fight
       const secret = was.step === 'steal' || was.step === 'fight' || now.played[activePid(st)] === 'tipoff' && was.played[activePid(st)] !== 'tipoff';
+      const took = secret || (now.played[activePid(st)] === 'shakedown' && was.played[activePid(st)] !== 'shakedown');   // taken, not traded (4 Oct 2026)
       const start = now.phase === 'place' && st.lastV != null ? GEO.verts[st.lastV].hexes : null;
       gains.forEach(g => {
         let n = g.n;
         losses.forEach(l => {
           if (!n || l.r !== g.r || l.pid === g.pid || !l.n) return;
           const k = Math.min(n, l.n); n -= k; l.n -= k;
-          for (let i = 0; i < k; i++) flights.push({ from: { pid: l.pid }, to: { pid: g.pid }, r: g.r, secret });
+          for (let i = 0; i < k; i++) flights.push({ from: { pid: l.pid }, to: { pid: g.pid }, r: g.r, secret, took });
         });
         for (let i = 0; i < n; i++) {
           const hx = start ? start.find(h => RESOURCE_OF[st.board.hexes[h].t] === g.r) : undefined;
@@ -18862,7 +19057,8 @@ function fxPlan(st, was, now) {
       const d = (b[k] || 0) - (a[k] || 0);
       if (d > 0) {
         const up = Object.keys(now.bld).find(v => now.bld[v] === p.pid + 'c' && was.bld[v] === p.pid + 's');
-        if (!mine || p.pid === mine) cardEv.push(up !== undefined ? { t: 'drop', pid: p.pid, k, v: +up } : { t: 'buy', pid: p.pid, k });
+        const fv = up === undefined && now.dice && (!was.dice || was.dice.join() !== now.dice.join() || was.turn !== now.turn) ? foundAt(st, p.pid, k) : undefined;   // found on the dice (4 Oct 2026)
+        if (!mine || p.pid === mine) cardEv.push(up !== undefined ? { t: 'drop', pid: p.pid, k, v: +up } : fv !== undefined ? { t: 'drop', pid: p.pid, k, v: fv } : { t: 'buy', pid: p.pid, k });
       } else if (d < 0 && now.played[p.pid] === k && was.played[p.pid] !== k) {
         const gone = was.placed.find(x => !now.placed.includes(x));
         cardEv.push({ t: 'play', pid: p.pid, k, gone: k === 'rewind' && gone ? gone.split(':') : null });
@@ -18913,7 +19109,7 @@ function fxPump() {
   if (!ev) { clearTimeout(FX.guard); FX.cur = null; if (FX.veil || Object.keys(FX.hold).length || FX.cardHold || FX.fightBusy) fxReset(); return; }
   FX.busy = true; FX.cur = ev;
   const next = () => { FX.busy = false; FX.cur = null; fxPump(); };
-  const run = { roll: fxRoll, fly: fxFly, keep: fxKeep, play: fxPlay, buy: fxBuy, drop: fxDrop, fight: fxFight, raid: fxRaid, turf: fxTurf }[ev.t];
+  const run = { roll: fxRoll, fly: fxFly, keep: fxKeep, play: fxPlay, buy: fxBuy, drop: fxDrop, fight: fxFight, raid: fxRaid, turf: fxTurf, taken: fxTaken }[ev.t];
   try { (run ? run(ev) : Promise.resolve()).then(next, next); } catch (e) { console.error(e); next(); }
 }
 function fxLayer() {
@@ -18976,6 +19172,7 @@ function fxFly(ev) {
     if (!left) { resolve(); return; }
     ev.flights.forEach((f, i) => {
       const a = fxPoint(f.from, f.r), b = fxPoint(f.to, f.r);
+      if (f.took && f.from.pid && (!phone || f.from.pid === PID)) lostPop(a, i);
       const el = document.createElement('div');
       el.className = 'flyc';
       el.innerHTML = rcard(f.secret && !(phone && (f.from.pid === PID || f.to.pid === PID)) ? 'back' : f.r, { size: phone ? 'm' : '' });
@@ -19001,6 +19198,62 @@ function fxFly(ev) {
       setTimeout(land, 880 + i * 95 + 600);                          // a hidden tab never fires onfinish
     });
   });
+}
+/* ---------- taken from you (4 Oct 2026) ----------
+   Like the board game: a phone that loses a card to the police, a Tip-off, a Shakedown or a fight is told what it was
+   and who has it, in the middle of the screen once (after the fight or the flying card that took it), and in a line
+   at the top until it is waved away or a round has gone by. The table keeps the round of it in st.took, so a phone that
+   was asleep at the time says so when it is picked up again. Each phone remembers what it has shown. */
+const TOOK = { seen: null, hide: null };
+const TOOK_WHY = { police: 'when the police came round', tipoff: 'with a Tip-off', shakedown: 'with a Shakedown', fight: 'as the spoils of the fight' };
+function tookList(st) {
+  if (!joinRoom || WATCH || !st || !Array.isArray(st.took) || !(st.phase === 'turn' || st.phase === 'over')) return [];
+  const n = {};
+  return st.took.map(x => { const id = `${st.room}:${x.t}:${x.by}:${x.from}:${x.r}:${x.how}`; n[id] = (n[id] || 0) + 1; return Object.assign({ key: id + ':' + n[id] }, x); })
+    .filter(x => x.from === PID && playerOf(st, x.by));
+}
+const tookSet = k => TOOK[k] || (TOOK[k] = new Set(load('rtcity.took' + k) || []));
+function tookMark(k, keys) { const s = tookSet(k); keys.forEach(x => s.add(x)); store('rtcity.took' + k, Array.from(s).slice(-60)); }
+function tookHide() { tookMark('hide', tookList(G.state).map(x => x.key)); }
+function tookWatch(st) {
+  const fresh = tookList(st).filter(x => !tookSet('seen').has(x.key));
+  if (!fresh.length || document.hidden) return;      // a phone in a pocket is told when it is looked at again
+  tookMark('seen', fresh.map(x => x.key));
+  if (!FX.on) return;                                // no motion: the line at the top says it
+  FX.queue.push({ t: 'taken', list: fresh });
+  setTimeout(fxPump, 60);
+}
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('visibilitychange', () => { if (!document.hidden && G.state) quietly(tookWatch, G.state); });
+// who took what, a bundle per taker, in the order it happened
+function tookBy(st, list) {
+  const by = [];
+  list.forEach(x => { let g = by.find(y => y.pid === x.by); if (!g) by.push(g = { pid: x.by, b: {}, how: x.how }); g.b[x.r] = (g.b[x.r] || 0) + 1; g.how = x.how; });
+  return by.map(g => Object.assign(g, { q: playerOf(st, g.pid) })).filter(g => g.q);
+}
+function tookAlertHTML(st) {
+  const hide = tookSet('hide'), by = tookBy(st, tookList(st).filter(x => !hide.has(x.key)));
+  if (!by.length) return '';
+  return `<div class="tooknote" role="status"><ul>${by.map(g => `<li><span class="tkm">${RES_ORDER.filter(r => g.b[r]).map(r => rcard(r, { size: 's', n: g.b[r] > 1 ? g.b[r] : undefined })).join('')}</span>` +
+    `<span><b>${esc(g.q.name)} took ${esc(handList(g.b))} from you</b><span class="why">${esc(TOOK_WHY[g.how] || '')}</span></span></li>`).join('')}</ul>` +
+    '<button class="btn ghost" data-p="tookok">OK</button></div>';
+}
+function fxTaken(ev) {
+  const st = G.state, by = st ? tookBy(st, ev.list) : [];
+  if (!by.length) return Promise.resolve();
+  const el = document.createElement('div');
+  el.className = 'fxtaken';
+  el.innerHTML = `<span class="tkstamp">Taken</span>${by.map(g => `<div class="tkrow"><div class="tkcards">${RES_ORDER.filter(r => g.b[r]).map(r => rcard(r, { n: g.b[r] > 1 ? g.b[r] : undefined })).join('')}</div>` +
+    `<p><b><span class="turnchip" style="background:var(--p-${g.q.color})"></span>${esc(g.q.name)} took ${esc(handList(g.b))}</b><span>${esc(TOOK_WHY[g.how] || '')}</span></p></div>`).join('')}`;
+  fxLayer().appendChild(el);
+  buzz([40, 70, 40]); sfx('whiff', { vol: 0.7 });
+  return wait(2600).then(() => { el.classList.add('away'); return wait(300); }).then(() => el.remove());
+}
+/* a card leaving somebody's hand for somebody else's, not by a trade: a "-1" rises where it left */
+function lostPop(p, i) {
+  if (!p) return;
+  const el = document.createElement('i'); el.className = 'lostpop' + (joinRoom && !WATCH ? '' : ' tb'); el.textContent = '−1';
+  el.style.left = p.x.toFixed(0) + 'px'; el.style.top = p.y.toFixed(0) + 'px'; el.style.animationDelay = (i * 95) + 'ms';
+  fxLayer().appendChild(el); setTimeout(() => el.remove(), 1700 + i * 95);
 }
 /* One card has arrived: show the new count where it landed, and nowhere else. */
 function fxLanded(f) {
@@ -19051,7 +19304,7 @@ function fxPlay(ev) {
   const layer = fxLayer(), box = document.createElement('div');
   box.className = `fxplay k-${ev.k} ${c.kind}`;
   box.innerHTML = `<div class="burst"></div><div class="fxcard">${scard(ev.k, { size: 'xl' })}</div>` +
-    `<p class="who"><span class="turnchip" style="background:var(--p-${p.color})"></span>${esc(p.name)} ${ev.k === 'legend' ? 'is a Local Legend' : 'plays ' + esc(c.name)}</p>`;
+    `<p class="who"><span class="turnchip" style="background:var(--p-${p.color})"></span>${esc(p.name)} ${ev.k === 'legend' ? 'is a Local Legend' : 'plays ' + esc(c.name) + (ev.k === 'spy' ? esc(spyOnText()) : '')}</p>`;
   layer.appendChild(box);
   const card = box.querySelector('.fxcard');
   card.animate([{ transform: 'translateY(40px) scale(.35) rotate(-14deg)', opacity: 0 }, { transform: 'translateY(-6px) scale(1.06) rotate(2deg)', opacity: 1, offset: 0.55 },
@@ -20395,6 +20648,7 @@ document.addEventListener('click', ev => {
     case 'sheet':
       if (pb.dataset.arg === 'market') { ui.buy = null; openSheet('market', pb); }
       else if (pb.dataset.arg === 'card') { ui.res = null; ui.take = {}; openSheet('card', pb); }
+      else if (pb.dataset.arg === 'spy') openSheet('spy', pb);
       break;
     case 'shclose': closeSheet(); break;
     case 'shgo': P.attnLater = P.focus || null; closeSheet(); break;
@@ -20409,8 +20663,11 @@ document.addEventListener('click', ev => {
       if (k === 'shakedown') { if (!RES_ORDER.includes(ui.res)) break; ui.sheetPlay = k; pact({ t: 'play', k, r: ui.res }); break; }
       if (k === 'connections') { if (bundleSize(ui.take || {}) !== 2) break; ui.sheetPlay = k; pact({ t: 'play', k, take: ui.take }); break; }
       if (k === 'rush') { if (!st || !rushTargets(st, PID).includes(ui.to)) break; ui.sheetPlay = k; pact({ t: 'play', k, to: ui.to }); break; }
+      if (k === 'spy') { if (!st || !spyTargets(st, PID).includes(ui.spyOn)) break; ui.sheetPlay = k; pact({ t: 'play', k, on: ui.spyOn }); break; }
       ui.sheetPlay = k; pact({ t: 'play', k }); break;
     }
+    case 'spyon': ui.spyOn = pb.dataset.arg; renderPlayer(); break;
+    case 'tookok': tookHide(); renderPlayer(); break;
     case 'mkpick': if (isCard(pb.dataset.arg)) { ui.buy = pb.dataset.arg; renderPlayer(); } break;
     case 'mkback': ui.buy = null; renderPlayer(); break;
     case 'buy': if (isCard(ui.buy)) { const me = st && playerOf(st, PID); ui.sheetBuy = { k: ui.buy, n: me ? heldCard(me, ui.buy) : 0 }; pact({ t: 'buy', k: ui.buy }); } break;
