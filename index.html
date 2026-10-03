@@ -2252,6 +2252,9 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 
 
 .release-wrap{position:relative;z-index:3;margin-top:40px}.release-notes{border:1px solid #64e8f346;background:#061923d9}.release-notes summary{display:flex;gap:20px;align-items:center;padding:20px 24px;cursor:pointer;list-style:none}.release-notes summary::-webkit-details-marker{display:none}.release-notes summary>span{font:700 24px/1.1 'Barlow Condensed',Impact,sans-serif;text-transform:uppercase;color:#e8fc37}.release-notes summary small{font:10px/1.6 ui-monospace,monospace;color:#a7c5d2;letter-spacing:.5px}.release-notes summary i{font:24px/1 var(--body);font-style:normal;margin-left:auto;color:#64e8f3;transition:transform .2s}.release-notes[open] summary i{transform:rotate(45deg)}.release-list{list-style:none;margin:0;padding:0 24px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 26px}.release-list li{display:flex;gap:12px;border-top:1px solid #64e8f333;padding-top:18px}.release-list li>span{color:#64e8f3;font:11px/1.6 ui-monospace,monospace}.lp .release-list h3{font-size:23px;margin-bottom:8px}.release-list p{font-size:12px;line-height:1.75;color:#bfd0d9}.lp .release-notes summary:focus-visible{outline:2px solid #e8fc37;outline-offset:4px}
+/* patch notes: a dated list under the releases, one row a day, newest first */
+.release-notes+.release-notes{margin-top:14px}.patch-list{list-style:none;margin:0;padding:0 24px 22px}.patch-list>li{display:grid;grid-template-columns:118px 1fr;gap:6px 26px;border-top:1px solid #64e8f333;padding:16px 0}.patch-list time{color:#64e8f3;font:11px/1.9 ui-monospace,monospace;letter-spacing:.5px;text-transform:uppercase}.patch-list ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}.lp .patch-list h3{font-size:19px;margin:0 0 3px}.patch-list p{font-size:12px;line-height:1.7;color:#bfd0d9;margin:0}
+@media(max-width:700px){.patch-list{padding:0 18px 20px}.patch-list>li{grid-template-columns:1fr;gap:8px}}
 @media(max-width:700px){.release-wrap{margin-top:28px}.release-notes summary{padding:18px;gap:8px;flex-wrap:wrap}.release-notes summary>span{font-size:23px}.release-notes summary small{order:3;width:100%;font-size:9px}.release-list{grid-template-columns:1fr;padding:0 18px 20px;gap:12px}}
 
 @keyframes wspdrop{from{opacity:0;transform:translateY(-16px)}}
@@ -13502,6 +13505,40 @@ function landingCardFanHTML() {
   }).join('');
   return `<div class="lp-cards" id="landing-card-deck" tabindex="0" role="group" aria-label="Browse game cards">${cards}</div>`;
 }
+/* Patch notes, newest first: [date, what, a line on it]. A shipped change adds its line at the top. */
+const PATCH_NOTES = [
+  ['2026-10-03', 'Balanced dice for two', 'In a two-player game a seven never comes within two rolls of the last one, and still comes about one roll in six. Every other number turns up as often as the odds say.'],
+  ['2026-10-03', 'Red means seven', 'Only a seven is shown in red now. Six and eight, the busiest numbers, are gold.'],
+  ['2026-09-28', 'Game modes', 'Pick your pace in the lobby: Blitz, Chess clock, Timed match, Rush Hour or Classic.'],
+  ['2026-09-28', 'Learn to play', 'A practice game against two computer crews, and a coach who talks new players through their turns on their own phone.'],
+  ['2026-09-27', 'Showtime', 'The winner gets a victory show, and now and then a giant walks through the city.'],
+  ['2026-09-27', 'Turf war', 'Wall off a slice of the city, knock down rival buildings, and keep Backup on call.'],
+  ['2026-09-27', 'Street banter', 'More whispers for every moment of the game, and stickers that move.'],
+  ['2026-09-26', 'The front door', 'A front page with the city running live. The logo always leads back to it.'],
+  ['2026-09-26', 'Lights on', 'Set-up is played on the map, then the city lights up block by block. Every game is recorded on the table, and the sound is softer.'],
+  ['2026-09-26', 'Turn clock', 'Optional timed turns, a hurry-up the others can ask for, and the standings called out as the game goes.'],
+  ['2026-09-26', 'Trash talk', 'Stickers, whispers and splats to throw across the table.'],
+  ['2026-09-26', 'The director', 'A camera that swoops in on the action, story panels, and an announcer who knows the city.'],
+  ['2026-09-26', 'A new look', 'The table and the phones dressed like the front page, with the players seated round the board.'],
+  ['2026-09-25', 'A phone made for play', 'End turn asks first, cards open as pop-ups, and the board goes full screen.'],
+  ['2026-09-25', 'More city on the table', 'The table screen frames the city itself, with no empty bands round it.'],
+  ['2026-09-24', 'The city after dark', 'Helicopters, car chases and holograms on the table screen, and your pieces lit up as part of the city.'],
+  ['2026-09-24', 'Traffic', 'Cars keep their lanes and their distance, and now and then one crashes and catches fire.'],
+  ['2026-09-24', 'Fight anybody', 'A street fight can be picked with any rival, whatever their points.'],
+  ['2026-09-23', 'Skills and talents', 'A market of cards to buy and play, street fights on the phones, and sound.'],
+  ['2026-09-23', 'Up to six players', 'Five or six players get a bigger city.'],
+  ['2026-09-23', 'Crime scenes and towers', 'The police tape off the block they are sent to, and major holdings stand as towers.'],
+  ['2026-09-20', 'Run the City opens', 'The night city: every turn says what to do next, players trade with each other, the dice spin in a slot machine, and the cards fly.'],
+];
+const patchDate = d => { const [y, m, day] = d.split('-'); return `${+day} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][m - 1]} ${y}`; };
+function patchNotesHTML() {
+  const days = [];
+  PATCH_NOTES.forEach(([d, what, line]) => { const day = days.find(x => x.d === d); if (day) day.n.push([what, line]); else days.push({ d, n: [[what, line]] }); });
+  const top = PATCH_NOTES[0];
+  return `<details class="release-notes patch-notes" id="patch-notes"><summary><span>Patch notes</span><small>Updated ${patchDate(top[0])} · ${esc(top[1])}</small><i aria-hidden="true">+</i></summary><ol class="patch-list">` +
+    days.map(x => `<li><time datetime="${x.d}">${patchDate(x.d)}</time><ul>${x.n.map(([what, line]) => `<li><h3>${esc(what)}</h3><p>${esc(line)}</p></li>`).join('')}</ul></li>`).join('') +
+    '</ol></details>';
+}
 function renderLanding() {
   const arrow = '<span class="lp-arrow" aria-hidden="true">↗</span>';
   const brand = '<img class="rtc-wordmark" src="art/landing/run-the-city.svg" width="360" height="160" alt="Run the City">';
@@ -13563,7 +13600,7 @@ function renderLanding() {
           <li><span>03</span><div><h3>Trash talk</h3><p>Stickers, whispers, and splats bring the table’s personalities into the city.</p></div></li>
           <li><span>04</span><div><h3>The director</h3><p>A moving camera, story panels, and an announcer follow the action.</p></div></li>
           <li><span>05</span><div><h3>Turf wars</h3><p>Claim territory, challenge rival buildings, and keep Backup on call.</p></div></li>
-        </ol></details></div>
+        </ol></details>${patchNotesHTML()}</div>
       </section>
     </main>
     <footer class="lp-footer"><a class="lp-logo" href="#top">${brand}</a><p>ONE SHARED CITY. EVERYBODY’S GOT AN ANGLE.</p><a href="#top">Back to the skyline ↑</a></footer>
