@@ -1,8 +1,12 @@
 # Run the City — poster artwork
 
+## Standing hero restored — 2026-10-04
+
+The hero uses the original `crews-poster.webp` (1536 × 1024) on desktop and mobile, with its original responsive sizing and a matching preload. The earlier image variants remain available locally.
+
 ## White crew leader pose correction — 2026-10-04
 
-The hero uses `crews-dynamic-v2.webp` (1536 × 1024, WebP quality 88, original generated alpha preserved); the generated master is saved locally as `crews-dynamic-v2.png`. Built-in ImageGen edited `crews-dynamic.png` to give the woman in white a natural forward stride, aligned torso, balanced arms, and proportional legs. The other five characters retain their composition and poses. The earlier dynamic assets remain available locally for comparison.
+This earlier version used `crews-dynamic-v2.webp` (1536 × 1024, WebP quality 88, original generated alpha preserved); the generated master is saved locally as `crews-dynamic-v2.png`. Built-in ImageGen edited `crews-dynamic.png` to give the woman in white a natural forward stride, aligned torso, balanced arms, and proportional legs. The other five characters retain their composition and poses. The earlier dynamic assets remain available locally for comparison.
 
 Final edit prompt:
 
