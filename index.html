@@ -2382,10 +2382,10 @@ body.pview :focus-visible{outline:2px solid var(--tb-acid);outline-offset:2px}
 
 
 .release-wrap{position:relative;z-index:3;margin-top:40px}.release-notes{border:1px solid #64e8f346;background:#061923d9}.release-notes summary{display:flex;gap:20px;align-items:center;padding:20px 24px;cursor:pointer;list-style:none}.release-notes summary::-webkit-details-marker{display:none}.release-notes summary>span{font:700 24px/1.1 'Barlow Condensed',Impact,sans-serif;text-transform:uppercase;color:#e8fc37}.release-notes summary small{font:10px/1.6 ui-monospace,monospace;color:#a7c5d2;letter-spacing:.5px}.release-notes summary i{font:24px/1 var(--body);font-style:normal;margin-left:auto;color:#64e8f3;transition:transform .2s}.release-notes[open] summary i{transform:rotate(45deg)}.release-list{list-style:none;margin:0;padding:0 24px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 26px}.release-list li{display:flex;gap:12px;border-top:1px solid #64e8f333;padding-top:18px}.release-list li>span{color:#64e8f3;font:11px/1.6 ui-monospace,monospace}.lp .release-list h3{font-size:23px;margin-bottom:8px}.release-list p{font-size:12px;line-height:1.75;color:#bfd0d9}.lp .release-notes summary:focus-visible{outline:2px solid #e8fc37;outline-offset:4px}
-/* patch notes: a dated list under the releases, one row a day, newest first */
-.release-notes+.release-notes{margin-top:14px}.patch-list{list-style:none;margin:0;padding:0 24px 22px}.patch-list>li{display:grid;grid-template-columns:118px 1fr;gap:6px 26px;border-top:1px solid #64e8f333;padding:16px 0}.patch-list time{color:#64e8f3;font:11px/1.9 ui-monospace,monospace;letter-spacing:.5px;text-transform:uppercase}.patch-list ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}.lp .patch-list h3{font-size:19px;margin:0 0 3px}.patch-list p{font-size:12px;line-height:1.7;color:#bfd0d9;margin:0}
+/* patch notes share the city history panel with the release highlights */
+.release-label{margin:0;padding:0 24px 14px;font:11px/1.6 ui-monospace,monospace;letter-spacing:1.6px;text-transform:uppercase;color:#a7c5d2}.patch-list{list-style:none;margin:0;padding:0 24px 22px}.patch-list>li{display:grid;grid-template-columns:118px 1fr;gap:6px 26px;border-top:1px solid #64e8f333;padding:16px 0}.patch-list time{color:#64e8f3;font:11px/1.9 ui-monospace,monospace;letter-spacing:.5px;text-transform:uppercase}.patch-list ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}.lp .patch-list h3{font-size:19px;margin:0 0 3px}.patch-list p{font-size:12px;line-height:1.7;color:#bfd0d9;margin:0}
 .pn-day{display:grid;gap:16px}.pn-group h4{display:flex;align-items:center;gap:8px;margin:0 0 9px;font:11px/1.6 ui-monospace,monospace;letter-spacing:1.6px;text-transform:uppercase}.pn-group h4::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}.pn-group.new h4{color:#64e8f3}.pn-group.fix h4{color:#e8fc37}
-@media(max-width:700px){.patch-list{padding:0 18px 20px}.patch-list>li{grid-template-columns:1fr;gap:8px}}
+@media(max-width:700px){.release-label{padding-inline:18px}.patch-list{padding:0 18px 20px}.patch-list>li{grid-template-columns:1fr;gap:8px}}
 @media(max-width:700px){.release-wrap{margin-top:28px}.release-notes summary{padding:18px;gap:8px;flex-wrap:wrap}.release-notes summary>span{font-size:23px}.release-notes summary small{order:3;width:100%;font-size:9px}.release-list{grid-template-columns:1fr;padding:0 18px 20px;gap:12px}}
 
 @keyframes wspdrop{from{opacity:0;transform:translateY(-16px)}}
@@ -13862,11 +13862,10 @@ function patchNotesHTML() {
     if (!day) days.push(day = { d, n: [], f: [] });
     (kind === 'fix' ? day.f : day.n).push([what, line]);
   });
-  const top = PATCH_NOTES[0];
   const group = (k, label, items) => (items.length ? `<div class="pn-group ${k}"><h4>${label}</h4><ul>${items.map(([what, line]) => `<li><h3>${esc(what)}</h3><p>${esc(line)}</p></li>`).join('')}</ul></div>` : '');
-  return `<details class="release-notes patch-notes" id="patch-notes"><summary><span>Patch notes</span><small>Updated ${patchDate(top[0])} · ${esc(top[1])}</small><i aria-hidden="true">+</i></summary><ol class="patch-list">` +
+  return '<p class="release-label">Patch notes</p><ol class="patch-list" aria-label="Patch notes">' +
     days.map(x => `<li><time datetime="${x.d}">${patchDate(x.d)}</time><div class="pn-day">${group('new', 'New', x.n)}${group('fix', 'Fixes', x.f)}</div></li>`).join('') +
-    '</ol></details>';
+    '</ol>';
 }
 
 function renderLanding() {
@@ -13925,13 +13924,13 @@ function renderLanding() {
         <details><summary>Can we try it with two players?</summary><p>The game is made for 3–6 players, but you can start with two to try it out. Five or six players get a bigger city with more blocks to compete for.</p></details>
         <details><summary>Are the dice fair?</summary><p>Yes, with one house rule: sevens are rarer. Real dice throw a seven one time in six. Here it comes about one roll in nine, and after a seven the police sit out a full round, so sevens never pile up. Every other number turns up in the usual mix, with six and eight the most common.</p></details>
         <details><summary>How do you win?</summary><p>Be the first to reach 10 points. Build operations, upgrade them into holdings, and use your cards and trades to get ahead. Your phone guides you through each turn.</p></details></div></div>
-        <div class="lp-wrap release-wrap" id="roadmap"><details class="release-notes"><summary><span>The city so far</span><small>Releases 01–05 · Already in the game</small><i aria-hidden="true">+</i></summary><ol class="release-list">
+        <div class="lp-wrap release-wrap" id="roadmap"><details class="release-notes patch-notes" id="patch-notes"><summary><span>The city so far</span><small>Releases &amp; patch notes · Updated ${patchDate(PATCH_NOTES[0][0])}</small><i aria-hidden="true">+</i></summary><p class="release-label">Releases 01–05</p><ol class="release-list" aria-label="Releases 01–05">
           <li><span>01</span><div><h3>The foundations</h3><p>Game records, board views, city lights, and a refined sound mix.</p></div></li>
           <li><span>02</span><div><h3>Set the pace</h3><p>Optional timed turns and tools to keep the game moving.</p></div></li>
           <li><span>03</span><div><h3>Trash talk</h3><p>GIF reactions, whispers, and distractions bring the table’s personalities into the city.</p></div></li>
           <li><span>04</span><div><h3>The director</h3><p>A moving camera, story panels, and an announcer follow the action.</p></div></li>
           <li><span>05</span><div><h3>Turf wars</h3><p>Claim territory, challenge rival buildings, and keep Backup on call.</p></div></li>
-        </ol></details>${patchNotesHTML()}</div>
+        </ol>${patchNotesHTML()}</details></div>
       </section>
     </main>
     <footer class="lp-footer"><a class="lp-logo" href="#top">${brand}</a><p>ONE SHARED CITY. EVERYBODY’S GOT AN ANGLE.</p><a href="#top">Back to the skyline ↑</a></footer>
