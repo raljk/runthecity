@@ -272,8 +272,9 @@ LINES.update({
     "v_s_round_1": dict(text="That's the round.", style=0.4),
     "v_s_round_2": dict(text="End of the round.", style=0.4),
     "v_s_round_3": dict(text="Round's done. Here's how it stands.", style=0.4),
-    # the clock: a hurry-up's ten seconds, and the time running out
-    "v_hurry":     dict(text="Everybody's waiting. Ten seconds.", style=0.55),
+    # the clock: a hurry-up's thirty seconds (or less, if that was all the turn had left), and the time running out
+    "v_hurry":     dict(text="Everybody's waiting. Thirty seconds.", style=0.55),
+    "v_hurry_go":  dict(text="Everybody's waiting. Hurry it up.", style=0.55),
     "v_timeup_1":  dict(text="Time's up.", style=0.5),
     "v_timeup_2":  dict(text="That's time. Next.", style=0.5),
     # a slow turn gets a yawn or a dig; a quick one with a plan in it, a nod (v3 for the yawn: it reads the tag)
