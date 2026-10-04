@@ -1716,7 +1716,6 @@ body:has(.ttgif)>.gif-credit{display:block}
 .payring.turf.off{border-style:dashed;box-shadow:none;opacity:.75}
 .yturn.tfband .yband{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--pc) 80%,#05070c) 14%,color-mix(in srgb,var(--pc) 80%,#05070c) 86%,transparent);box-shadow:0 0 44px color-mix(in srgb,var(--pc) 55%,transparent)}
 .yturn.tfband.off .yband{background:linear-gradient(90deg,transparent,#3b3f4c 14%,#3b3f4c 86%,transparent);box-shadow:none}
-.ocmark{color:#ffd27a}
 .tally .num.tfn{color:var(--pc);font-weight:800}
 .tally .num.ocn{color:#ffd27a}
 .perk.oncall{color:#ffd27a;border-color:color-mix(in srgb,#ffd27a 45%,var(--line))}
@@ -1997,6 +1996,23 @@ body.hostfight .hframe .bwrap>#h-seats{display:none}
   .hframe .bwrap>#h-seats .at-lm,.hframe .bwrap>#h-seats .at-rm{grid-row:2;align-self:center}
   .hframe .bwrap>#h-seats .at-lb,.hframe .bwrap>#h-seats .at-rb{grid-row:3;align-self:end}
 }
+/* the skills and talents still working for a player, laid on the table under their name (seatInPlayHTML): the card
+   and two words on what is left of it, in the seat's quiet mono. Always one row, so a seat never grows into the one
+   below: three or more fan out like a hand and drop their words. A card just played flies in from the middle (fxLay)
+   and its place stays empty until it lands. */
+.hframe #h-seats .inplay{display:flex;flex-wrap:nowrap;gap:8px;margin-top:4px}
+.hframe #h-seats .inplay.fan{gap:0}
+.hframe #h-seats .inplay.fan .ip+.ip{margin-left:-12px}
+.hframe #h-seats .inplay.fan.many .ip+.ip{margin-left:-19px}
+.hframe #h-seats .inplay.fan .ip i{display:none}
+.hframe #h-seats .ip{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.hframe #h-seats .ip .sc.xs{width:36px;height:50px;border-radius:4px;border-width:1.5px;box-shadow:0 4px 10px rgba(0,0,0,.55)}
+.hframe #h-seats .ip .sc.xs .art b{font-size:1.15rem}
+.hframe #h-seats .ip i{max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 8.5px/1 var(--tb-mono);font-style:normal;letter-spacing:.6px;text-transform:uppercase;color:var(--tb-muted)}
+.hframe #h-seats .ip.held{visibility:hidden}
+@media (min-width:981px) and (min-height:600px){.hframe .bwrap>#h-seats .seat-l .inplay{justify-content:flex-end}}
+@media (max-height:780px){.hframe #h-seats .ip .sc.xs{width:31px;height:43px}}
+.fxplay.lay .burst,.fxplay.lay .who{opacity:0;transition:opacity .25s}
 
 /* What happened: the newest line in paper, the rest quiet, hairlines between */
 .hframe .log{gap:0;font-size:.86rem;line-height:1.38}
@@ -13182,7 +13198,7 @@ const RING_AT = { 1: ['lm'], 2: ['lm', 'rm'], 3: ['lt', 'rm', 'lb'], 4: ['lt', '
 function seatsHTML(st, ro) {
   const act = activePid(st), at = st.phase === 'lobby' ? RING : RING_AT[st.players.length] || RING;
   return st.players.map((p, i) => {
-    const roll = st.rolls[p.pid], spot = at[i] || RING[i % RING.length]; let line = '';
+    const roll = st.rolls[p.pid], spot = at[i] || RING[i % RING.length]; let line = '', ip = '';
     if (st.phase === 'lobby') {
       const ok = modeAsks(st) ? (st.clock.ok[p.pid] ? '<span class="okd" title="Said OK to the game mode">OK</span>' : '<span class="okd no" title="Has not said OK to the game mode yet">no OK</span>') : '';
       line = ok + (ro ? '' : `${i > 0 ? `<button class="btn ghost small" data-h="up" data-arg="${esc(p.pid)}" aria-label="Move ${esc(p.name)} up one seat">&uarr;</button>` : ''}<button class="btn ghost small" data-h="kick" data-arg="${esc(p.pid)}" aria-label="Remove ${esc(p.name)}">&times;</button>`);
@@ -13190,11 +13206,36 @@ function seatsHTML(st, ro) {
     else {
       const n = shownCount(p), k = shownCards(p);
       line = `${st.pend && st.pend[p.pid] ? `<em class="sdrop">drop ${st.pend[p.pid]}</em>` : ''}<span class="vp"><b>${vpOf(st, p.pid)}</b>/${WIN_VP}</span><span class="backs" title="Cards in hand">${n} card${n === 1 ? '' : 's'}</span>` +
-        (k ? `<span class="cbacks" title="Skills and talents held">&#9670;${k}</span>` : '') + ((p.luck | 0) > 0 ? `<span title="Lucky Streak: ${p.luck} three-dice rolls left">&#9752;${p.luck}</span>` : '') + (p.paid ? '<span title="The police are paid off">$</span>' : '') + seatMarksHTML(p) + modeSeatHTML(st, p);
+        (k ? `<span class="cbacks" title="Skills and talents held">&#9670;${k}</span>` : '') + modeSeatHTML(st, p);
+      ip = seatInPlayHTML(st, p);
     }
     return `<li class="seat seat-${spot[0]} at-${spot}${p.pid === act ? ' active' : ''}${p.online ? '' : ' off'}" data-seat="${esc(p.pid)}" style="--pc:var(--p-${p.color})">` +
-      `<p class="nm">${p.online ? '' : '<i class="dot" title="Phone asleep or offline"></i>'}<span class="nmt">${esc(p.name)}</span>${p.pid === st.starter ? '<span class="star" title="Takes the first turn">&#9733;</span>' : ''}</p><p class="sub">${line}</p></li>`;
+      `<p class="nm">${p.online ? '' : '<i class="dot" title="Phone asleep or offline"></i>'}<span class="nmt">${esc(p.name)}</span>${p.pid === st.starter ? '<span class="star" title="Takes the first turn">&#9733;</span>' : ''}</p><p class="sub">${line}</p>${ip}</li>`;
   }).join('');
+}
+/* The skills and talents still working for a player once played, laid on the table under their name: the card and
+   two words on what is left of it (4 Oct 2026). Lucky Streak's rolls, Paid Off until their turn, Backup on call and
+   Local Legend for good; for the turn they are played in, Silver Tongue, Road Crew's free streets, Spy, and Rush
+   Hour's Stall. Rush lies under the rival it slows. Read from the state, so nothing new is sent. */
+function inPlayOf(st, p) {
+  const out = [], turn = st.phase === 'turn', mine = turn && activePid(st) === p.pid, c = st.clock || {}, n = p.luck | 0, lg = p.legend | 0;
+  const put = (k, note, why) => out.push({ k, note, why });
+  if (n > 0) put('luck', `${n} roll${n === 1 ? '' : 's'}`, `Lucky Streak: ${n === 1 ? 'the next roll is' : `the next ${n} rolls are`} three dice, keep two`);
+  if (p.paid) put('paidoff', 'no police', 'Paid Off: nobody else can send the police next to their buildings until their next turn');
+  if (onCall(p)) put('backup', 'on call', 'Backup on call: Shakedown skips them until they lose a fight');
+  if (turn && playedBy(st, p.pid) === 'silver') put('silver', '2 for 1', 'Silver Tongue: two for one at every terminal this turn');
+  if (mine && (st.free | 0) > 0) put('roadcrew', `${st.free} free`, `Road Crew: ${st.free} free street${st.free === 1 ? '' : 's'} still to lay this turn`);
+  const spied = turn && st.spy && st.spy.by === p.pid && playerOf(st, st.spy.on);
+  if (spied) put('spy', 'on ' + spied.name, `Spy: sees everything ${spied.name} holds, this turn`);
+  if (mine && c.stall) put('stall', 'no hurry', 'Stall: nobody can hurry them this turn');
+  if ((c.rushed && c.rushed[p.pid]) || (mine && c.rs)) put('rush', 'half time', `Rush: ${mine && c.rs ? 'this turn has' : 'their next turn gets'} half the time`);
+  if (lg > 0) put('legend', `+${lg} point${lg === 1 ? '' : 's'}`, `Local Legend: ${lg === 1 ? 'one point' : lg + ' points'} for the rest of the game`);
+  return out;
+}
+function seatInPlayHTML(st, p) {
+  const ks = inPlayOf(st, p), held = k => !!(FX.playHold && FX.playHold.has(p.pid + ':' + k));
+  return ks.length ? `<div class="inplay${ks.length > 2 ? ' fan' : ''}${ks.length > 3 ? ' many' : ''}">${ks.map(x => `<span class="ip${held(x.k) ? ' held' : ''}" data-ip="${x.k}" title="${esc(x.why)}">` +
+    `${scard(x.k, { size: 'xs' })}<i>${esc(x.note)}</i></span>`).join('')}</div>` : '';
 }
 function renderHost() {
   const ro = WATCH, st = G.state;
@@ -13777,6 +13818,7 @@ function landingCardFanHTML() {
 /* Patch notes, newest first: [date, what, a line on it], and 'fix' fourth when it mends something (left out, it is
    something new). A shipped change adds its line at the top. */
 const PATCH_NOTES = [
+  ['2026-10-04', 'Cards on the table', 'A skill or talent that is still working once it is played now lies on the table screen under its player’s name, with a word on what is left of it: Lucky Streak’s rolls, Paid Off, Backup on call and Local Legend, and for the turn they are played Silver Tongue, Road Crew, Spy and Stall. Rush lies under the rival it slows. A card just played flies there from the middle of the screen.'],
   ['2026-10-04', 'GIF distractions', 'Pick a GIF to distract the player whose turn it is. It lands on their board for a few seconds, once per turn, replacing the old spray paint, smoke, glitter and pigeon effects.'],
   ['2026-10-04', 'More GIF reactions', 'Live GIPHY choices cover getting paid, boss moves, big wins, getting busted, betrayal, deals, robberies and payback. Emote, Booty, Sexy and Party mode have their own Distractions row. GIFs appear on the board without a frame or name strip.'],
   ['2026-10-04', 'Taken from you', 'When the police, a Tip-off, a Shakedown or a fight takes a card from you, your phone says what it was and who took it, even if it was in your pocket at the time. On the table a −1 rises from the player it was taken from.'],
@@ -16663,9 +16705,6 @@ function fightResult(f, crew, win) {
 
 /* ---------- seats, lists and perks ---------- */
 function turfBlocks(st, pid) { const s = turfOn(st) ? sliceOf(st, pid) : null; return s ? s.blocks.length : 0; }
-/* on a seat round the table, only a cross while Backup is on call: the seats stay a name and one quiet line, and the
-   board itself shows whose turf is whose */
-const seatMarksHTML = p => (onCall(p) ? '<span class="ocmark" title="Backup on call: Shakedown skips them until they lose a fight">&#10010;</span>' : '');
 /* ---------- end of Turf war ---------- */
 /* ---------- Showtime (release 6) ----------
    When somebody wins, the table puts on a show for them: their crews pour out of their buildings firing into the
@@ -19021,8 +19060,8 @@ function fxSig(st) {
 }
 function fxReset(quiet) {
   clearTimeout(FX.guard); FX.queue = []; FX.busy = false;
-  const dirty = FX.veil || Object.keys(FX.hold).length || FX.fightBusy || AR.say;
-  FX.veil = false; FX.hold = {}; FX.fightBusy = false; FX.cardHold = null; FX.fightPre = null; AR.say = '';
+  const dirty = FX.veil || Object.keys(FX.hold).length || FX.fightBusy || AR.say || FX.playHold;
+  FX.veil = false; FX.hold = {}; FX.fightBusy = false; FX.cardHold = null; FX.fightPre = null; AR.say = ''; FX.playHold = null;
   const fst = G.state, fv = fst && (fst.phase === 'turn' || fst.phase === 'over') && fst.fight && fightView(fst.fight);
   AR.shown = fv ? fv.steps.length : 1e9;           // catch the arena up to where the fight really is
   const l = document.getElementById('fx'); if (l) l.innerHTML = '';
@@ -19145,6 +19184,8 @@ function fxPlan(st, was, now) {
   // an upgrade's draw stays in the crate until the crate opens
   const dropEv = cardEv.find(e => e.t === 'drop');
   if (dropEv) FX.cardHold = { pid: dropEv.pid, k: dropEv.k };
+  // a card played that goes on working is laid under its player on the table, once it has flown there (fxLay)
+  if (!joinRoom || WATCH) cardEv.forEach(e => { if (e.t === 'play') (FX.playHold = FX.playHold || new Set()).add(e.pid + ':' + e.k); });
   if (!events.length && !flights.length && !cardEv.length && !fightEv && !turfEv.length) { if (FX.fightBusy) clearTimeout(FX.guard), FX.guard = setTimeout(() => fxReset(), 12000); return; }
   const veil = events.some(e => e.t === 'roll' && !e.quick) ? 'roll' : cardEv.some(e => e.t === 'drop') ? 'drop' : null;
   if (veil) FX.veil = veil;
@@ -19395,12 +19436,45 @@ function fxPlay(ev) {
     if (app) app.animate([{ transform: 'none' }, { transform: 'translate(-6px,2px)' }, { transform: 'translate(6px,-2px)' }, { transform: 'translate(-3px,1px)' }, { transform: 'none' }], { duration: 380, delay: 300 });
   }
   return wait(FIGHT_CARDS.includes(ev.k) ? 1500 : 1900).then(() => {
+    const slot = fxLaySlot(ev);
+    if (slot) { box.classList.add('lay'); return fxLay(ev, card, slot); }
     box.classList.add('away');
     card.animate([{ transform: 'none', opacity: 1 }, { transform: 'translateY(-30px) scale(.7)', opacity: 0 }], { duration: 320, fill: 'forwards' });
     // the card has had the screen: now the crews walk out
     if (FIGHT_CARDS.includes(ev.k) && FX.fightPre) { FX.fightNew = FX.fightPre; FX.fightPre = null; AR.mounted = ''; arenaRefresh(); }
     return wait(330);
-  }).then(() => box.remove());
+  }).then(() => { box.remove(); fxLaid(ev); });
+}
+/* A card that goes on working once played (inPlayOf) is laid on the table under its player's name: it flies there from
+   the middle of the screen, small as it lands, and its place under the seat is shown only then. Only on the table
+   and the board view, and only to a place that can be seen (not while a fight hides the seats). */
+function fxLaySlot(ev) {
+  if (joinRoom && !WATCH) return null;
+  const slot = document.querySelector(`#h-seats [data-seat="${ev.pid}"] [data-ip="${ev.k}"] .sc`), r = slot && slot.getBoundingClientRect();
+  return r && r.width > 0 && r.bottom > 0 && r.top < window.innerHeight ? slot : null;
+}
+function fxLay(ev, card, slot) {
+  const sc = card.querySelector('.sc'), a = sc.getBoundingClientRect(), b = slot.getBoundingClientRect(), k = b.width / a.width;
+  const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2);
+  const fly = sc.animate([{ transform: 'none' }, { transform: `translate(${(dx * 0.45).toFixed(0)}px,${(dy * 0.45 - 50).toFixed(0)}px) scale(${((1 + k) / 2).toFixed(3)}) rotate(-7deg)`, offset: 0.45 },
+    { transform: `translate(${dx.toFixed(0)}px,${dy.toFixed(0)}px) scale(${k.toFixed(3)})` }], { duration: 700, easing: 'cubic-bezier(.5,.05,.3,1)', fill: 'forwards' });
+  return new Promise(r => {
+    let done = false;
+    const fin = () => {
+      if (done) return; done = true; fxLaid(ev); buzz(10);
+      const now = document.querySelector(`#h-seats [data-seat="${ev.pid}"] [data-ip="${ev.k}"] .sc`);
+      if (now && now.animate) now.animate([{ filter: 'brightness(2.2)', transform: 'scale(1.18)' }, { filter: 'none', transform: 'none' }], { duration: 520, easing: 'ease-out' });
+      r();
+    };
+    fly.onfinish = fin; fly.oncancel = fin; setTimeout(fin, 1200);
+  });
+}
+/* the card is down (or went another way): its place under the seat is shown */
+function fxLaid(ev) {
+  const key = ev.pid + ':' + ev.k;
+  if (!FX.playHold || !FX.playHold.delete(key)) return;
+  if (!FX.playHold.size) FX.playHold = null;
+  if (G.state && $('#h-seats')) setHTML('#h-seats', seatsHTML(G.state, WATCH));
 }
 /* Bought at the market: the card slides from the market into your row. */
 function fxBuy(ev) {
